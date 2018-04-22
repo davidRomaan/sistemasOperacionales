@@ -8,8 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="PERSONA")
-public class Persona {
+@Table(name="AREA")
+public class Area {
 
 	@Id
 	@Column(name="id")
@@ -19,22 +19,18 @@ public class Persona {
 	@Column(name="nombre")
 	private String nombre;
 	
-	@Column(name="apellido")
-	private String apellido;
+	@Column(name="descripcion", length=100)
+	private String descripcion;
 	
-	@Column(name="cedula")
-	private String cedula;
-	
-	public Persona() {
+	public Area() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Persona(int id, String nombre, String apellido, String cedula) {
+	public Area(int id, String nombre, String descripcion) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
-		this.apellido = apellido;
-		this.cedula = cedula;
+		this.descripcion = descripcion;
 	}
 
 	public int getId() {
@@ -53,21 +49,12 @@ public class Persona {
 		this.nombre = nombre;
 	}
 
-	public String getApellido() {
-		return apellido;
+	public String getDescripcion() {
+		return descripcion;
 	}
 
-	public void setApellido(String apellido) {
-		this.apellido = apellido;
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
 	}
-
-	public String getCedula() {
-		return cedula;
-	}
-
-	public void setCedula(String cedula) {
-		this.cedula = cedula;
-	}
-	
 	
 }
