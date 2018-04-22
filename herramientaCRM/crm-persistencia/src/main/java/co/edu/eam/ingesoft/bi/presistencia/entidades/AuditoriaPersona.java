@@ -1,5 +1,6 @@
 package co.edu.eam.ingesoft.bi.presistencia.entidades;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -15,7 +16,7 @@ import javax.persistence.TemporalType;
 
 @Entity
 @Table(name="AUDITORIA_PERSONA")
-public class AuditoriaPersona {
+public class AuditoriaPersona implements Serializable {
 
 	@Id
 	@Column(name="id")
