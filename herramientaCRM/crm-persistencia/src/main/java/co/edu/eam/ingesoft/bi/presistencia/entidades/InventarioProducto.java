@@ -15,40 +15,41 @@ import javax.persistence.Table;
 public class InventarioProducto implements Serializable{
 	
 	@Id
-	@JoinColumn(name="inventarioId")
+	@JoinColumn(name="inventario_id")
 	@ManyToOne
-	private Modulo inventarioId;
+	private Inventario inventarioId;
 	
 	@Id
-	@JoinColumn(name="productoId")
+	@JoinColumn(name="producto_id")
 	@ManyToOne
-	private TipoUsuario productoId;
+	private Producto productoId;
 
-	public InventarioProducto(Modulo inventarioId, TipoUsuario productoId) {
+	public InventarioProducto() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public InventarioProducto(Inventario inventarioId, Producto productoId) {
 		super();
 		this.inventarioId = inventarioId;
 		this.productoId = productoId;
 	}
 
-	public InventarioProducto() {
-		super();
-	}
-
-	public Modulo getInventarioId() {
+	public Inventario getInventarioId() {
 		return inventarioId;
 	}
 
-	public void setInventarioId(Modulo inventarioId) {
+	public void setInventarioId(Inventario inventarioId) {
 		this.inventarioId = inventarioId;
 	}
 
-	public TipoUsuario getProductoId() {
+	public Producto getProductoId() {
 		return productoId;
 	}
 
-	public void setProductoId(TipoUsuario productoId) {
+	public void setProductoId(Producto productoId) {
 		this.productoId = productoId;
 	}
+	
 	
 	
 

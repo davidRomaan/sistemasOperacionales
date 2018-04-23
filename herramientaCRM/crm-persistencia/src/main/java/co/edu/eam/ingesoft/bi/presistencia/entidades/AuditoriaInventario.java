@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -37,16 +38,15 @@ public class AuditoriaInventario implements Serializable{
 	@Column(name="navegador")
 	private String navegador;
 	
-	@JoinColumn(name="inventarioId")
+	@JoinColumns({
+		@JoinColumn(name="inventario_id", referencedColumnName="inventario_id"),
+		@JoinColumn(name="producto_id", referencedColumnName="producto_id")
+	})
 	@ManyToOne
-	private InventarioProducto inventarioId;
-	
-	@JoinColumn(name="productoId")
-	@ManyToOne
-	private InventarioProducto productoId;
+	private InventarioProducto inventario;
 
 	public AuditoriaInventario(int id, String nombreProducto, Date fechaHora, String dispositivo, String accion,
-			String navegador, Departamento inventarioId, Departamento productoId) {
+			String navegador, InventarioProducto inventario) {
 		super();
 		this.id = id;
 		this.nombreProducto = nombreProducto;
@@ -54,8 +54,7 @@ public class AuditoriaInventario implements Serializable{
 		this.dispositivo = dispositivo;
 		this.accion = accion;
 		this.navegador = navegador;
-		this.inventarioId = inventarioId;
-		this.productoId = productoId;
+		this.inventario = inventario;
 	}
 
 	public AuditoriaInventario() {
@@ -110,23 +109,13 @@ public class AuditoriaInventario implements Serializable{
 		this.navegador = navegador;
 	}
 
-	public Departamento getInventarioId() {
-		return inventarioId;
+	public InventarioProducto getInventario() {
+		return inventario;
 	}
 
-	public void setInventarioId(Departamento inventarioId) {
-		this.inventarioId = inventarioId;
+	public void setInventario(InventarioProducto inventario) {
+		this.inventario = inventario;
 	}
-
-	public Departamento getProductoId() {
-		return productoId;
-	}
-
-	public void setProductoId(Departamento productoId) {
-		this.productoId = productoId;
-	}
-	
-	
 	
 
 }

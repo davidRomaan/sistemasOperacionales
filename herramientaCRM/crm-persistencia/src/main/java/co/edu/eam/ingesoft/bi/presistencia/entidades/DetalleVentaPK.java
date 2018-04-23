@@ -4,16 +4,16 @@ import java.io.Serializable;
 
 public class DetalleVentaPK implements Serializable{
 
-	private String facturaVentaId;
+	private int facturaVenta;
 	
-	private String productoId;
+	private int producto;
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((facturaVentaId == null) ? 0 : facturaVentaId.hashCode());
-		result = prime * result + ((productoId == null) ? 0 : productoId.hashCode());
+		result = prime * result + facturaVenta;
+		result = prime * result + producto;
 		return result;
 	}
 
@@ -26,18 +26,14 @@ public class DetalleVentaPK implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		DetalleVentaPK other = (DetalleVentaPK) obj;
-		if (facturaVentaId == null) {
-			if (other.facturaVentaId != null)
-				return false;
-		} else if (!facturaVentaId.equals(other.facturaVentaId))
+		if (facturaVenta != other.facturaVenta)
 			return false;
-		if (productoId == null) {
-			if (other.productoId != null)
-				return false;
-		} else if (!productoId.equals(other.productoId))
+		if (producto != other.producto)
 			return false;
 		return true;
 	}
+
+	
 	
 	
 	

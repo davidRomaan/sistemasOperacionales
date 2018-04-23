@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -33,26 +34,23 @@ public class AuditoriaDetalleVenta implements Serializable{
 	@Column(name="navegador")
 	private String navegador;
 	
-	@JoinColumn(name="producto_id")
+	@JoinColumns({
+		@JoinColumn(name="producto_id", referencedColumnName="producto_id"),
+		@JoinColumn(name="factura_venta_id", referencedColumnName="factura_venta_id")
+	})
 	@ManyToOne
-	private DetalleVenta productoId;
-	
-	
-	@JoinColumn(name="factura_venta_id")
-	@ManyToOne
-	private DetalleVenta facturaVentaId;
+	private DetalleVenta detalleVenta;
 
 
 	public AuditoriaDetalleVenta(int id, String seleccion, Date fechaHora, String dispositivo, String navegador,
-			DetalleVenta productoId, DetalleVenta facturaVentaId) {
+			DetalleVenta detalleVenta) {
 		super();
 		this.id = id;
 		this.seleccion = seleccion;
 		this.fechaHora = fechaHora;
 		this.dispositivo = dispositivo;
 		this.navegador = navegador;
-		this.productoId = productoId;
-		this.facturaVentaId = facturaVentaId;
+		this.detalleVenta = detalleVenta;
 	}
 
 
@@ -111,23 +109,13 @@ public class AuditoriaDetalleVenta implements Serializable{
 	}
 
 
-	public DetalleVenta getProductoId() {
-		return productoId;
+	public DetalleVenta getDetalleVenta() {
+		return detalleVenta;
 	}
 
 
-	public void setProductoId(DetalleVenta productoId) {
-		this.productoId = productoId;
-	}
-
-
-	public DetalleVenta getFacturaVentaId() {
-		return facturaVentaId;
-	}
-
-
-	public void setFacturaVentaId(DetalleVenta facturaVentaId) {
-		this.facturaVentaId = facturaVentaId;
+	public void setDetalleVenta(DetalleVenta detalleVenta) {
+		this.detalleVenta = detalleVenta;
 	}
 	
 	

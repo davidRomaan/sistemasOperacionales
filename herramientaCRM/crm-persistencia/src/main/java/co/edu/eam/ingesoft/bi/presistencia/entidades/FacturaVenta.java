@@ -31,7 +31,6 @@ public class FacturaVenta implements Serializable{
 	@ManyToOne
 	private Persona clienteId;
 	
-	
 	@JoinColumn(name="empleado_id")
 	@ManyToOne
 	private Persona empleadoId;

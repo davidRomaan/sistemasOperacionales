@@ -1,6 +1,8 @@
 package co.edu.eam.ingesoft.bi.presistencia.entidades;
 
 import java.io.Serializable;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
@@ -14,24 +16,24 @@ import javax.persistence.Table;
 public class DetalleVenta implements Serializable{
 	
 	@Id
-	@JoinColumn(name="facturaVentaId")
+	@JoinColumn(name="factura_venta_id")
 	@ManyToOne
-	private FacturaVenta facturaVentaId;
+	private FacturaVenta facturaVenta;
 	
 	@Id
-	@JoinColumn(name="productoId")
+	@JoinColumn(name="producto_id")
 	@ManyToOne
-	private Producto productoId;
+	private Producto producto;
 	
-	@JoinColumn(name="cantidad")
-	private float cantidad;
+	@Column(name="cantidad")
+	private int cantidad;
 
 	
 
-	public DetalleVenta(FacturaVenta facturaVentaId, Producto productoId, float cantidad) {
+	public DetalleVenta(FacturaVenta facturaVenta, Producto producto, int cantidad) {
 		super();
-		this.facturaVentaId = facturaVentaId;
-		this.productoId = productoId;
+		this.facturaVenta = facturaVenta;
+		this.producto = producto;
 		this.cantidad = cantidad;
 	}
 
@@ -44,36 +46,36 @@ public class DetalleVenta implements Serializable{
 
 
 	public FacturaVenta getFacturaVentaId() {
-		return facturaVentaId;
+		return facturaVenta;
 	}
 
 
 
 	public void setFacturaVentaId(FacturaVenta facturaVentaId) {
-		this.facturaVentaId = facturaVentaId;
+		this.facturaVenta = facturaVentaId;
 	}
 
 
 
 	public Producto getProductoId() {
-		return productoId;
+		return producto;
 	}
 
 
 
 	public void setProductoId(Producto productoId) {
-		this.productoId = productoId;
+		this.producto = productoId;
 	}
 
 
 
-	public float getCantidad() {
+	public int getCantidad() {
 		return cantidad;
 	}
 
 
 
-	public void setCantidad(float cantidad) {
+	public void setCantidad(int cantidad) {
 		this.cantidad = cantidad;
 	}
 

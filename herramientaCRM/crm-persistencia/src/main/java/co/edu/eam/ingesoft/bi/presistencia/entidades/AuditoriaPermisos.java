@@ -36,9 +36,9 @@ public class AuditoriaPermisos implements Serializable {
 	@Column(name = "navegador", length = 30, nullable = false)
 	private String navegador;
 
-	@JoinColumns({ @JoinColumn(name = "modulo_id", referencedColumnName = "codigo_modulo"),
-			@JoinColumn(name = "tipoUsiario_id", referencedColumnName = "codigo_tipoUsuario") })
-	private ModulosUsuarioPK modulosUsuario;
+	@JoinColumns({ @JoinColumn(name = "codigo_modulo", referencedColumnName = "modulo_id"),
+			@JoinColumn(name = "codigo_tipoUsuario", referencedColumnName = "tipoUsuario_id") })
+	private ModulosUsuario modulosUsuario;
 	
 	
 	public AuditoriaPermisos(){
@@ -47,7 +47,7 @@ public class AuditoriaPermisos implements Serializable {
 
 
 	public AuditoriaPermisos(String accion, Date fechaHora, String dispositivo, String navegador,
-			ModulosUsuarioPK modulosUsuario) {
+			ModulosUsuario modulosUsuario) {
 		super();
 		this.accion = accion;
 		this.fechaHora = fechaHora;
@@ -107,12 +107,12 @@ public class AuditoriaPermisos implements Serializable {
 	}
 
 
-	public ModulosUsuarioPK getModulosUsuario() {
+	public ModulosUsuario getModulosUsuario() {
 		return modulosUsuario;
 	}
 
 
-	public void setModulosUsuario(ModulosUsuarioPK modulosUsuario) {
+	public void setModulosUsuario(ModulosUsuario modulosUsuario) {
 		this.modulosUsuario = modulosUsuario;
 	}
 
