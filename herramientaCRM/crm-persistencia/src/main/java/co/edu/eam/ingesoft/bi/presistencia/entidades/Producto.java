@@ -18,7 +18,6 @@ public class Producto implements Serializable{
 
 	@Id
 	@Column(name="id")
-	@GeneratedValue(strategy= GenerationType.AUTO)
 	private int id;
 	
 	@Column(name="fecha_ingreso")
@@ -30,7 +29,7 @@ public class Producto implements Serializable{
 	@Column(name="dimension")
 	private double dimension;
 	
-	@Column(name="valorProducto")
+	@Column(name="valor_producto")
 	private double valorProducto;
 	
 	@JoinColumn(name="lote_id")
