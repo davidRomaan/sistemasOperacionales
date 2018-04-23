@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="AUDITORIA_DETALLE_VENTA")
+@Table(name="PRODUCTO")
 public class Producto implements Serializable{
 
 	@Id
