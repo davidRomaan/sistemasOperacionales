@@ -8,6 +8,9 @@ public class ModulosUsuarioPK implements Serializable{
 	
 	private int tipoUsiario_id;
 
+	
+	
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
