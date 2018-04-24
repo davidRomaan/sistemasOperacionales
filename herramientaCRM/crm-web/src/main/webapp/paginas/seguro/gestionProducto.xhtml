@@ -1,0 +1,53 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" template="/templates/index.xhtml">
+
+	<ui:define name="cuerpoRegistroProducto">
+		<h:form prependId="false">
+			<h:panelGrid id="panelDatos" columns="2">
+
+				<h:outputLabel id="lblNombreProducto" value="#{msj['producto.nombre']}" />
+				<h:inputText id="tfNombreProducto" value="#{controladorProducto.nombre}" />
+
+				<h:outputLabel id="lblDescripcion" value="#{msj['producto.descripcion']}" />
+				<h:inputText id="tfDescripcion" value="#{controladorProducto.descripcion}" />
+				
+				<h:outputLabel id="lblPeso" value="#{controladorProducto.peso}"/>
+
+				<h:outputLabel id="lblTipoId"
+					value="#{msj['customer.tipoIdentificacion']}" />
+				<h:selectOneMenu id="cbTipoCed"
+					value="#{controladorCustomer.tipoSeleccionado}">
+
+					<f:selectItem itemValue="Cedula" itemLabel="Cedula" />
+					<f:selectItem itemValue="Pasaporte" itemLabel="Pasaporte" />
+					<f:selectItem itemValue="Tarjeta de Identidad"
+						itemLabel="Tarjeta de Identidad" />
+
+				</h:selectOneMenu>
+
+				<h:outputLabel id="lblCed" value="#{msj['customer.identificacion']}" />
+				<h:inputText id="tfCed"
+					value="#{controladorCustomer.identificacion}" />
+
+				<h:outputLabel id="lblUserName" value="#{msj['customer.usuario']}" />
+				<h:inputText id="tfUserName"
+					value="#{controladorCustomer.username}" />
+
+				<p:outputLabel for="tfpass" value="#{msj['customer.password']}" />
+				<h:inputSecret value="#{controladorCustomer.password}" id="tfpass" />
+
+			</h:panelGrid>
+
+			<h:panelGrid id="panelBotones" columns="2">
+
+				<p:commandButton id="btnRegistrar"
+					value="#{msj['customer.registrar']}" process="@this,panelDatos"
+					update="panelDatos" action="#{controladorCustomer.crear}" />
+
+			</h:panelGrid>
+		</h:form>
+	</ui:define>
+</ui:composition>
