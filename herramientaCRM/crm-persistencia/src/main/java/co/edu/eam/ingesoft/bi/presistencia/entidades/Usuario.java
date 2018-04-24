@@ -18,13 +18,13 @@ import co.edu.eam.ingesoft.bi.persistencia.enumeraciones.Genero;
 public class Usuario extends Persona implements Serializable {
 
 	
-	@Column(name="contraseña", nullable= false)
-	private String contraseña;
+	@Column(name="contrasenia", nullable= false)
+	private String contrasenia;
 	
-	@Column(name="nombreUsuario", nullable= false, unique=true)
+	@Column(name="nombre_usuario", nullable= false, unique=true)
 	private String nombreUsuario;
 	
-	@JoinColumn(name="tipoUsuario")
+	@JoinColumn(name="tipo_usuario")
 	@ManyToOne
 	private TipoUsuario tipoUsuario;
 	
@@ -47,10 +47,10 @@ public class Usuario extends Persona implements Serializable {
 
 
 	public Usuario(String cedula, String nombre, String apellido, String telefono, String correo, Date fechaNacimiento,
-			boolean activo, Municipio municipio, Genero genero, String contraseña, String nombreUsuario,
+			boolean activo, Municipio municipio, Genero genero, String contrasenia, String nombreUsuario,
 			TipoUsuario tipoUsuario, Area area, Date fechaIngreso, Cargo cargo) {
 		super(cedula, nombre, apellido, telefono, correo, fechaNacimiento, activo, municipio, genero);
-		this.contraseña = contraseña;
+		this.contrasenia = contrasenia;
 		this.nombreUsuario = nombreUsuario;
 		this.tipoUsuario = tipoUsuario;
 		this.area = area;
@@ -59,13 +59,13 @@ public class Usuario extends Persona implements Serializable {
 	}
 
 
-	public String getContraseña() {
-		return contraseña;
+	public String getContrasenia() {
+		return contrasenia;
 	}
 
 
-	public void setContraseña(String contraseña) {
-		this.contraseña = contraseña;
+	public void setContrasenia(String contrasenia) {
+		this.contrasenia = contrasenia;
 	}
 
 
@@ -125,7 +125,7 @@ public class Usuario extends Persona implements Serializable {
 		int result = super.hashCode();
 		result = prime * result + ((area == null) ? 0 : area.hashCode());
 		result = prime * result + ((cargo == null) ? 0 : cargo.hashCode());
-		result = prime * result + ((contraseña == null) ? 0 : contraseña.hashCode());
+		result = prime * result + ((contrasenia == null) ? 0 : contrasenia.hashCode());
 		result = prime * result + ((fechaIngreso == null) ? 0 : fechaIngreso.hashCode());
 		result = prime * result + ((nombreUsuario == null) ? 0 : nombreUsuario.hashCode());
 		result = prime * result + ((tipoUsuario == null) ? 0 : tipoUsuario.hashCode());
@@ -152,10 +152,10 @@ public class Usuario extends Persona implements Serializable {
 				return false;
 		} else if (!cargo.equals(other.cargo))
 			return false;
-		if (contraseña == null) {
-			if (other.contraseña != null)
+		if (contrasenia == null) {
+			if (other.contrasenia != null)
 				return false;
-		} else if (!contraseña.equals(other.contraseña))
+		} else if (!contrasenia.equals(other.contrasenia))
 			return false;
 		if (fechaIngreso == null) {
 			if (other.fechaIngreso != null)
