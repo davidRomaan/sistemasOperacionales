@@ -14,38 +14,32 @@
 				<h:outputLabel id="lblDescripcion" value="#{msj['producto.descripcion']}" />
 				<h:inputText id="tfDescripcion" value="#{controladorProducto.descripcion}" />
 				
-				<h:outputLabel id="lblPeso" value="#{controladorProducto.peso}"/>
+				<h:outputLabel id="lblPeso" value="#{msj['producto.peso']}"/>
+				<h:inputText id="tfPeso" value="#{controladorProducto.peso}"/>
+				
+				<h:outputLabel id="lblDimension" value="#{msj['producto.dimension']}"/>
+				<h:inputText id="tfDimension" value="#{controladorProducto.dimension}"/>
+				
+				<h:outputLabel id="lblPrecio" value="#{msj['producto.valor']}"/>
+				<h:inputText id="tfPrecio" value="#{controladorProducto.valor}"/>
+				
+				<h:outputLabel for="cblote" id="lbLote"
+					value="#{msj['producto.lote']}" />
+				<h:selectOneMenu id="cblote"
+					value="#{controladorProducto.loteSeleccionado}">
 
-				<h:outputLabel id="lblTipoId"
-					value="#{msj['customer.tipoIdentificacion']}" />
-				<h:selectOneMenu id="cbTipoCed"
-					value="#{controladorCustomer.tipoSeleccionado}">
-
-					<f:selectItem itemValue="Cedula" itemLabel="Cedula" />
-					<f:selectItem itemValue="Pasaporte" itemLabel="Pasaporte" />
-					<f:selectItem itemValue="Tarjeta de Identidad"
-						itemLabel="Tarjeta de Identidad" />
+					<f:selectItems value="#{controladorProductos.lotes}"
+						var="lote" itemValue="#{lote}" itemLabel="#{lote.descripcion}" />
 
 				</h:selectOneMenu>
-
-				<h:outputLabel id="lblCed" value="#{msj['customer.identificacion']}" />
-				<h:inputText id="tfCed"
-					value="#{controladorCustomer.identificacion}" />
-
-				<h:outputLabel id="lblUserName" value="#{msj['customer.usuario']}" />
-				<h:inputText id="tfUserName"
-					value="#{controladorCustomer.username}" />
-
-				<p:outputLabel for="tfpass" value="#{msj['customer.password']}" />
-				<h:inputSecret value="#{controladorCustomer.password}" id="tfpass" />
 
 			</h:panelGrid>
 
 			<h:panelGrid id="panelBotones" columns="2">
 
 				<p:commandButton id="btnRegistrar"
-					value="#{msj['customer.registrar']}" process="@this,panelDatos"
-					update="panelDatos" action="#{controladorCustomer.crear}" />
+					value="#{msj['prducto.registrar']}" process="@this,panelDatos"
+					update="panelDatos" action="#{controladorProducto.registrar}" />
 
 			</h:panelGrid>
 		</h:form>
