@@ -11,16 +11,16 @@
 			<h:panelGrid columns="3">
 
 				<p:outputLabel for="tfuser" value="Usuario :" />
-				<h:inputText value="#{seccionControl.nickname}" id="tfuser" />
+				<h:inputText value="#{controladorSesion.username}" id="tfuser" />
 				<p:message for="tfuser" />
 
 				<p:outputLabel for="tfpass" value="Contraseña :" />
-				<h:inputSecret value="#{seccionControl.contra}" id="tfpass" />
+				<h:inputSecret value="#{controladorSesion.password}" id="tfpass" />
 				<p:message for="tfpass" />
+
 				<p:separator></p:separator>
-				
 				<p:commandButton value="IniciarSesion" ajax="false"
-					action="#" />
+					action="#{controladorSesion.login}" />
 			</h:panelGrid>
 
 		</h:form>
