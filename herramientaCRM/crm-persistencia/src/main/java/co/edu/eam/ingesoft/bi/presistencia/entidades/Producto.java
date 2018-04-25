@@ -10,11 +10,21 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="PRODUCTO")
+@NamedQueries({
+	@NamedQuery(name=Producto.LISTAR, query="SELECT p FROM Producto p")
+})
 public class Producto implements Serializable{
+	
+	/**
+	 * Lista los productos registrados
+	 */
+	public static final String LISTAR = "producto.listar";
 
 	@Id
 	@Column(name="id")

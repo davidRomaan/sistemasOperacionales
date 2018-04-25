@@ -6,43 +6,95 @@
 
 	<ui:define name="cuerpo">
 		<h:form prependId="false">
+
+			<h:panelGrid id="panelCodigo" columns="3">
+
+				<h:outputLabel id="lblCodigoProducto" value="Código: " />
+				<h:inputText id="tfCodigoProducto"
+					value="#{controladorProducto.codigo}" />
+				<p:commandButton id="btnBuscar" value="Buscar" process="@this"
+					update="panelDatos" action="#{controladorProducto.buscar}" />
+
+			</h:panelGrid>
+
 			<h:panelGrid id="panelDatos" columns="2">
 
-                <!-- #{msj['producto.peso']}, #{msj['producto.lote']} -->
 				<h:outputLabel id="lblNombreProducto" value="Nombre: " />
-				<h:inputText id="tfNombreProducto" value="#{controladorProducto.nombre}" />
+				<h:inputText id="tfNombreProducto"
+					value="#{controladorProducto.nombre}" />
 
-				<h:outputLabel id="lblDescripcion" value="#{msj['producto.descripcion']}" />
-				<h:inputText id="tfDescripcion" value="#{controladorProducto.descripcion}" />
-				
-				<h:outputLabel id="lblPeso" value="Peso: "/>
-				<h:inputText id="tfPeso" value="#{controladorProducto.peso}"/>
-				
-				<h:outputLabel id="lblDimension" value="Dimensión: "/>
-				<h:inputText id="tfDimension" value="#{controladorProducto.dimension}"/>
-				
-				<h:outputLabel id="lblPrecio" value="Precio: "/>
-				<h:inputText id="tfPrecio" value="#{controladorProducto.valor}"/>
-				
-				<h:outputLabel for="cblote" id="lbLote"
-					value="Seleccione el lote" />
+				<h:outputLabel id="lblDescripcion" value="Descripción: " />
+				<h:inputText id="tfDescripcion"
+					value="#{controladorProducto.descripcion}" />
+
+				<h:outputLabel id="lblPeso" value="Peso: " />
+				<h:inputText id="tfPeso" value="#{controladorProducto.peso}" />
+
+				<h:outputLabel id="lblDimension" value="Dimensión: " />
+				<h:inputText id="tfDimension"
+					value="#{controladorProducto.dimension}" />
+
+				<h:outputLabel id="lblPrecio" value="Precio: " />
+				<h:inputText id="tfPrecio" value="#{controladorProducto.valor}" />
+
+				<h:outputLabel for="cblote" id="lbLote" value="Seleccione el lote " />
 				<h:selectOneMenu id="cblote"
 					value="#{controladorProducto.loteSeleccionado}">
 
-					<f:selectItems value="#{controladorProductos.lotes}"
-						var="lote" itemValue="#{lote}" itemLabel="#{lote.descripcion}" />
+					<f:selectItems value="#{controladorProducto.lotes}" var="lote"
+						itemValue="#{lote}" itemLabel="#{lote.descripcion}" />
 
 				</h:selectOneMenu>
 
 			</h:panelGrid>
 
-			<h:panelGrid id="panelBotones" columns="2">
+			<h:panelGrid id="panelBotones" columns="4">
 
-				<p:commandButton id="btnRegistrar"
-					value="Registrar" process="@this,panelDatos"
-					update="panelDatos" action="#{controladorProducto.registrar}" />
+				<p:commandButton id="btnRegistrar" value="Registrar"
+					process="@this,panelDatos,panelCodigo" update="panelDatos"
+					action="#{controladorProducto.registrar}" />
+
+				<p:commandButton id="btnEditar" value="Editar"
+					process="@this, panelDatos" update="panelDatos"
+					action="#{controladorProducto.editar}" />
+
+				<p:commandButton id="btnListar" value="Listar"
+					process="@this, panelTabla" update="panelTabla"
+					action="#{controladorProducto.listar}" />
+
+				<p:commandButton id="btnEliminar" value="Eliminar"
+					process="@this, panelDatos" update="panelDatos, panelCodigo"
+					action="#{controladorProducto.eliminar}" />
 
 			</h:panelGrid>
+
+			<h:panelGrid id="panelTabla" columns="5">
+
+				<p:dataTable id="tablaProductos"
+					value="#{controladorProducto.productos}" var="producto" border="1">
+
+					<p:column headerText="Id ">
+						<h:outputLabel value="#{producto.id}" />
+					</p:column>
+
+					<p:column headerText="Nombre ">
+						<h:outputLabel value="#{producto.nombre}" />
+					</p:column>
+
+					<p:column headerText="Precio ">
+						<h:outputLabel value="#{producto.valorProducto}" />
+					</p:column>
+
+					<p:column headerText="Acción">
+						<p:commandButton value="Eliminar" process="@this,tablaProductos"
+							update="tablaProductos"
+							action="#{controladorProducto.eliminarProducto(producto)}" />
+					</p:column>
+
+				</p:dataTable>
+
+			</h:panelGrid>
+
 		</h:form>
 	</ui:define>
 </ui:composition>
