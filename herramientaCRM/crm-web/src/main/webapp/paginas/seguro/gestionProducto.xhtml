@@ -4,27 +4,28 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui" template="/templates/index.xhtml">
 
-	<ui:define name="cuerpoRegistroProducto">
+	<ui:define name="cuerpo">
 		<h:form prependId="false">
 			<h:panelGrid id="panelDatos" columns="2">
 
-				<h:outputLabel id="lblNombreProducto" value="#{msj['producto.nombre']}" />
+                <!-- #{msj['producto.peso']}, #{msj['producto.lote']} -->
+				<h:outputLabel id="lblNombreProducto" value="Nombre: " />
 				<h:inputText id="tfNombreProducto" value="#{controladorProducto.nombre}" />
 
 				<h:outputLabel id="lblDescripcion" value="#{msj['producto.descripcion']}" />
 				<h:inputText id="tfDescripcion" value="#{controladorProducto.descripcion}" />
 				
-				<h:outputLabel id="lblPeso" value="#{msj['producto.peso']}"/>
+				<h:outputLabel id="lblPeso" value="Peso: "/>
 				<h:inputText id="tfPeso" value="#{controladorProducto.peso}"/>
 				
-				<h:outputLabel id="lblDimension" value="#{msj['producto.dimension']}"/>
+				<h:outputLabel id="lblDimension" value="Dimensión: "/>
 				<h:inputText id="tfDimension" value="#{controladorProducto.dimension}"/>
 				
-				<h:outputLabel id="lblPrecio" value="#{msj['producto.valor']}"/>
+				<h:outputLabel id="lblPrecio" value="Precio: "/>
 				<h:inputText id="tfPrecio" value="#{controladorProducto.valor}"/>
 				
 				<h:outputLabel for="cblote" id="lbLote"
-					value="#{msj['producto.lote']}" />
+					value="Seleccione el lote" />
 				<h:selectOneMenu id="cblote"
 					value="#{controladorProducto.loteSeleccionado}">
 
@@ -38,7 +39,7 @@
 			<h:panelGrid id="panelBotones" columns="2">
 
 				<p:commandButton id="btnRegistrar"
-					value="#{msj['prducto.registrar']}" process="@this,panelDatos"
+					value="Registrar" process="@this,panelDatos"
 					update="panelDatos" action="#{controladorProducto.registrar}" />
 
 			</h:panelGrid>
