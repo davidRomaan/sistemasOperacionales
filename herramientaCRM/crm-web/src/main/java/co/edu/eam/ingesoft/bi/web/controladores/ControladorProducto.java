@@ -3,10 +3,13 @@ package co.edu.eam.ingesoft.bi.web.controladores;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 
+import co.edu.eam.ingesoft.bi.negocio.beans.ProductoEJB;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Lote;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.Producto;
 
 @Named("controladorProducto")
 @SessionScoped
@@ -20,9 +23,23 @@ public class ControladorProducto implements Serializable{
 	private ArrayList<Lote> lotes;
 	private int loteSeleccionado;
 	
+	@EJB
+	private ProductoEJB productoEJB;
 	
+	/**
+	 * Registra el producto
+	 */
 	public void registrar(){
 		//Fecha
+		Producto producto = new Producto();
+		producto.setDimension(dimension);
+		producto.setFechaIngreso(null);
+		producto.setPeso(peso);
+		producto.setNombre(nombre);
+		producto.setDescripcion(descripcion);
+		producto.setValorProducto(valor);
+		producto.setLote(null);
+		productoEJB.registrarProducto(producto);
 	}
 	
 	public String getNombre() {
