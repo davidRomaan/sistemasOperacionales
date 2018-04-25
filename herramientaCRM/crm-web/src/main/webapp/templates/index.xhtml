@@ -8,7 +8,7 @@
 	<meta charset="utf-8"></meta>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
 	<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
-	<title>NNCOMPANY</title>
+	<title>BUSINESS FORCE</title>
 
 	<link
 		href="#{request.contextPath}/https://fonts.googleapis.com/css?family=Open+Sans:400,600&amp;subset=latin-ext"
@@ -35,8 +35,9 @@
 					<span class="sr-only">Toggle Navigation</span> <i
 						class="fa fa-bars"></i>
 				</button>
-				<a href="index.html" class="navbar-brand"> <img
-					src="#{request.contextPath}/img/logo.png" alt="Post"></img>
+				<a href="#{request.contextPath}/templates/index.xhtml" class="navbar-brand"> <img
+					src="#{request.contextPath}/img/logotipo.png" alt="Post"></img>
+
 				</a>
 				<!-- Collect the nav links, forms, and other content for toggling -->
 				<div class="collapse navbar-collapse" id="bs-navbar-collapse">
@@ -50,27 +51,30 @@
 
 						</ul>
 					</h:panelGroup>
-					<h:panelGroup rendered="#{controladorSesion.sesion}">
-						<ul class="nav navbar-nav main-navbar-nav">
-							<li class="active"><a href="index.html" title="">HOME</a></li>
-							<li class="dropdown"><a href="#" title=""
-								class="dropdown-toggle" data-toggle="dropdown" role="button"
-								aria-haspopup="true" aria-expanded="false">DROPDOWN MENU <span
-									class="caret"></span></a>
-								<ul class="dropdown-menu">
-									<li><a href="#" title="">SUB MENU 1</a></li>
-									<li><a href="#" title="">SUB MENU 2</a></li>
-									<li><a href="#" title="">SUB MENU 3</a></li>
-								</ul></li>
-							<li><a href="page.html" title="">PAGE</a></li>
-							<li><a href="category.html" title="">CATEGORY</a></li>
-							<li><a href="#" title="">MENU ITEM</a></li>
-							<li><a href="#" title="">MENU ITEM</a></li>
-						</ul>
-					</h:panelGroup>
+					<h:form>
+						<h:panelGroup rendered="#{controladorSesion.sesion}">
+							<ul class="nav navbar-nav main-navbar-nav">
+								<li class="active"><a href="index.html" title="">HOME</a></li>
+								<li class="dropdown"><a href="#" title=""
+									class="dropdown-toggle" data-toggle="dropdown" role="button"
+									aria-haspopup="true" aria-expanded="false">DROPDOWN MENU <span
+										class="caret"></span></a>
+									<ul class="dropdown-menu">
+										<li><a href="#" title="">SUB MENU 1</a></li>
+										<li><a href="#" title="">SUB MENU 2</a></li>
+										<li><a href="#" title="">SUB MENU 3</a></li>
+									</ul></li>
+								<li><a href="page.html" title="">PAGE</a></li>
+								<li><a href="category.html" title="">CATEGORY</a></li>
+								<li><a href="#" title="">MENU ITEM</a></li>
+								<li><a href="#" title="">MENU ITEM</a></li>
+							</ul>
+							<li><h:commandLink
+									action="#{controladorSesion.cerrarSession}"
+									value="CERRAR SESIÓN"></h:commandLink></li>
+						</h:panelGroup>
+					</h:form>
 				</div>
-				<!-- /.navbar-collapse -->
-				<!-- END MAIN NAVIGATION -->
 			</div>
 		</nav>
 	</header>
@@ -80,7 +84,7 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-sm-12">
-						<h1>NNCOMPANY</h1>
+						<h1>SISTEMA DE GESTION EMPRESARIAL</h1>
 						<h2>Bienvenido</h2>
 					</div>
 				</div>
@@ -88,50 +92,16 @@
 		</div>
 	</section>
 	<section>
-		
+
 		<div id="divCuerpo" align="center" width="100px">
 			<p:messages id="facesMessage" autoUpdate="true" globalOnly="true"
 				closable="true" />
 			<ui:insert name="cuerpo" />
 		</div>
-		
-	</section>
-	<section class="boxes_area">
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-4">
-					<div class="box">
-						<h3>FIRST BOX TITLE</h3>
-						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-							Proin id pulvinar magna. Aenean accumsan iaculis lorem, nec
-							sodales lectus auctor tempor.</p>
-						<i class="fa fa-cogs"></i>
-					</div>
-				</div>
-				<div class="col-sm-4">
-					<div class="box">
-						<h3>SECOND BOX TITLE</h3>
-						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-							Proin id pulvinar magna. Aenean accumsan iaculis lorem, nec
-							sodales lectus auctor tempor.</p>
-						<i class="fa fa-exclamation-triangle"></i>
-					</div>
-				</div>
-				<div class="col-sm-4">
-					<div class="box">
-						<h3>THIRD BOX TITLE</h3>
-						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-							Proin id pulvinar magna. Aenean accumsan iaculis lorem, nec
-							sodales lectus auctor tempor.</p>
-						<i class="fa fa-clipboard"></i>
-					</div>
-				</div>
-			</div>
-		</div>
+
 	</section>
 	<section class="services">
-		<h2 class="section-title">SERVICES</h2>
-		<p class="desc">Praesent faucibus ipsum at sodales blandit</p>
+		<h2 class="section-title">SERVICIOS</h2>
 		<div class="container">
 			<div class="row">
 				<div class="col-md-4 col-sm-6 col-xs-12">
@@ -140,10 +110,10 @@
 							<i class="fa fa-cogs"></i>
 						</div>
 						<div class="media-body">
-							<h4 class="media-heading">FIRST SERVICE TITLE</h4>
-							<p>Lorem ipsum dolor amet,consectetur adipiscing elit. Proin
-								id pulvinar magna. Aenean accumsan iaculis lorem, nec sodales
-								lectus auctor tempor.</p>
+							<h4 class="media-heading">GESTIONA TUS VENTAS</h4>
+							<p>puedes medir la efectividad de cada uno de tus
+								comerciales, analizando el proceso de venta en tiempo real y las
+								metas alcanzadas.</p>
 						</div>
 					</div>
 				</div>
@@ -153,10 +123,10 @@
 							<i class="fa fa-user-md"></i>
 						</div>
 						<div class="media-body">
-							<h4 class="media-heading">SECOND SERVICE TITLE</h4>
-							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-								Proin id pulvinar magna. Aenean accumsan iaculis lorem, nec
-								sodales lectus auctor tempor.</p>
+							<h4 class="media-heading">GESTIONA TUS USUARIOS</h4>
+							<p>De manera fácil puedes hacer seguimiento a tus negocios,
+								con una sola herramienta que te permite conocer todos los
+								procesos .</p>
 						</div>
 					</div>
 				</div>
@@ -166,10 +136,9 @@
 							<i class="fa fa-stethoscope"></i>
 						</div>
 						<div class="media-body">
-							<h4 class="media-heading">THIRD SERVICE TITLE</h4>
-							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-								Proin id pulvinar magna. Aenean accumsan iaculis lorem, nec
-								sodales lectus auctor tempor.</p>
+							<h4 class="media-heading">BASES DE DATOS</h4>
+							<p>Trabaja con diferentes bases de datos donde podras obtener
+								y registrar todos tus datos de manera segura.</p>
 						</div>
 					</div>
 				</div>
@@ -179,10 +148,8 @@
 							<i class="fa fa-graduation-cap"></i>
 						</div>
 						<div class="media-body">
-							<h4 class="media-heading">FOURTH SERVICE TITLE</h4>
-							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-								Proin id pulvinar magna. Aenean accumsan iaculis lorem, nec
-								sodales lectus auctor tempor.</p>
+							<h4 class="media-heading">IMPULSE SU NEGOCIO</h4>
+							<p>Unifique las funcionalidades de CRM y ERP,.</p>
 						</div>
 					</div>
 				</div>
@@ -192,10 +159,11 @@
 							<i class="fa fa-file-text-o"></i>
 						</div>
 						<div class="media-body">
-							<h4 class="media-heading">FIFTH SERVICE TITLE</h4>
-							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-								Proin id pulvinar magna. Aenean accumsan iaculis lorem, nec
-								sodales lectus auctor tempor.</p>
+							<h4 class="media-heading">CONVIERTA LAS RELACIONES EN
+								INGRESOS</h4>
+							<p>Capacite a los vendedores con información práctica para
+								personalizar relaciones, predecir las necesidades de los
+								clientes y aumentar las ventas.</p>
 						</div>
 					</div>
 				</div>
@@ -205,10 +173,9 @@
 							<i class="fa fa-heartbeat"></i>
 						</div>
 						<div class="media-body">
-							<h4 class="media-heading">SIXTH SERVICE TITLE</h4>
-							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-								Proin id pulvinar magna. Aenean accumsan iaculis lorem, nec
-								sodales lectus auctor tempor.</p>
+							<h4 class="media-heading">AUDITORIA</h4>
+							<p>Lleva a cabo un proceso de auditoria de toda tu empresa
+								asi podras tener un control total sobre esta.</p>
 						</div>
 					</div>
 				</div>
@@ -220,7 +187,7 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-sm-12">
-						<h2 class="sub_title">LATEST NEWS</h2>
+						<h2 class="sub_title">ULTIMAS NOTICIAS</h2>
 					</div>
 					<div class="home_list">
 						<ul>
@@ -229,11 +196,10 @@
 									<img src="#{request.contextPath}/img/h1.jpeg" alt="Post"></img>
 									<div class="caption">
 										<h3>
-											<a href="#">Post Title</a>
+											<a href="#">EQUIPO</a>
 										</h3>
-										<p>Cras justo odio, dapibus ac facilisis in, egestas eget
-											quam. Donec id elit non mi porta gravida at eget metus.</p>
-										<a href="#" class="btn btn-link" role="button">More</a>
+										<p>Estamos ampliando nuestro grupo de trabajo con mas de
+											dos mil empleados en diferentes ciudades de Colombia.</p>
 									</div>
 								</div>
 							</li>
@@ -243,11 +209,10 @@
 										class="img-responsive" alt="Post"></img>
 									<div class="caption">
 										<h3>
-											<a href="#">Post Title</a>
+											<a href="#">SEDES</a>
 										</h3>
-										<p>Cras justo odio, dapibus ac facilisis in, egestas eget
-											quam. Donec id elit non mi porta gravida at eget metus.</p>
-										<a href="#" class="btn btn-link" role="button">More</a>
+										<p>Estamos ampliandonos en diferentes ciudades con mas de
+											50 sedes que prestan servicios para su empresa.</p>
 									</div>
 								</div>
 							</li>
@@ -257,11 +222,10 @@
 										class="img-responsive" alt="Post"></img>
 									<div class="caption">
 										<h3>
-											<a href="#">Post Title</a>
+											<a href="#">PUNTO DE ATENCION</a>
 										</h3>
-										<p>Cras justo odio, dapibus ac facilisis in, egestas eget
-											quam. Donec id elit non mi porta gravida at eget metus.</p>
-										<a href="#" class="btn btn-link" role="button">More</a>
+										<p>En cada ciudad usted puede ir a las sedes donde podra
+											obtener informacion mas detallada de nuestros servicios.</p>
 									</div>
 								</div>
 							</li>
@@ -271,158 +235,14 @@
 										class="img-responsive" alt="Post"></img>
 									<div class="caption">
 										<h3>
-											<a href="#">Post Title</a>
+											<a href="#">SEDE CENTRAL</a>
 										</h3>
-										<p>Cras justo odio, dapibus ac facilisis in, egestas eget
-											quam. Donec id elit non mi porta gravida at eget metus.</p>
-										<a href="#" class="btn btn-link" role="button">More</a>
+										<p>Nuestra sede central se encuentra ubicada en
+											Armenia-Quindio.</p>
 									</div>
 								</div>
 							</li>
 						</ul>
-					</div>
-
-					<div class="col-sm-9 home_bottom">
-						<h2 class="sub_title">REFERENCES</h2>
-						<div class="clearfix"></div>
-						<div class="row">
-							<div class="carousel slide" data-ride="carousel"
-								data-type="multi" data-interval="6000" id="myCarousel">
-								<div class="carousel-inner">
-									<div class="item active">
-										<div class="col-md-2 col-sm-6 col-xs-12 p10">
-											<a href="#"><img src="#{request.contextPath}/img/l1.jpg"
-												class="img-responsive" alt="Reference"></img></a>
-										</div>
-									</div>
-									<div class="item">
-										<div class="col-md-2 col-sm-6 col-xs-12 p10">
-											<a href="#"><img src="#{request.contextPath}/img/l2.jpg"
-												class="img-responsive" alt="Reference"></img></a>
-										</div>
-									</div>
-									<div class="item">
-										<div class="col-md-2 col-sm-6 col-xs-12">
-											<a href="#"><img src="#{request.contextPath}/img/l3.jpg"
-												class="img-responsive" alt="Reference"></img></a>
-										</div>
-									</div>
-									<div class="item">
-										<div class="col-md-2 col-sm-6 col-xs-12">
-											<a href="#"><img src="#{request.contextPath}/img/l4.jpg"
-												class="img-responsive" alt="Reference"></img></a>
-										</div>
-									</div>
-									<div class="item">
-										<div class="col-md-2 col-sm-6 col-xs-12">
-											<a href="#"><img src="#{request.contextPath}/img/l5.jpg"
-												class="img-responsive" alt="Reference"></img></a>
-										</div>
-									</div>
-									<div class="item">
-										<div class="col-md-2 col-sm-6 col-xs-12">
-											<a href="#"><img src="#{request.contextPath}/img/l6.jpg"
-												class="img-responsive" alt="Reference"></img></a>
-										</div>
-									</div>
-									<div class="item">
-										<div class="col-md-2 col-sm-6 col-xs-12">
-											<a href="#"><img src="#{request.contextPath}/img/l7.jpg"
-												class="img-responsive" alt="Reference"></img></a>
-										</div>
-									</div>
-									<div class="item">
-										<div class="col-md-2 col-sm-6 col-xs-12">
-											<a href="#"><img src="#{request.contextPath}/img/l8.jpg"
-												class="img-responsive" alt="Reference"></img></a>
-										</div>
-									</div>
-									<div class="item">
-										<div class="col-md-2 col-sm-6 col-xs-12 p10">
-											<a href="#"><img src="#{request.contextPath}/img/l1.jpg"
-												class="img-responsive" alt="Reference"></img></a>
-										</div>
-									</div>
-									<div class="item">
-										<div class="col-md-2 col-sm-6 col-xs-12 p10">
-											<a href="#"><img src="#{request.contextPath}/img/l2.jpg"
-												class="img-responsive" alt="Reference"></img></a>
-										</div>
-									</div>
-									<div class="item">
-										<div class="col-md-2 col-sm-6 col-xs-12">
-											<a href="#"><img src="#{request.contextPath}/img/l3.jpg"
-												class="img-responsive" alt="Reference"></img></a>
-										</div>
-									</div>
-									<div class="item">
-										<div class="col-md-2 col-sm-6 col-xs-12">
-											<a href="#"><img src="#{request.contextPath}/img/l4.jpg"
-												class="img-responsive" alt="Reference"></img></a>
-										</div>
-									</div>
-									<div class="item">
-										<div class="col-md-2 col-sm-6 col-xs-12">
-											<a href="#"><img src="#{request.contextPath}/img/l5.jpg"
-												class="img-responsive" alt="Reference"></img></a>
-										</div>
-									</div>
-									<div class="item">
-										<div class="col-md-2 col-sm-6 col-xs-12">
-											<a href="#"><img src="img/l6.jpg"
-												class="#{request.contextPath}/img-responsive"
-												alt="Reference"></img></a>
-										</div>
-									</div>
-									<div class="item">
-										<div class="col-md-2 col-sm-6 col-xs-12">
-											<a href="#"><img src="img/l7.jpg"
-												class="#{request.contextPath}/img-responsive"
-												alt="Reference"></img></a>
-										</div>
-									</div>
-									<div class="item">
-										<div class="col-md-2 col-sm-6 col-xs-12">
-											<a href="#"><img src="img/l8.jpg"
-												class="#{request.contextPath}/img-responsive"
-												alt="Reference"></img></a>
-										</div>
-									</div>
-								</div>
-								<a class="left carousel-control" href="#myCarousel"
-									data-slide="prev"><i
-									class="glyphicon glyphicon-chevron-left"></i></a> <a
-									class="right carousel-control" href="#myCarousel"
-									data-slide="next"><i
-									class="glyphicon glyphicon-chevron-right"></i></a>
-							</div>
-						</div>
-					</div>
-					<div class="col-sm-3">
-						<h2 class="sub_title w10">CALL YOU</h2>
-						<div class="clearfix"></div>
-						<div class="login-form-1">
-							<h:form id="login-form" class="text-left">
-								<div class="login-form-main-message"></div>
-								<div class="main-login-form">
-									<div class="login-group">
-										<div class="form-group">
-											<label for="ad" class="sr-only">Name</label> <input
-												type="text" class="form-control" id="ad" name="ad"
-												placeholder="Name"></input>
-										</div>
-										<div class="form-group">
-											<label for="tel" class="sr-only">Phone Number</label> <input
-												type="text" class="form-control" id="tel" name="tel"
-												placeholder="Phone Number"></input>
-										</div>
-									</div>
-									<button type="submit" class="login-button">
-										<i class="fa fa-chevron-right"></i>
-									</button>
-								</div>
-							</h:form>
-						</div>
 					</div>
 				</div>
 			</div>
@@ -434,10 +254,9 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-md-3 col-sm-6 col-xs-12 fbox">
-					<h4>COMPANY NAME</h4>
-					<p class="text">Lorem ipsum dolor sit amet, consectetur
-						adipiscing elit. Etiam congue lectus diam, sit amet cursus massa
-						efficitur sed.</p>
+					<h4>BUSSINESFORCE</h4>
+					<p class="text">Empresa dedicada a solucionar y hacer el
+						manejo simple de su empresa con el simple manejo de este software.</p>
 					<ul class="list-inline">
 						<li><a href="#"><i class="fa fa-facebook"></i></a></li>
 						<li><a href="#"><i class="fa fa-twitter"></i></a></li>
@@ -447,33 +266,18 @@
 				<div class="col-md-3 col-sm-6 col-xs-12 fbox">
 					<h4>SERVICES</h4>
 					<ul class="big">
-						<li><a href="#" title="">Title One</a></li>
-						<li><a href="#" title="">Title Two</a></li>
-						<li><a href="#" title="">Title Three</a></li>
-						<li><a href="#" title="">Title Four</a></li>
-						<li><a href="#" title="">Title Five</a></li>
-						<li><a href="#" title="">Title Six</a></li>
-						<li><a href="#" title="">Title Seven</a></li>
-						<li><a href="#" title="">Title Eight</a></li>
+						<li><a href="#" title="">Ventas</a></li>
+						<li><a href="#" title="">Usuarios</a></li>
+						<li><a href="#" title="">Base de datos</a></li>
+						<li><a href="#" title="">Auditoria</a></li>
+						<li><a href="#" title="">Ingresos</a></li>
+					
 					</ul>
 				</div>
+			
 				<div class="col-md-3 col-sm-6 col-xs-12 fbox">
-					<h4>CONTENT</h4>
-					<ul class="big">
-						<li><a href="#" title="">Title One</a></li>
-						<li><a href="#" title="">Title Two</a></li>
-						<li><a href="#" title="">Title Three</a></li>
-						<li><a href="#" title="">Title Four</a></li>
-						<li><a href="#" title="">Title Five</a></li>
-						<li><a href="#" title="">Title Six</a></li>
-						<li><a href="#" title="">Title Seven</a></li>
-						<li><a href="#" title="">Title Eight</a></li>
-					</ul>
-				</div>
-				<div class="col-md-3 col-sm-6 col-xs-12 fbox">
-					<h4>CONTENT</h4>
-					<p class="text">Lorem ipsum dolor sit amet, consectetur
-						adipiscing elit.</p>
+					<h4>Contactenos</h4>
+					<p class="text">Contactenos por los siguientes medios:.</p>
 					<p>
 						<a href="tel:+902222222222"><span
 							class="glyphicon glyphicon-earphone" aria-hidden="true"></span>
@@ -482,7 +286,7 @@
 					<p>
 						<a href="mailto:iletisim@agrisosgb.com"><span
 							class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
-							mail@awebsitename.com</a>
+							bussinesforce@awebsitename.com</a>
 					</p>
 				</div>
 			</div>
@@ -491,17 +295,10 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-md-4">
-						<p class="pull-left">2016 COMPANY NAME</p>
+						<p class="pull-left"></p>
 					</div>
 					<div class="col-md-8">
-						<ul class="list-inline navbar-right">
-							<li><a href="#">HOME</a></li>
-							<li><a href="#">MENU ITEM</a></li>
-							<li><a href="#">MENU ITEM</a></li>
-							<li><a href="#">MENU ITEM</a></li>
-							<li><a href="#">MENU ITEM</a></li>
-							<li><a href="#">MENU ITEM</a></li>
-						</ul>
+						
 					</div>
 				</div>
 			</div>

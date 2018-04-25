@@ -7,12 +7,18 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import co.edu.eam.ingesoft.bi.persistencia.enumeraciones.Genero;
 
+
+@NamedQueries({
+	@NamedQuery(name="Usuario.buscarUsuario",query="SELECT u FROM Usuario u WHERE u.nombreUsuario=?1")
+})
 @Entity
 @Table(name="USUARIO")
 public class Usuario extends Persona implements Serializable {
