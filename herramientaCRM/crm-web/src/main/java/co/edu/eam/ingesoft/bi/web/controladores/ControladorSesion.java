@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
+
 import javax.servlet.http.HttpSession;
 
 import org.omnifaces.util.Faces;
@@ -21,6 +22,7 @@ public class ControladorSesion implements Serializable {
 	private String password;
 	private Usuario user;
 
+	
 	@EJB
 	private UsuarioEJB usuarioEJB;
 

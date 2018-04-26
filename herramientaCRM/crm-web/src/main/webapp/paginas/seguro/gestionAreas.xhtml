@@ -1,0 +1,81 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" template="/templates/index.xhtml">
+
+
+	<ui:define name="cuerpo">
+		<h:form prependId="false">
+
+
+
+			<h1>GESTION DE AREAS DE LA EMPRESA</h1>
+			<br></br>
+			<br></br>
+
+
+			<h:panelGrid id="panelRegistro" columns="2">
+
+				<h:outputLabel id="lblCodigo" value="Codigo: " />
+				<h:inputText id="tfCodigo" value="#{controladorAreas.codigo}" />
+
+				<h:outputLabel id="lblNombre" value="Nombre: " />
+				<h:inputText id="tfNombre" value="#{controladorAreas.nombre}" />
+
+				<h:outputLabel id="lblDesc" value="Descripcion: " />
+				<h:inputTextarea id="tfDescripcion"
+					value="#{controladorAreas.descripcion}" />
+
+				<br></br>
+				<br></br>
+
+				<p:commandButton id="btnRegistrar" value="Registrar" process="@this"
+					update="panelRegistro" action="#{controladorAreas.registrarArea()}" />
+
+				<p:commandButton id="btnbuscar" value="Buscar" process="@this"
+					update="panelRegistro" action="#{controladorAreas.buscarArea()}" />
+
+
+			</h:panelGrid>
+
+			<br></br>
+			<br></br>
+
+			<h:panelGrid id="panelBotones" columns="4">
+
+				<p:dataTable id="tablaAreas" emptyMessage="Ningun resultado"
+					value="#{controladorAreas.areasEmpresa}" var="area"
+					filteredValue="#{controladorAreas.listaNueva}" border="3">
+
+					<p:column filterBy="#{area.id}" headerText="codigo">
+						<h:outputText value="#{area.id}">
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Nombre">
+						<h:outputLabel value="#{area.nombre}"></h:outputLabel>
+					</p:column>
+
+					<p:column headerText="Descripcion">
+						<h:outputLabel value="#{area.descripcion}"></h:outputLabel>
+					</p:column>
+
+					<p:column headerText="Acciones">
+						<p:commandButton id="btnEditar" value="Editar"
+							process="@this,panelRegistro" update="panelRegistro"
+							action="#{controladorAreas.editarArea()}" />
+
+						<p:commandButton action="#{controladorAreas.eliminarArea(area)}"
+							process="@this" value="Eliminar" update="panelRegistro" />
+
+					</p:column>
+				</p:dataTable>
+
+			</h:panelGrid>
+
+
+		</h:form>
+	</ui:define>
+
+</ui:composition>

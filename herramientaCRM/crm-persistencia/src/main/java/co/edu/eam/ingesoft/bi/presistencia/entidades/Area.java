@@ -7,15 +7,28 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+
+@NamedQueries({
+	@NamedQuery(name="Areas.listar",query="SELECT a FROM Area a")
+})
 @Entity
 @Table(name="AREA")
 public class Area implements Serializable{
 
+	
+	/**
+	 * Lista las Areas registradas
+	 */
+	public static final String LISTAR_AREAS = "Areas.listar";
+	
+
+	
 	@Id
 	@Column(name="id")
-	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
 	
 	@Column(name="nombre")
