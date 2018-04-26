@@ -9,12 +9,22 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="MUNICIPIO")
+@NamedQueries({
+	@NamedQuery(name=Municipio.LISTAR_MUNICIPIO_DEPTO, query="SELECT m FROM Municipio m WHERE m.departamento = ?1")
+})
 public class Municipio implements Serializable{
 	
+	/**
+	 * Lista los municipios de un departamento registrados en la base de datos
+	 * ?1 codigo del departamento
+	 */
+	public static final String LISTAR_MUNICIPIO_DEPTO = "municipio.listar";
 	
 	@Id
 	@Column(name="id")

@@ -23,5 +23,35 @@ public class UsuarioEJB {
 			return us.get(0);
 		}
 	}
+	
+	/**
+	 * Busca un usuario en la base de datos
+	 * @param cedula cédula del usuario que se desea buscar
+	 * @return el usuario si lo encuentra, de lo contrario null
+	 */
+	public Usuario buscarUsuarioCedula (String cedula){
+		return em.find(Usuario.class, cedula);
+	}
+	
+	/**
+	 * Busca un cliente, verificando su tipo de usuario
+	 * @param cedula cédula del cliente que se desea buscar
+	 * @return el cliente si lo encuentra, de lo contrario null
+	 */
+	public Usuario buscarCliente (String cedula){
+		Usuario cliente = buscarUsuarioCedula(cedula);
+		if (cliente.getTipoUsuario().getNombre().equals("cliente")){
+			return cliente;
+		}
+		return null;
+	}
+	
+	/**
+	 * Registra un usuario en la base de datos
+	 * @param usuario usuario que se desea registrar
+	 */
+	public void registrarUsuario (Usuario usuario){
+		em.persist(usuario);
+	}
 
 }

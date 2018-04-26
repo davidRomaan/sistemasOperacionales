@@ -2,15 +2,26 @@ package co.edu.eam.ingesoft.bi.presistencia.entidades;
 
 import java.io.Serializable;
 import javax.persistence.Table;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 @Entity
 @Table(name="LOTE")
+@NamedQueries({
+	@NamedQuery(name=Lote.LISTA_LOTES, query="SELECT l FROM Lote l")
+})
 public class Lote implements Serializable{
+	
+	/**
+	 * Lista de lotes registrados en la BD
+	 */
+	public static final String LISTA_LOTES = "lista.lotes";
 	
 	@Id
 	@Column(name="id")

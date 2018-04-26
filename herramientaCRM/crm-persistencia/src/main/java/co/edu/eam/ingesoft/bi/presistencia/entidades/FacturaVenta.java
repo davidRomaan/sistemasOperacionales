@@ -25,7 +25,7 @@ public class FacturaVenta implements Serializable{
 	private Date fechaVenta;
 	
 	@Column(name="total")
-	private float total;
+	private double total;
 	
 	@JoinColumn(name="cliente_id")
 	@ManyToOne
@@ -36,7 +36,7 @@ public class FacturaVenta implements Serializable{
 	private Persona empleadoId;
 
 
-	public FacturaVenta(int id, Date fechaVenta, float total, Persona clienteId, Persona empleadoId) {
+	public FacturaVenta(int id, Date fechaVenta, double total, Persona clienteId, Persona empleadoId) {
 		super();
 		this.id = id;
 		this.fechaVenta = fechaVenta;
@@ -71,12 +71,12 @@ public class FacturaVenta implements Serializable{
 	}
 
 
-	public float getTotal() {
+	public double getTotal() {
 		return total;
 	}
 
 
-	public void setTotal(float total) {
+	public void setTotal(double total) {
 		this.total = total;
 	}
 

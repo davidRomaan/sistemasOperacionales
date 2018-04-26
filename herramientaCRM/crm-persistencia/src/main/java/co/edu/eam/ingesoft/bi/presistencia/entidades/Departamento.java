@@ -7,11 +7,21 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="DEPARTAMENTO")
+@NamedQueries({
+	@NamedQuery(name=Departamento.LISTAR, query="SELECT d FROM Departamento d")
+})
 public class Departamento implements Serializable{
+	
+	/**
+	 * Lista los departamentos registrados en la base de datos
+	 */
+	public static final String LISTAR = "Depto.listar";
 
 	@Id
 	@Column(name="id")
