@@ -15,7 +15,6 @@ import javax.persistence.Query;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Lote;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Producto;
 
-@LocalBean
 @Stateless
 public class ProductoEJB {
 	

@@ -55,20 +55,20 @@
 					action="#{controladorProducto.registrar}" />
 
 				<p:commandButton id="btnEditar" value="Editar"
-					process="@this, panelDatos" update="panelDatos"
+					process="@this,panelDatos" update="panelDatos"
 					action="#{controladorProducto.editar}" />
 
 				<p:commandButton id="btnListar" value="Listar"
-					process="@this, panelTabla" update="panelTabla"
+					process="@this,panelTabla" update="panelTabla"
 					action="#{controladorProducto.listar}" />
 
 				<p:commandButton id="btnEliminar" value="Eliminar"
-					process="@this, panelDatos" update="panelDatos, panelCodigo"
+					process="@this,panelDatos" update="panelDatos,panelCodigo"
 					action="#{controladorProducto.eliminar}" />
 
 			</h:panelGrid>
 
-			<h:panelGrid id="panelTabla" columns="5">
+			<h:panelGrid id="panelTabla" columns="4">
 
 				<p:dataTable id="tablaProductos"
 					value="#{controladorProducto.productos}" var="producto" border="1">
