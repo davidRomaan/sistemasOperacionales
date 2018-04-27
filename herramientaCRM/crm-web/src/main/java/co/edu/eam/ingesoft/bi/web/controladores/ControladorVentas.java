@@ -1,6 +1,7 @@
 package co.edu.eam.ingesoft.bi.web.controladores;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import co.edu.eam.ingesoft.bi.negocio.beans.DepartamentoEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.ProductoEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.UsuarioEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.VentaEJB;
+import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.persistencia.enumeraciones.Genero;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Departamento;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.DetalleVenta;
@@ -38,6 +40,10 @@ public class ControladorVentas implements Serializable{
 	private Departamento deptoSeleccionado;
 	private Municipio municipioSeleccionado;
 	
+	//Cliente que va a reliazar la compra
+	Usuario cliente;
+	private boolean clienteExiste;
+	
 	private List<Departamento> departamentos;
 	private List<Municipio> municipios;
 	
@@ -46,8 +52,12 @@ public class ControladorVentas implements Serializable{
 	private List<DetalleVenta> productosCompra;
 	private List<Producto> productos;
 	
+	DetalleVenta detalleAgregar;
+	
 	FacturaVenta factura;
 	double totalVenta = 0;
+	
+	private boolean btnAgregarCarritoSeleccionado;
 	
 	//EJB
 	@EJB
@@ -63,7 +73,7 @@ public class ControladorVentas implements Serializable{
 	private DepartamentoEJB departamentoEJB;
 	
 	/**
-	 * Carga los elementos al inicar la página
+	 * Carga los elementos al iniciar la página
 	 */
 	@PostConstruct
 	private void cargarElementos(){
@@ -88,21 +98,8 @@ public class ControladorVentas implements Serializable{
 	/**
 	 * Lista los muncipios del departamento seleccionado
 	 */
-	private void listarMunicipios(){
+	public void listarMunicipios(){
 		municipios = departamentoEJB.listarMunicipiosDepartamento(deptoSeleccionado.getId());
-	}
-	
-	/**
-	 * registra la venta
-	 */
-	public void vender(){
-		crearFactura();
-		ventaEJB.registrarVenta(factura);
-		registrarDetallesVenta();
-		
-		FacesContext.getCurrentInstance().addMessage(null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, "La venta se ha registrado exitosamente", null));
-		
 	}
 	
 	/**
@@ -121,18 +118,24 @@ public class ControladorVentas implements Serializable{
 	 * @param p Producto que se desea comprar
 	 */
 	public void crearDetalleVenta(Producto p){
-		DetalleVenta dv = new DetalleVenta();
-		dv.setProductoId(p);
-		agregarCantidad(dv);
+		btnAgregarCarritoSeleccionado = true;
+		detalleAgregar = new DetalleVenta();
+		detalleAgregar.setProductoId(p);
 	}
 	
 	/**
 	 * Se agrega la cantidad del producto que se desea vender
-	 * @param detalle detalle venta con el producto que se desea vender
 	 */
-	public void agregarCantidad(DetalleVenta detalle){
-		detalle.setCantidad(cantidad);
-		sumarTotalVenta(cantidad, detalle.getProductoId().getValorProducto());
+	public void agregarCantidad(){
+		detalleAgregar.setCantidad(cantidad);
+		sumarTotalVenta(cantidad, detalleAgregar.getProductoId().getValorProducto());
+		productosCompra.add(detalleAgregar);
+		detalleAgregar = null;
+	}
+	
+	public void eliminarDetalleVenta (DetalleVenta dv){
+		restarTotalVenta(dv);
+		productosCompra.remove(dv);
 	}
 	
 	/**
@@ -155,42 +158,105 @@ public class ControladorVentas implements Serializable{
 		totalVenta += valorProductos;
 	}
 	
+	private void limpiarCampos(){
+		
+		productosCompra = new ArrayList<DetalleVenta>();
+		nombre = "";
+		apellido = "";
+		correo = "";
+		telefono = "";
+		cedula = "";
+		totalVenta = 0;
+		cliente = null;
+		
+	}
+	
 	/**
 	 * Crea la factura que se asiganará a los detalle venta
 	 */
-	public void crearFactura(){
+	public void vender(){
 		
 		factura = new FacturaVenta();
 		
-		Usuario cliente = buscarCliente();
 		if (cliente != null){
 			factura.setClienteId(cliente);
-		} else {
-			cliente = new Usuario();
-			cliente.setApellido(apellido);
-			cliente.setNombre(nombre);
-			cliente.setCedula(cedula);
-			cliente.setCorreo(correo);
-			cliente.setTelefono(telefono);
-			cliente.setMunicipio(municipioSeleccionado);
+			factura.setFechaVenta(new Date());
+			factura.setTotal(totalVenta);
 			
-			//Genero
-			TipoUsuario tipoUsuario = new TipoUsuario();
-			tipoUsuario.setId(3);
-			cliente.setTipoUsuario(tipoUsuario);
+			ventaEJB.registrarVenta(factura);
+			
+			registrarDetallesVenta();
+			
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, 
+							"La venta se ha registrado exitosamente", null));
+			
+			limpiarCampos();
+			
+		} else {
+			
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+							"Debe buscar o registrar un cliente previamente", null));
+			
 		}
 		
-		factura.setFechaVenta(new Date());
-		factura.setTotal(totalVenta);
+	}
+	
+	/**
+	 * Registra un cliente
+	 */
+	public void registrarCliente(){
+		
+		cliente = new Usuario();
+		cliente.setApellido(apellido);
+		cliente.setNombre(nombre);
+		cliente.setCedula(cedula);
+		cliente.setCorreo(correo);
+		cliente.setTelefono(telefono);
+		cliente.setMunicipio(municipioSeleccionado);
+		
+		//Genero
+		TipoUsuario tipoUsuario = new TipoUsuario();
+		tipoUsuario.setId(3);
+		cliente.setTipoUsuario(tipoUsuario);
+		
+		try{
+		usuarioEJB.registrarUsuario(cliente);
+		clienteExiste = true;
+		
+		} catch (ExcepcionNegocio e){
+			
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), null));
+			
+		}
 		
 	}
 	
 	/**
 	 * Busca un cliente
-	 * @return el cliente si lo encuetra, de lo contrario null
 	 */
-	private Usuario buscarCliente(){
-		return usuarioEJB.buscarCliente(cedula);
+	public void buscarCliente(){
+		cliente = usuarioEJB.buscarCliente(cedula);
+		if (cliente != null){
+			
+			clienteExiste = true;
+			
+			nombre = cliente.getNombre();
+			apellido = cliente.getApellido();
+			correo = cliente.getCorreo();
+			telefono = cliente.getTelefono();
+			municipioSeleccionado = cliente.getMunicipio();
+			
+		} else {
+			
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_WARN, 
+							"El cliente no se encuentra registrado, "
+							+ "este debe ser registrado para continuar con la venta", null));
+			
+		}
 	}
 	
 	
@@ -247,6 +313,62 @@ public class ControladorVentas implements Serializable{
 	}
 	public void setProductos(List<Producto> productos) {
 		this.productos = productos;
+	}
+
+	public Departamento getDeptoSeleccionado() {
+		return deptoSeleccionado;
+	}
+
+	public void setDeptoSeleccionado(Departamento deptoSeleccionado) {
+		this.deptoSeleccionado = deptoSeleccionado;
+	}
+
+	public Municipio getMunicipioSeleccionado() {
+		return municipioSeleccionado;
+	}
+
+	public void setMunicipioSeleccionado(Municipio municipioSeleccionado) {
+		this.municipioSeleccionado = municipioSeleccionado;
+	}
+
+	public List<Departamento> getDepartamentos() {
+		return departamentos;
+	}
+
+	public void setDepartamentos(List<Departamento> departamentos) {
+		this.departamentos = departamentos;
+	}
+
+	public List<Municipio> getMunicipios() {
+		return municipios;
+	}
+
+	public void setMunicipios(List<Municipio> municipios) {
+		this.municipios = municipios;
+	}
+
+	public double getTotalVenta() {
+		return totalVenta;
+	}
+
+	public void setTotalVenta(double totalVenta) {
+		this.totalVenta = totalVenta;
+	}
+
+	public boolean isClienteExiste() {
+		return clienteExiste;
+	}
+
+	public void setClienteExiste(boolean clienteExiste) {
+		this.clienteExiste = clienteExiste;
+	}
+
+	public boolean isBtnAgregarCarritoSeleccionado() {
+		return btnAgregarCarritoSeleccionado;
+	}
+
+	public void setBtnAgregarCarritoSeleccionado(boolean btnAgregarCarritoSeleccionado) {
+		this.btnAgregarCarritoSeleccionado = btnAgregarCarritoSeleccionado;
 	}
 	
 	

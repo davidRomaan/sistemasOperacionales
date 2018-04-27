@@ -1,0 +1,168 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" template="/templates/index.xhtml">
+
+
+	<ui:define name="cuerpo">
+		<h:form prependId="false">
+
+			<h:panelGrid id="panelTabla" columns="1" width="80%">
+
+				<p:dataTable id="tablaProductos"
+					value="#{controladorVentas.productos}" var="producto" border="1">
+
+					<p:column headerText="Id ">
+						<h:outputLabel value="#{producto.id}" />
+					</p:column>
+
+					<p:column headerText="Nombre ">
+						<h:outputLabel value="#{producto.nombre}" />
+					</p:column>
+
+					<p:column headerText="Precio ">
+						<h:outputLabel value="#{producto.valorProducto}" />
+					</p:column>
+
+					<p:column headerText="Acción">
+						<p:commandButton value="Agregar al carrito"
+							process="@this,tablaProductos" update="tablaProductos"
+							action="#{controladorVentas.crearDetalleVenta}" />
+					</p:column>
+
+				</p:dataTable>
+
+			</h:panelGrid>
+
+			<h:panelGrid id="panelCantidad" columns="3" style="margin-top: 10px"
+				rendered="#{controladorVentas.btnAgregarCarritoSeleccionado}">
+
+				<p:outputLabel for="tfcantidad" value="Cantidad a comprar " />
+				<h:inputText value="#{controladorVentas.cantidad}" id="tfcantidad" />
+				<p:message for="tfcantidad" />
+
+				<p:commandButton value="Agregar al carrito" process="@this"
+					update="panelTablaDetalles"
+					action="#{controladorVentas.agregarCantidad}" />
+
+			</h:panelGrid>
+			<br />
+
+			<p:outputLabel id="lblTotal" style="color: green"
+				value="Total Venta: $#{controladorVentas.totalVenta}" /> <br/>
+
+			<h:panelGrid id="panelTablaDetalles" columns="1">
+
+				<p:dataTable id="tablaProductosSeleccionados"
+					value="#{controladorVentas.productosCompra}" var="producto"
+					border="1">
+
+					<p:column headerText="Id ">
+						<h:outputLabel value="#{producto.id}" />
+					</p:column>
+
+					<p:column headerText="Nombre ">
+						<h:outputLabel value="#{producto.nombre}" />
+					</p:column>
+
+					<p:column headerText="Precio ">
+						<h:outputLabel value="#{producto.valorProducto}" />
+					</p:column>
+
+					<p:column headerText="Cantidad">
+						<h:outputLabel value="#{producto.cantidad}]" />
+					</p:column>
+
+					<p:column headerText="Acción">
+						<p:commandButton value="Quitar"
+							process="@this,tablaProductosSeleccionados"
+							update="tablaProductosSeleccionados"
+							action="#{controladorVentas.eliminarDetalleVenta}" />
+					</p:column>
+
+				</p:dataTable>
+
+			</h:panelGrid> <br/>
+
+			<p:outputLabel value="Datos del cliente" />
+
+			<h:panelGrid columns="4" id="panelCedula">
+
+				<p:outputLabel for="tfcedulaCliente"
+					value="Número de identificación " />
+				<h:inputText value="#{controladorVentas.cedula}"
+					id="tfcedulaCliente" />
+				<p:message for="tfcedulaCliente" />
+
+				<p:commandButton value="Buscar" process="@this"
+					update="panelDatosCliente"
+					action="#{controladorVentas.buscarCliente}" />
+
+			</h:panelGrid>
+
+			<h:panelGrid columns="3" id="panelDatosCliente">
+
+				<p:outputLabel for="tfnombre" value="Nombre: " />
+				<h:inputText value="#{controladorVentas.nombre}" id="tfnombre"
+					placeholder="Ingrese el nombre" />
+				<p:message for="tfnombre" />
+
+				<p:outputLabel for="tfapellido" value="Apellido: " />
+				<h:inputText value="#{controladorVentas.apellido}" id="tfapellido"
+					placeholder="Ingrese el apellido" />
+				<p:message for="tfapellido" />
+
+				<p:outputLabel for="tfcorreo" value="Correo: " />
+				<h:inputText value="#{controladorVentas.correo}" id="tfcorreo"
+					placeholder="Ingrese el correo" />
+				<p:message for="tfcorreo" />
+
+				<p:outputLabel for="tftelefono" value="Telefono: " />
+				<h:inputText value="#{controladorVentas.telefono}" id="tftelefono"
+					placeholder="Ingrese el telefono" />
+				<p:message for="tftelefono" />
+
+				<h:outputLabel for="cbDepto" id="lbDepto" value="Departamento: " />
+				<h:selectOneMenu id="cbDepto"
+					valueChangeListener="#{controladorVentas.listarMunicipios}"
+					immediate="true" value="#{controladorVentas.deptoSeleccionado}">
+
+					<f:selectItems value="#{controladorVentas.departamentos}"
+						var="depto" itemValue="#{depto}" itemLabel="#{depto.nombre}" />
+
+				</h:selectOneMenu>
+				<p:message for="cbDepto" />
+
+				<h:outputLabel for="cbmunicipio" id="lbmunicipio"
+					value="Municipio: " />
+				<h:selectOneMenu id="cbmunicipio"
+					value="#{controladorVentas.municipioSeleccionado}">
+
+					<f:selectItems value="#{controladorVentas.municipios}"
+						var="municipio" itemValue="#{municipio}"
+						itemLabel="#{municipio.nombre}" />
+
+				</h:selectOneMenu>
+				<p:message for="cbmunicipio" />
+
+				<p:commandButton value="Registrar" process="@this,panelCedula"
+					update="@this,panelCedula"
+					action="#{controladorVentas.registrarCliente}" />
+
+			</h:panelGrid>
+
+			<h:panelGrid columns="1">
+
+				<p:outputLabel value="Total Venta: $#{controladorVentas.totalVenta}" />
+				<p:commandButton value="Vender"
+					process="@this,panelTabla,panelTablaDetalles,panelCedula,panelDatosCliente"
+					update="panelTabla,panelTablaDetalles,panelCedula,panelDatosCliente"
+					action="#{controladorVentas.vender}" />
+
+			</h:panelGrid>
+
+		</h:form>
+	</ui:define>
+
+</ui:composition>
