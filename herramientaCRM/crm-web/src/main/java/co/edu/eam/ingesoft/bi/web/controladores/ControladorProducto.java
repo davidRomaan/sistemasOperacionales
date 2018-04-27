@@ -13,6 +13,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Named;
 
 import co.edu.eam.ingesoft.bi.negocio.beans.ProductoEJB;
+import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Lote;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Producto;
 
@@ -46,6 +47,8 @@ public class ControladorProducto implements Serializable{
 	public void buscar(){
 		
 		productoBuscado = productoEJB.buscarProducto(codigo);
+		
+		System.out.println(productoBuscado.getDescripcion());
 		
 		if (productoBuscado != null){
 			
@@ -96,10 +99,6 @@ public class ControladorProducto implements Serializable{
 	 */
 	public void registrar(){	
 		
-		buscar();
-		
-		if (productoBuscado == null){
-		
 		Producto producto = new Producto();
 		producto.setId(codigo);
 		producto.setDimension(dimension);
@@ -109,19 +108,23 @@ public class ControladorProducto implements Serializable{
 		producto.setDescripcion(descripcion);
 		producto.setValorProducto(valor);
 		producto.setLote(loteSeleccionado);
+		
+		try{
+		
 		productoEJB.registrarProducto(producto);
 		
 		FacesContext.getCurrentInstance().addMessage(null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, 
 						"El producto ha sido registrado exitosamente", null));
 		
-		} else {
+		} catch (ExcepcionNegocio e){
 			
 			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Ya existe un producto con el código ingresado", null));
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), null));
 			
 		}
+			
+		
 		
 	}
 	

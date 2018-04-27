@@ -37,8 +37,8 @@ public class ControladorVentas implements Serializable{
 	private String correo;
 	private String telefono;
 	private Genero genero;
-	private Departamento deptoSeleccionado;
-	private Municipio municipioSeleccionado;
+	private int deptoSeleccionado;
+	private int municipioSeleccionado;
 	
 	//Cliente que va a reliazar la compra
 	Usuario cliente;
@@ -99,7 +99,7 @@ public class ControladorVentas implements Serializable{
 	 * Lista los muncipios del departamento seleccionado
 	 */
 	public void listarMunicipios(){
-		municipios = departamentoEJB.listarMunicipiosDepartamento(deptoSeleccionado.getId());
+		municipios = departamentoEJB.listarMunicipiosDepartamento(deptoSeleccionado);
 	}
 	
 	/**
@@ -214,7 +214,9 @@ public class ControladorVentas implements Serializable{
 		cliente.setCedula(cedula);
 		cliente.setCorreo(correo);
 		cliente.setTelefono(telefono);
-		cliente.setMunicipio(municipioSeleccionado);
+		
+		Municipio municipio = departamentoEJB.buscarMunicipio(municipioSeleccionado);
+		cliente.setMunicipio(municipio);
 		
 		//Genero
 		TipoUsuario tipoUsuario = new TipoUsuario();
@@ -247,7 +249,8 @@ public class ControladorVentas implements Serializable{
 			apellido = cliente.getApellido();
 			correo = cliente.getCorreo();
 			telefono = cliente.getTelefono();
-			municipioSeleccionado = cliente.getMunicipio();
+			deptoSeleccionado = cliente.getMunicipio().getDepartamento().getId();			
+			municipioSeleccionado = cliente.getMunicipio().getId();
 			
 		} else {
 			
@@ -315,19 +318,19 @@ public class ControladorVentas implements Serializable{
 		this.productos = productos;
 	}
 
-	public Departamento getDeptoSeleccionado() {
+	public int getDeptoSeleccionado() {
 		return deptoSeleccionado;
 	}
 
-	public void setDeptoSeleccionado(Departamento deptoSeleccionado) {
+	public void setDeptoSeleccionado(int deptoSeleccionado) {
 		this.deptoSeleccionado = deptoSeleccionado;
 	}
 
-	public Municipio getMunicipioSeleccionado() {
+	public int getMunicipioSeleccionado() {
 		return municipioSeleccionado;
 	}
 
-	public void setMunicipioSeleccionado(Municipio municipioSeleccionado) {
+	public void setMunicipioSeleccionado(int municipioSeleccionado) {
 		this.municipioSeleccionado = municipioSeleccionado;
 	}
 

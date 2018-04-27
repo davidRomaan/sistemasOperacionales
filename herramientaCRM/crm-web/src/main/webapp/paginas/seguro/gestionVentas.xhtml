@@ -28,7 +28,7 @@
 					<p:column headerText="Acción">
 						<p:commandButton value="Agregar al carrito"
 							process="@this,tablaProductos" update="tablaProductos"
-							action="#{controladorVentas.crearDetalleVenta}" />
+							action="#{controladorVentas.crearDetalleVenta(producto)}" />
 					</p:column>
 
 				</p:dataTable>
@@ -36,7 +36,7 @@
 			</h:panelGrid>
 
 			<h:panelGrid id="panelCantidad" columns="3" style="margin-top: 10px"
-				rendered="#{controladorVentas.btnAgregarCarritoSeleccionado}">
+				rendered="#{controladorVentas.isBtnAgregarCarritoSeleccionado}">
 
 				<p:outputLabel for="tfcantidad" value="Cantidad a comprar " />
 				<h:inputText value="#{controladorVentas.cantidad}" id="tfcantidad" />
@@ -129,7 +129,7 @@
 					immediate="true" value="#{controladorVentas.deptoSeleccionado}">
 
 					<f:selectItems value="#{controladorVentas.departamentos}"
-						var="depto" itemValue="#{depto}" itemLabel="#{depto.nombre}" />
+						var="depto" itemValue="#{depto.id}" itemLabel="#{depto.nombre}" />
 
 				</h:selectOneMenu>
 				<p:message for="cbDepto" />
