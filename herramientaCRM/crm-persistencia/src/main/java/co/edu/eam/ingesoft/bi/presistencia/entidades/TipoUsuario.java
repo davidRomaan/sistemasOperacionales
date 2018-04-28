@@ -7,12 +7,29 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "TIPO_USUARIO")
+@NamedQueries({
+	@NamedQuery(name=TipoUsuario.BUSCAR_NOMBRE, query="SELECT tp FROM TipoUsuario tp WHERE tp.nombre = ?1"),
+	@NamedQuery(name=TipoUsuario.LISTAR, query="SELECT tp FROM TipoUsuario tp")
+})
 public class TipoUsuario implements Serializable{
 
+	/**
+	 * Busca un tipo de usuario por el nombre
+	 * 1? nombre del tipo usuario a buscar
+	 */
+	public static final String BUSCAR_NOMBRE = "TipoUsuario.buscarNombre";
+	
+	/**
+	 * Lista los tipos de usuario registrados
+	 */
+	public static final String LISTAR = "TipoUsuario.listar";
+	
 	@Id
 	@Column(name="id")
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -28,9 +45,8 @@ public class TipoUsuario implements Serializable{
 		// TODO Auto-generated constructor stub
 	}
 
-	public TipoUsuario(int id, String nombre, String descripcion) {
+	public TipoUsuario(String nombre, String descripcion) {
 		super();
-		this.id = id;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 	}
