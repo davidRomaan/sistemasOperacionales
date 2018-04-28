@@ -2,6 +2,7 @@ package co.edu.eam.ingesoft.bi.negocio.beans;
 
 import java.util.List;
 
+import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -9,6 +10,7 @@ import javax.persistence.PersistenceContext;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Usuario;
 
+@LocalBean
 @Stateless
 public class UsuarioEJB {
 

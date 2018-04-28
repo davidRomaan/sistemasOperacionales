@@ -16,6 +16,7 @@ import co.edu.eam.ingesoft.bi.negocio.beans.ProductoEJB;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Lote;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Producto;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.TipoProducto;
 
 @Named("controladorProducto")
 @SessionScoped
@@ -28,17 +29,26 @@ public class ControladorProducto implements Serializable{
 	private double dimension;
 	private double valor;
 	private List<Lote> lotes;
-	private Lote loteSeleccionado;
+	private int loteSeleccionado;
 	private List<Producto> productos;
-	
+	private List<TipoProducto> tiposProducto;
 	private Producto productoBuscado;
+	private int tipoProductoSeleccionado;
 	
 	@EJB
 	private ProductoEJB productoEJB;
 	
 	@PostConstruct
-	private void listarLotes(){
+	private void cargarDatos(){
 		lotes = productoEJB.lotes();
+		listarTiposProducto();
+	}
+	
+	/**
+	 * Lista los tipos de producto registrados
+	 */
+	private void listarTiposProducto(){
+		tiposProducto = productoEJB.listarTiposProducto();
 	}
 	
 	/**
@@ -57,7 +67,7 @@ public class ControladorProducto implements Serializable{
 			peso = productoBuscado.getPeso();
 			dimension = productoBuscado.getDimension();
 			valor = productoBuscado.getValorProducto();
-			loteSeleccionado = productoBuscado.getLote();
+			loteSeleccionado = productoBuscado.getLote().getId();
 			
 		} else {
 			
@@ -81,7 +91,7 @@ public class ControladorProducto implements Serializable{
 			productoBuscado.setDescripcion(descripcion);
 			productoBuscado.setNombre(nombre);
 			productoBuscado.setDimension(dimension);
-			productoBuscado.setLote(loteSeleccionado);
+			productoBuscado.setLote(productoEJB.buscarloteProducto(loteSeleccionado));
 			productoBuscado.setValorProducto(valor);
 			productoBuscado.setPeso(peso);
 			
@@ -107,7 +117,7 @@ public class ControladorProducto implements Serializable{
 		producto.setNombre(nombre);
 		producto.setDescripcion(descripcion);
 		producto.setValorProducto(valor);
-		producto.setLote(loteSeleccionado);
+		producto.setLote(productoEJB.buscarloteProducto(loteSeleccionado));
 		
 		try{
 		
@@ -186,11 +196,11 @@ public class ControladorProducto implements Serializable{
 		this.lotes = lotes;
 	}
 
-	public Lote getLoteSeleccionado() {
+	public int getLoteSeleccionado() {
 		return loteSeleccionado;
 	}
 
-	public void setLoteSeleccionado(Lote loteSeleccionado) {
+	public void setLoteSeleccionado(int loteSeleccionado) {
 		this.loteSeleccionado = loteSeleccionado;
 	}
 
@@ -208,6 +218,22 @@ public class ControladorProducto implements Serializable{
 
 	public void setProductos(List<Producto> productos) {
 		this.productos = productos;
+	}
+
+	public List<TipoProducto> getTiposProducto() {
+		return tiposProducto;
+	}
+
+	public void setTiposProducto(List<TipoProducto> tiposProducto) {
+		this.tiposProducto = tiposProducto;
+	}
+
+	public int getTipoProductoSeleccionado() {
+		return tipoProductoSeleccionado;
+	}
+
+	public void setTipoProductoSeleccionado(int tipoProductoSeleccionado) {
+		this.tipoProductoSeleccionado = tipoProductoSeleccionado;
 	}
 	
 	

@@ -42,7 +42,16 @@
 					value="#{controladorProducto.loteSeleccionado}">
 
 					<f:selectItems value="#{controladorProducto.lotes}" var="lote"
-						itemValue="#{lote}" itemLabel="#{lote.descripcion}" />
+						itemValue="#{lote.id}" itemLabel="#{lote.descripcion}" />
+
+				</h:selectOneMenu>
+				
+				<h:outputLabel for="cbtipoProds" id="lbtiposProd" value="Seleccione el tipo de producto " />
+				<h:selectOneMenu id="cbtipoProds"
+					value="#{controladorProducto.tipoProductoSeleccionado}">
+
+					<f:selectItems value="#{controladorProducto.tiposProducto}" var="tipo"
+						itemValue="#{tipo.id}" itemLabel="#{tipo.nombre}" />
 
 				</h:selectOneMenu>
 

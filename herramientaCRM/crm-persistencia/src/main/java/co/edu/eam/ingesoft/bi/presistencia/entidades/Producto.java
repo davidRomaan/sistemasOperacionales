@@ -56,13 +56,14 @@ public class Producto implements Serializable{
 	@JoinColumn(name="usuario_persona_id")
 	@ManyToOne
 	private Persona usuairoPersonaId;
-
-
 	
+	@JoinColumn(name="tipo_producto_id")
+	@ManyToOne
+	private TipoProducto tipoProducto;
 
 
 	public Producto(int id, String nombre, String descripcion, Date fechaIngreso, double peso, double dimension,
-			double valorProducto, Lote loteId, Persona usuairoPersonaId) {
+			double valorProducto, Lote loteId, Persona usuairoPersonaId, TipoProducto tipoProducto) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
@@ -73,6 +74,7 @@ public class Producto implements Serializable{
 		this.valorProducto = valorProducto;
 		this.lote = loteId;
 		this.usuairoPersonaId = usuairoPersonaId;
+		this.tipoProducto = tipoProducto;
 	}
 
 
@@ -168,6 +170,16 @@ public class Producto implements Serializable{
 
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
+	}
+
+
+	public TipoProducto getTipoProducto() {
+		return tipoProducto;
+	}
+
+
+	public void setTipoProducto(TipoProducto tipoProducto) {
+		this.tipoProducto = tipoProducto;
 	}
 	
 	

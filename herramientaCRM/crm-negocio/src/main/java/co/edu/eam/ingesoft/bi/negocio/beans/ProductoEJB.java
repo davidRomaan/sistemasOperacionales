@@ -15,7 +15,9 @@ import javax.persistence.Query;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Lote;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Producto;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.TipoProducto;
 
+@LocalBean
 @Stateless
 public class ProductoEJB {
 
@@ -31,6 +33,17 @@ public class ProductoEJB {
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void editarProducto(Producto producto) {
 		em.merge(producto);
+	}
+	
+	/**
+	 * Lista los tipos de producto regstrados en la base de datos
+	 * @return la lista de tipos de producto registrados
+	 */
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	public List<TipoProducto> listarTiposProducto(){
+		Query q = em.createNamedQuery(TipoProducto.LISTAR);
+		List<TipoProducto> tipos = q.getResultList();
+		return tipos;
 	}
 
 	/**
@@ -56,10 +69,20 @@ public class ProductoEJB {
 	 *            id del producto a buscar
 	 * @return el producto si lo encuentra, de lo contrario null
 	 */
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public Producto buscarProducto(int id) {
 		// TODO Auto-generated method stub
 		return em.find(Producto.class, id);
+	}
+	
+	/**
+	 * Busca el lote de un producto en la base de datos
+	 * @param codigo código del lote
+	 * @return el lote si lo encuetra, de lo contrario null
+	 */
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	public Lote buscarloteProducto(int codigo){
+		return em.find(Lote.class, codigo);
 	}
 
 	/**

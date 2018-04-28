@@ -1,5 +1,6 @@
 package co.edu.eam.ingesoft.bi.negocio.beans;
 
+import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -7,6 +8,7 @@ import javax.persistence.PersistenceContext;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.DetalleVenta;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.FacturaVenta;
 
+@LocalBean
 @Stateless
 public class VentaEJB {
 
