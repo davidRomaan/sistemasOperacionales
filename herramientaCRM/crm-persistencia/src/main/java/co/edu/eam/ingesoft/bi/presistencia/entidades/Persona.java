@@ -14,6 +14,8 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -23,7 +25,12 @@ import co.edu.eam.ingesoft.bi.persistencia.enumeraciones.Genero;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "PERSONA")
+@NamedQueries({
+	@NamedQuery(name=Persona.LISTA_PERSONA, query="SELECT p FROM Persona p"),
+})
 public class Persona implements Serializable{
+	
+	public static final String LISTA_PERSONA = "lista.persona";
 
 	@Id
 	@Column(name = "cedula", nullable = false)

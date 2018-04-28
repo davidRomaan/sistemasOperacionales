@@ -16,7 +16,9 @@ import javax.persistence.Table;
 @Entity
 @Table(name="MUNICIPIO")
 @NamedQueries({
-	@NamedQuery(name=Municipio.LISTAR_MUNICIPIO_DEPTO, query="SELECT m FROM Municipio m WHERE m.departamento = ?1")
+	@NamedQuery(name=Municipio.LISTAR_MUNICIPIO_DEPTO, query="SELECT m FROM Municipio m WHERE m.departamento = ?1"),
+	@NamedQuery(name=Municipio.LISTAR_MUNICIPIO, query="SELECT m FROM Municipio m"),
+	@NamedQuery(name=Municipio.LISTAR_MUNICIPIO_NOM, query="SELECT m FROM Municipio m WHERE m.nombre = ?1")
 })
 public class Municipio implements Serializable{
 	
@@ -26,12 +28,15 @@ public class Municipio implements Serializable{
 	 */
 	public static final String LISTAR_MUNICIPIO_DEPTO = "municipio.listar";
 	
+	public static final String LISTAR_MUNICIPIO_NOM = "municipioNom.listar";
+	
+	public static final String LISTAR_MUNICIPIO = "municipioTodos.listar";
+	
 	@Id
 	@Column(name="id")
 	@GeneratedValue(strategy= GenerationType.AUTO)
 	private int id;
-	
-	
+
 	@Column(name="nombre")
 	private String nombre;
 	

@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" template="/templates/template.xhtml">
+
+
+	<ui:define name="cuerpoRegistro">
+		<h:form prependId="false">
+			<h:panelGrid id="panelDatos" columns="2">
+				
+				<h:outputLabel id="lblCedula" value="#{'Cedula'}" />
+				<h:inputText id="tfCedula" value="#{controladorPersona.cedula}" />
+
+				<h:outputLabel id="lblNombre" value="#{'Nombre'}" />
+				<h:inputText id="tfNombre" value="#{controladorPersona.nombre}" />
+
+				<h:outputLabel id="lblApellido" value="#{'Apellido'}" />
+				<h:inputText id="tfApellido" value="#{controladorCustomer.apellido}" />
+				
+				<h:outputLabel id="lblCorreo" value="#{'Correo'}" />
+				<h:inputText id="tfCorreo" value="#{controladorPersona.correo}" />
+
+				<h:outputLabel id="lblGenero"
+					value="#{'Genero'}" />
+				<h:selectOneMenu id="cbGenero"
+					value="#{controladorCustomer.tipoGenero}">
+
+					<f:selectItems value="#{controladorPersona.generos}"
+						var="genero" itemValue="#{genero}" itemLabel="#{genero}" />
+
+				</h:selectOneMenu>
+				
+				<h:outputLabel for="cbMunicipio" id="lbMunicipio"
+					value="#{'Municipio'}" />
+				<h:selectOneMenu id="cbMunicipios"
+					value="#{controladorPagoTarjeta.municipioSeleccinado}">
+
+					<f:selectItems value="#{controladorPersona.municipios}"
+						var="municipio" itemValue="#{municipio}" itemLabel="#{municipio.nombre}" />
+
+				</h:selectOneMenu>
+
+			</h:panelGrid>
+
+			<h:panelGrid id="panelBotones" columns="2">
+
+				<p:commandButton id="btnRegistrar"
+					value="#{'Registrar Persona'}" process="@this,panelDatos"
+					update="panelDatos" action="#{controladorPersona.registrar}" />
+
+			</h:panelGrid>
+		</h:form>
+	</ui:define>
+</ui:composition>
