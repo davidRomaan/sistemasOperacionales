@@ -17,62 +17,57 @@
 
 			<h:panelGrid id="panelRegistro" columns="2">
 
-				<h:outputLabel id="lblCodigo" value="Codigo: " />
-				<h:inputText id="tfCodigo" value="#{controladorAreas.codigo}" />
+				<h:outputLabel id="txflCodigo" value="Codigo: " />
+				<h:inputText value="#{controladorAreas.codigo}" id="lblCodigo" />
 
-				<h:outputLabel id="lblNombre" value="Nombre: " />
-				<h:inputText id="tfNombre" value="#{controladorAreas.nombre}" />
+				<h:outputLabel id="txfNombre" value="Nombre: " />
+				<h:inputText value="#{controladorAreas.nombre}" id="lblNombre" />
 
-				<h:outputLabel id="lblDesc" value="Descripcion: " />
-				<h:inputTextarea id="tfDescripcion"
-					value="#{controladorAreas.descripcion}" />
+				<h:outputLabel id="txflDesc" value="Descripcion: " />
+				<h:inputTextarea value="#{controladorAreas.descripcion}"
+					id="lblDesc" />
 
 				<br></br>
 				<br></br>
 
 				<p:commandButton id="btnRegistrar" value="Registrar" process="@this"
-					update="panelRegistro" action="#{controladorAreas.registrarArea()}" />
-
-				<p:commandButton id="btnbuscar" value="Buscar" process="@this"
-					update="panelRegistro" action="#{controladorAreas.buscarArea()}" />
+					update="@this" action="#{controladorAreas.registrarArea}" />
 
 
 			</h:panelGrid>
 
+
 			<br></br>
 			<br></br>
 
-			<h:panelGrid id="panelBotones" columns="4">
+			<h:panelGrid id="panelTabla" columns="4">
 
-				<p:dataTable id="tablaAreas" emptyMessage="Ningun resultado"
-					value="#{controladorAreas.areasEmpresa}" var="area"
-					filteredValue="#{controladorAreas.listaNueva}" border="3">
+				<p:dataTable id="tablaProductos"
+					value="#{controladorAreas.areasEmpresa}" var="area" border="1">
 
-					<p:column filterBy="#{area.id}" headerText="codigo">
-						<h:outputText value="#{area.id}">
-						</h:outputText>
+					<p:column headerText="Id ">
+						<h:outputLabel value="#{area.id}" />
 					</p:column>
 
-					<p:column headerText="Nombre">
-						<h:outputLabel value="#{area.nombre}"></h:outputLabel>
+					<p:column headerText="Nombre ">
+						<h:outputLabel value="#{area.nombre}" />
 					</p:column>
 
-					<p:column headerText="Descripcion">
-						<h:outputLabel value="#{area.descripcion}"></h:outputLabel>
+					<p:column headerText="Precio ">
+						<h:outputLabel value="#{area.descripcion}" />
 					</p:column>
 
-					<p:column headerText="Acciones">
-						<p:commandButton id="btnEditar" value="Editar"
-							process="@this,panelRegistro" update="panelRegistro"
-							action="#{controladorAreas.editarArea()}" />
-
-						<p:commandButton action="#{controladorAreas.eliminarArea(area)}"
-							process="@this" value="Eliminar" update="panelRegistro" />
-
+					<p:column headerText="Acción">
+						<p:commandButton value="Eliminar" process="@this,tablaProductos"
+							update="tablaProductos"
+							action="#{controladorAreas.eliminarArea(area)}" />
 					</p:column>
+
 				</p:dataTable>
 
 			</h:panelGrid>
+
+
 
 
 		</h:form>

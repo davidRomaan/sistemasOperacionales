@@ -37,7 +37,7 @@ public class ControladorPersona implements Serializable{
 	
 	private Genero tipoGenero;
 	
-	private String municipioSeleccinado;
+	private int municipioSeleccinado;
 	
 	private Persona personaBuscada;
 	
@@ -85,6 +85,13 @@ public class ControladorPersona implements Serializable{
 				new FacesMessage(FacesMessage.SEVERITY_INFO, 
 						"La persona ha sido registrada exitosamente", null));
 		
+		cedula = "";
+		nombre = "";
+		apellido = "";
+		correo = "";
+		telefono = "";
+		
+		
 		} else {
 			
 			FacesContext.getCurrentInstance().addMessage(null,
@@ -98,5 +105,128 @@ public class ControladorPersona implements Serializable{
 		
 	}
 
+
+	public String getCedula() {
+		return cedula;
+	}
+
+
+	public void setCedula(String cedula) {
+		this.cedula = cedula;
+	}
+
+
+	public String getNombre() {
+		return nombre;
+	}
+
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+
+	public String getApellido() {
+		return apellido;
+	}
+
+
+	public void setApellido(String apellido) {
+		this.apellido = apellido;
+	}
+
+
+	public String getTelefono() {
+		return telefono;
+	}
+
+
+	public void setTelefono(String telefono) {
+		this.telefono = telefono;
+	}
+
+
+	public String getCorreo() {
+		return correo;
+	}
+
+
+	public void setCorreo(String correo) {
+		this.correo = correo;
+	}
+
+
+	public Date getFechaNacimiento() {
+		return fechaNacimiento;
+	}
+
+
+	public void setFechaNacimiento(Date fechaNacimiento) {
+		this.fechaNacimiento = fechaNacimiento;
+	}
+
+
+	public Genero getTipoGenero() {
+		return tipoGenero;
+	}
+
+
+	public void setTipoGenero(Genero tipoGenero) {
+		this.tipoGenero = tipoGenero;
+	}
+
+
 	
+
+
+	public int getMunicipioSeleccinado() {
+		return municipioSeleccinado;
+	}
+
+
+	public void setMunicipioSeleccinado(int municipioSeleccinado) {
+		this.municipioSeleccinado = municipioSeleccinado;
+	}
+
+
+	public Persona getPersonaBuscada() {
+		return personaBuscada;
+	}
+
+
+	public void setPersonaBuscada(Persona personaBuscada) {
+		this.personaBuscada = personaBuscada;
+	}
+
+
+	public Municipio getMunicipioBuscado() {
+		return municipioBuscado;
+	}
+
+
+	public void setMunicipioBuscado(Municipio municipioBuscado) {
+		this.municipioBuscado = municipioBuscado;
+	}
+
+
+	public List<Municipio> getMunicipios() {
+		return municipios;
+	}
+
+
+	public void setMunicipios(List<Municipio> municipios) {
+		this.municipios = municipios;
+	}
+
+
+	public List<Genero> getGeneros() {
+		return generos;
+	}
+
+
+	public void setGeneros(List<Genero> generos) {
+		this.generos = generos;
+	}
+
+
 }
