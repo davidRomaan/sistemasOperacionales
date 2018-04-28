@@ -5,28 +5,28 @@
 	xmlns:p="http://primefaces.org/ui" template="/templates/index.xhtml">
 
 
-	<ui:define name="cuerpoRegistro">
+	<ui:define name="cuerpo">
 		<h:form prependId="false">
 			<h:panelGrid id="panelDatos" columns="2">
 				
-				<h:outputLabel id="lblCedula" value="#{'Cedula'}" />
-				<h:inputText id="tfCedula" value="#{controladorPersona.cedula}" />
+				<h:outputLabel id="lblCedula" value="Cedula" />
+				<h:inputText id="tfCedula" value="#{controladorPersonas.cedula}" />
 
-				<h:outputLabel id="lblNombre" value="#{'Nombre'}" />
-				<h:inputText id="tfNombre" value="#{controladorPersona.nombre}" />
+				<h:outputLabel id="lblNombre" value="Nombre" />
+				<h:inputText id="tfNombre" value="#{controladorPersonas.nombre}" />
 
-				<h:outputLabel id="lblApellido" value="#{'Apellido'}" />
-				<h:inputText id="tfApellido" value="#{controladorCustomer.apellido}" />
+				<h:outputLabel id="lblApellido" value="Apellido" />
+				<h:inputText id="tfApellido" value="#{controladorPersonas.apellido}" />
 				
-				<h:outputLabel id="lblCorreo" value="#{'Correo'}" />
-				<h:inputText id="tfCorreo" value="#{controladorPersona.correo}" />
+				<h:outputLabel id="lblCorreo" value="Correo" />
+				<h:inputText id="tfCorreo" value="#{controladorPersonas.correo}" />
 
 				<h:outputLabel id="lblGenero"
-					value="#{'Genero'}" />
+					value="Genero" />
 				<h:selectOneMenu id="cbGenero"
-					value="#{controladorCustomer.tipoGenero}">
+					value="#{controladorPersonas.tipoGenero}">
 
-					<f:selectItems value="#{controladorPersona.generos}"
+					<f:selectItems value="#{controladorPersonas.generos}"
 						var="genero" itemValue="#{genero}" itemLabel="#{genero}" />
 
 				</h:selectOneMenu>
@@ -34,10 +34,10 @@
 				<h:outputLabel for="cbMunicipio" id="lbMunicipio"
 					value="#{'Municipio'}" />
 				<h:selectOneMenu id="cbMunicipios"
-					value="#{controladorPagoTarjeta.municipioSeleccinado}">
+					value="#{controladorPersonas.municipioSeleccinado}">
 
-					<f:selectItems value="#{controladorPersona.municipios}"
-						var="municipio" itemValue="#{municipio}" itemLabel="#{municipio.nombre}" />
+					<f:selectItems value="#{controladorPersonas.municipios}"
+						var="municipio" itemValue="#{municipio.id}" itemLabel="#{municipio.nombre}" />
 
 				</h:selectOneMenu>
 
@@ -47,7 +47,7 @@
 
 				<p:commandButton id="btnRegistrar"
 					value="#{'Registrar Persona'}" process="@this,panelDatos"
-					update="panelDatos" action="#{controladorPersona.registrar}" />
+					update="panelDatos" action="#{controladorPersonas.registrar}" />
 
 			</h:panelGrid>
 		</h:form>

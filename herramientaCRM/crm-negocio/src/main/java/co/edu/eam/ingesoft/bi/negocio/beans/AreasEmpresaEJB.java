@@ -13,7 +13,7 @@ import javax.persistence.Query;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Area;
 
-@LocalBean
+
 @Stateless
 public class AreasEmpresaEJB {
 
@@ -24,7 +24,7 @@ public class AreasEmpresaEJB {
 	
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void registrarAreas(Area a) {
+	public void registrarAreas(Area a) throws ExcepcionNegocio {
 		Area buscado = buscarArea(a.getId());
 		if (buscado == null) {
 			em.persist(a);

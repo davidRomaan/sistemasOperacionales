@@ -11,6 +11,7 @@ import javax.inject.Named;
 import org.omnifaces.util.Messages;
 
 import co.edu.eam.ingesoft.bi.negocio.beans.AreasEmpresaEJB;
+import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Area;
 
 @Named("controladorAreas")
@@ -45,19 +46,23 @@ public class ControladorAreasEmpresa implements Serializable {
 
 	public void registrarArea() {
 
-		if (codigo == 0 || nombre.equals("") || descripcion.equals("")) {
-			Messages.addFlashGlobalInfo("Ingrese todos los campos");
-		} else {
+		//if (codigo == 0 || nombre.equals("") || descripcion.equals("")) {
+			//Messages.addFlashGlobalInfo("Ingrese todos los campos");
+		//} else {
 
 			Area a = new Area(codigo, nombre, descripcion);
+			try{
 			areas.registrarAreas(a);
 			Messages.addFlashGlobalInfo("Registro exitoso");
-
+			listarAreas();
 			codigo = 0;
 			nombre = "";
 			descripcion = "";
+			} catch (ExcepcionNegocio e){
+				Messages.addFlashGlobalError(e.getMessage());
+			}
 
-		}
+		//}
 
 	}
 
@@ -102,7 +107,7 @@ public class ControladorAreasEmpresa implements Serializable {
 	public void eliminarArea(Area a) {
 		areas.eliminarArea(a);
 		Messages.addFlashGlobalInfo("se elimino correctamente");
-		
+		listarAreas();
 	}
 
 	public int getCodigo() {

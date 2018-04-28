@@ -18,8 +18,8 @@ public class MunicipioEJB {
 	
 	
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-	public Municipio buscar(String nombre){
-		return em.find(Municipio.class, nombre);
+	public Municipio buscar(int id){
+		return em.find(Municipio.class, id);
 	}
 
 }
