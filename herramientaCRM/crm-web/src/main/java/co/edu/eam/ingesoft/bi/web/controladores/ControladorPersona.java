@@ -55,12 +55,8 @@ public class ControladorPersona implements Serializable{
 	
 	
 	@PostConstruct
-	public void listarMunicipios() {
+	public void listares() {
 		municipios = personaEJB.listaMunicipios();
-	}
-	
-	@PostConstruct
-	public void listarGeneros() {
 		generos = Arrays.asList(Genero.values());
 	}
 	
