@@ -75,7 +75,6 @@ public class ControladorPersona implements Serializable{
 			persona.setApellido(apellido);
 			persona.setTelefono(telefono);
 			persona.setCorreo(correo);
-			persona.setActivo(false);
 			persona.setGenero(tipoGenero);
 			persona.setMunicipio(municipioBuscado);
 			

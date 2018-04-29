@@ -16,7 +16,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="MUNICIPIO")
 @NamedQueries({
-	@NamedQuery(name=Municipio.LISTAR_MUNICIPIO_DEPTO, query="SELECT m FROM Municipio m WHERE m.departamento = ?1"),
+	@NamedQuery(name=Municipio.LISTAR_MUNICIPIO_DEPTO, query="SELECT m FROM Municipio m WHERE m.departamento.id = ?1"),
 	@NamedQuery(name=Municipio.LISTAR_MUNICIPIO, query="SELECT m FROM Municipio m"),
 	@NamedQuery(name=Municipio.LISTAR_MUNICIPIO_NOM, query="SELECT m FROM Municipio m WHERE m.nombre = ?1")
 })

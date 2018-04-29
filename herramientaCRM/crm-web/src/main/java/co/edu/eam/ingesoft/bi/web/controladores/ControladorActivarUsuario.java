@@ -17,6 +17,7 @@ import co.edu.eam.ingesoft.bi.negocio.beans.UsuarioEJB;
 import co.edu.eam.ingesoft.bi.persistencia.enumeraciones.Genero;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Municipio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Persona;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.Usuario;
 
 @Named("controladorActivar")
 @SessionScoped
@@ -65,7 +66,7 @@ public class ControladorActivarUsuario implements Serializable {
 
 	public void activarUsuario(Persona per) {
 
-		Persona p = usuarioEJB.buscarUsuarioCedula(per.getCedula());
+		Usuario p = usuarioEJB.buscarUsuarioCedula(per.getCedula());
 
 		if (p != null) {
 			if (p.isActivo() == true) {
@@ -84,7 +85,7 @@ public class ControladorActivarUsuario implements Serializable {
 
 	public void desactivarUsuario(Persona per) {
 
-		Persona p = usuarioEJB.buscarUsuarioCedula(per.getCedula());
+		Usuario p = usuarioEJB.buscarUsuarioCedula(per.getCedula());
 		if (p != null) {
 			if (p.isActivo() == true) {
 				p.setActivo(false);
