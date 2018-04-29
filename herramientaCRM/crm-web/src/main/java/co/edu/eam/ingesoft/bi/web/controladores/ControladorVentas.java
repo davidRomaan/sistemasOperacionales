@@ -10,6 +10,7 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import co.edu.eam.ingesoft.bi.negocio.beans.DepartamentoEJB;
@@ -30,6 +31,10 @@ import co.edu.eam.ingesoft.bi.presistencia.entidades.Usuario;
 @SessionScoped
 public class ControladorVentas implements Serializable{
 
+	//Empleado que inció sesión
+	@Inject
+	private ControladorSesion sesion;
+	
 	//Datos cliente
 	private String cedula;
 	private String nombre;
@@ -189,6 +194,7 @@ public class ControladorVentas implements Serializable{
 			factura.setClienteId(cliente);
 			factura.setFechaVenta(new Date());
 			factura.setTotal(totalVenta);
+			factura.setEmpleadoId(sesion.getUser());
 			
 			ventaEJB.registrarVenta(factura);
 			

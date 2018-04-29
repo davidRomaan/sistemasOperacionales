@@ -48,11 +48,11 @@
 					</p:column>
 
 					<p:column headerText="Acción">
-						<p:commandButton value="Editar" process="@this,tablaProductos"
+						<p:commandButton value="Editar" process="@this,tablaTipos"
 							update="panelDatos"
 							action="#{controladorTipoUsuario.habilitarEdicion(tipo)}" />
 
-						<p:commandButton value="Eliminar" process="@this,tablaProductos"
+						<p:commandButton value="Eliminar" process="@this,tablaTipos"
 							update="panelDatos"
 							action="#{controladorTipoUsuario.eliminarTipo(tipo)}" />
 					</p:column>
