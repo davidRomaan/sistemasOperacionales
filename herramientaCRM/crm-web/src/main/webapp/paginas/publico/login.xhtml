@@ -8,20 +8,23 @@
 	<ui:define name="cuerpo">
 		<h:form prependId="false">
 
-			<h:panelGrid columns="3">
+			<h:panelGrid id="panelDatos" columns="2">
 
-				
+
 				<p:outputLabel for="tfuser" value="Usuario :" />
 				<h:inputText value="#{controladorSesion.username}" id="tfuser" />
-				<p:message for="tfuser" />
 
 				<p:outputLabel for="tfpass" value="Contraseña :" />
 				<h:inputSecret value="#{controladorSesion.password}" id="tfpass" />
-				<p:message for="tfpass" />
 
-				<p:separator></p:separator>
+
+			</h:panelGrid>
+			<br></br>
+			<br></br>
+			<h:panelGrid id="panelBoton" columns="3">
 				<p:commandButton value="IniciarSesion" ajax="false"
-					action="#{controladorSesion.login}" />
+					process="panelDatos" action="#{controladorSesion.login}" />
+
 			</h:panelGrid>
 
 		</h:form>

@@ -11,6 +11,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Persona;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.Area;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Municipio;
 
 @LocalBean
@@ -43,6 +44,17 @@ public class PersonaEJB {
 			//throw new ExcepcionNegocio("El cliente que desea registrar ya se encuentra registrado");
 		}
 	}
+	
+
+	/**
+	 * edita una persona
+	 * @param p la persona que se va a editar
+	 */
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void editarPersona(Persona p) {
+		em.merge(p);
+	}
+	
 	
 	/**
 	 * 

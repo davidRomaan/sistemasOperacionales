@@ -37,6 +37,7 @@ public class ControladorSesion implements Serializable {
 				Faces.setSessionAttribute("user", user);
 				return "/paginas/admin/inicioAdministrador.xhtml?faces-redirect=true";
 			} else {
+				
 				user = usuarioTemporal;
 				Faces.setSessionAttribute("user", user);
 				return "/paginas/seguro/gestionProducto.xhtml?faces-redirect=true";
