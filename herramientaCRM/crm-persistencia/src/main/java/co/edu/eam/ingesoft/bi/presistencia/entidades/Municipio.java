@@ -16,7 +16,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="MUNICIPIO")
 @NamedQueries({
-	@NamedQuery(name=Municipio.LISTAR_MUNICIPIO_DEPTO, query="SELECT m FROM Municipio m WHERE m.departamento = ?1"),
+	@NamedQuery(name=Municipio.LISTAR_MUNICIPIO_DEPTO, query="SELECT m FROM Municipio m WHERE m.departamento.id = ?1"),
 	@NamedQuery(name=Municipio.LISTAR_MUNICIPIO, query="SELECT m FROM Municipio m"),
 	@NamedQuery(name=Municipio.LISTAR_MUNICIPIO_NOM, query="SELECT m FROM Municipio m WHERE m.nombre = ?1")
 })
@@ -24,11 +24,10 @@ public class Municipio implements Serializable{
 	
 	/**
 	 * Lista los municipios de un departamento registrados en la base de datos
-	 * ?1 codigo del departamento
 	 */
-	public static final String LISTAR_MUNICIPIO_DEPTO = "municipio.listar";
+	public static final String LISTAR_MUNICIPIO_DEPTO = "municipio.listarDepto";
 	
-	public static final String LISTAR_MUNICIPIO_NOM = "municipioNom.listar";
+	public static final String LISTAR_MUNICIPIO_NOM = "municipioNom.listarNom";
 	
 	public static final String LISTAR_MUNICIPIO = "municipioTodos.listar";
 	

@@ -17,16 +17,12 @@ public class Inventario implements Serializable{
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
 	
-	@Column(name="cantidad", length=30)
-	private int cantidad;
-	
 	@Column(name="descripcion")
 	private String descripcion;
 
 	public Inventario(int id, int cantidad, String descripcion) {
 		super();
 		this.id = id;
-		this.cantidad = cantidad;
 		this.descripcion = descripcion;
 	}
 
@@ -40,14 +36,6 @@ public class Inventario implements Serializable{
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public int getCantidad() {
-		return cantidad;
-	}
-
-	public void setCantidad(int cantidad) {
-		this.cantidad = cantidad;
 	}
 
 	public String getDescripcion() {
