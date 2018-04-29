@@ -27,7 +27,7 @@ public class TipoUsuarioEJB {
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void registrar(TipoUsuario tu){
 		if (buscar(tu.getNombre()) != null){
-			throw new ExcepcionNegocio("Ya existe un tipo de usuario con este nombre");
+			throw new ExcepcionNegocio("YA existe un tipo de usuario con este nombre");
 		} else {
 			em.persist(tu);
 		}
@@ -43,9 +43,6 @@ public class TipoUsuarioEJB {
 		Query q = em.createNamedQuery(TipoUsuario.BUSCAR_NOMBRE);
 		q.setParameter(1, nombre);
 		List<TipoUsuario> lista = q.getResultList();
-		if (lista.size() == 0){
-			return null;
-		}
 		return lista.get(0);
 	}
 	
@@ -66,7 +63,7 @@ public class TipoUsuarioEJB {
 	 */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void eliminar(TipoUsuario tu){
-		em.remove(em.merge(tu));
+		em.remove(tu);
 	}
 	
 	/**

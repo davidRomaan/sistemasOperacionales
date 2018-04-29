@@ -2,7 +2,6 @@ package co.edu.eam.ingesoft.bi.web.controladores;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -23,8 +22,6 @@ import co.edu.eam.ingesoft.bi.persistencia.enumeraciones.Genero;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Departamento;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.DetalleVenta;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.FacturaVenta;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.Inventario;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.InventarioProducto;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Municipio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Producto;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.TipoUsuario;
@@ -32,13 +29,13 @@ import co.edu.eam.ingesoft.bi.presistencia.entidades.Usuario;
 
 @Named("controladorVentas")
 @SessionScoped
-public class ControladorVentas implements Serializable {
+public class ControladorVentas implements Serializable{
 
-	// Empleado que inció sesión
+	//Empleado que inció sesión
 	@Inject
 	private ControladorSesion sesion;
-
-	// Datos cliente
+	
+	//Datos cliente
 	private String cedula;
 	private String nombre;
 	private String apellido;
@@ -48,164 +45,132 @@ public class ControladorVentas implements Serializable {
 	private int deptoSeleccionado;
 	private int municipioSeleccionado;
 	private List<Genero> generos;
-
-	// Cliente que va a reliazar la compra
+	
+	//Cliente que va a reliazar la compra
 	Usuario cliente;
-	private boolean mostrarDatosCliente;
-
+	private boolean clienteExiste;
+	
 	private List<Departamento> departamentos;
 	private List<Municipio> municipios;
-
-	// Datos venta
+	
+	//Datos venta
 	private int cantidad;
 	private List<DetalleVenta> productosCompra;
-	private List<InventarioProducto> productos;
-	private InventarioProducto inventarioProductoComprar;
-
+	private List<Producto> productos;
+	
 	DetalleVenta detalleAgregar;
-
+	
 	FacturaVenta factura;
 	double totalVenta = 0;
-
-	// EJB
+	
+	private boolean btnAgregarCarritoSeleccionado;
+	
+	//EJB
 	@EJB
 	private ProductoEJB productoEJB;
-
+	
 	@EJB
 	private UsuarioEJB usuarioEJB;
-
+	
 	@EJB
 	private VentaEJB ventaEJB;
-
+	
 	@EJB
 	private DepartamentoEJB departamentoEJB;
-
+	
 	/**
 	 * Carga los elementos al iniciar la página
 	 */
 	@PostConstruct
-	private void cargarElementos() {
+	private void cargarElementos(){
 		cargarProductos();
 		listarDepartamentos();
-		productosCompra = new ArrayList<DetalleVenta>();
-		generos = Arrays.asList(Genero.values());
-		municipios = departamentoEJB.listarMunicipiosDepartamento(departamentos.get(0).getId());
 	}
-
+	
 	/**
 	 * Carga la lista de productos
 	 */
-	private void cargarProductos() {
-		productos = productoEJB.listarInventariosProductos();
+	private void cargarProductos(){
+		productos = productoEJB.listarProductos();
 	}
-
+	
 	/**
 	 * Lista los departamentos registrados
 	 */
-	private void listarDepartamentos() {
+	private void listarDepartamentos (){
 		departamentos = departamentoEJB.listarDepartamentos();
 	}
-
+	
 	/**
 	 * Lista los muncipios del departamento seleccionado
 	 */
-	public void listarMunicipios() {
+	public void listarMunicipios(){
 		municipios = departamentoEJB.listarMunicipiosDepartamento(deptoSeleccionado);
 	}
-
+	
 	/**
 	 * Se asigna la fatura a cada uno de los detalles de venta
 	 */
-	private void registrarDetallesVenta() {
+	private void registrarDetallesVenta(){
 		for (DetalleVenta detalleVenta : productosCompra) {
-			detalleVenta.setFacturaVenta(factura);
-			// Registramos cada uno de los detalles venta
+			detalleVenta.setFacturaVentaId(factura);
+			//Registramos cada uno de los detalles venta
 			ventaEJB.registrarDetalleVenta(detalleVenta);
 		}
 	}
-
+	
 	/**
 	 * Se crea un detalle venta que será agregado al carrito
-	 * 
-	 * @param p
-	 *            InventarioProducto que se desea comprar
+	 * @param p Producto que se desea comprar
 	 */
-	public void crearDetalleVenta(InventarioProducto p) {
+	public void crearDetalleVenta(Producto p){
+		btnAgregarCarritoSeleccionado = true;
 		detalleAgregar = new DetalleVenta();
-		detalleAgregar.setProducto(p.getProductoId());
-		inventarioProductoComprar = p;
+		detalleAgregar.setProductoId(p);
 	}
-
+	
 	/**
 	 * Se agrega la cantidad del producto que se desea vender
 	 */
-	public void agregarCantidad() {
-		if (cantidad > 0) {
-			if (cantidad <= inventarioProductoComprar.getCantidad()) {
-				detalleAgregar.setCantidad(cantidad);
-				detalleAgregar.setSubtotal(detalleAgregar.getProducto().getValorProducto() * cantidad);
-				inventarioProductoComprar.setCantidad(inventarioProductoComprar.getCantidad() - cantidad);
-				sumarTotalVenta(cantidad, detalleAgregar.getProducto().getValorProducto());
-				productosCompra.add(detalleAgregar);
-				detalleAgregar = null;
-			} else {
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-						"No existe esta cantidad en el inventario", null));
-			}
-		} else {
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "La cantidad debe ser mayor a 0", null));
-		}
+	public void agregarCantidad(){
+		detalleAgregar.setCantidad(cantidad);
+		sumarTotalVenta(cantidad, detalleAgregar.getProductoId().getValorProducto());
+		productosCompra.add(detalleAgregar);
+		detalleAgregar = null;
+		btnAgregarCarritoSeleccionado = false;
 	}
-
-	/**
-	 * Para verificar si se seleccionó el botón agregar
-	 * 
-	 * @return true si se seleccionó, de lo contrario false
-	 */
-	public boolean isBtnAgregar() {
-		return detalleAgregar != null;
-	}
-
+	
 	/**
 	 * Elimina un detalle venta de la lista
-	 * 
-	 * @param dv
-	 *            detalle venta a eliminar
+	 * @param dv detalle venta a eliminar
 	 */
-	public void eliminarDetalleVenta(DetalleVenta dv) {
+	public void eliminarDetalleVenta (DetalleVenta dv){
 		restarTotalVenta(dv);
-		inventarioProductoComprar.setCantidad(inventarioProductoComprar.getCantidad() + dv.getCantidad());
 		productosCompra.remove(dv);
 	}
-
+	
 	/**
 	 * Le resta al total de la venta el detalle venta que se desea eliminar
-	 * 
-	 * @param dv
-	 *            detalle de venta que se desea eliminar
+	 * @param dv detalle de venta que se desea eliminar
 	 */
-	private void restarTotalVenta(DetalleVenta dv) {
+	private void restarTotalVenta (DetalleVenta dv){
 		int cantidad = dv.getCantidad();
-		double precioProducto = dv.getProducto().getValorProducto();
+		double precioProducto = dv.getProductoId().getValorProducto();
 		totalVenta -= cantidad * precioProducto;
 	}
-
+	
 	/**
 	 * Se suma al total de la venta el nuevo producto que se desea agregar
-	 * 
-	 * @param cantidad
-	 *            cantidad del mismo producto que se desea agregar
-	 * @param precioProducto
-	 *            precio del producto
+	 * @param cantidad cantidad del mismo producto que se desea agregar
+	 * @param precioProducto precio del producto
 	 */
-	private void sumarTotalVenta(int cantidad, double precioProducto) {
+	private void sumarTotalVenta (int cantidad, double precioProducto){
 		double valorProductos = cantidad * precioProducto;
 		totalVenta += valorProductos;
 	}
-
-	private void limpiarCampos() {
-
+	
+	private void limpiarCampos(){
+		
 		productosCompra = new ArrayList<DetalleVenta>();
 		nombre = "";
 		apellido = "";
@@ -214,46 +179,48 @@ public class ControladorVentas implements Serializable {
 		cedula = "";
 		totalVenta = 0;
 		cliente = null;
-		mostrarDatosCliente = false;
-
+		clienteExiste = false;
+		
 	}
-
+	
 	/**
 	 * Crea la factura que se asiganará a los detalle venta
 	 */
-	public void vender() {
-
+	public void vender(){
+		
 		factura = new FacturaVenta();
-
-		if (cliente != null) {
+		
+		if (cliente != null){
 			factura.setClienteId(cliente);
 			factura.setFechaVenta(new Date());
 			factura.setTotal(totalVenta);
 			factura.setEmpleadoId(sesion.getUser());
-
+			
 			ventaEJB.registrarVenta(factura);
-
+			
 			registrarDetallesVenta();
-
+			
 			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, "La venta se ha registrado exitosamente", null));
-
+					new FacesMessage(FacesMessage.SEVERITY_INFO, 
+							"La venta se ha registrado exitosamente", null));
+			
 			limpiarCampos();
-
+			
 		} else {
-
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Debe buscar o registrar un cliente previamente", null));
-
+			
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+							"Debe buscar o registrar un cliente previamente", null));
+			
 		}
-
+		
 	}
-
+	
 	/**
 	 * Registra un cliente
 	 */
-	public void registrarCliente() {
-
+	public void registrarCliente(){
+		
 		cliente = new Usuario();
 		cliente.setApellido(apellido);
 		cliente.setNombre(nombre);
@@ -261,96 +228,83 @@ public class ControladorVentas implements Serializable {
 		cliente.setCorreo(correo);
 		cliente.setTelefono(telefono);
 		cliente.setGenero(tipoGenero);
-
+		
 		Municipio municipio = departamentoEJB.buscarMunicipio(municipioSeleccionado);
 		cliente.setMunicipio(municipio);
-
-		// Genero
+		
+		//Genero
 		TipoUsuario tipoUsuario = new TipoUsuario();
 		tipoUsuario.setId(3);
 		cliente.setTipoUsuario(tipoUsuario);
-
-		try {
-
-			usuarioEJB.registrarUsuario(cliente);
-
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, "Cliente Registrado Exitosamente", null));
-
-		} catch (ExcepcionNegocio e) {
-
+		
+		try{
+			
+		usuarioEJB.registrarUsuario(cliente);
+		clienteExiste = true;
+		
+		} catch (ExcepcionNegocio e){
+			
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), null));
-
+			
 		}
-
+		
 	}
-
+	
 	/**
 	 * Busca un cliente
 	 */
-	public void buscarCliente() {
-
+	public void buscarCliente(){
 		cliente = usuarioEJB.buscarCliente(cedula);
-
-		mostrarDatosCliente = true;
-
-		if (cliente != null) {
-
+		if (cliente != null){
+			
+			clienteExiste = true;
+			
 			nombre = cliente.getNombre();
 			apellido = cliente.getApellido();
 			correo = cliente.getCorreo();
 			telefono = cliente.getTelefono();
-			deptoSeleccionado = cliente.getMunicipio().getDepartamento().getId();
+			deptoSeleccionado = cliente.getMunicipio().getDepartamento().getId();			
 			municipioSeleccionado = cliente.getMunicipio().getId();
-			tipoGenero = cliente.getGenero();
-
+			
 		} else {
-
+			
 			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_WARN,
-							"El cliente no se encuentra registrado, este debe ser registrado para continuar con la venta",
-							null));
-
+					new FacesMessage(FacesMessage.SEVERITY_WARN, 
+							"El cliente no se encuentra registrado, "
+							+ "este debe ser registrado para continuar con la venta", null));
+			
 		}
 	}
-
+	
+	
 	public String getCedula() {
 		return cedula;
 	}
-
 	public void setCedula(String cedula) {
 		this.cedula = cedula;
 	}
-
 	public String getNombre() {
 		return nombre;
 	}
-
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-
 	public String getApellido() {
 		return apellido;
 	}
-
 	public void setApellido(String apellido) {
 		this.apellido = apellido;
 	}
-
 	public String getCorreo() {
 		return correo;
 	}
-
 	public void setCorreo(String correo) {
 		this.correo = correo;
 	}
-
 	public String getTelefono() {
 		return telefono;
 	}
-
 	public void setTelefono(String telefono) {
 		this.telefono = telefono;
 	}
@@ -374,24 +328,19 @@ public class ControladorVentas implements Serializable {
 	public int getCantidad() {
 		return cantidad;
 	}
-
 	public void setCantidad(int cantidad) {
 		this.cantidad = cantidad;
 	}
-
 	public List<DetalleVenta> getProductosCompra() {
 		return productosCompra;
 	}
-
 	public void setProductosCompra(List<DetalleVenta> productosCompra) {
 		this.productosCompra = productosCompra;
 	}
-
-	public List<InventarioProducto> getProductos() {
+	public List<Producto> getProductos() {
 		return productos;
 	}
-
-	public void setProductos(List<InventarioProducto> productos) {
+	public void setProductos(List<Producto> productos) {
 		this.productos = productos;
 	}
 
@@ -435,12 +384,22 @@ public class ControladorVentas implements Serializable {
 		this.totalVenta = totalVenta;
 	}
 
-	public boolean isMostrarDatosCliente() {
-		return mostrarDatosCliente;
+	public boolean isClienteExiste() {
+		return clienteExiste;
 	}
 
-	public void setMostrarDatosCliente(boolean mostrarDatosCliente) {
-		this.mostrarDatosCliente = mostrarDatosCliente;
+	public void setClienteExiste(boolean clienteExiste) {
+		this.clienteExiste = clienteExiste;
 	}
 
+	public boolean isBtnAgregarCarritoSeleccionado() {
+		return btnAgregarCarritoSeleccionado;
+	}
+
+	public void setBtnAgregarCarritoSeleccionado(boolean btnAgregarCarritoSeleccionado) {
+		this.btnAgregarCarritoSeleccionado = btnAgregarCarritoSeleccionado;
+	}
+	
+	
+	
 }

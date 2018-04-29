@@ -61,10 +61,8 @@ public class UsuarioEJB {
 	 */
 	public Usuario buscarCliente(String cedula) {
 		Usuario cliente = buscarUsuarioCedula(cedula);
-		if (cliente != null) {
-			if (cliente.getTipoUsuario().getNombre().equals("cliente")) {
-				return cliente;
-			}
+		if (cliente.getTipoUsuario().getNombre().equals("cliente")) {
+			return cliente;
 		}
 		return null;
 	}

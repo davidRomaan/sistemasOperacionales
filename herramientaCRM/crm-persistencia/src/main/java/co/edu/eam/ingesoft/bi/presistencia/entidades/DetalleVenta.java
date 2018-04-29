@@ -28,8 +28,7 @@ public class DetalleVenta implements Serializable{
 	@Column(name="cantidad")
 	private int cantidad;
 
-	@Column(name="subtotal")
-	private double subtotal;
+	
 
 	public DetalleVenta(FacturaVenta facturaVenta, Producto producto, int cantidad) {
 		super();
@@ -43,42 +42,29 @@ public class DetalleVenta implements Serializable{
 	public DetalleVenta() {
 		super();
 	}
-	
 
 
 
-	public FacturaVenta getFacturaVenta() {
+	public FacturaVenta getFacturaVentaId() {
 		return facturaVenta;
 	}
 
 
 
-	public void setFacturaVenta(FacturaVenta facturaVenta) {
-		this.facturaVenta = facturaVenta;
+	public void setFacturaVentaId(FacturaVenta facturaVentaId) {
+		this.facturaVenta = facturaVentaId;
 	}
 
 
 
-	public Producto getProducto() {
+	public Producto getProductoId() {
 		return producto;
 	}
 
 
 
-	public double getSubtotal() {
-		return subtotal;
-	}
-
-
-
-	public void setSubtotal(double subtotal) {
-		this.subtotal = subtotal;
-	}
-
-
-
-	public void setProducto(Producto producto) {
-		this.producto = producto;
+	public void setProductoId(Producto productoId) {
+		this.producto = productoId;
 	}
 
 

@@ -13,7 +13,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.InventarioProducto;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Lote;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Producto;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.TipoProducto;
@@ -95,18 +94,6 @@ public class ProductoEJB {
 	public List<Producto> listarProductos() {
 		Query q = em.createNamedQuery(Producto.LISTAR);
 		List<Producto> lista = q.getResultList();
-		return lista;
-	}
-	
-	/**
-	 * Lista los productos registrados
-	 * 
-	 * @return la lista de productos registrados
-	 */
-	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-	public List<InventarioProducto> listarInventariosProductos() {
-		Query q = em.createNamedQuery(InventarioProducto.LISTAR);
-		List<InventarioProducto> lista = q.getResultList();
 		return lista;
 	}
 

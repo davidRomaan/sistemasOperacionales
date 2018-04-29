@@ -17,6 +17,50 @@
 			<br></br>
 			<br></br>
 
+			<h:panelGrid id="panelDatos" columns="2">
+
+				<h:outputLabel id="lblCedula" value="Cedula" />
+				<h:inputText id="tfCedula" value="#{controladorPersonas.cedula}" />
+
+				<h:outputLabel id="lblNombre" value="Nombre" />
+				<h:inputText id="tfNombre" value="#{controladorPersonas.nombre}" />
+
+				<h:outputLabel id="lblApellido" value="Apellido" />
+				<h:inputText id="tfApellido" value="#{controladorPersonas.apellido}" />
+
+				<h:outputLabel id="lblCorreo" value="Correo" />
+				<h:inputText id="tfCorreo" value="#{controladorPersonas.correo}" />
+
+				<h:outputLabel id="lblGenero" value="Genero" />
+				<h:selectOneMenu id="cbGenero"
+					value="#{controladorPersonas.tipoGenero}">
+
+					<f:selectItems value="#{controladorPersonas.generos}" var="genero"
+						itemValue="#{genero}" itemLabel="#{genero}" />
+
+				</h:selectOneMenu>
+
+				<h:outputLabel for="cbMunicipio" id="lbMunicipio"
+					value="#{'Municipio'}" />
+				<h:selectOneMenu id="cbMunicipios"
+					value="#{controladorPersonas.municipioSeleccinado}">
+
+					<f:selectItems value="#{controladorPersonas.municipios}"
+						var="municipio" itemValue="#{municipio.id}"
+						itemLabel="#{municipio.nombre}" />
+
+				</h:selectOneMenu>
+
+			</h:panelGrid>
+
+			<h:panelGrid id="panelBotones" columns="2">
+
+				<p:commandButton id="btnRegistrar" value="#{'Registrar Persona'}"
+					process="@this,panelDatos" update="panelDatos"
+					action="#{controladorPersonas.registrar}" />
+
+			</h:panelGrid>
+
 
 			<h:panelGrid id="paneltabla" columns="5" border="1" width="80%">
 
@@ -43,11 +87,13 @@
 					<p:column headerText="Accion">
 						<p:commandButton
 							action="#{controladorActivar.activarUsuario(per)}"
-							process="@this,paneltabla" value="Activar" update="@this,paneltabla" />
+							process="@this,paneltabla" value="Activar"
+							update="@this,paneltabla" />
 
 						<p:commandButton
 							action="#{controladorActivar.desactivarUsuario(per)}"
-							process="@this,paneltabla" value="Desactivar" update="@this,paneltabla" />
+							process="@this,paneltabla" value="Desactivar"
+							update="@this,paneltabla" />
 					</p:column>
 
 				</p:dataTable>

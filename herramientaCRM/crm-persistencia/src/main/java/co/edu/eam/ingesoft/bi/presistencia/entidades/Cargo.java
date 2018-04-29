@@ -7,15 +7,24 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+@NamedQueries({
+	@NamedQuery(name=Cargo.LISTAR_CARGOS,query="SELECT c FROM Cargo c")
+})
 @Entity
 @Table(name="CARGO")
 public class Cargo implements Serializable {
 	
+	/**
+	 * Lista los cargos registrados
+	 */
+	public static final String LISTAR_CARGOS = "Cargo.listar";
+	
 	@Id
 	@Column(name="id")
-	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
 	
 	@Column(name="descripcion", length=30)

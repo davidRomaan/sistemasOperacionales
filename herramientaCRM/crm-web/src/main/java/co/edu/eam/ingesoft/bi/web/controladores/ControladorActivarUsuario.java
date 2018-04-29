@@ -1,6 +1,7 @@
 package co.edu.eam.ingesoft.bi.web.controladores;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -10,13 +11,40 @@ import javax.inject.Named;
 
 import org.omnifaces.util.Messages;
 
+import co.edu.eam.ingesoft.bi.negocio.beans.MunicipioEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.PersonaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.UsuarioEJB;
+import co.edu.eam.ingesoft.bi.persistencia.enumeraciones.Genero;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.Municipio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Persona;
 
 @Named("controladorActivar")
 @SessionScoped
 public class ControladorActivarUsuario implements Serializable {
+
+	private String cedula;
+
+	private String apellido;
+	
+	private String correo;
+	
+	private Date fechaNacimiento;
+	
+	private Genero tipoGenero;
+	
+	private String nombre;
+
+	private String telefono;
+
+	private Municipio municipioBuscado;
+	
+
+	@EJB
+	private MunicipioEJB municipioEJB;
+
+	private List<Municipio> municipios;
+
+	private List<Genero> generos;
 
 	private List<Persona> personas;
 
@@ -38,7 +66,7 @@ public class ControladorActivarUsuario implements Serializable {
 	public void activarUsuario(Persona per) {
 
 		Persona p = usuarioEJB.buscarUsuarioCedula(per.getCedula());
-		
+
 		if (p != null) {
 			if (p.isActivo() == true) {
 				Messages.addFlashGlobalInfo("este Usuario ya esta activo");
@@ -71,7 +99,7 @@ public class ControladorActivarUsuario implements Serializable {
 			Messages.addFlashGlobalInfo("este usuario no existe");
 		}
 	}
-	
+
 	public List<Persona> getPersonas() {
 		return personas;
 	}

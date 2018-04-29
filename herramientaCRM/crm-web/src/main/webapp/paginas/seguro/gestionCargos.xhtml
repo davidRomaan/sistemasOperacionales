@@ -1,0 +1,81 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" template="/templates/index.xhtml">
+
+
+	<ui:define name="cuerpo">
+		<h:form prependId="false">
+
+
+
+			<h1>GESTION DE CARGOS DE LA EMPRESA</h1>
+			<br></br>
+			<br></br>
+
+			<h:panelGrid id="panelRegistro" columns="2">
+
+				<h:outputLabel id="txflCodigo" value="Codigo " />
+				<h:inputText value="#{controladorCargo.codigo}" id="lblCodigo" />
+
+				<h:outputLabel id="txfNombre" value="Nombre " />
+				<h:inputText value="#{controladorCargo.nombre}" id="lblNombre" />
+
+				<h:outputLabel id="txflSalar" value="Salario " />
+				<h:inputTextarea value="#{controladorCargo.salario}" id="lblDesc" />
+
+			</h:panelGrid>
+			<br></br>
+			<br></br>
+			<h:panelGrid id="panelBotones" columns="3">
+
+				<p:commandButton id="btnRegistrar" value="Registrar"
+					process="@this,panelRegistro" update="tablaCargos"
+					action="#{controladorCargo.registrarCargo}" />
+
+				<p:commandButton id="btnBuscar" value="Buscar"
+					process="@this,panelRegistro" update="panelRegistro"
+					action="#{controladorCargo.buscarCargo}" />
+
+				<p:commandButton id="btnEditar" value="Editar"
+					process="@this,panelRegistro" update="panelRegistro,tablaCargos"
+					action="#{controladorCargo.editarCargo}" />
+			</h:panelGrid>
+
+			<br></br>
+			<br></br>
+
+			<h:panelGrid id="tablaCargos" columns="4">
+
+				<p:dataTable id="tabla" emptyMessage="Ningun resultado"
+					value="#{controladorCargo.cargosEmpresa}" var="cargo" border="1"
+					width="80%">
+
+					<p:column filterBy="#{cargo.id}" headerText="codigo">
+						<h:outputText value="#{cargo.id}">
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Nombre">
+						<h:outputLabel value="#{cargo.descripcion}"></h:outputLabel>
+					</p:column>
+
+					<p:column headerText="Salario">
+						<h:outputLabel value="#{cargo.salario}"></h:outputLabel>
+					</p:column>
+
+					<p:column headerText="Acciones">
+
+						<p:commandButton action="#{controladorCargo.eliminarCargo(cargo)}"
+							process="@this" value="Eliminar" update="@this,tablaCargos" />
+
+					</p:column>
+				</p:dataTable>
+
+			</h:panelGrid>
+		</h:form>
+	</ui:define>
+
+</ui:composition>
+

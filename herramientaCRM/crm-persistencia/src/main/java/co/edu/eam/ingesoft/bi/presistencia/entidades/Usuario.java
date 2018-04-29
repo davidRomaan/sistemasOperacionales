@@ -24,10 +24,10 @@ import co.edu.eam.ingesoft.bi.persistencia.enumeraciones.Genero;
 public class Usuario extends Persona implements Serializable {
 
 	
-	@Column(name="contrasenia")
+	@Column(name="contrasenia", nullable= false)
 	private String contrasenia;
 	
-	@Column(name="nombre_usuario", unique=true)
+	@Column(name="nombre_usuario", nullable= false, unique=true)
 	private String nombreUsuario;
 	
 	@JoinColumn(name="tipo_usuario")

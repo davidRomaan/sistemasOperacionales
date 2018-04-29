@@ -6,22 +6,15 @@
 
 	<ui:define name="cuerpo">
 		<h:form prependId="false">
-		
-		<h1>GESTIÓN DE PRODUCTOS</h1>
-
-			<br></br>
-			<br></br>
-			<br></br>
 
 			<h:panelGrid id="panelCodigo" columns="3">
 
 				<h:outputLabel id="lblCodigoProducto" value="Código: " />
 				<h:inputText id="tfCodigoProducto"
-					value="#{controladorProducto.codigo}" />
+					value="#{controladorProducto.codigo}" /><br/>
 					
-				<p:commandButton id="btnBuscarProd" value="Buscar"
-					process="@this" update="@this,panelDatos"
-					action="#{controladorProducto.buscar}" />
+				<p:commandButton id="btnBuscar" value="Buscar" process="@this"
+					update="@this,panelDatos" action="#{controladorProducto.buscar}" />
 
 			</h:panelGrid><br/>
 
@@ -29,21 +22,21 @@
 
 				<h:outputLabel id="lblNombreProducto" value="Nombre: " />
 				<h:inputText id="tfNombreProducto"
-					value="#{controladorProducto.nombre}" />
+					value="#{controladorProducto.nombre}" /><br/>
 
 				<h:outputLabel id="lblDescripcion" value="Descripción: " />
-				<h:inputTextarea id="tfDescripcion"
-					value="#{controladorProducto.descripcion}" />
+				<h:inputText id="tfDescripcion"
+					value="#{controladorProducto.descripcion}" /><br/>
 
 				<h:outputLabel id="lblPeso" value="Peso: " />
-				<h:inputText id="tfPeso" value="#{controladorProducto.peso}" />
+				<h:inputText id="tfPeso" value="#{controladorProducto.peso}" /><br/>
 
 				<h:outputLabel id="lblDimension" value="Dimensión: " />
 				<h:inputText id="tfDimension"
-					value="#{controladorProducto.dimension}" />
+					value="#{controladorProducto.dimension}" /><br/>
 
 				<h:outputLabel id="lblPrecio" value="Precio: " />
-				<h:inputText id="tfPrecio" value="#{controladorProducto.valor}" />
+				<h:inputText id="tfPrecio" value="#{controladorProducto.valor}" /><br/>
 
 				<h:outputLabel for="cblote" id="lbLote" value="Seleccione el lote " />
 				<h:selectOneMenu id="cblote"
@@ -52,7 +45,7 @@
 					<f:selectItems value="#{controladorProducto.lotes}" var="lote"
 						itemValue="#{lote.id}" itemLabel="#{lote.descripcion}" />
 
-				</h:selectOneMenu>
+				</h:selectOneMenu><br/>
 				
 				<h:outputLabel for="cbtipoProds" id="lbtiposProd" value="Seleccione el tipo de producto " />
 				<h:selectOneMenu id="cbtipoProds"
@@ -68,7 +61,7 @@
 			<h:panelGrid id="panelBotones" columns="3">
 
 				<p:commandButton id="btnRegistrar" value="Registrar"
-					process="@this,panelDatos,panelCodigo" update="panelDatos,panelCodigo"
+					process="@this,panelDatos,panelCodigo" update="panelDatos"
 					action="#{controladorProducto.registrar}" />
 
 				<p:commandButton id="btnEditar" value="Editar"

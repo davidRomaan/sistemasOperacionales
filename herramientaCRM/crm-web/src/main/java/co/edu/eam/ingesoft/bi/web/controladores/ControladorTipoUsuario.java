@@ -6,7 +6,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.context.FacesContext;
 import javax.inject.Named;
 
 import org.omnifaces.util.Messages;
@@ -42,7 +41,7 @@ public class ControladorTipoUsuario implements Serializable {
 				tipoUsuarioEJB.registrar(tu);
 				listarTipos();
 				Messages.addFlashGlobalInfo("Registro exitoso");
-				limpiarCampos();
+				tiposUsuario.add(tu);
 			} catch (ExcepcionNegocio e) {
 				// TODO: handle exception
 				Messages.addFlashGlobalError(e.getMessage());
@@ -64,6 +63,7 @@ public class ControladorTipoUsuario implements Serializable {
 	 *            tipo de usuario a eliminar
 	 */
 	public void eliminarTipo(TipoUsuario tu) {
+		tiposUsuario.remove(tu);
 		tipoUsuarioEJB.eliminar(tu);
 		listarTipos();
 	}
@@ -75,30 +75,17 @@ public class ControladorTipoUsuario implements Serializable {
 		if (!validarCamposVacios()){
 			Messages.addFlashGlobalError("Debe ingresar todos los campos");
 		} else {
+			tiposUsuario.remove(tipoEditar);
 			tipoEditar.setNombre(nombre);
 			tipoEditar.setDescripcion(descripcion);
 			tipoUsuarioEJB.editar(tipoEditar);
 			listarTipos();
 			Messages.addFlashGlobalInfo("Se ha editado correctamente");
+			tiposUsuario.add(tipoEditar);
 			tipoEditar = null;
-			limpiarCampos();
+			nombre = "";
+			descripcion = "";
 		}
-	}
-	
-	/**
-	 * Refresca la página
-	 * @return la pagina refrescada
-	 */
-	private String refresacarPagina(){
-		return "paginas/seguro/gestionTipoUsuario.xhtml?faces-redirect=true";
-	}
-	
-	/**
-	 * Lismpia los campos
-	 */
-	private void limpiarCampos(){
-		nombre = "";
-		descripcion = "";
 	}
 	
 	/**

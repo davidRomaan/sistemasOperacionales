@@ -51,8 +51,8 @@
 			<h:panelGrid id="tablaAreas" columns="4">
 
 				<p:dataTable id="tabla" emptyMessage="Ningun resultado"
-					value="#{controladorAreas.areasEmpresa}" var="area"
-					filteredValue="#{controladorAreas.listaNueva}" border="3">
+					value="#{controladorAreas.areasEmpresa}" var="area" border="1"
+					width="80%">
 
 					<p:column filterBy="#{area.id}" headerText="codigo">
 						<h:outputText value="#{area.id}">
