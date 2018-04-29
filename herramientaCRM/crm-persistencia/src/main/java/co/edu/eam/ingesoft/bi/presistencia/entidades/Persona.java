@@ -26,12 +26,12 @@ import co.edu.eam.ingesoft.bi.persistencia.enumeraciones.Genero;
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "PERSONA")
 @NamedQueries({
-	@NamedQuery(name=Persona.LISTA_PERSONA, query="SELECT p FROM Persona p"),
+	@NamedQuery(name=Persona.LISTA_PERSONA, query="SELECT p FROM Persona p")
 })
 public class Persona implements Serializable{
 	
 	public static final String LISTA_PERSONA = "lista.persona";
-
+	
 	@Id
 	@Column(name = "cedula", nullable = false)
 	private String cedula;

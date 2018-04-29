@@ -6,8 +6,10 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.Persona;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Usuario;
 
 @LocalBean
@@ -26,6 +28,19 @@ public class UsuarioEJB {
 		}
 	}
 
+	
+	/**
+	 * metodo que busca las personas que se encuentren inactivos
+	 * @return lista con las personas inactivas
+	 */
+	public List<Persona >listarActivosInactivos(){
+		Query q = em.createNamedQuery(Persona.LISTA_PERSONA);
+		List<Persona>per = q.getResultList();
+		return per;
+	}
+	
+	
+	
 	/**
 	 * Busca un usuario en la base de datos
 	 * 

@@ -53,7 +53,7 @@
 
 				<p:dataTable id="tablatipos" emptyMessage="Ningun resultado"
 					value="#{controladorTipoProd.tipoProducto}" var="tipo"
-					filteredValue="#{controladorTipoProd.listaNueva}" border="3">
+					filteredValue="#{controladorTipoProd.listaNueva}" border="1">
 
 					<p:column filterBy="#{tipo.id}" headerText="codigo">
 						<h:outputText value="#{tipo.id}">

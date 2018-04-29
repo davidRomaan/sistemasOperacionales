@@ -1,0 +1,60 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" template="/templates/index.xhtml">
+
+
+
+
+	<ui:define name="cuerpo">
+		<h:form prependId="false">
+
+
+			<h1>ACTIVAR O DESACTIVAR USUARIOS</h1>
+			<br></br>
+			<br></br>
+			<br></br>
+			<br></br>
+
+
+			<h:panelGrid id="paneltabla" columns="5" border="1" width="80%">
+
+				<p:dataTable id="tablatipos" emptyMessage="Ningun resultado"
+					value="#{controladorActivar.personas}" var="per" border="1">
+
+					<p:column filterBy="#{per.cedula}" headerText="cedula">
+						<h:outputText value="#{per.cedula}">
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Nombre">
+						<h:outputLabel value="#{per.nombre}"></h:outputLabel>
+					</p:column>
+
+					<p:column headerText="Apellido">
+						<h:outputLabel value="#{per.apellido}"></h:outputLabel>
+					</p:column>
+
+					<p:column headerText="Estado">
+						<h:outputLabel value="#{per.activo}"></h:outputLabel>
+					</p:column>
+
+					<p:column headerText="Accion">
+						<p:commandButton
+							action="#{controladorActivar.activarUsuario(per)}"
+							process="@this,paneltabla" value="Activar" update="@this,paneltabla" />
+
+						<p:commandButton
+							action="#{controladorActivar.desactivarUsuario(per)}"
+							process="@this,paneltabla" value="Desactivar" update="@this,paneltabla" />
+					</p:column>
+
+				</p:dataTable>
+
+			</h:panelGrid>
+
+
+		</h:form>
+	</ui:define>
+</ui:composition>
