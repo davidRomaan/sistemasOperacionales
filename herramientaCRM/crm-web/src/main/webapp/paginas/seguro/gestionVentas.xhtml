@@ -8,7 +8,7 @@
 	<ui:define name="cuerpo">
 		<h:form prependId="false">
 
-			<h:panelGrid id="panelTabla" columns="1" width="80%">
+			<h:panelGrid id="panelTabla" columns="2" width="80%">
 
 				<p:dataTable id="tablaProductos"
 					value="#{controladorVentas.productos}" var="producto" border="1">
@@ -41,8 +41,9 @@
 				<p:outputLabel for="tfcantidad" value="Cantidad a comprar " />
 				<h:inputText value="#{controladorVentas.cantidad}" id="tfcantidad" />
 				<p:message for="tfcantidad" />
+				<br />
 
-				<p:commandButton value="Agregar al carrito" process="@this"
+				<p:commandButton value="Agregar" process="@this"
 					update="panelTablaDetalles"
 					action="#{controladorVentas.agregarCantidad}" />
 
@@ -50,7 +51,8 @@
 			<br />
 
 			<p:outputLabel id="lblTotal" style="color: green"
-				value="Total Venta: $#{controladorVentas.totalVenta}" /> <br/>
+				value="Total Venta: $#{controladorVentas.totalVenta}" />
+			<br />
 
 			<h:panelGrid id="panelTablaDetalles" columns="1">
 
@@ -83,7 +85,8 @@
 
 				</p:dataTable>
 
-			</h:panelGrid> <br/>
+			</h:panelGrid>
+			<br />
 
 			<p:outputLabel value="Datos del cliente" />
 
@@ -94,34 +97,51 @@
 				<h:inputText value="#{controladorVentas.cedula}"
 					id="tfcedulaCliente" />
 				<p:message for="tfcedulaCliente" />
+				<br />
 
 				<p:commandButton value="Buscar" process="@this"
 					update="panelDatosCliente"
 					action="#{controladorVentas.buscarCliente}" />
 
 			</h:panelGrid>
+			<br/>
 
-			<h:panelGrid columns="3" id="panelDatosCliente">
+			<h:panelGrid columns="3" id="panelDatosCliente"
+				rendered="#{controladorVentas.clienteExiste}">
 
 				<p:outputLabel for="tfnombre" value="Nombre: " />
 				<h:inputText value="#{controladorVentas.nombre}" id="tfnombre"
 					placeholder="Ingrese el nombre" />
 				<p:message for="tfnombre" />
+				<br />
 
 				<p:outputLabel for="tfapellido" value="Apellido: " />
 				<h:inputText value="#{controladorVentas.apellido}" id="tfapellido"
 					placeholder="Ingrese el apellido" />
 				<p:message for="tfapellido" />
+				<br />
+				
+				<h:outputLabel id="lblGenero"
+					value="Genero" />
+				<h:selectOneMenu id="cbGenero"
+					value="#{controladorVentas.tipoGenero}">
+
+					<f:selectItems value="#{controladorVentas.generos}"
+						var="genero" itemValue="#{genero}" itemLabel="#{genero}" />
+
+				</h:selectOneMenu> <br/>
 
 				<p:outputLabel for="tfcorreo" value="Correo: " />
 				<h:inputText value="#{controladorVentas.correo}" id="tfcorreo"
 					placeholder="Ingrese el correo" />
 				<p:message for="tfcorreo" />
+				<br />
 
 				<p:outputLabel for="tftelefono" value="Telefono: " />
 				<h:inputText value="#{controladorVentas.telefono}" id="tftelefono"
 					placeholder="Ingrese el telefono" />
 				<p:message for="tftelefono" />
+				<br />
 
 				<h:outputLabel for="cbDepto" id="lbDepto" value="Departamento: " />
 				<h:selectOneMenu id="cbDepto"
@@ -133,6 +153,7 @@
 
 				</h:selectOneMenu>
 				<p:message for="cbDepto" />
+				<br />
 
 				<h:outputLabel for="cbmunicipio" id="lbmunicipio"
 					value="Municipio: " />
@@ -145,16 +166,20 @@
 
 				</h:selectOneMenu>
 				<p:message for="cbmunicipio" />
+				<br />
 
 				<p:commandButton value="Registrar" process="@this,panelCedula"
 					update="@this,panelCedula"
 					action="#{controladorVentas.registrarCliente}" />
 
 			</h:panelGrid>
+			<br />
 
 			<h:panelGrid columns="1">
 
-				<p:outputLabel value="Total Venta: $#{controladorVentas.totalVenta}" />
+				<p:outputLabel value="Total Venta: $#{controladorVentas.totalVenta}"
+					style="color: green" />
+				<br />
 				<p:commandButton value="Vender"
 					process="@this,panelTabla,panelTablaDetalles,panelCedula,panelDatosCliente"
 					update="panelTabla,panelTablaDetalles,panelCedula,panelDatosCliente"

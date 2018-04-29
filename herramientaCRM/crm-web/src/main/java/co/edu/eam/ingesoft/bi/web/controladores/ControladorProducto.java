@@ -57,11 +57,10 @@ public class ControladorProducto implements Serializable{
 	public void buscar(){
 		
 		productoBuscado = productoEJB.buscarProducto(codigo);
-		
-		System.out.println(productoBuscado.getDescripcion());
-		
+				
 		if (productoBuscado != null){
 			
+			codigo = productoBuscado.getId();
 			nombre = productoBuscado.getNombre();
 			descripcion = productoBuscado.getDescripcion();
 			peso = productoBuscado.getPeso();
@@ -88,6 +87,8 @@ public class ControladorProducto implements Serializable{
 					new FacesMessage(FacesMessage.SEVERITY_WARN, "Debe buscar un producto previamente", null));
 		} else {
 			
+			productos.remove(productoBuscado);
+			
 			productoBuscado.setDescripcion(descripcion);
 			productoBuscado.setNombre(nombre);
 			productoBuscado.setDimension(dimension);
@@ -100,8 +101,23 @@ public class ControladorProducto implements Serializable{
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Operación exitosa", null));
 			
+			productos.add(productoBuscado);
+			limpiarCampos();
 		}
 		
+	}
+	
+	/**
+	 * Limpia los campos del producto
+	 */
+	private void limpiarCampos(){
+		productoBuscado = null;
+		
+		codigo = 0;
+		nombre = "";
+		descripcion = "";
+		valor = 0;
+		peso = 0;
 	}
 	
 	/**
@@ -127,6 +143,9 @@ public class ControladorProducto implements Serializable{
 				new FacesMessage(FacesMessage.SEVERITY_INFO, 
 						"El producto ha sido registrado exitosamente", null));
 		
+		productos.add(producto);
+		limpiarCampos();
+		
 		} catch (ExcepcionNegocio e){
 			
 			FacesContext.getCurrentInstance().addMessage(null,
@@ -141,14 +160,8 @@ public class ControladorProducto implements Serializable{
 	/**
 	 * Lista los productos registrados en la base de datos
 	 */
-	public void listar(){
-		
-		productos = productoEJB.listarProductos();
-		
-	}
-	
-	public void eliminar(){
-		eliminarProducto(productoBuscado);
+	public void listar(){		
+		productos = productoEJB.listarProductos();		
 	}
 	
 	/**
@@ -156,6 +169,7 @@ public class ControladorProducto implements Serializable{
 	 * @param p producto que se desea eliminar
 	 */
 	public void eliminarProducto(Producto p){
+		productos.remove(p);
 		productoEJB.eliminarProducto(p);
 	}
 	

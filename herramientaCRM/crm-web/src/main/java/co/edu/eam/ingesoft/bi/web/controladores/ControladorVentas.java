@@ -36,9 +36,10 @@ public class ControladorVentas implements Serializable{
 	private String apellido;
 	private String correo;
 	private String telefono;
-	private Genero genero;
+	private Genero tipoGenero;
 	private int deptoSeleccionado;
 	private int municipioSeleccionado;
+	private List<Genero> generos;
 	
 	//Cliente que va a reliazar la compra
 	Usuario cliente;
@@ -131,8 +132,13 @@ public class ControladorVentas implements Serializable{
 		sumarTotalVenta(cantidad, detalleAgregar.getProductoId().getValorProducto());
 		productosCompra.add(detalleAgregar);
 		detalleAgregar = null;
+		btnAgregarCarritoSeleccionado = false;
 	}
 	
+	/**
+	 * Elimina un detalle venta de la lista
+	 * @param dv detalle venta a eliminar
+	 */
 	public void eliminarDetalleVenta (DetalleVenta dv){
 		restarTotalVenta(dv);
 		productosCompra.remove(dv);
@@ -168,6 +174,7 @@ public class ControladorVentas implements Serializable{
 		cedula = "";
 		totalVenta = 0;
 		cliente = null;
+		clienteExiste = false;
 		
 	}
 	
@@ -214,6 +221,7 @@ public class ControladorVentas implements Serializable{
 		cliente.setCedula(cedula);
 		cliente.setCorreo(correo);
 		cliente.setTelefono(telefono);
+		cliente.setGenero(tipoGenero);
 		
 		Municipio municipio = departamentoEJB.buscarMunicipio(municipioSeleccionado);
 		cliente.setMunicipio(municipio);
@@ -224,6 +232,7 @@ public class ControladorVentas implements Serializable{
 		cliente.setTipoUsuario(tipoUsuario);
 		
 		try{
+			
 		usuarioEJB.registrarUsuario(cliente);
 		clienteExiste = true;
 		
@@ -293,12 +302,23 @@ public class ControladorVentas implements Serializable{
 	public void setTelefono(String telefono) {
 		this.telefono = telefono;
 	}
-	public Genero getGenero() {
-		return genero;
+
+	public Genero getTipoGenero() {
+		return tipoGenero;
 	}
-	public void setGenero(Genero genero) {
-		this.genero = genero;
+
+	public void setTipoGenero(Genero tipoGenero) {
+		this.tipoGenero = tipoGenero;
 	}
+
+	public List<Genero> getGeneros() {
+		return generos;
+	}
+
+	public void setGeneros(List<Genero> generos) {
+		this.generos = generos;
+	}
+
 	public int getCantidad() {
 		return cantidad;
 	}

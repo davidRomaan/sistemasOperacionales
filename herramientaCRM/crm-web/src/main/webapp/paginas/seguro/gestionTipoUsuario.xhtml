@@ -12,12 +12,12 @@
 				<p:outputLabel for="tfnombre" value="Nombre: " />
 				<h:inputText value="#{controladorTipoUsuario.nombre}" id="tfnombre"
 					placeholder="Ingrese el nombre" />
-				<p:message for="tfnombre" />
+				<p:message for="tfnombre" /><br/>
 
 				<p:outputLabel for="tfdesc" value="Descripción: " />
 				<h:inputTextarea value="#{controladorTipoUsuario.descripcion}"
 					id="tfdesc" placeholder="Ingrese una descripción" />
-				<p:message for="tfdesc" />
+				<p:message for="tfdesc" /><br/>
 
 				<p:commandButton value="Registrar" process="@this"
 					update="@this,panelTabla"
@@ -27,7 +27,7 @@
 					rendered="#{controladorTipoUsuario.editando}"
 					update="@this,panelTabla" action="#{controladorTipoUsuario.editar}" />
 
-			</h:panelGrid>
+			</h:panelGrid><br/>
 
 			<h:panelGrid id="panelTabla" columns="1" width="80%">
 

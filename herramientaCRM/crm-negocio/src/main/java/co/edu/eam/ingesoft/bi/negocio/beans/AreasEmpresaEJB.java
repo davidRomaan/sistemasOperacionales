@@ -13,7 +13,7 @@ import javax.persistence.Query;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Area;
 
-
+@LocalBean
 @Stateless
 public class AreasEmpresaEJB {
 

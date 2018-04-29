@@ -40,6 +40,7 @@ public class ControladorTipoUsuario implements Serializable {
 			try {
 				tipoUsuarioEJB.registrar(tu);
 				Messages.addFlashGlobalInfo("Registro exitoso");
+				tiposUsuario.add(tu);
 			} catch (ExcepcionNegocio e) {
 				// TODO: handle exception
 				Messages.addFlashGlobalError(e.getMessage());
@@ -61,6 +62,7 @@ public class ControladorTipoUsuario implements Serializable {
 	 *            tipo de usuario a eliminar
 	 */
 	public void eliminarTipo(TipoUsuario tu) {
+		tiposUsuario.remove(tu);
 		tipoUsuarioEJB.eliminar(tu);
 	}
 
@@ -71,10 +73,12 @@ public class ControladorTipoUsuario implements Serializable {
 		if (!validarCamposVacios()){
 			Messages.addFlashGlobalError("Debe ingresar todos los campos");
 		} else {
+			tiposUsuario.remove(tipoEditar);
 			tipoEditar.setNombre(nombre);
 			tipoEditar.setDescripcion(descripcion);
 			tipoUsuarioEJB.editar(tipoEditar);
 			Messages.addFlashGlobalInfo("Se ha editado correctamente");
+			tiposUsuario.add(tipoEditar);
 			tipoEditar = null;
 			nombre = "";
 			descripcion = "";
@@ -95,7 +99,7 @@ public class ControladorTipoUsuario implements Serializable {
 	 * Verifica si se esta editando un tipo de usuario
 	 * @return true si se esta editando, de lo contrario false
 	 */
-	private boolean isEditando(){
+	public boolean isEditando(){
 		return tipoEditar != null;
 	}
 
