@@ -27,48 +27,55 @@
 				<h:inputTextarea value="#{controladorAreas.descripcion}"
 					id="lblDesc" />
 
-				<br></br>
-				<br></br>
+			</h:panelGrid>
+			<br></br>
+			<br></br>
+			<h:panelGrid id="panelBotones" columns="3">
 
-				<p:commandButton id="btnRegistrar" value="Registrar" process="@this"
-					update="@this" action="#{controladorAreas.registrarArea}" />
+				<p:commandButton id="btnRegistrar" value="Registrar"
+					process="@this,panelRegistro" update="tablaAreas"
+					action="#{controladorAreas.registrarArea}" />
 
+				<p:commandButton id="btnBuscar" value="Buscar"
+					process="@this,panelRegistro" update="panelRegistro"
+					action="#{controladorAreas.buscarArea}" />
 
+				<p:commandButton id="btnEditar" value="Editar"
+					process="@this,panelRegistro" update="panelRegistro,tablaAreas"
+					action="#{controladorAreas.editarArea()}" />
 			</h:panelGrid>
 
-
 			<br></br>
 			<br></br>
 
-			<h:panelGrid id="panelTabla" columns="4">
+			<h:panelGrid id="tablaAreas" columns="4">
 
-				<p:dataTable id="tablaProductos"
-					value="#{controladorAreas.areasEmpresa}" var="area" border="1">
+				<p:dataTable id="tabla" emptyMessage="Ningun resultado"
+					value="#{controladorAreas.areasEmpresa}" var="area"
+					filteredValue="#{controladorAreas.listaNueva}" border="3">
 
-					<p:column headerText="Id ">
-						<h:outputLabel value="#{area.id}" />
+					<p:column filterBy="#{area.id}" headerText="codigo">
+						<h:outputText value="#{area.id}">
+						</h:outputText>
 					</p:column>
 
-					<p:column headerText="Nombre ">
-						<h:outputLabel value="#{area.nombre}" />
+					<p:column headerText="Nombre">
+						<h:outputLabel value="#{area.nombre}"></h:outputLabel>
 					</p:column>
 
-					<p:column headerText="Precio ">
-						<h:outputLabel value="#{area.descripcion}" />
+					<p:column headerText="Descripcion">
+						<h:outputLabel value="#{area.descripcion}"></h:outputLabel>
 					</p:column>
 
-					<p:column headerText="Acción">
-						<p:commandButton value="Eliminar" process="@this,tablaProductos"
-							update="tablaProductos"
-							action="#{controladorAreas.eliminarArea(area)}" />
-					</p:column>
+					<p:column headerText="Acciones">
 
+						<p:commandButton action="#{controladorAreas.eliminarArea(area)}"
+							process="@this" value="Eliminar" update="@this,tablaAreas" />
+
+					</p:column>
 				</p:dataTable>
 
 			</h:panelGrid>
-
-
-
 
 		</h:form>
 	</ui:define>

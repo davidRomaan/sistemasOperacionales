@@ -7,27 +7,37 @@
 	<ui:define name="cuerpo">
 		<h:form prependId="false">
 
-			<h:panelGrid columns="3" id="panelDatos">
 
-				<p:outputLabel for="tfnombre" value="Nombre: " />
-				<h:inputText value="#{controladorTipoUsuario.nombre}" id="tfnombre"
-					placeholder="Ingrese el nombre" />
-				<p:message for="tfnombre" /><br/>
+			<h1>REGISTRO DE TIPO DE PRODUCTOS</h1>
 
-				<p:outputLabel for="tfdesc" value="Descripción: " />
+			<br></br>
+			<br></br>
+			<br></br>
+
+			<h:panelGrid columns="2" id="panelDatos">
+
+				<h:outputLabel for="tfnombre" value="Nombre: " />
+				<h:inputText value="#{controladorTipoUsuario.nombre}" id="tfnombre" />
+
+				<h:outputLabel for="tfdesc" value="Descripción: " />
 				<h:inputTextarea value="#{controladorTipoUsuario.descripcion}"
-					id="tfdesc" placeholder="Ingrese una descripción" />
-				<p:message for="tfdesc" /><br/>
+					id="tfdesc" />
 
-				<p:commandButton value="Registrar" process="@this"
-					update="@this,panelTabla"
+			</h:panelGrid>
+			<br />
+			<h:panelGrid columns="3" id="panelBotones">
+
+				<p:commandButton value="Registrar" process="@this,panelDatos"
+					update="panelDatos,panelTabla"
 					action="#{controladorTipoUsuario.registrar}" />
 
-				<p:commandButton value="Editar" process="@this"
+				<p:commandButton value="Editar" process="@this,panelDatos"
 					rendered="#{controladorTipoUsuario.editando}"
-					update="@this,panelTabla" action="#{controladorTipoUsuario.editarTipo}" />
+					update="@this,panelTabla"
+					action="#{controladorTipoUsuario.editarTipo}" />
 
-			</h:panelGrid><br/>
+			</h:panelGrid>
+			<br />
 
 			<h:panelGrid id="panelTabla" columns="1" width="80%">
 
@@ -52,8 +62,8 @@
 							update="panelDatos"
 							action="#{controladorTipoUsuario.habilitarEdicion(tipo)}" />
 
-						<p:commandButton value="Eliminar" process="@this,tablaTipos"
-							update="panelDatos"
+						<p:commandButton value="Eliminar" process="@this"
+							update="panelTabla"
 							action="#{controladorTipoUsuario.eliminarTipo(tipo)}" />
 					</p:column>
 

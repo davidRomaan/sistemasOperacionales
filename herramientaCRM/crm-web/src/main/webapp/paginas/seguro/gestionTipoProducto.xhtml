@@ -1,0 +1,84 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" template="/templates/index.xhtml">
+
+
+	<ui:define name="cuerpo">
+		<h:form prependId="false">
+
+
+
+			<h1>REGISTRO DE TIPO DE PRODUCTOS</h1>
+
+			<br></br>
+			<br></br>
+			<br></br>
+
+			<h:panelGrid id="panelDatos" columns="2">
+
+				<h:outputLabel id="lblid" value="codigo" />
+				<h:inputText id="tfCodigo" value="#{controladorTipoProd.codigo}" />
+
+				<h:outputLabel id="lblnombre" value="Nombre" />
+				<h:inputText id="tfNombre" value="#{controladorTipoProd.nombre}" />
+
+				<h:outputLabel id="lblDescripcion" value="Descripcion" />
+				<h:inputText id="tfDescripcion"
+					value="#{controladorTipoProd.descripcion}" />
+			</h:panelGrid>
+
+			<br></br>
+			<br></br>
+			<h:panelGrid id="panelBotones" columns="3">
+
+				<p:commandButton id="btnRegistrar" value="#{'Registrar'}"
+					process="@this,panelDatos" update="panelDatos,paneltabla"
+					action="#{controladorTipoProd.registrar}" />
+
+				<p:commandButton id="btnBuscar" value="Buscar"
+					process="@this,panelDatos" update="panelDatos,paneltabla"
+					action="#{controladorTipoProd.buscarTipo}" />
+
+
+				<p:commandButton id="btnEditar" value="Editar"
+					process="@this,panelDatos" update="panelDatos,paneltabla"
+					action="#{controladorTipoProd.editarTipos}" />
+
+			</h:panelGrid>
+			<br></br>
+			<br></br>
+			<h:panelGrid id="paneltabla" columns="4" border="1" width="80%">
+
+				<p:dataTable id="tablatipos" emptyMessage="Ningun resultado"
+					value="#{controladorTipoProd.tipoProducto}" var="tipo"
+					filteredValue="#{controladorTipoProd.listaNueva}" border="3">
+
+					<p:column filterBy="#{tipo.id}" headerText="codigo">
+						<h:outputText value="#{tipo.id}">
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Nombre">
+						<h:outputLabel value="#{tipo.nombre}"></h:outputLabel>
+					</p:column>
+
+					<p:column headerText="Descripcion">
+						<h:outputLabel value="#{tipo.descripcion}"></h:outputLabel>
+					</p:column>
+
+					<p:column headerText="Accion">
+						<p:commandButton
+							action="#{controladorTipoProd.eliminarTipo(tipo)}"
+							process="@this" value="Eliminar" update="@this,paneltabla" />
+
+					</p:column>
+				</p:dataTable>
+
+			</h:panelGrid>
+
+
+		</h:form>
+	</ui:define>
+</ui:composition>

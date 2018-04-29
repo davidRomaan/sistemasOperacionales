@@ -23,46 +23,42 @@ public class ControladorAreasEmpresa implements Serializable {
 	private String nombre;
 
 	private String descripcion;
-	
-	
-    private List<Area>areasEmpresa;
-    
-    private List<Area>listaNueva;
-    
-    @PostConstruct
+
+	private List<Area> areasEmpresa;
+
+	private List<Area> listaNueva;
+
+	@PostConstruct
 	public void postconstructor() {
-    	listarAreas();
+		listarAreas();
 	}
-    
-    
-    public void listarAreas(){
-    	areasEmpresa = areas.listarAreas();
-    }
-    
-    
+
+	public void listarAreas() {
+		areasEmpresa = areas.listarAreas();
+	}
 
 	@EJB
 	private AreasEmpresaEJB areas;
 
 	public void registrarArea() {
 
-		//if (codigo == 0 || nombre.equals("") || descripcion.equals("")) {
-			//Messages.addFlashGlobalInfo("Ingrese todos los campos");
-		//} else {
+		if (codigo == 0 || nombre.equals("") || descripcion.equals("")) {
+			Messages.addFlashGlobalInfo("Ingrese todos los campos");
+		} else {
 
 			Area a = new Area(codigo, nombre, descripcion);
-			try{
-			areas.registrarAreas(a);
-			Messages.addFlashGlobalInfo("Registro exitoso");
-			listarAreas();
-			codigo = 0;
-			nombre = "";
-			descripcion = "";
-			} catch (ExcepcionNegocio e){
+			try {
+				areas.registrarAreas(a);
+				Messages.addFlashGlobalInfo("Registro exitoso");
+				listarAreas();
+				codigo = 0;
+				nombre = "";
+				descripcion = "";
+			} catch (ExcepcionNegocio e) {
 				Messages.addFlashGlobalError(e.getMessage());
 			}
 
-		//}
+		}
 
 	}
 
@@ -94,7 +90,9 @@ public class ControladorAreasEmpresa implements Serializable {
 
 				Area area = new Area(codigo, nombre, descripcion);
 				areas.editarArea(area);
+				listarAreas();
 				Messages.addFlashGlobalInfo("se edito exitosamente");
+				
 
 			} else {
 				Messages.addFlashGlobalError("No existe esta area de la empresa");
@@ -106,8 +104,9 @@ public class ControladorAreasEmpresa implements Serializable {
 
 	public void eliminarArea(Area a) {
 		areas.eliminarArea(a);
-		Messages.addFlashGlobalInfo("se elimino correctamente");
 		listarAreas();
+		Messages.addFlashGlobalInfo("se elimino correctamente");
+		
 	}
 
 	public int getCodigo() {
@@ -134,21 +133,17 @@ public class ControladorAreasEmpresa implements Serializable {
 		this.descripcion = descripcion;
 	}
 
-
 	public List<Area> getAreasEmpresa() {
 		return areasEmpresa;
 	}
-
 
 	public void setAreasEmpresa(List<Area> areasEmpresa) {
 		this.areasEmpresa = areasEmpresa;
 	}
 
-
 	public List<Area> getListaNueva() {
 		return listaNueva;
 	}
-
 
 	public void setListaNueva(List<Area> listaNueva) {
 		this.listaNueva = listaNueva;

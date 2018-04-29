@@ -39,6 +39,7 @@ public class ControladorTipoUsuario implements Serializable {
 			TipoUsuario tu = new TipoUsuario(nombre, descripcion);
 			try {
 				tipoUsuarioEJB.registrar(tu);
+				listarTipos();
 				Messages.addFlashGlobalInfo("Registro exitoso");
 				tiposUsuario.add(tu);
 			} catch (ExcepcionNegocio e) {
@@ -64,6 +65,7 @@ public class ControladorTipoUsuario implements Serializable {
 	public void eliminarTipo(TipoUsuario tu) {
 		tiposUsuario.remove(tu);
 		tipoUsuarioEJB.eliminar(tu);
+		listarTipos();
 	}
 
 	/**
@@ -77,6 +79,7 @@ public class ControladorTipoUsuario implements Serializable {
 			tipoEditar.setNombre(nombre);
 			tipoEditar.setDescripcion(descripcion);
 			tipoUsuarioEJB.editar(tipoEditar);
+			listarTipos();
 			Messages.addFlashGlobalInfo("Se ha editado correctamente");
 			tiposUsuario.add(tipoEditar);
 			tipoEditar = null;
@@ -108,7 +111,7 @@ public class ControladorTipoUsuario implements Serializable {
 	 * @return true si no lo están, de lo contrario false
 	 */
 	private boolean validarCamposVacios() {
-		if (nombre.equals("") && descripcion.equals("")) {
+		if (nombre.isEmpty() && descripcion.isEmpty()) {
 			return false;
 		}
 		return true;
