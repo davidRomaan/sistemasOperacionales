@@ -31,7 +31,9 @@ public class ControladorAreasEmpresa implements Serializable {
 	private List<Area> listaNueva;
 	
 	private AuditoriaEJB auditoriaEJB;
-
+	
+	private String accion;
+	
 	@PostConstruct
 	public void postconstructor() {
 		listarAreas();
@@ -50,19 +52,21 @@ public class ControladorAreasEmpresa implements Serializable {
 			Messages.addFlashGlobalInfo("Ingrese todos los campos");
 		} else {
 
-			Area a = new Area(codigo, nombre, descripcion);
+			Area a = new Area();
+			a.setNombre(nombre);
+			a.setDescripcion(descripcion);
+			a.setId(codigo);
+			
+			accion = "RegistrarArea";
 			try {
-				areas.registrarAreas(a);
 				
-				try {
-					
-					String browserDetail = Faces.getRequest().getHeader("User-Agent");
-					
-					auditoriaEJB.crearAuditoriaArea(a, "Registrar", browserDetail);
+				areas.registrarAreas(a);		
 				
-				}catch (Exception e) {
-					e.printStackTrace();
-				}
+				String browserDetail = Faces.getRequest().getHeader("User-Agent");
+				System.out.println(a);
+				System.out.println(browserDetail);
+				auditoriaEJB.crearAuditoriaArea(a, accion, browserDetail);
+					
 				Messages.addFlashGlobalInfo("Registro exitoso");
 				listarAreas();
 				codigo = 0;
@@ -70,6 +74,8 @@ public class ControladorAreasEmpresa implements Serializable {
 				descripcion = "";
 			} catch (ExcepcionNegocio e) {
 				Messages.addFlashGlobalError(e.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 
 		}

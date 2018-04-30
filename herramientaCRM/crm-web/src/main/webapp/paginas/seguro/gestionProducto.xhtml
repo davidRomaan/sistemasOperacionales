@@ -44,6 +44,18 @@
 
 				<h:outputLabel id="lblPrecio" value="Precio: " />
 				<h:inputText id="tfPrecio" value="#{controladorProducto.valor}" />
+				
+				<h:outputLabel id="lblPrecio" value="Cantidad: " />
+				<h:inputText id="tfPrecio" value="#{controladorProducto.cantidad}" />
+				
+				<h:outputLabel for="cbInventarios" id="lbInventario" value="Seleccione un inventario " />
+				<h:selectOneMenu id="cbInventarios"
+					value="#{controladorProducto.inventarioSeleccionado}">
+
+					<f:selectItems value="#{controladorProducto.inventarios}" var="inventario"
+						itemValue="#{inventario.id}" itemLabel="#{inventario.nombre}" />
+
+				</h:selectOneMenu>
 
 				<h:outputLabel for="cblote" id="lbLote" value="Seleccione el lote " />
 				<h:selectOneMenu id="cblote"

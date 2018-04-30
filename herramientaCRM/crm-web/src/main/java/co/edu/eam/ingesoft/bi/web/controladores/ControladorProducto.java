@@ -15,6 +15,7 @@ import javax.inject.Named;
 import co.edu.eam.ingesoft.bi.negocio.beans.ProductoEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.TipoProductoEJB;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.Inventario;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Lote;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Producto;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.TipoProducto;
@@ -28,6 +29,9 @@ public class ControladorProducto implements Serializable {
 	private String descripcion;
 	private double peso;
 	private double dimension;
+	private int cantidad;
+	private List<Inventario> inventarios;
+	private int inventarioSeleccionado;
 	private double valor;
 	private List<Lote> lotes;
 	private int loteSeleccionado;
@@ -262,6 +266,30 @@ public class ControladorProducto implements Serializable {
 
 	public void setTipoProductoSeleccionado(int tipoProductoSeleccionado) {
 		this.tipoProductoSeleccionado = tipoProductoSeleccionado;
+	}
+
+	public int getCantidad() {
+		return cantidad;
+	}
+
+	public void setCantidad(int cantidad) {
+		this.cantidad = cantidad;
+	}
+
+	public List<Inventario> getInventarios() {
+		return inventarios;
+	}
+
+	public void setInventarios(List<Inventario> inventarios) {
+		this.inventarios = inventarios;
+	}
+
+	public int getInventarioSeleccionado() {
+		return inventarioSeleccionado;
+	}
+
+	public void setInventarioSeleccionado(int inventarioSeleccionado) {
+		this.inventarioSeleccionado = inventarioSeleccionado;
 	}
 
 }

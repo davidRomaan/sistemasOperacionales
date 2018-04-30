@@ -1,9 +1,12 @@
 package co.edu.eam.ingesoft.bi.negocio.beans;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -22,6 +25,7 @@ public class VentaEJB {
 	 * Se registra la venta en la base de datos
 	 * @param v venta que se desea registrar
 	 */
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void registrarVenta (FacturaVenta v){
 		em.persist(v);
 	}
@@ -30,6 +34,7 @@ public class VentaEJB {
 	 * Registra un detalle venta en la base de datos
 	 * @param dv detalle venta que se desea registrar
 	 */
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void registrarDetalleVenta (DetalleVenta dv){
 		em.merge(dv);
 	}
@@ -43,6 +48,22 @@ public class VentaEJB {
 		Query q = em.createNamedQuery(FacturaVenta.OBTENER_ULTIMA_REGISTRADA);
 		q.setParameter(1, cedulaCliente);
 		return (int) ((Integer)q.getSingleResult());
+	}
+	
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	public List<FacturaVenta> listarFacturasPorFecha(String fecha){
+		Query q = em.createNamedQuery(FacturaVenta.LISTAR_POR_FECHA);
+		q.setParameter(1, fecha);
+		List<FacturaVenta> facturas = q.getResultList();
+		return facturas;
+	}
+	
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	public List<DetalleVenta> listarDetallesVentaFactura(FacturaVenta factura){
+		Query q = em.createNamedQuery(DetalleVenta.LISTAR_DETALLES_FACTURA);
+		q.setParameter(1, factura);
+		List<DetalleVenta> lista = q.getResultList();
+		return lista;
 	}
 	
 }

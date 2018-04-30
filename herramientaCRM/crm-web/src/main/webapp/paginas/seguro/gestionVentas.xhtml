@@ -1,0 +1,67 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" template="/templates/index.xhtml">
+
+	<ui:define name="cuerpo">
+		<h:form prependId="false">
+
+
+			<h1>GESTIÓN VENTAS</h1>
+
+			<br></br>
+			<br></br>
+			<br></br>
+
+			<h:panelGrid columns="2" id="panelFecha">
+
+				<p:outputLabel id="maskIngres" value="FechaIngreso" />
+				<p:inputMask id="dateIngreso"
+					value="#{controladorGestionVentas.fechaCompra}" mask="99/99/9999" />
+
+				<p:commandButton value="Buscar" process="@this,panelFecha"
+					update="panelTablaFacturas"
+					action="#{controladorGestionVentas.listarFacturasFecha}" />
+
+			</h:panelGrid>
+			
+			<br />
+
+			<h:panelGrid id="panelTablaFacturas" columns="1" width="80%">
+
+				<p:dataTable id="tablaTipos"
+					value="#{controladorTipoUsuario.tiposUsuario}" var="tipo"
+					border="1">
+
+					<p:column headerText="Id">
+						<h:outputLabel value="#{tipo.id}" />
+					</p:column>
+
+					<p:column headerText="Nombre " filterBy="#{tipo.nombre}">
+						<h:outputLabel value="#{tipo.nombre}" />
+					</p:column>
+
+					<p:column headerText="Descripcion">
+						<h:outputLabel value="#{tipo.descripcion}" />
+					</p:column>
+
+					<p:column headerText="Acción">
+						<p:commandButton value="Editar" process="@this,tablaTipos"
+							update="panelDatos"
+							action="#{controladorTipoUsuario.habilitarEdicion(tipo)}" />
+
+						<p:commandButton value="Eliminar" process="@this"
+							update="panelTabla"
+							action="#{controladorTipoUsuario.eliminarTipo(tipo)}" />
+					</p:column>
+
+				</p:dataTable>
+
+			</h:panelGrid>
+
+
+		</h:form>
+	</ui:define>
+
+</ui:composition>
