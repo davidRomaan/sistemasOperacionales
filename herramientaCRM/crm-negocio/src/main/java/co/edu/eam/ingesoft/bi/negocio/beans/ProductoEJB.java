@@ -13,6 +13,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.Inventario;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.InventarioProducto;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Lote;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Producto;
@@ -35,22 +36,25 @@ public class ProductoEJB {
 	public void editarProducto(Producto producto) {
 		em.merge(producto);
 	}
-	
+
 	/**
 	 * Edita un inventario de un producto
-	 * @param ip inventario del producto a editar
+	 * 
+	 * @param ip
+	 *            inventario del producto a editar
 	 */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void editarInventarioProducto(InventarioProducto ip){
+	public void editarInventarioProducto(InventarioProducto ip) {
 		em.merge(ip);
 	}
-	
+
 	/**
 	 * Lista los tipos de producto regstrados en la base de datos
+	 * 
 	 * @return la lista de tipos de producto registrados
 	 */
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-	public List<TipoProducto> listarTiposProducto(){
+	public List<TipoProducto> listarTiposProducto() {
 		Query q = em.createNamedQuery(TipoProducto.LISTAR);
 		List<TipoProducto> tipos = q.getResultList();
 		return tipos;
@@ -84,14 +88,16 @@ public class ProductoEJB {
 		// TODO Auto-generated method stub
 		return em.find(Producto.class, id);
 	}
-	
+
 	/**
 	 * Busca el lote de un producto en la base de datos
-	 * @param codigo código del lote
+	 * 
+	 * @param codigo
+	 *            código del lote
 	 * @return el lote si lo encuetra, de lo contrario null
 	 */
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-	public Lote buscarloteProducto(int codigo){
+	public Lote buscarloteProducto(int codigo) {
 		return em.find(Lote.class, codigo);
 	}
 
@@ -106,7 +112,7 @@ public class ProductoEJB {
 		List<Producto> lista = q.getResultList();
 		return lista;
 	}
-	
+
 	/**
 	 * Lista los productos registrados
 	 * 
@@ -129,6 +135,8 @@ public class ProductoEJB {
 	public void eliminarProducto(Producto producto) {
 		em.remove(em.contains(producto) ? producto : em.merge(producto));
 	}
+	
+	
 
 	/**
 	 * Obtiene la lista de lotes registrados en la base de datos
@@ -140,6 +148,42 @@ public class ProductoEJB {
 		Query q = em.createNamedQuery(Lote.LISTA_LOTES);
 		List<Lote> lotes = q.getResultList();
 		return lotes;
+	}
+
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	public Inventario buscarNombre(String nombre) {
+		Query q = em.createNamedQuery(Inventario.BUSCAR_NOMBRE);
+		q.setParameter(1, nombre);
+		List<Inventario> lista = q.getResultList();
+		if (lista.size() != 0) {
+			return lista.get(0);
+		}
+		return null;
+	}
+
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void registrarInventario(Inventario inventario) throws ExcepcionNegocio {
+		if (buscarNombre(inventario.getNombre()) != null) {
+			throw new ExcepcionNegocio("Ya existe un inventario con este nombre");
+		} else {
+			em.persist(inventario);
+		}
+	}
+
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void editarInventario(Inventario inventario) {
+		em.merge(inventario);
+	}
+
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void eliminarInventario(Inventario inventario) {
+		em.remove(em.contains(inventario) ? inventario : em.merge(inventario));
+	}
+
+	public List<Inventario> listarInventario() {
+		Query q = em.createNamedQuery(Inventario.LISTAR);
+		List<Inventario> lista = q.getResultList();
+		return lista;
 	}
 
 }

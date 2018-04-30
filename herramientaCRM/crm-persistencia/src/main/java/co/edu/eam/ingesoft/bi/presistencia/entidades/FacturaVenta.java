@@ -13,15 +13,24 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "FACTURA_VENTA")
 @NamedQueries({
 		@NamedQuery(name = FacturaVenta.OBTENER_ULTIMA_REGISTRADA, query = "SELECT MAX(fv.id) FROM FacturaVenta fv "
-				+ "WHERE fv.clienteId.cedula = ?1") })
+				+ "WHERE fv.clienteId.cedula = ?1"),
+		@NamedQuery(name=FacturaVenta.LISTAR_POR_FECHA, query="SELECT fv FROM FacturaVenta fv WHERE fv.fechaVenta = ?1")})
 public class FacturaVenta implements Serializable {
 
 	public static final String OBTENER_ULTIMA_REGISTRADA = "facturaVenta.obtener";
+	
+	/**
+	 * Lista las facturas por fecha
+	 * ?1 fecha
+	 */
+	public static final String LISTAR_POR_FECHA = "facturaVenta.listarPorFecha";
 
 	@Id
 	@Column(name = "id")
@@ -29,7 +38,7 @@ public class FacturaVenta implements Serializable {
 	private int id;
 
 	@Column(name = "fecha_venta")
-	private Date fechaVenta;
+	private String fechaVenta;
 
 	@Column(name = "total")
 	private double total;
@@ -42,7 +51,7 @@ public class FacturaVenta implements Serializable {
 	@ManyToOne(cascade = {})
 	private Persona empleadoId;
 
-	public FacturaVenta(int id, Date fechaVenta, double total, Persona clienteId, Persona empleadoId) {
+	public FacturaVenta(int id, String fechaVenta, double total, Persona clienteId, Persona empleadoId) {
 		super();
 		this.id = id;
 		this.fechaVenta = fechaVenta;
@@ -63,11 +72,11 @@ public class FacturaVenta implements Serializable {
 		this.id = id;
 	}
 
-	public Date getFechaVenta() {
+	public String getFechaVenta() {
 		return fechaVenta;
 	}
 
-	public void setFechaVenta(Date fechaVenta) {
+	public void setFechaVenta(String fechaVenta) {
 		this.fechaVenta = fechaVenta;
 	}
 

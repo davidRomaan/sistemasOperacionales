@@ -1,5 +1,6 @@
 package co.edu.eam.ingesoft.bi.web.controladores;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,9 +11,11 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
 
 import co.edu.eam.ingesoft.bi.negocio.beans.DepartamentoEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.ProductoEJB;
@@ -115,6 +118,11 @@ public class ControladorVentas implements Serializable {
 	public void listarMunicipios() {
 		municipios = departamentoEJB.listarMunicipiosDepartamento(deptoSeleccionado);
 	}
+	
+	private void reload() throws IOException {
+	    ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+	    ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
+	}
 
 	/**
 	 * Se asigna la fatura a cada uno de los detalles de venta
@@ -137,6 +145,11 @@ public class ControladorVentas implements Serializable {
 		detalleAgregar = new DetalleVenta();
 		detalleAgregar.setProducto(p.getProductoId());
 		inventarioProductoComprar = p;
+		try{
+			reload();
+		}catch (IOException e){
+			
+		}
 	}
 
 	/**
@@ -152,6 +165,11 @@ public class ControladorVentas implements Serializable {
 				productosCompra.add(detalleAgregar);
 				inventariosEditar.add(inventarioProductoComprar);
 				detalleAgregar = null;
+				try{
+					reload();
+				}catch (IOException e){
+					
+				}
 			} else {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 						"No existe esta cantidad en el inventario", null));
@@ -182,6 +200,11 @@ public class ControladorVentas implements Serializable {
 		inventariosEditar.remove(inventarioProductoComprar);
 		inventarioProductoComprar.setCantidad(inventarioProductoComprar.getCantidad() + dv.getCantidad());
 		productosCompra.remove(dv);
+		try{
+			reload();
+		}catch (IOException e){
+			
+		}
 	}
 
 	/**
@@ -248,7 +271,9 @@ public class ControladorVentas implements Serializable {
 
 			if (cliente != null) {
 				factura.setClienteId(cliente);
-				factura.setFechaVenta(new Date());
+				Date fecha = new Date();
+				String nuevaFecha = fecha.getDate()+"/"+fecha.getMonth()+1+"/"+fecha.getYear();
+				factura.setFechaVenta(nuevaFecha);
 				factura.setTotal(totalVenta);
 				factura.setEmpleadoId(sesion.getUser());
 				ventaEJB.registrarVenta(factura);
@@ -335,6 +360,11 @@ public class ControladorVentas implements Serializable {
 							"El cliente no se encuentra registrado, este debe ser registrado para continuar con la venta",
 							null));
 
+		}
+		try{
+			reload();
+		}catch (IOException e){
+			
 		}
 	}
 

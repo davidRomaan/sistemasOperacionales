@@ -14,28 +14,33 @@ import javax.persistence.Table;
 
 @Entity
 @IdClass(InventarioProductoPK.class)
-@Table(name="INVENTARIO_PRODUCTO")
-@NamedQueries({
-	@NamedQuery(name=InventarioProducto.LISTAR, query="SELECT ip FROM InventarioProducto ip")
-})
-public class InventarioProducto implements Serializable{
-	
+@Table(name = "INVENTARIO_PRODUCTO")
+@NamedQueries({ @NamedQuery(name = InventarioProducto.LISTAR, query = "SELECT ip FROM InventarioProducto ip"),
+		@NamedQuery(name = InventarioProducto.BUSCAR_INVENTARIO_PRODUCTO, query = "SELECT ip FROM InventarioProducto ip "
+				+ "WHERE ip.productoId = ?1") })
+public class InventarioProducto implements Serializable {
+
 	/**
 	 * Lista los inventarios de los productos
 	 */
 	public static final String LISTAR = "ip.listar";
-	
+
+	/**
+	 * Busca el inventario de un producto por producto ?1 el producto
+	 */
+	public static final String BUSCAR_INVENTARIO_PRODUCTO = "ip.buscarProducto";
+
 	@Id
-	@JoinColumn(name="inventario_id")
+	@JoinColumn(name = "inventario_id")
 	@ManyToOne
 	private Inventario inventarioId;
-	
+
 	@Id
-	@JoinColumn(name="producto_id")
+	@JoinColumn(name = "producto_id")
 	@ManyToOne
 	private Producto productoId;
-	
-	@Column(name="cantidad", length=30)
+
+	@Column(name = "cantidad", length = 30)
 	private int cantidad;
 
 	public InventarioProducto() {
@@ -48,8 +53,6 @@ public class InventarioProducto implements Serializable{
 		this.cantidad = cantidad;
 		this.productoId = productoId;
 	}
-	
-	
 
 	public int getCantidad() {
 		return cantidad;
@@ -74,8 +77,5 @@ public class InventarioProducto implements Serializable{
 	public void setProductoId(Producto productoId) {
 		this.productoId = productoId;
 	}
-	
-	
-	
 
 }

@@ -1,13 +1,16 @@
 package co.edu.eam.ingesoft.bi.web.controladores;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
 
 import org.omnifaces.util.Messages;
 
@@ -37,7 +40,7 @@ public class ControladorTipoUsuario implements Serializable {
 		if (!validarCamposVacios()) {
 			Messages.addFlashGlobalError("Debe ingresar todos los campos");
 		} else {
-			TipoUsuario tu = new TipoUsuario(nombre, descripcion);
+			TipoUsuario tu = new TipoUsuario(nombre.toUpperCase(), descripcion);
 			try {
 				tipoUsuarioEJB.registrar(tu);
 				listarTipos();
@@ -76,7 +79,7 @@ public class ControladorTipoUsuario implements Serializable {
 		if (!validarCamposVacios()){
 			Messages.addFlashGlobalError("Debe ingresar todos los campos");
 		} else {
-			tipoEditar.setNombre(nombre);
+			tipoEditar.setNombre(nombre.toUpperCase());
 			tipoEditar.setDescripcion(descripcion);
 			tipoUsuarioEJB.editar(tipoEditar);
 			listarTipos();
@@ -84,14 +87,6 @@ public class ControladorTipoUsuario implements Serializable {
 			tipoEditar = null;
 			limpiarCampos();
 		}
-	}
-	
-	/**
-	 * Refresca la página
-	 * @return la pagina refrescada
-	 */
-	private String refresacarPagina(){
-		return "paginas/seguro/gestionTipoUsuario.xhtml?faces-redirect=true";
 	}
 	
 	/**
@@ -110,6 +105,16 @@ public class ControladorTipoUsuario implements Serializable {
 		tipoEditar = tu;
 		nombre = tipoEditar.getNombre();
 		descripcion = tipoEditar.getDescripcion();
+		try{
+			reload();
+		}catch (IOException e){
+			
+		}
+	}
+	
+	private void reload() throws IOException {
+	    ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+	    ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
 	}
 	
 	/**
