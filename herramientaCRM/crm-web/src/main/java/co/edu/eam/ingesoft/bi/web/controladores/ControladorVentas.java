@@ -295,6 +295,7 @@ public class ControladorVentas implements Serializable {
 				factura.setClienteId(cliente);
 				Date fecha = new Date();
 				String nuevaFecha = fecha.getDate()+"/"+fecha.getMonth()+1+"/"+fecha.getYear();
+				
 				factura.setFechaVenta(nuevaFecha);
 				factura.setTotal(totalVenta);
 				factura.setEmpleadoId(sesion.getUser());

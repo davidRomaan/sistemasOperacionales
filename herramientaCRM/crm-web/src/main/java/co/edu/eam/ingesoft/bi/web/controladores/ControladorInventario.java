@@ -137,7 +137,7 @@ public class ControladorInventario implements Serializable {
 		
 	}
 	
-	public void eliminarInventario(Inventario inventario){
+	public void eliminarInventario(Inventario inventario){	
 		productoEJB.eliminarInventario(inventario); 
 	}
 	
