@@ -1,32 +1,23 @@
 package co.edu.eam.ingesoft.bi.negocio.beans;
 
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Area;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaArea;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaDetalleVenta;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaInventario;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaPersona;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaProducto;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaUsuario;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.DetalleVenta;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.Inventario;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.InventarioProducto;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.Persona;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.Producto;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.Usuario;
 
 @LocalBean
 @Stateless
-public class AuditoriaPersonaEJB {
-
+public class AuditoriaAreaEJB {
+	
+	
+	
 	@PersistenceContext
 	private EntityManager em;
 
@@ -87,7 +78,10 @@ public class AuditoriaPersonaEJB {
 		}
 
 	}
-
+	
+	
+	
+	
 	/**
 	 * 
 	 * @param persona
@@ -97,7 +91,7 @@ public class AuditoriaPersonaEJB {
 	 * @param usuario
 	 * @param usuarioAf
 	 */
-	public void crearAuditoriaPersona(Usuario usu, String accion, String browserDeta) {
+	public void crearAuditoriaArea(Area area, String accion, String browserDeta) {
 
 		this.browserDetails = browserDeta;
 		userAgent = browserDetails;
@@ -120,24 +114,15 @@ public class AuditoriaPersonaEJB {
 		fechaGuardar.set(anio, mes, dia);
 		fechaGuardar.setTime(horaGuadar);
 		
-		AuditoriaUsuario audiUsuario = new AuditoriaUsuario();
-		audiUsuario.setAccion(accion);
-		audiUsuario.setFechaHora(fechaGuardar);
-		audiUsuario.setUsuarioId(usu);
-		audiUsuario.setDispositivo(os);
-		audiUsuario.setNavegador(browser);		
+		AuditoriaArea auditoriaArea = new AuditoriaArea();
+		auditoriaArea.setAccion(accion);
+		auditoriaArea.setFechaHora(fechaGuardar);
+		auditoriaArea.setArea(area);
+		auditoriaArea.setDispositivo(os);
+		auditoriaArea.setNavegador(browser);	
 
-		em.persist(audiUsuario);
-	
+		em.persist(auditoriaArea);
 
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 }
