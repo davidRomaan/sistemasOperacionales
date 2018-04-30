@@ -6,6 +6,8 @@ import java.util.GregorianCalendar;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -89,6 +91,7 @@ public class AuditoriaDetalleVentaEJB {
 	 * @param usuario
 	 * @param usuarioAf
 	 */
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void crearAuditoriaDetalleVenta(DetalleVenta dt, String accion, String browserDeta) {
 
 		this.browserDetails = browserDeta;

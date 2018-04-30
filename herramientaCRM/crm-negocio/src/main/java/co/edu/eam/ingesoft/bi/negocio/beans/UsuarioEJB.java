@@ -94,7 +94,7 @@ public class UsuarioEJB {
 	 */
 	public Usuario buscarCliente(String cedula) {
 		Usuario cliente = buscarUsuarioCedula(cedula);
-		if (cliente.getTipoUsuario().getNombre().equals("cliente")) {
+		if (cliente.getTipoUsuario().getNombre().equalsIgnoreCase("cliente")) {
 			return cliente;
 		}
 		return null;

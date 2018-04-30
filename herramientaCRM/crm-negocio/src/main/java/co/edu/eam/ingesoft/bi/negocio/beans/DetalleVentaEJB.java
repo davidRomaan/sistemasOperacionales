@@ -8,6 +8,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import co.edu.eam.ingesoft.bi.presistencia.entidades.DetalleVenta;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.DetalleVentaPK;
@@ -19,45 +20,33 @@ public class DetalleVentaEJB {
 
 	@PersistenceContext
 	EntityManager em;
-	
+
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-	public DetalleVenta buscar(DetalleVentaPK pk){
+	public DetalleVenta buscar(DetalleVentaPK pk) {
 		return em.find(DetalleVenta.class, pk);
 	}
-	
+
 	/**
 	 * Registra un detalle venta en la base de datos
-	 * @param dv detalle venta que se desea registrar
+	 * 
+	 * @param dv
+	 *            detalle venta que se desea registrar
 	 */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void registrarDetalleVenta (List<DetalleVenta> detalles, FacturaVenta factura){
-				
-		for (DetalleVenta detalleVenta : detalles) {
-			
-			DetalleVentaPK primaria = new DetalleVentaPK();
-			
-			primaria.setFacturaVenta(factura.getId());
-			primaria.setProducto(detalleVenta.getProducto().getId());
-			
-			DetalleVenta detalle = buscar(primaria);
-			
-			if (detalle == null){
-								
-				em.persist(detalle);
-				
-			}
-			
+	public void registrarDetalleVenta(List<DetalleVenta> detalles, FacturaVenta factura) {
+
+		for (DetalleVenta dv : detalles) {
+
+			Query q = em.createNativeQuery("INSERT INTO DETALLE_VENTA (factura_venta_id, "
+					+ "producto_id, cantidad, subtotal) VALUES (?1,?2,?3,?4)");
+			q.setParameter(1, factura.getId());
+			q.setParameter(2, dv.getProducto().getId());
+			q.setParameter(3, dv.getCantidad());
+			q.setParameter(4, dv.getSubtotal());
+			q.executeUpdate();
+
 		}
-		//System.out.println("detalle " + dv.getProducto().getNombre());
-		//em.persist(dv);
-		/**Query q = em.createNativeQuery("INSERT INTO DETALLE_VENTA (factura_venta_id, "
-				+ "producto_id, cantidad, subtotal) VALUES (?1,?2,?3,?4)");
-		q.setParameter(1, dv.getFacturaVenta().getId());
-		q.setParameter(2, dv.getProducto().getId());
-		q.setParameter(3, dv.getCantidad());
-		q.setParameter(4, dv.getSubtotal());
-		System.out.println("Query " + q.toString());
-		q.executeUpdate();**/
+
 	}
-	
+
 }

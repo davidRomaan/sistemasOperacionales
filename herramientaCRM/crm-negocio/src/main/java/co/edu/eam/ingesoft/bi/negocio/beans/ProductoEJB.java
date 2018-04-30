@@ -49,7 +49,12 @@ public class ProductoEJB {
 	 */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void editarInventarioProducto(InventarioProducto ip) {
-		em.merge(ip);
+		Query q = em.createNativeQuery("UPDATE INVENTARIO_PRODUCTO SET cantidad = ?1 "
+				+ "WHERE inventario_id = ?2 AND producto_id = ?3");
+		q.setParameter(1, ip.getCantidad());
+		q.setParameter(2, ip.getInventarioId().getId());
+		q.setParameter(3, ip.getProductoId().getId());
+		q.executeUpdate();
 	}
 
 	/**
@@ -139,29 +144,29 @@ public class ProductoEJB {
 	public void eliminarProducto(Producto producto) {
 		em.remove(em.contains(producto) ? producto : em.merge(producto));
 	}
-	
+
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-	public InventarioProducto buscarInventarioProducto (Producto producto){
+	public InventarioProducto buscarInventarioProducto(Producto producto) {
 		Query q = em.createNamedQuery(InventarioProducto.BUSCAR_INVENTARIO_PRODUCTO);
 		q.setParameter(1, producto);
 		List<InventarioProducto> lista = q.getResultList();
 		return lista.get(0);
 	}
-	
+
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-	public List<InventarioProducto> inventariosProducto (Producto prod){
+	public List<InventarioProducto> inventariosProducto(Producto prod) {
 		Query q = em.createNamedQuery(InventarioProducto.BUSCAR_INVENTARIO_PRODUCTO);
 		q.setParameter(1, prod);
 		List<InventarioProducto> lista = q.getResultList();
 		return lista;
 	}
-	
+
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-	public List<Inventario> listarInventarios(){
+	public List<Inventario> listarInventarios() {
 		Query q = em.createNamedQuery(Inventario.LISTAR);
 		List<Inventario> lista = q.getResultList();
 		return lista;
- 	}
+	}
 
 	/**
 	 * Obtiene la lista de lotes registrados en la base de datos
@@ -185,9 +190,9 @@ public class ProductoEJB {
 		}
 		return null;
 	}
-	
+
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-	public Inventario buscarInventarioId (int id){
+	public Inventario buscarInventarioId(int id) {
 		return em.find(Inventario.class, id);
 	}
 
@@ -216,26 +221,21 @@ public class ProductoEJB {
 		List<Inventario> lista = q.getResultList();
 		return lista;
 	}
-	
+
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void registrarInventarioProducto (InventarioProducto ip){
-					
-			InventarioProductoPK primaria = new InventarioProductoPK();
-			
-			primaria.setInventarioId(ip.getInventarioId().getId());
-			primaria.setProductoId(ip.getProductoId().getId());
-			
-			InventarioProducto inventario = buscarInventarioProdPK(primaria);
-			
-			if (inventario == null){
-							
-				em.persist(ip);
-							
-		}
+	public void registrarInventarioProducto(InventarioProducto ip) {
+
+		Query q = em.createNativeQuery("INSERT INTO INVENTARIO_PRODUCTO (inventario_id, "
+				+ "producto_id, cantidad) VALUES (?1,?2,?3)");
+		q.setParameter(1, ip.getInventarioId().getId());
+		q.setParameter(2, ip.getProductoId().getId());
+		q.setParameter(3, ip.getCantidad());
+		System.out.println("Query " + q.toString());
+		q.executeUpdate();
 	}
-	
+
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-	public InventarioProducto buscarInventarioProdPK (InventarioProductoPK inventario){
+	public InventarioProducto buscarInventarioProdPK(InventarioProductoPK inventario) {
 		return em.find(InventarioProducto.class, inventario);
 	}
 
