@@ -14,7 +14,7 @@ import javax.inject.Named;
 
 import org.omnifaces.util.Faces;
 
-import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaPersonaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.MunicipioEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.PersonaEJB;
 import co.edu.eam.ingesoft.bi.persistencia.enumeraciones.Genero;
@@ -57,7 +57,7 @@ public class ControladorPersona implements Serializable{
 	private MunicipioEJB municipioEJB;
 	
 	@EJB
-	AuditoriaEJB auditoriaEJB;
+	AuditoriaPersonaEJB auditoriaEJB;
 	
 	private List<Municipio> municipios;
 	
@@ -71,7 +71,7 @@ public class ControladorPersona implements Serializable{
 		generos = Arrays.asList(Genero.values());
 		departamentos = personaEJB.listaDepartamentos();
 		municipios = personaEJB.listaMunicipiosPorDepartamento(1);
-		accion = "registrar";
+		
 	}
 	
 	public void listarMunicipios () {
@@ -104,6 +104,8 @@ public class ControladorPersona implements Serializable{
 			
 			
 			try {
+				
+				accion = "registrar";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");	
 				auditoriaEJB.crearAuditoriaPersona(persona, accion, browserDetail);
 			

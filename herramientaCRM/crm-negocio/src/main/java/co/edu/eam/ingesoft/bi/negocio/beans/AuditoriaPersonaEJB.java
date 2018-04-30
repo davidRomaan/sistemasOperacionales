@@ -23,7 +23,7 @@ import co.edu.eam.ingesoft.bi.presistencia.entidades.Producto;
 
 @LocalBean
 @Stateless
-public class AuditoriaEJB {
+public class AuditoriaPersonaEJB {
 
 	@PersistenceContext
 	private EntityManager em;
@@ -130,176 +130,12 @@ public class AuditoriaEJB {
 
 	}
 	
-	/**
-	 * 
-	 * @param persona
-	 * @param accion
-	 * @param nombreReg
-	 * @param browserDeta
-	 * @param usuario
-	 * @param usuarioAf
-	 */
-	public void crearAuditoriaArea(Area area, String accion, String browserDeta) {
-
-		this.browserDetails = browserDeta;
-		userAgent = browserDetails;
-		user2 = userAgent.toLowerCase();
-
-		identificarNavegadorPeticion();
-
-		Calendar fechaActual = new GregorianCalendar();
-		int dia = fechaActual.get(Calendar.DAY_OF_MONTH);
-		int mes = fechaActual.get(Calendar.MONTH);
-		int anio = fechaActual.get(Calendar.YEAR);
-		int minutos = fechaActual.get(Calendar.SECOND);
-		int hora = fechaActual.get(Calendar.HOUR);
-		
-		Date horaGuadar = new Date();
-		horaGuadar.setMinutes(minutos);
-		horaGuadar.setHours(hora);
-		
-		Calendar fechaGuardar = new GregorianCalendar();
-		fechaGuardar.set(anio, mes, dia);
-		fechaGuardar.setTime(horaGuadar);
-		
-		AuditoriaArea auditoriaArea = new AuditoriaArea();
-		auditoriaArea.setAccion(accion);
-		auditoriaArea.setFechaHora(fechaGuardar);
-		auditoriaArea.setArea(area);
-		auditoriaArea.setDispositivo(os);
-		auditoriaArea.setNavegador(browser);	
-
-		em.persist(auditoriaArea);
-
-	}
 	
-	/**
-	 * 
-	 * @param persona
-	 * @param accion
-	 * @param nombreReg
-	 * @param browserDeta
-	 * @param usuario
-	 * @param usuarioAf
-	 */
-	public void crearAuditoriaDetalleVenta(DetalleVenta dt, String accion, String browserDeta) {
-
-		this.browserDetails = browserDeta;
-		userAgent = browserDetails;
-		user2 = userAgent.toLowerCase();
-
-		identificarNavegadorPeticion();
-
-		Calendar fechaActual = new GregorianCalendar();
-		int dia = fechaActual.get(Calendar.DAY_OF_MONTH);
-		int mes = fechaActual.get(Calendar.MONTH);
-		int anio = fechaActual.get(Calendar.YEAR);
-		int minutos = fechaActual.get(Calendar.SECOND);
-		int hora = fechaActual.get(Calendar.HOUR);
-		
-		Date horaGuadar = new Date();
-		horaGuadar.setMinutes(minutos);
-		horaGuadar.setHours(hora);
-		
-		Calendar fechaGuardar = new GregorianCalendar();
-		fechaGuardar.set(anio, mes, dia);
-		fechaGuardar.setTime(horaGuadar);
-		
-		AuditoriaDetalleVenta detalleVenta = new AuditoriaDetalleVenta();
-		detalleVenta.setSeleccion(accion);
-		detalleVenta.setFechaHora(fechaGuardar);
-		detalleVenta.setDetalleVenta(dt);
-		detalleVenta.setDispositivo(os);
-		detalleVenta.setNavegador(browser);	
-
-		em.persist(detalleVenta);
-
-	}
 	
-	/**
-	 * 
-	 * @param persona
-	 * @param accion
-	 * @param nombreReg
-	 * @param browserDeta
-	 * @param usuario
-	 * @param usuarioAf
-	 */
-	public void crearAuditoriaInventario( Inventario inventario, String accion, String browserDeta) {
-
-		this.browserDetails = browserDeta;
-		userAgent = browserDetails;
-		user2 = userAgent.toLowerCase();
-
-		identificarNavegadorPeticion();
-
-		Calendar fechaActual = new GregorianCalendar();
-		int dia = fechaActual.get(Calendar.DAY_OF_MONTH);
-		int mes = fechaActual.get(Calendar.MONTH);
-		int anio = fechaActual.get(Calendar.YEAR);
-		int minutos = fechaActual.get(Calendar.SECOND);
-		int hora = fechaActual.get(Calendar.HOUR);
-		
-		Date horaGuadar = new Date();
-		horaGuadar.setMinutes(minutos);
-		horaGuadar.setHours(hora);
-		
-		Calendar fechaGuardar = new GregorianCalendar();
-		fechaGuardar.set(anio, mes, dia);
-		fechaGuardar.setTime(horaGuadar);
-		
-		AuditoriaInventario invenProducto = new AuditoriaInventario();
-		invenProducto.setAccion(accion);
-		invenProducto.setFechaHora(fechaGuardar);
-		invenProducto.setInventario(inventario);
-		invenProducto.setDispositivo(os);
-		invenProducto.setNavegador(browser);	
-
-		em.persist(invenProducto);
-
-	}
 	
-	/**
-	 * 
-	 * @param persona
-	 * @param accion
-	 * @param nombreReg
-	 * @param browserDeta
-	 * @param usuario
-	 * @param usuarioAf
-	 */
-	public void crearAuditoriaProducto( Producto producto, String accion, String browserDeta) {
-
-		this.browserDetails = browserDeta;
-		userAgent = browserDetails;
-		user2 = userAgent.toLowerCase();
-
-		identificarNavegadorPeticion();
-
-		Calendar fechaActual = new GregorianCalendar();
-		int dia = fechaActual.get(Calendar.DAY_OF_MONTH);
-		int mes = fechaActual.get(Calendar.MONTH);
-		int anio = fechaActual.get(Calendar.YEAR);
-		int minutos = fechaActual.get(Calendar.SECOND);
-		int hora = fechaActual.get(Calendar.HOUR);
-		
-		Date horaGuadar = new Date();
-		horaGuadar.setMinutes(minutos);
-		horaGuadar.setHours(hora);
-		
-		Calendar fechaGuardar = new GregorianCalendar();
-		fechaGuardar.set(anio, mes, dia);
-		fechaGuardar.setTime(horaGuadar);
-		
-		AuditoriaProducto pro = new AuditoriaProducto();
-		pro.setAccion(accion);
-		pro.setFechaHora(fechaGuardar);
-		pro.setProducto(producto);
-		pro.setDispositivo(os);
-		pro.setNavegador(browser);	
-
-		em.persist(pro);
-
-	}
+	
+	
+	
+	
 	
 }

@@ -16,7 +16,8 @@ import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 import org.omnifaces.util.Messages.Message;
 
-import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaInventarioEJB;
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaPersonaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.ProductoEJB;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Inventario;
@@ -34,7 +35,8 @@ public class ControladorInventario implements Serializable {
 	@EJB
 	private ProductoEJB productoEJB;
 	
-	private AuditoriaEJB auditoriaEJB;
+	@EJB
+	private AuditoriaInventarioEJB inventarioEJB;
 	
 	@PostConstruct
 	private void postConstruct(){
@@ -62,7 +64,7 @@ public class ControladorInventario implements Serializable {
 			accion = "Regitro Inventario";
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
 			
-			auditoriaEJB.crearAuditoriaInventario(inventario, accion, browserDetail);
+			inventarioEJB.crearAuditoriaInventario(inventario, accion, browserDetail);
 		
 		}catch (Exception e) {
 			e.printStackTrace();

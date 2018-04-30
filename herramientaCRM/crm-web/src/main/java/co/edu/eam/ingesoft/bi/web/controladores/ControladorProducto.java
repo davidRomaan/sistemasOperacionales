@@ -14,7 +14,8 @@ import javax.inject.Named;
 
 import org.omnifaces.util.Faces;
 
-import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaPersonaEJB;
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaProductoEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.ProductoEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.TipoProductoEJB;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
@@ -47,7 +48,7 @@ public class ControladorProducto implements Serializable {
 	private String accion;
 	
 	@EJB
-	private AuditoriaEJB auditoriaEJB;
+	private AuditoriaProductoEJB auditoriaProductoEJB;
 
 	@EJB
 	private ProductoEJB productoEJB;
@@ -177,7 +178,7 @@ public class ControladorProducto implements Serializable {
 
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
 
-				auditoriaEJB.crearAuditoriaProducto(producto, accion, browserDetail);
+				auditoriaProductoEJB.crearAuditoriaProducto(producto, accion, browserDetail);
 
 			} catch (Exception e) {
 				e.printStackTrace();

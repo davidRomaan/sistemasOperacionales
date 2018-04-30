@@ -19,7 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.omnifaces.util.Faces;
 
-import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaDetalleVentaEJB;
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaPersonaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.DepartamentoEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.ProductoEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.UsuarioEJB;
@@ -90,7 +91,7 @@ public class ControladorVentas implements Serializable {
 	private DepartamentoEJB departamentoEJB;
 	
 	@EJB
-	private AuditoriaEJB auditoriaEJB;
+	private AuditoriaDetalleVentaEJB auditoriaDetalleVentasEJB;
 
 	/**
 	 * Carga los elementos al iniciar la p�gina
@@ -140,7 +141,7 @@ public class ControladorVentas implements Serializable {
 			try {
 				accion = "Registrar Detalle Venta";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoriaDetalleVenta(detalleVenta, accion, browserDetail);
+				auditoriaDetalleVentasEJB.crearAuditoriaDetalleVenta(detalleVenta, accion, browserDetail);
 			
 			}catch (Exception e) {
 				e.printStackTrace();
