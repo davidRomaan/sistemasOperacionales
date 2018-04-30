@@ -37,6 +37,15 @@ public class ProductoEJB {
 	}
 	
 	/**
+	 * Edita un inventario de un producto
+	 * @param ip inventario del producto a editar
+	 */
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void editarInventarioProducto(InventarioProducto ip){
+		em.merge(ip);
+	}
+	
+	/**
 	 * Lista los tipos de producto regstrados en la base de datos
 	 * @return la lista de tipos de producto registrados
 	 */

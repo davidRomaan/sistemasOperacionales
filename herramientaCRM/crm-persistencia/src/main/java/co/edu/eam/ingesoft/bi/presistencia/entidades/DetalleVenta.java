@@ -2,6 +2,7 @@ package co.edu.eam.ingesoft.bi.presistencia.entidades;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -17,12 +18,12 @@ public class DetalleVenta implements Serializable{
 	
 	@Id
 	@JoinColumn(name="factura_venta_id")
-	@ManyToOne
+	@ManyToOne(cascade = {})
 	private FacturaVenta facturaVenta;
 	
 	@Id
 	@JoinColumn(name="producto_id")
-	@ManyToOne
+	@ManyToOne(cascade = {})
 	private Producto producto;
 	
 	@Column(name="cantidad")

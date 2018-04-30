@@ -11,7 +11,7 @@
 		<h:form prependId="false">
 
 
-			<h1>ACTIVAR O DESACTIVAR USUARIOS</h1>
+			<h1>USUARIOS</h1>
 			<br></br>
 			<br></br>
 			<br></br>
@@ -20,39 +20,95 @@
 			<h:panelGrid id="panelDatos" columns="2">
 
 				<h:outputLabel id="lblCedula" value="Cedula" />
-				<h:inputText id="tfCedula" value="#{controladorPersonas.cedula}" />
+				<h:inputText id="tfCedula" value="#{controladorActivar.cedula}" />
 
 				<h:outputLabel id="lblNombre" value="Nombre" />
-				<h:inputText id="tfNombre" value="#{controladorPersonas.nombre}" />
+				<h:inputText id="tfNombre" value="#{controladorActivar.nombre}" />
 
 				<h:outputLabel id="lblApellido" value="Apellido" />
-				<h:inputText id="tfApellido" value="#{controladorPersonas.apellido}" />
+				<h:inputText id="tfApellido" value="#{controladorActivar.apellido}" />
 
 				<h:outputLabel id="lblCorreo" value="Correo" />
-				<h:inputText id="tfCorreo" value="#{controladorPersonas.correo}" />
+				<h:inputText id="tfCorreo" value="#{controladorActivar.correo}" />
+
+				<p:outputLabel id="mask" value="FechaNacimiento" />
+				<p:inputMask id="date" value="#{controladorActivar.fechaNacimiento}"
+					mask="99/99/9999" />
 
 				<h:outputLabel id="lblGenero" value="Genero" />
 				<h:selectOneMenu id="cbGenero"
-					value="#{controladorPersonas.tipoGenero}">
+					value="#{controladorActivar.tipoGenero}">
 
-					<f:selectItems value="#{controladorPersonas.generos}" var="genero"
+					<f:selectItems value="#{controladorActivar.generos}" var="genero"
 						itemValue="#{genero}" itemLabel="#{genero}" />
 
 				</h:selectOneMenu>
 
+				<h:outputLabel id="lblTelefono" value="Telefono" />
+				<h:inputText id="tfTelefonno" value="#{controladorActivar.telefono}" />
+
 				<h:outputLabel for="cbMunicipio" id="lbMunicipio"
 					value="#{'Municipio'}" />
 				<h:selectOneMenu id="cbMunicipios"
-					value="#{controladorPersonas.municipioSeleccinado}">
+					value="#{controladorActivar.municipioSeleccionado}">
 
-					<f:selectItems value="#{controladorPersonas.municipios}"
+					<f:selectItems value="#{controladorActivar.municipios}"
 						var="municipio" itemValue="#{municipio.id}"
 						itemLabel="#{municipio.nombre}" />
 
 				</h:selectOneMenu>
 
-			</h:panelGrid>
+				<p:outputLabel id="maskIngres" value="FechaIngreso" />
+				<p:inputMask id="dateIngreso"
+					value="#{controladorActivar.fechaIngreso}" mask="99/99/9999" />
 
+
+				<h:outputLabel id="lblNomUsu" value="Usuario" />
+				<h:inputText id="tfUsuario"
+					value="#{controladorActivar.nombreUsuario}" />
+
+
+				<h:outputLabel for="cbArea" id="lbArea" value="#{'AreaEmpresa'}" />
+				<h:selectOneMenu id="cbAreas"
+					value="#{controladorActivar.areaSeleccionada}">
+
+					<f:selectItems value="#{controladorActivar.areas}" var="area"
+						itemValue="#{area.id}" itemLabel="#{area.nombre}" />
+
+				</h:selectOneMenu>
+
+				<h:outputLabel for="cbCargo" id="lbCargo" value="#{'Cargo'}" />
+				<h:selectOneMenu id="cbCargo"
+					value="#{controladorActivar.cargoSeleccionado}">
+
+					<f:selectItems value="#{controladorActivar.cargos}" var="cargo"
+						itemValue="#{cargo.id}" itemLabel="#{cargo.descripcion}" />
+
+				</h:selectOneMenu>
+
+
+				<h:outputLabel for="cbtipoUsuario" id="lbtipo"
+					value="#{'TipoUsuario'}" />
+				<h:selectOneMenu id="cbtipo"
+					value="#{controladorActivar.tipoUsuarioSeleccionado}">
+
+					<f:selectItems value="#{controladorActivar.tiposUsu}" var="tipo"
+						itemValue="#{tipo.id}" itemLabel="#{tipo.nombre}" />
+
+				</h:selectOneMenu>
+
+			</h:panelGrid>
+			<br></br>
+			<h:panelGrid id="panelContra" columns="3">
+				<h:outputLabel id="lblContra" value="Contrasenia" />
+				<h:inputText id="tfContra" value="#{controladorActivar.contrasenia}" />
+
+				<p:commandButton id="btngenerar" value="#{'Generar Clave'}"
+					process="@this,panelContra" update="panelContra"
+					action="#{controladorActivar.generarClave}" />
+			</h:panelGrid>
+			<br></br>
+			<br></br>
 			<h:panelGrid id="panelBotones" columns="2">
 
 				<p:commandButton id="btnRegistrar" value="#{'Registrar Persona'}"
@@ -60,6 +116,22 @@
 					action="#{controladorPersonas.registrar}" />
 
 			</h:panelGrid>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 			<h:panelGrid id="paneltabla" columns="5" border="1" width="80%">

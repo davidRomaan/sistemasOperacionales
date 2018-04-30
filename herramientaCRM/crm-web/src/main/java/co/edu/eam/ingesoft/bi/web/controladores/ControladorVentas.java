@@ -49,7 +49,7 @@ public class ControladorVentas implements Serializable {
 	private int municipioSeleccionado;
 	private List<Genero> generos;
 
-	// Cliente que va a reliazar la compra 
+	// Cliente que va a reliazar la compra
 	Usuario cliente;
 	private boolean mostrarDatosCliente;
 
@@ -61,6 +61,8 @@ public class ControladorVentas implements Serializable {
 	private List<DetalleVenta> productosCompra;
 	private List<InventarioProducto> productos;
 	private InventarioProducto inventarioProductoComprar;
+	
+	private List<InventarioProducto> inventariosEditar;
 
 	DetalleVenta detalleAgregar;
 
@@ -90,6 +92,7 @@ public class ControladorVentas implements Serializable {
 		productosCompra = new ArrayList<DetalleVenta>();
 		generos = Arrays.asList(Genero.values());
 		municipios = departamentoEJB.listarMunicipiosDepartamento(departamentos.get(0).getId());
+		inventariosEditar = new ArrayList<InventarioProducto>();
 	}
 
 	/**
@@ -147,6 +150,7 @@ public class ControladorVentas implements Serializable {
 				inventarioProductoComprar.setCantidad(inventarioProductoComprar.getCantidad() - cantidad);
 				sumarTotalVenta(cantidad, detalleAgregar.getProducto().getValorProducto());
 				productosCompra.add(detalleAgregar);
+				inventariosEditar.add(inventarioProductoComprar);
 				detalleAgregar = null;
 			} else {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
@@ -175,6 +179,7 @@ public class ControladorVentas implements Serializable {
 	 */
 	public void eliminarDetalleVenta(DetalleVenta dv) {
 		restarTotalVenta(dv);
+		inventariosEditar.remove(inventarioProductoComprar);
 		inventarioProductoComprar.setCantidad(inventarioProductoComprar.getCantidad() + dv.getCantidad());
 		productosCompra.remove(dv);
 	}
@@ -217,34 +222,52 @@ public class ControladorVentas implements Serializable {
 		mostrarDatosCliente = false;
 
 	}
+	
+	/**
+	 * Actualiza las cantidades de los inventarios
+	 */
+	private void actualizarInventarios(){
+		for (InventarioProducto inventarioProducto : inventariosEditar) {
+			productoEJB.editarInventarioProducto(inventarioProducto);
+		}
+	}
 
 	/**
 	 * Crea la factura que se asiganará a los detalle venta
 	 */
 	public void vender() {
 
-		factura = new FacturaVenta();
-
-		if (cliente != null) {
-			factura.setClienteId(cliente);
-			factura.setFechaVenta(new Date());
-			factura.setTotal(totalVenta);
-			factura.setEmpleadoId(sesion.getUser());
-
-			ventaEJB.registrarVenta(factura);
-
-			registrarDetallesVenta();
+		if (productosCompra.size() == 0) {
 
 			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, "La venta se ha registrado exitosamente", null));
-
-			limpiarCampos();
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "No hay productos en el carrito de compras", null));
 
 		} else {
 
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Debe buscar o registrar un cliente previamente", null));
+			factura = new FacturaVenta();
 
+			if (cliente != null) {
+				factura.setClienteId(cliente);
+				factura.setFechaVenta(new Date());
+				factura.setTotal(totalVenta);
+				factura.setEmpleadoId(sesion.getUser());
+				ventaEJB.registrarVenta(factura);
+				
+				factura.setId(ventaEJB.codigoUltimaFacturaCliente(cliente.getCedula()));
+				registrarDetallesVenta();
+				actualizarInventarios();
+
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, "La venta se ha registrado exitosamente", null));
+
+				limpiarCampos();
+
+			} else {
+
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+						"Debe buscar o registrar un cliente previamente", null));
+
+			}
 		}
 
 	}
