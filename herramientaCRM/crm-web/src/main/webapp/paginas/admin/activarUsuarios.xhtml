@@ -93,7 +93,7 @@
 					value="#{controladorActivar.tipoUsuarioSeleccionado}">
 
 					<f:selectItems value="#{controladorActivar.tiposUsu}" var="tipo"
-						itemValue="#{tipo.id}" itemLabel="#{tipo.nombre}" />
+						itemValue="#{tipo.nombre}" itemLabel="#{tipo.nombre}" />
 
 				</h:selectOneMenu>
 
@@ -112,58 +112,44 @@
 			<h:panelGrid id="panelBotones" columns="2">
 
 				<p:commandButton id="btnRegistrar" value="#{'Registrar Persona'}"
-					process="@this,panelDatos" update="panelDatos"
-					action="#{controladorPersonas.registrar}" />
+					process="@this,panelDatos,panelContra" update="panelDatos,panelContra"
+					action="#{controladorActivar.crearUsuario}" />
 
 			</h:panelGrid>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-			<h:panelGrid id="paneltabla" columns="5" border="1" width="80%">
+			<br></br>
+			<br></br>
+			<h:panelGrid id="paneltabla" columns="5" width="80%">
 
 				<p:dataTable id="tablatipos" emptyMessage="Ningun resultado"
-					value="#{controladorActivar.personas}" var="per" border="1">
+					value="#{controladorActivar.usuarios}" var="us" border="1">
 
-					<p:column filterBy="#{per.cedula}" headerText="cedula">
-						<h:outputText value="#{per.cedula}">
+					<p:column filterBy="#{us.cedula}" headerText="cedula">
+						<h:outputText value="#{us.cedula}">
 						</h:outputText>
 					</p:column>
 
 					<p:column headerText="Nombre">
-						<h:outputLabel value="#{per.nombre}"></h:outputLabel>
+						<h:outputLabel value="#{us.nombre}"></h:outputLabel>
 					</p:column>
 
 					<p:column headerText="Apellido">
-						<h:outputLabel value="#{per.apellido}"></h:outputLabel>
+						<h:outputLabel value="#{us.apellido}"></h:outputLabel>
 					</p:column>
 
 					<p:column headerText="Estado">
-						<h:outputLabel value="#{per.activo}"></h:outputLabel>
+						<h:outputLabel value="#{us.estado}"></h:outputLabel>
 					</p:column>
 
 					<p:column headerText="Accion">
 						<p:commandButton
-							action="#{controladorActivar.activarUsuario(per)}"
+							action="#{controladorActivar.activarUsuario(us.cedula)}"
 							process="@this,paneltabla" value="Activar"
 							update="@this,paneltabla" />
 
 						<p:commandButton
-							action="#{controladorActivar.desactivarUsuario(per)}"
+							action="#{controladorActivar.desactivarUsuario(us.cedula)}"
 							process="@this,paneltabla" value="Desactivar"
 							update="@this,paneltabla" />
 					</p:column>

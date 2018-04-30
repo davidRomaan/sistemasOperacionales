@@ -12,12 +12,15 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 
+import org.omnifaces.util.Faces;
+
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.MunicipioEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.PersonaEJB;
 import co.edu.eam.ingesoft.bi.persistencia.enumeraciones.Genero;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.Departamento;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Municipio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Persona;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.Producto;
 
 @Named("controladorPersonas")
 @SessionScoped
@@ -39,9 +42,13 @@ public class ControladorPersona implements Serializable{
 	
 	private int municipioSeleccinado;
 	
+	private int departamentoSelccionado;
+	
 	private Persona personaBuscada;
 	
 	private Municipio municipioBuscado;
+	
+	private String accion;
 
 	@EJB
 	private PersonaEJB personaEJB;
@@ -49,16 +56,29 @@ public class ControladorPersona implements Serializable{
 	@EJB
 	private MunicipioEJB municipioEJB;
 	
+	@EJB
+	AuditoriaEJB auditoriaEJB;
+	
 	private List<Municipio> municipios;
 	
 	private List<Genero> generos;
 	
+	private List<Departamento> departamentos;
+	
 	
 	@PostConstruct
-	public void listares() {
-		municipios = personaEJB.listaMunicipios();
+	public void listares() {  
 		generos = Arrays.asList(Genero.values());
+		departamentos = personaEJB.listaDepartamentos();
+		accion = "registrar";
 	}
+	
+	public void listarMunicipios () {
+		
+		municipios = personaEJB.listaMunicipios(departamentoSelccionado);
+	}
+	
+	
 	
 	
 	public void registrar() {
@@ -79,6 +99,16 @@ public class ControladorPersona implements Serializable{
 			persona.setMunicipio(municipioBuscado);
 			
 			personaEJB.crearPersona(persona);
+			
+			try {
+				
+				String browserDetail = Faces.getRequest().getHeader("User-Agent");
+				
+				auditoriaEJB.crearAuditoriaPersona(persona, accion, browserDetail);
+			
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
 		
 		FacesContext.getCurrentInstance().addMessage(null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, 
@@ -97,12 +127,11 @@ public class ControladorPersona implements Serializable{
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
 							"Ya existe una persona con la cedula ingresado", null));
 			
-		}
-		
-		
+		}	
 		
 		
 	}
+
 
 
 	public String getCedula() {
@@ -226,6 +255,36 @@ public class ControladorPersona implements Serializable{
 	public void setGeneros(List<Genero> generos) {
 		this.generos = generos;
 	}
+
+
+
+
+	public int getDepartamentoSelccionado() {
+		return departamentoSelccionado;
+	}
+
+
+
+
+	public void setDepartamentoSelccionado(int departamentoSelccionado) {
+		this.departamentoSelccionado = departamentoSelccionado;
+	}
+
+
+
+
+	public List<Departamento> getDepartamentos() {
+		return departamentos;
+	}
+
+
+
+
+	public void setDepartamentos(List<Departamento> departamentos) {
+		this.departamentos = departamentos;
+	}
+	
+	
 
 
 }

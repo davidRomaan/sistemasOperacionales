@@ -49,8 +49,7 @@ public class Persona implements Serializable{
 	protected String correo;
 
 	@Column(name = "fecha_nacimiento")
-	@Temporal(TemporalType.TIMESTAMP)
-	protected Date fechaNacimiento;
+	protected String fechaNacimiento;
 
 	@JoinColumn(name = "minicipio_id")
 	@ManyToOne
@@ -64,7 +63,7 @@ public class Persona implements Serializable{
 		// TODO Auto-generated constructor stub
 	}
 
-	public Persona(String cedula, String nombre, String apellido, String telefono, String correo, Date fechaNacimiento,
+	public Persona(String cedula, String nombre, String apellido, String telefono, String correo, String fechaNacimiento,
 			Municipio municipio, Genero genero) {
 		super();
 		this.cedula = cedula;
@@ -97,12 +96,12 @@ public class Persona implements Serializable{
 	}
 
 
-	public Date getFechaNacimiento() {
+	public String getFechaNacimiento() {
 		return fechaNacimiento;
 	}
 
 
-	public void setFechaNacimiento(Date fechaNacimiento) {
+	public void setFechaNacimiento(String fechaNacimiento) {
 		this.fechaNacimiento = fechaNacimiento;
 	}
 

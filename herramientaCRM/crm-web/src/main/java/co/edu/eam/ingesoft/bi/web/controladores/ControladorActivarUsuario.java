@@ -21,6 +21,7 @@ import co.edu.eam.ingesoft.bi.negocio.beans.MunicipioEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.PersonaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.TipoUsuarioEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.UsuarioEJB;
+import co.edu.eam.ingesoft.bi.persistencia.DTO.UsuariosDTO;
 import co.edu.eam.ingesoft.bi.persistencia.enumeraciones.Genero;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Area;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Cargo;
@@ -40,7 +41,7 @@ public class ControladorActivarUsuario implements Serializable {
 
 	private String correo;
 
-	private Date fechaNacimiento;
+	private String fechaNacimiento;
 
 	private Genero tipoGenero;
 
@@ -55,27 +56,27 @@ public class ControladorActivarUsuario implements Serializable {
 	/* datos usuario */
 	private String contrasenia;
 
-	private Date fechaIngreso;
+	private String fechaIngreso;
 
 	private String nombreUsuario;
 
 	private int areaSeleccionada;
 
 	private int cargoSeleccionado;
-	
-	private int tipoUsuarioSeleccionado;
+
+	private String tipoUsuarioSeleccionado;
 
 	private List<Municipio> municipios;
 
 	private List<Genero> generos;
-	
-	private List<Area>areas;
-	
-	private List<Cargo>cargos;
-	
-	private List<TipoUsuario>tiposUsu;
 
-	private List<Persona> personas;
+	private List<Area> areas;
+
+	private List<Cargo> cargos;
+
+	private List<TipoUsuario> tiposUsu;
+
+	private List<UsuariosDTO> usuarios;
 
 	@EJB
 	private MunicipioEJB municipioEJB;
@@ -85,20 +86,20 @@ public class ControladorActivarUsuario implements Serializable {
 
 	@EJB
 	private PersonaEJB personaEJB;
-	
+
 	@EJB
 	private AreasEmpresaEJB areasEJB;
 
 	@EJB
 	private CargoEJB cargoEJB;
-	
+
 	@EJB
 	private TipoUsuarioEJB tipoEJB;
-	
+
 	@PostConstruct
 	public void postconstructor() {
 		listarActivosInActivos();
-		municipios = personaEJB.listaMunicipios();
+		municipios = personaEJB.listarMunicipios();
 		generos = Arrays.asList(Genero.values());
 		areas = areasEJB.listarAreas();
 		cargos = cargoEJB.listarCargos();
@@ -107,26 +108,86 @@ public class ControladorActivarUsuario implements Serializable {
 	}
 
 	public void listarActivosInActivos() {
-		personas = usuarioEJB.listarActivosInactivos();
+		usuarios = usuarioEJB.llenarDTO();
 	}
-	
-	public void generarClave(){
-		
+
+	public void crearUsuario() {
+
+		if (cedula.isEmpty() || apellido.isEmpty() || correo.isEmpty() || nombre.isEmpty() || telefono.isEmpty()
+				|| contrasenia.isEmpty() || nombreUsuario.isEmpty()) {
+			Messages.addFlashGlobalInfo("ingrese todos los campos");
+
+		} else {
+
+			Persona p = personaEJB.buscar(cedula);
+			Municipio m = municipioEJB.buscar(municipioSeleccionado);
+			Area a = areasEJB.buscarArea(areaSeleccionada);
+			Cargo c = cargoEJB.buscarCargo(cargoSeleccionado);
+			TipoUsuario tip = tipoEJB.buscar(tipoUsuarioSeleccionado);
+
+			if (p == null) {
+
+				Persona persona = new Persona();
+				persona.setCedula(cedula);
+				persona.setApellido(apellido);
+				persona.setCorreo(correo);
+				persona.setFechaNacimiento(fechaNacimiento);
+				persona.setGenero(tipoGenero);
+				persona.setNombre(nombre);
+				persona.setTelefono(telefono);
+				persona.setMunicipio(m);
+				personaEJB.crearPersona(persona);
+
+				Usuario usu = new Usuario();
+				usu.setContrasenia(contrasenia);
+				usu.setFechaIngreso(fechaIngreso);
+				usu.setNombreUsuario(nombreUsuario);
+				usu.setCedula(cedula);
+				usu.setActivo(true);
+				usu.setArea(a);
+				usu.setCargo(c);
+				usu.setTipoUsuario(tip);
+				usuarioEJB.registrarUsuario(usu);
+
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, "se ha registrado correctamente", null));
+
+				cedula = "";
+				nombre = "";
+				apellido = "";
+				correo = "";
+				telefono = "";
+				fechaNacimiento = null;
+				contrasenia = "";
+				fechaIngreso = null;
+				nombreUsuario = "";
+
+			} else {
+
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+						"Ya existe una persona con la cedula ingresado", null));
+
+			}
+		}
+
+	}
+
+	public void generarClave() {
+
 		String clave = usuarioEJB.generarClave();
 		contrasenia = clave;
 	}
-	
 
-	public void activarUsuario(Persona per) {
+	public void activarUsuario(String ced) {
 
-		Usuario p = usuarioEJB.buscarUsuarioCedula(per.getCedula());
+		Usuario usuar = usuarioEJB.buscarUsuarioCedula(ced);
 
-		if (p != null) {
-			if (p.isActivo() == true) {
+		if (usuar != null) {
+			if (usuar.isActivo() == true) {
 				Messages.addFlashGlobalInfo("este Usuario ya esta activo");
 			} else {
-				p.setActivo(true);
-				personaEJB.editarPersona(p);
+				usuar.setActivo(true);
+				usuarioEJB.editarUsuario(usuar);
 				listarActivosInActivos();
 				Messages.addFlashGlobalInfo("se activo correctamente");
 			}
@@ -136,13 +197,13 @@ public class ControladorActivarUsuario implements Serializable {
 		}
 	}
 
-	public void desactivarUsuario(Persona per) {
+	public void desactivarUsuario(String ced) {
 
-		Usuario p = usuarioEJB.buscarUsuarioCedula(per.getCedula());
-		if (p != null) {
-			if (p.isActivo() == true) {
-				p.setActivo(false);
-				personaEJB.editarPersona(p);
+		Usuario usuar = usuarioEJB.buscarUsuarioCedula(ced);
+		if (usuar != null) {
+			if (usuar.isActivo() == true) {
+				usuar.setActivo(false);
+				usuarioEJB.editarUsuario(usuar);
 				listarActivosInActivos();
 				Messages.addFlashGlobalInfo("se desactivo correctamente");
 			} else {
@@ -154,12 +215,14 @@ public class ControladorActivarUsuario implements Serializable {
 		}
 	}
 
-	public List<Persona> getPersonas() {
-		return personas;
+	
+
+	public List<UsuariosDTO> getUsuarios() {
+		return usuarios;
 	}
 
-	public void setPersonas(List<Persona> personas) {
-		this.personas = personas;
+	public void setUsuarios(List<UsuariosDTO> usuarios) {
+		this.usuarios = usuarios;
 	}
 
 	public String getCedula() {
@@ -186,12 +249,20 @@ public class ControladorActivarUsuario implements Serializable {
 		this.correo = correo;
 	}
 
-	public Date getFechaNacimiento() {
+	public String getFechaNacimiento() {
 		return fechaNacimiento;
 	}
 
-	public void setFechaNacimiento(Date fechaNacimiento) {
+	public void setFechaNacimiento(String fechaNacimiento) {
 		this.fechaNacimiento = fechaNacimiento;
+	}
+
+	public String getFechaIngreso() {
+		return fechaIngreso;
+	}
+
+	public void setFechaIngreso(String fechaIngreso) {
+		this.fechaIngreso = fechaIngreso;
 	}
 
 	public Genero getTipoGenero() {
@@ -242,14 +313,6 @@ public class ControladorActivarUsuario implements Serializable {
 		this.contrasenia = contrasenia;
 	}
 
-	public Date getFechaIngreso() {
-		return fechaIngreso;
-	}
-
-	public void setFechaIngreso(Date fechaIngreso) {
-		this.fechaIngreso = fechaIngreso;
-	}
-
 	public String getNombreUsuario() {
 		return nombreUsuario;
 	}
@@ -298,14 +361,6 @@ public class ControladorActivarUsuario implements Serializable {
 		this.areas = areas;
 	}
 
-	public int getTipoUsuarioSeleccionado() {
-		return tipoUsuarioSeleccionado;
-	}
-
-	public void setTipoUsuarioSeleccionado(int tipoUsuarioSeleccionado) {
-		this.tipoUsuarioSeleccionado = tipoUsuarioSeleccionado;
-	}
-
 	public List<Cargo> getCargos() {
 		return cargos;
 	}
@@ -320,6 +375,14 @@ public class ControladorActivarUsuario implements Serializable {
 
 	public void setTiposUsu(List<TipoUsuario> tiposUsu) {
 		this.tiposUsu = tiposUsu;
+	}
+
+	public String getTipoUsuarioSeleccionado() {
+		return tipoUsuarioSeleccionado;
+	}
+
+	public void setTipoUsuarioSeleccionado(String tipoUsuarioSeleccionado) {
+		this.tipoUsuarioSeleccionado = tipoUsuarioSeleccionado;
 	}
 
 }

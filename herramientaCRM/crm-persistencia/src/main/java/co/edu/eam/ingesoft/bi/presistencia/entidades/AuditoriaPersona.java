@@ -1,6 +1,7 @@
 package co.edu.eam.ingesoft.bi.presistencia.entidades;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -28,7 +29,7 @@ public class AuditoriaPersona implements Serializable {
 	
 	@Column(name="fecha_hora")
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date fechaHora;
+	private Calendar fechaHora;
 	
 	@Column(name="dispositivo", length=30)
 	private String dispositivo;
@@ -44,7 +45,7 @@ public class AuditoriaPersona implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
-	public AuditoriaPersona(int id, String accion, Date fechaHora, String dispositivo, String navegador,
+	public AuditoriaPersona(int id, String accion, Calendar fechaHora, String dispositivo, String navegador,
 			Persona persona) {
 		super();
 		this.id = id;
@@ -55,14 +56,6 @@ public class AuditoriaPersona implements Serializable {
 		this.persona = persona;
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
 	public String getAccion() {
 		return accion;
 	}
@@ -71,11 +64,11 @@ public class AuditoriaPersona implements Serializable {
 		this.accion = accion;
 	}
 
-	public Date getFechaHora() {
+	public Calendar getFechaHora() {
 		return fechaHora;
 	}
 
-	public void setFechaHora(Date fechaHora) {
+	public void setFechaHora(Calendar fechaHora) {
 		this.fechaHora = fechaHora;
 	}
 

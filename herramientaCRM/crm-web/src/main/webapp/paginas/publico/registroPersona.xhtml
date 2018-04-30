@@ -31,13 +31,26 @@
 
 				</h:selectOneMenu>
 				
-				<h:outputLabel for="cbMunicipio" id="lbMunicipio"
-					value="#{'Municipio'}" />
-				<h:selectOneMenu id="cbMunicipios"
+				<h:outputLabel for="cbDepto" id="lbDepto" value="Departamento: " />
+				<h:selectOneMenu id="cbDepto"
+					value="#{controladorPersonas.departamentoSelccionado}">
+
+					<f:selectItems value="#{controladorPersonas.departamentos}"
+						var="depto" itemValue="#{depto.id}" itemLabel="#{depto.nombre}" />
+
+					<f:ajax event="change" execute="@this" render="cbmunicipio"
+						listener="#{controladorPersonas.listarMunicipios}" />
+
+				</h:selectOneMenu>
+
+				<h:outputLabel for="cbmunicipio" id="lbmunicipio"
+					value="Municipio: " />
+				<h:selectOneMenu id="cbmunicipio"
 					value="#{controladorPersonas.municipioSeleccinado}">
 
-					<f:selectItems value="#{controladorPersonas.municipios}"
-						var="municipio" itemValue="#{municipio.id}" itemLabel="#{municipio.nombre}" />
+					<f:selectItems value="#{controladorVentas.municipios}"
+						var="municipio" itemValue="#{municipio.id}"
+						itemLabel="#{municipio.nombre}" />
 
 				</h:selectOneMenu>
 

@@ -17,12 +17,14 @@ import co.edu.eam.ingesoft.bi.persistencia.enumeraciones.Genero;
 
 
 @NamedQueries({
-	@NamedQuery(name="Usuario.buscarUsuario",query="SELECT u FROM Usuario u WHERE u.nombreUsuario=?1")
+	@NamedQuery(name="Usuario.buscarUsuario",query="SELECT u FROM Usuario u WHERE u.nombreUsuario=?1"),
+	@NamedQuery(name=Usuario.LISTA_USUARIOS, query="SELECT U FROM Usuario U")
 })
 @Entity
 @Table(name="USUARIO")
 public class Usuario extends Persona implements Serializable {
 
+	public static final String LISTA_USUARIOS = "Usuario.lista";
 	
 	@Column(name="contrasenia")
 	private String contrasenia;
@@ -39,8 +41,7 @@ public class Usuario extends Persona implements Serializable {
 	private Area area;
 	
 	@Column(name = "fecha_Ingreso")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date fechaIngreso;
+	private String fechaIngreso;
 	
 	@JoinColumn(name="cargo")
 	@ManyToOne
@@ -54,9 +55,9 @@ public class Usuario extends Persona implements Serializable {
 	}
 
 
-	public Usuario(String cedula, String nombre, String apellido, String telefono, String correo, Date fechaNacimiento,
+	public Usuario(String cedula, String nombre, String apellido, String telefono, String correo, String fechaNacimiento,
 			boolean activo, Municipio municipio, Genero genero, String contrasenia, String nombreUsuario,
-			TipoUsuario tipoUsuario, Area area, Date fechaIngreso, Cargo cargo) {
+			TipoUsuario tipoUsuario, Area area, String fechaIngreso, Cargo cargo) {
 		super(cedula, nombre, apellido, telefono, correo, fechaNacimiento, municipio, genero);
 		this.contrasenia = contrasenia;
 		this.nombreUsuario = nombreUsuario;
@@ -107,12 +108,12 @@ public class Usuario extends Persona implements Serializable {
 	}
 
 
-	public Date getFechaIngreso() {
+	public String getFechaIngreso() {
 		return fechaIngreso;
 	}
 
 
-	public void setFechaIngreso(Date fechaIngreso) {
+	public void setFechaIngreso(String fechaIngreso) {
 		this.fechaIngreso = fechaIngreso;
 	}
 

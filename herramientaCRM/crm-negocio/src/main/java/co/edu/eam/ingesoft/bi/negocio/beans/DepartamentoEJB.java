@@ -26,14 +26,14 @@ public class DepartamentoEJB {
 	 */
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public List<Departamento> listarDepartamentos (){
-		Query q = em.createNamedQuery(Departamento.LISTAR);
+		Query q = em.createNamedQuery(Departamento.LISTAR_DEPARTAMENTOS);
 		List<Departamento> lista = q.getResultList();
 		return lista;
 	}
 	
 	/**
 	 * Busca un departamento en la bd
-	 * @param id código del depto
+	 * @param id cï¿½digo del depto
 	 * @return el deto si lo encuentra, de lo contrario null
 	 */
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
@@ -48,7 +48,7 @@ public class DepartamentoEJB {
 	
 	/**
 	 * Lista los municipios de un departamento
-	 * @param idDepto código del departamento
+	 * @param idDepto cï¿½digo del departamento
 	 * @return la lista de municipios del departamento
 	 */
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
