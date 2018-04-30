@@ -32,6 +32,7 @@ public class UsuarioEJB {
 	@EJB
 	private UsuarioEJB usuarioEJB;
 
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public Usuario buscarUsuario(String user) {
 		List<Usuario> us = em.createNamedQuery("Usuario.buscarUsuario").setParameter(1, user).getResultList();
 		if (us.isEmpty()) {

@@ -43,6 +43,7 @@ public class ControladorTipoUsuario implements Serializable {
 				listarTipos();
 				Messages.addFlashGlobalInfo("Registro exitoso");
 				limpiarCampos();
+				tipoEditar = null;
 			} catch (ExcepcionNegocio e) {
 				// TODO: handle exception
 				Messages.addFlashGlobalError(e.getMessage());
