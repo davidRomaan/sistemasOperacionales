@@ -9,6 +9,8 @@ import java.util.GregorianCalendar;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import co.edu.eam.ingesoft.bi.presistencia.entidades.Area;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaArea;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaPersona;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Persona;
 
@@ -113,6 +115,50 @@ public class AuditoriaEJB {
 		audiPersona.setAccion(accion);
 		audiPersona.setFechaHora(fechaGuardar);
 		audiPersona.setPersona(persona);
+		audiPersona.setDispositivo(os);
+		audiPersona.setNavegador(browser);		
+
+		em.persist(audiPersona);
+	
+
+	}
+	
+	/**
+	 * 
+	 * @param persona
+	 * @param accion
+	 * @param nombreReg
+	 * @param browserDeta
+	 * @param usuario
+	 * @param usuarioAf
+	 */
+	public void crearAuditoriaArea(Area area, String accion, String browserDeta) {
+
+		this.browserDetails = browserDeta;
+		userAgent = browserDetails;
+		user2 = userAgent.toLowerCase();
+
+		identificarNavegadorPeticion();
+
+		Calendar fechaActual = new GregorianCalendar();
+		int dia = fechaActual.get(Calendar.DAY_OF_MONTH);
+		int mes = fechaActual.get(Calendar.MONTH);
+		int anio = fechaActual.get(Calendar.YEAR);
+		int minutos = fechaActual.get(Calendar.SECOND);
+		int hora = fechaActual.get(Calendar.HOUR);
+		
+		Date horaGuadar = new Date();
+		horaGuadar.setMinutes(minutos);
+		horaGuadar.setHours(hora);
+		
+		Calendar fechaGuardar = new GregorianCalendar();
+		fechaGuardar.set(anio, mes, dia);
+		fechaGuardar.setTime(horaGuadar);
+		
+		AuditoriaArea audiPersona = new AuditoriaArea();
+		audiPersona.setAccion(accion);
+		audiPersona.setFechaHora(fechaGuardar);
+		audiPersona.setArea(area);
 		audiPersona.setDispositivo(os);
 		audiPersona.setNavegador(browser);		
 

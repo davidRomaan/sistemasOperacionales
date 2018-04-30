@@ -8,9 +8,11 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 
+import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 
 import co.edu.eam.ingesoft.bi.negocio.beans.AreasEmpresaEJB;
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Area;
 
@@ -27,6 +29,8 @@ public class ControladorAreasEmpresa implements Serializable {
 	private List<Area> areasEmpresa;
 
 	private List<Area> listaNueva;
+	
+	private AuditoriaEJB auditoriaEJB;
 
 	@PostConstruct
 	public void postconstructor() {
@@ -49,6 +53,16 @@ public class ControladorAreasEmpresa implements Serializable {
 			Area a = new Area(codigo, nombre, descripcion);
 			try {
 				areas.registrarAreas(a);
+				
+				try {
+					
+					String browserDetail = Faces.getRequest().getHeader("User-Agent");
+					
+					auditoriaEJB.crearAuditoriaArea(a, "Registrar", browserDetail);
+				
+				}catch (Exception e) {
+					e.printStackTrace();
+				}
 				Messages.addFlashGlobalInfo("Registro exitoso");
 				listarAreas();
 				codigo = 0;
