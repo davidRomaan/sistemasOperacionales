@@ -11,7 +11,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Persona;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.Area;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaPersona;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Departamento;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Municipio;
@@ -79,6 +78,14 @@ public class PersonaEJB {
 		q.setParameter(1, idDepartamento);
 		List<Municipio> municipio = q.getResultList();
 		return municipio;
+	}
+	
+	
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	public List<Municipio> listarMunicipios(){
+		Query q = em.createNamedQuery(Municipio.LISTAR_MUNICIPIO);
+		List<Municipio> lista = q.getResultList();
+		return lista;
 	}
 	
 	/**

@@ -99,7 +99,7 @@ public class ControladorActivarUsuario implements Serializable {
 	@PostConstruct
 	public void postconstructor() {
 		listarActivosInActivos();
-		municipios = personaEJB.listaMunicipios();
+		municipios = personaEJB.listarMunicipios();
 		generos = Arrays.asList(Genero.values());
 		areas = areasEJB.listarAreas();
 		cargos = cargoEJB.listarCargos();
