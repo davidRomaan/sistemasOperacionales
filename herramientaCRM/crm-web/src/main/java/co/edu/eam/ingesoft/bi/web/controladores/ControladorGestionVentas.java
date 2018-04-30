@@ -25,7 +25,7 @@ public class ControladorGestionVentas implements Serializable {
 	private VentaEJB ventasEJB;
 
 	@PostConstruct
-	private void cargarDatos() {
+	private void constructor() {
 		Date fechaActual = new Date();
 		String fecha = fechaActual.getDate() + "/" + fechaActual.getMonth() 
 		+ 1 + "/" + fechaActual.getYear();
