@@ -113,7 +113,7 @@
 			<br></br>
 			<h:panelGrid id="panelContra" columns="3">
 				<h:outputLabel id="lblContra" value="Contrasenia" />
-				<h:inputText id="tfContra" value="#{controladorActivar.contrasenia}" />
+				<h:inputText id="tfContra" value="#{controladorActivar.contrasenia}" disabled="true" />
 
 				<p:commandButton id="btngenerar" value="#{'Generar Clave'}"
 					process="@this,panelContra" update="panelContra"

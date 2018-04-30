@@ -7,8 +7,11 @@
 
 	<ui:define name="cuerpo">
 		<h:form prependId="false">
+
+
+
 			<h:panelGrid id="panelDatos" columns="2">
-				
+
 				<h:outputLabel id="lblCedula" value="Cedula" />
 				<h:inputText id="tfCedula" value="#{controladorPersonas.cedula}" />
 
@@ -17,23 +20,29 @@
 
 				<h:outputLabel id="lblApellido" value="Apellido" />
 				<h:inputText id="tfApellido" value="#{controladorPersonas.apellido}" />
-				
+
 				<h:outputLabel id="lblCorreo" value="Correo" />
 				<h:inputText id="tfCorreo" value="#{controladorPersonas.correo}" />
 
-				<h:outputLabel id="lblGenero"
-					value="Genero" />
+				<p:outputLabel id="mask" value="FechaNacimiento" />
+				<p:inputMask id="date" value="#{controladorPersonas.fechaNacimiento}"
+					mask="99/99/9999" />
+
+				<h:outputLabel id="lblGenero" value="Genero" />
 				<h:selectOneMenu id="cbGenero"
 					value="#{controladorPersonas.tipoGenero}">
 
-					<f:selectItems value="#{controladorPersonas.generos}"
-						var="genero" itemValue="#{genero}" itemLabel="#{genero}" />
+					<f:selectItems value="#{controladorPersonas.generos}" var="genero"
+						itemValue="#{genero}" itemLabel="#{genero}" />
 
 				</h:selectOneMenu>
-				
+
+				<h:outputLabel id="lblTelefono" value="Telefono" />
+				<h:inputText id="tfTelefonno" value="#{controladorPersonas.telefono}" />
+
 				<h:outputLabel for="cbDepto" id="lbDepto" value="Departamento: " />
 				<h:selectOneMenu id="cbDepto"
-					value="#{controladorPersonas.departamentoSelccionado}">
+					value="#{controladorPersonas.deptoSeleccionado}">
 
 					<f:selectItems value="#{controladorPersonas.departamentos}"
 						var="depto" itemValue="#{depto.id}" itemLabel="#{depto.nombre}" />
@@ -54,15 +63,65 @@
 
 				</h:selectOneMenu>
 
-			</h:panelGrid>
+				<p:outputLabel id="maskIngres" value="FechaIngreso" />
+				<p:inputMask id="dateIngreso"
+					value="#{controladorPersonas.fechaIngreso}" mask="99/99/9999" />
 
+
+				<h:outputLabel id="lblNomUsu" value="Usuario" />
+				<h:inputText id="tfUsuario"
+					value="#{controladorPersonas.nombreUsuario}" />
+
+
+				<h:outputLabel for="cbArea" id="lbArea" value="#{'AreaEmpresa'}" />
+				<h:selectOneMenu id="cbAreas"
+					value="#{controladorPersonas.areaSeleccionada}">
+
+					<f:selectItems value="#{controladorPersonas.areas}" var="area"
+						itemValue="#{area.id}" itemLabel="#{area.nombre}" />
+
+				</h:selectOneMenu>
+
+				<h:outputLabel for="cbCargo" id="lbCargo" value="#{'Cargo'}" />
+				<h:selectOneMenu id="cbCargo"
+					value="#{controladorPersonas.cargoSeleccionado}">
+
+					<f:selectItems value="#{controladorPersonas.cargos}" var="cargo"
+						itemValue="#{cargo.id}" itemLabel="#{cargo.descripcion}" />
+
+				</h:selectOneMenu>
+
+
+				<h:outputLabel for="cbtipoUsuario" id="lbtipo"
+					value="#{'TipoUsuario'}" />
+				<h:selectOneMenu id="cbtipo"
+					value="#{controladorPersonas.tipoUsuarioSeleccionado}">
+
+					<f:selectItems value="#{controladorActivar.tiposUsu}" var="tipo"
+						itemValue="#{tipo.nombre}" itemLabel="#{tipo.nombre}" />
+
+				</h:selectOneMenu>
+
+			</h:panelGrid>
+			<br></br>
+			<h:panelGrid id="panelContra" columns="3">
+				<h:outputLabel id="lblContra" value="Contrasenia" />
+				<h:inputText id="tfContra" value="#{controladorPersonas.contrasenia}" disabled="true"/>
+
+				<p:commandButton id="btngenerar" value="#{'Generar Clave'}"
+					process="@this,panelContra" update="panelContra"
+					action="#{controladorPersonas.generarClave}" />
+			</h:panelGrid>
+			<br></br>
+			<br></br>
 			<h:panelGrid id="panelBotones" columns="2">
 
-				<p:commandButton id="btnRegistrar"
-					value="#{'Registrar Persona'}" process="@this,panelDatos"
-					update="panelDatos" action="#{controladorPersonas.registrar}" />
+				<p:commandButton id="btnRegistrar" value="#{'Registrar Persona'}"
+					process="@this,panelDatos,panelContra" update="@this"
+					action="#{controladorPersonas.registrar}" />
 
 			</h:panelGrid>
+
 		</h:form>
 	</ui:define>
 </ui:composition>
