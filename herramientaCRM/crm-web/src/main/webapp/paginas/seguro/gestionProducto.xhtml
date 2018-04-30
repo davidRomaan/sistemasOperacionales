@@ -20,7 +20,7 @@
 					value="#{controladorProducto.codigo}" />
 					
 				<p:commandButton id="btnBuscarProd" value="Buscar"
-					process="@this" update="@this,panelDatos"
+					process="@this,panelCodigo" update="@this,panelDatos"
 					action="#{controladorProducto.buscar}" />
 
 			</h:panelGrid><br/>
@@ -86,16 +86,24 @@
 				<p:dataTable id="tablaProductos"
 					value="#{controladorProducto.productos}" var="producto" border="1">
 
-					<p:column headerText="Id ">
+					<p:column headerText="Id " filterBy="#{producto.id}">
 						<h:outputLabel value="#{producto.id}" />
 					</p:column>
 
-					<p:column headerText="Nombre ">
+					<p:column headerText="Nombre " filterBy="#{producto.nombre}">
 						<h:outputLabel value="#{producto.nombre}" />
 					</p:column>
 
 					<p:column headerText="Precio ">
 						<h:outputLabel value="#{producto.valorProducto}" />
+					</p:column>
+					
+					<p:column headerText="Lote">
+						<h:outputLabel value="#{producto.lote.descripcion}" />
+					</p:column>
+					
+					<p:column headerText="Tipo Producto">
+						<h:outputLabel value="#{producto.tipoProducto.nombre}" />
 					</p:column>
 
 					<p:column headerText="Acción">

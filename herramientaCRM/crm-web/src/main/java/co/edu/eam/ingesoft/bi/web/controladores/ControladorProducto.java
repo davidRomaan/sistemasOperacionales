@@ -105,7 +105,6 @@ public class ControladorProducto implements Serializable {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Operación exitosa", null));
 
-			productos.add(productoBuscado);
 			limpiarCampos();
 		}
 
