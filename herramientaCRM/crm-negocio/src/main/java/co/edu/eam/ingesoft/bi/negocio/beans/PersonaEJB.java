@@ -73,7 +73,7 @@ public class PersonaEJB {
 	 * @return
 	 */
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-	public List<Municipio> listaMunicipios(int idDepartamento){
+	public List<Municipio> listaMunicipiosPorDepartamento(int idDepartamento){
 		Query q = em.createNamedQuery(Municipio.LISTAR_MUNICIPIO_DEPTO);
 		q.setParameter(1, idDepartamento);
 		List<Municipio> municipio = q.getResultList();

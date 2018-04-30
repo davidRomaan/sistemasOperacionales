@@ -11,7 +11,9 @@ import javax.persistence.PersistenceContext;
 
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Area;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaArea;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaDetalleVenta;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaPersona;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.DetalleVenta;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Persona;
 
 @LocalBean
@@ -160,9 +162,52 @@ public class AuditoriaEJB {
 		audiPersona.setFechaHora(fechaGuardar);
 		audiPersona.setArea(area);
 		audiPersona.setDispositivo(os);
-		audiPersona.setNavegador(browser);		
+		audiPersona.setNavegador(browser);	
 
 		em.persist(audiPersona);
+
+	}
+	
+	/**
+	 * 
+	 * @param persona
+	 * @param accion
+	 * @param nombreReg
+	 * @param browserDeta
+	 * @param usuario
+	 * @param usuarioAf
+	 */
+	public void crearDetalleVenta(DetalleVenta dt, String accion, String browserDeta) {
+
+		this.browserDetails = browserDeta;
+		userAgent = browserDetails;
+		user2 = userAgent.toLowerCase();
+
+		identificarNavegadorPeticion();
+
+		Calendar fechaActual = new GregorianCalendar();
+		int dia = fechaActual.get(Calendar.DAY_OF_MONTH);
+		int mes = fechaActual.get(Calendar.MONTH);
+		int anio = fechaActual.get(Calendar.YEAR);
+		int minutos = fechaActual.get(Calendar.SECOND);
+		int hora = fechaActual.get(Calendar.HOUR);
+		
+		Date horaGuadar = new Date();
+		horaGuadar.setMinutes(minutos);
+		horaGuadar.setHours(hora);
+		
+		Calendar fechaGuardar = new GregorianCalendar();
+		fechaGuardar.set(anio, mes, dia);
+		fechaGuardar.setTime(horaGuadar);
+		
+		AuditoriaDetalleVenta detalleVenta = new AuditoriaDetalleVenta();
+		detalleVenta.setSeleccion(accion);
+		detalleVenta.setFechaHora(fechaGuardar);
+		detalleVenta.setDetalleVenta(dt);
+		detalleVenta.setDispositivo(os);
+		detalleVenta.setNavegador(browser);	
+
+		em.persist(detalleVenta);
 
 	}
 	
