@@ -1,5 +1,6 @@
 package co.edu.eam.ingesoft.bi.presistencia.entidades;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -21,7 +22,7 @@ public class AuditoriaProducto {
 	private int id;
 	
 	@Column(name="fecha_hora")
-	private Date fechaHora;
+	private Calendar fechaHora;
 	
 	@Column(name="dispositivo")
 	private String dispositivo;
@@ -40,7 +41,7 @@ public class AuditoriaProducto {
 		// TODO Auto-generated constructor stub
 	}
 
-	public AuditoriaProducto(int id, Date fechaHora, String dispositivo, String accion, String navegador,
+	public AuditoriaProducto(int id, Calendar fechaHora, String dispositivo, String accion, String navegador,
 			Producto producto) {
 		super();
 		this.id = id;
@@ -59,11 +60,11 @@ public class AuditoriaProducto {
 		this.id = id;
 	}
 
-	public Date getFechaHora() {
+	public Calendar getFechaHora() {
 		return fechaHora;
 	}
 
-	public void setFechaHora(Date fechaHora) {
+	public void setFechaHora(Calendar fechaHora) {
 		this.fechaHora = fechaHora;
 	}
 
