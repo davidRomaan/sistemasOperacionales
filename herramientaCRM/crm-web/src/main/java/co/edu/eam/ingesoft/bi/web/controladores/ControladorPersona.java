@@ -2,7 +2,6 @@ package co.edu.eam.ingesoft.bi.web.controladores;
 
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;

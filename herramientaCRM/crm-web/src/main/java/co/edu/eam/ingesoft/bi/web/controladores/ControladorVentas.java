@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.omnifaces.util.Faces;
 
 import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaDetalleVentaEJB;
-import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaPersonaEJB;
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaFacturaVentaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.DepartamentoEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.DetalleVentaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.ProductoEJB;
@@ -31,10 +31,8 @@ import co.edu.eam.ingesoft.bi.persistencia.enumeraciones.Genero;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Departamento;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.DetalleVenta;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.FacturaVenta;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.Inventario;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.InventarioProducto;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Municipio;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.Producto;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.TipoUsuario;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Usuario;
 
@@ -96,6 +94,9 @@ public class ControladorVentas implements Serializable {
 	
 	@EJB
 	private AuditoriaDetalleVentaEJB auditoriaDetalleVentasEJB;
+	
+	@EJB
+	private AuditoriaFacturaVentaEJB auditoriaFacturaVentaEJB;
 
 	/**
 	 * Carga los elementos al iniciar la p�gina
@@ -299,6 +300,10 @@ public class ControladorVentas implements Serializable {
 				factura.setTotal(totalVenta);
 				factura.setEmpleadoId(sesion.getUser());
 				ventaEJB.registrarVenta(factura);
+				
+				accion = "Registrar Detalle Venta";
+				String browserDetail = Faces.getRequest().getHeader("User-Agent");
+				auditoriaFacturaVentaEJB.crearAuditoriaFacturaVenta(factura, accion, browserDetail);
 				
 				factura.setId(ventaEJB.codigoUltimaFacturaCliente(cliente.getCedula()));
 				registrarDetallesVenta();
