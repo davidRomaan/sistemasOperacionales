@@ -119,7 +119,7 @@ public class ControladorActivarUsuario implements Serializable {
 
 	public void activarUsuario(Persona per) {
 
-		Persona p = usuarioEJB.buscarUsuarioCedula(per.getCedula());
+		Usuario p = usuarioEJB.buscarUsuarioCedula(per.getCedula());
 
 		if (p != null) {
 			if (p.isActivo() == true) {
@@ -138,7 +138,7 @@ public class ControladorActivarUsuario implements Serializable {
 
 	public void desactivarUsuario(Persona per) {
 
-		Persona p = usuarioEJB.buscarUsuarioCedula(per.getCedula());
+		Usuario p = usuarioEJB.buscarUsuarioCedula(per.getCedula());
 		if (p != null) {
 			if (p.isActivo() == true) {
 				p.setActivo(false);
