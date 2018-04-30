@@ -36,15 +36,10 @@ public class AuditoriaArea implements Serializable{
 	@Column(name="navegador", length=30)
 	private String navegador;
 	
-	@JoinColumn(name="area_id")
-	@ManyToOne
-	private Area area;
-	
-	public AuditoriaArea() {
-		// TODO Auto-generated constructor stub
-	}
+	@Column(name="area")
+	private String area;
 
-	public AuditoriaArea(int id, String accion, Calendar fechaHora, String dispositivo, String navegador, Area area) {
+	public AuditoriaArea(int id, String accion, Calendar fechaHora, String dispositivo, String navegador, String area) {
 		super();
 		this.id = id;
 		this.accion = accion;
@@ -53,6 +48,14 @@ public class AuditoriaArea implements Serializable{
 		this.navegador = navegador;
 		this.area = area;
 	}
+	
+	
+
+	public AuditoriaArea() {
+		super();
+	}
+
+
 
 	public int getId() {
 		return id;
@@ -94,14 +97,18 @@ public class AuditoriaArea implements Serializable{
 		this.navegador = navegador;
 	}
 
-	public Area getArea() {
+	public String getArea() {
 		return area;
 	}
 
-	public void setArea(Area area) {
+	public void setArea(String area) {
 		this.area = area;
 	}
 	
 	
+	
+	
+	
+
 	
 }

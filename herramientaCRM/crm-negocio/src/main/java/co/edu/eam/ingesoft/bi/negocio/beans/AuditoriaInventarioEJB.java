@@ -114,7 +114,7 @@ public class AuditoriaInventarioEJB {
 		AuditoriaInventario invenProducto = new AuditoriaInventario();
 		invenProducto.setAccion(accion);
 		invenProducto.setFechaHora(fechaGuardar);
-		invenProducto.setInventario(inventario);
+		invenProducto.setInventario("Inventario");
 		invenProducto.setDispositivo(os);
 		invenProducto.setNavegador(browser);	
 

@@ -36,16 +36,15 @@ public class AuditoriaConexion implements Serializable {
 	@Column(name="navegador", length=30)
 	private String navegador;
 	
-	@JoinColumn(name="conexion_id")
-	@ManyToOne
-	private Conexion conexion;	
+	@Column(name="conexion")
+	private String conexion;	
 	
 	public AuditoriaConexion() {
 		// TODO Auto-generated constructor stub
 	}
 
 	public AuditoriaConexion(int id, String seleccion, Date fechaHora, String dispositivo, String navegador,
-			Conexion conexion) {
+			String conexion) {
 		super();
 		this.id = id;
 		this.seleccion = seleccion;
@@ -95,13 +94,15 @@ public class AuditoriaConexion implements Serializable {
 		this.navegador = navegador;
 	}
 
-	public Conexion getConexion() {
+	public String getConexion() {
 		return conexion;
 	}
 
-	public void setConexion(Conexion conexion) {
+	public void setConexion(String conexion) {
 		this.conexion = conexion;
 	}
+
+	
 	
 	
 }

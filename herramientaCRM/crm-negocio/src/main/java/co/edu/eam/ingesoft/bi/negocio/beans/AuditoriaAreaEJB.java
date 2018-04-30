@@ -117,7 +117,7 @@ public class AuditoriaAreaEJB {
 		AuditoriaArea auditoriaArea = new AuditoriaArea();
 		auditoriaArea.setAccion(accion);
 		auditoriaArea.setFechaHora(fechaGuardar);
-		auditoriaArea.setArea(area);
+		auditoriaArea.setArea("Area");
 		auditoriaArea.setDispositivo(os);
 		auditoriaArea.setNavegador(browser);	
 

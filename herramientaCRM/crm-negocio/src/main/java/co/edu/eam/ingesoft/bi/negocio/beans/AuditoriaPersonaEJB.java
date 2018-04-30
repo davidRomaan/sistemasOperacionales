@@ -123,7 +123,7 @@ public class AuditoriaPersonaEJB {
 		AuditoriaUsuario audiUsuario = new AuditoriaUsuario();
 		audiUsuario.setAccion(accion);
 		audiUsuario.setFechaHora(fechaGuardar);
-		audiUsuario.setUsuarioId(usu);
+		audiUsuario.setUsuarioId("Usuario");
 		audiUsuario.setDispositivo(os);
 		audiUsuario.setNavegador(browser);		
 

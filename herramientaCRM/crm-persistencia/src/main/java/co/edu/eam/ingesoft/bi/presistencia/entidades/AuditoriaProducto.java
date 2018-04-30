@@ -33,16 +33,17 @@ public class AuditoriaProducto {
 	@Column(name="navegador")
 	private String navegador;
 	
-	@JoinColumn(name="producto_id")
-	@ManyToOne
-	private Producto producto;
+	@Column(name="producto_id")
+	private String producto;
 	
 	public AuditoriaProducto() {
 		// TODO Auto-generated constructor stub
 	}
 
+	
+	
 	public AuditoriaProducto(int id, Calendar fechaHora, String dispositivo, String accion, String navegador,
-			Producto producto) {
+			String producto) {
 		super();
 		this.id = id;
 		this.fechaHora = fechaHora;
@@ -52,52 +53,80 @@ public class AuditoriaProducto {
 		this.producto = producto;
 	}
 
+
+
 	public int getId() {
 		return id;
 	}
+
+
 
 	public void setId(int id) {
 		this.id = id;
 	}
 
+
+
 	public Calendar getFechaHora() {
 		return fechaHora;
 	}
+
+
 
 	public void setFechaHora(Calendar fechaHora) {
 		this.fechaHora = fechaHora;
 	}
 
+
+
 	public String getDispositivo() {
 		return dispositivo;
 	}
+
+
 
 	public void setDispositivo(String dispositivo) {
 		this.dispositivo = dispositivo;
 	}
 
+
+
 	public String getAccion() {
 		return accion;
 	}
+
+
 
 	public void setAccion(String accion) {
 		this.accion = accion;
 	}
 
+
+
 	public String getNavegador() {
 		return navegador;
 	}
+
+
 
 	public void setNavegador(String navegador) {
 		this.navegador = navegador;
 	}
 
-	public Producto getProducto() {
+
+
+	public String getProducto() {
 		return producto;
 	}
 
-	public void setProducto(Producto producto) {
+
+
+	public void setProducto(String producto) {
 		this.producto = producto;
 	}
+
+
+
+	
 	
 }

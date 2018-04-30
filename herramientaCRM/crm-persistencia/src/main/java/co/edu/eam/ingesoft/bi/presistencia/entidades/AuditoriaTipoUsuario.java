@@ -1,6 +1,7 @@
 package co.edu.eam.ingesoft.bi.presistencia.entidades;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -28,7 +29,7 @@ public class AuditoriaTipoUsuario implements Serializable{
 	
 	@Column(name="fecha_hora")
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date fechaHora;
+	private Calendar fechaHora;
 	
 	@Column(name="dispositivo", length=30)
 	private String dispositivo;
@@ -36,16 +37,17 @@ public class AuditoriaTipoUsuario implements Serializable{
 	@Column(name="navegador", length=30)
 	private String navegador;
 	
-	@JoinColumn(name="tipo_usuario_id")
-	@ManyToOne
-	private TipoUsuario tipoUsuario;
+	@Column(name="tipo_usuario_id")
+	private String tipoUsuario;
 	
 	public AuditoriaTipoUsuario() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public AuditoriaTipoUsuario(int id, String accion, Date fechaHora, String dispositivo, String navegador,
-			TipoUsuario tipoUsuario) {
+	
+
+	public AuditoriaTipoUsuario(int id, String accion, Calendar fechaHora, String dispositivo, String navegador,
+			String tipoUsuario) {
 		super();
 		this.id = id;
 		this.accion = accion;
@@ -55,53 +57,78 @@ public class AuditoriaTipoUsuario implements Serializable{
 		this.tipoUsuario = tipoUsuario;
 	}
 
+
+
 	public int getId() {
 		return id;
 	}
+
+
 
 	public void setId(int id) {
 		this.id = id;
 	}
 
+
+
 	public String getAccion() {
 		return accion;
 	}
+
+
 
 	public void setAccion(String accion) {
 		this.accion = accion;
 	}
 
-	public Date getFechaHora() {
+
+
+	public Calendar getFechaHora() {
 		return fechaHora;
 	}
 
-	public void setFechaHora(Date fechaHora) {
+
+
+	public void setFechaHora(Calendar fechaHora) {
 		this.fechaHora = fechaHora;
 	}
+
+
 
 	public String getDispositivo() {
 		return dispositivo;
 	}
 
+
+
 	public void setDispositivo(String dispositivo) {
 		this.dispositivo = dispositivo;
 	}
+
+
 
 	public String getNavegador() {
 		return navegador;
 	}
 
+
+
 	public void setNavegador(String navegador) {
 		this.navegador = navegador;
 	}
 
-	public TipoUsuario getTipoUsuario() {
+
+
+	public String getTipoUsuario() {
 		return tipoUsuario;
 	}
 
-	public void setTipoUsuario(TipoUsuario tipoUsuario) {
+
+
+	public void setTipoUsuario(String tipoUsuario) {
 		this.tipoUsuario = tipoUsuario;
 	}
+
 	
 	
 

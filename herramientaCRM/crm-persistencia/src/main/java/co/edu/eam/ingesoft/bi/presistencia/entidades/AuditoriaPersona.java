@@ -37,16 +37,17 @@ public class AuditoriaPersona implements Serializable {
 	@Column(name="navegador", length=30)
 	private String navegador;
 	
-	@JoinColumn(name="persona_id")
-	@ManyToOne
-	private Persona persona;
+	@Column(name="persona_id")
+	private String persona;
 	
 	public AuditoriaPersona() {
 		// TODO Auto-generated constructor stub
 	}
 
+	
+
 	public AuditoriaPersona(int id, String accion, Calendar fechaHora, String dispositivo, String navegador,
-			Persona persona) {
+			String persona) {
 		super();
 		this.id = id;
 		this.accion = accion;
@@ -56,45 +57,81 @@ public class AuditoriaPersona implements Serializable {
 		this.persona = persona;
 	}
 
+
+
+	public int getId() {
+		return id;
+	}
+
+
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+
+
 	public String getAccion() {
 		return accion;
 	}
+
+
 
 	public void setAccion(String accion) {
 		this.accion = accion;
 	}
 
+
+
 	public Calendar getFechaHora() {
 		return fechaHora;
 	}
+
+
 
 	public void setFechaHora(Calendar fechaHora) {
 		this.fechaHora = fechaHora;
 	}
 
+
+
 	public String getDispositivo() {
 		return dispositivo;
 	}
+
+
 
 	public void setDispositivo(String dispositivo) {
 		this.dispositivo = dispositivo;
 	}
 
+
+
 	public String getNavegador() {
 		return navegador;
 	}
+
+
 
 	public void setNavegador(String navegador) {
 		this.navegador = navegador;
 	}
 
-	public Persona getPersona() {
+
+
+	public String getPersona() {
 		return persona;
 	}
 
-	public void setPersona(Persona persona) {
+
+
+	public void setPersona(String persona) {
 		this.persona = persona;
 	}
+
+
+
+	
 	
 	
 	

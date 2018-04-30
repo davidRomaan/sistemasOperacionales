@@ -114,7 +114,7 @@ public class AuditoriaProductoEJB {
 		AuditoriaProducto pro = new AuditoriaProducto();
 		pro.setAccion(accion);
 		pro.setFechaHora(fechaGuardar);
-		pro.setProducto(producto);
+		pro.setProducto("Producto");
 		pro.setDispositivo(os);
 		pro.setNavegador(browser);	
 

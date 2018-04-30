@@ -38,9 +38,8 @@ public class AuditoriaUsuario implements Serializable {
 	@Column(name="navegador", length=30,nullable = false)
 	private String navegador;
 	
-	@JoinColumn(name="usuarioId")
-	@ManyToOne
-	private Usuario usuarioId;
+	@Column(name="usuarioId")
+	private String usuarioId;
 	
 	@Column(name="resultadoAccion")
 	private String resultadoAccion;
@@ -51,9 +50,13 @@ public class AuditoriaUsuario implements Serializable {
 	}
 
 
-	public AuditoriaUsuario(String accion, Calendar fechaHora, String dispositivo, String navegador,
-			Usuario usuarioId, String resultadoAccion) {
+	
+
+
+	public AuditoriaUsuario(int id, String accion, Calendar fechaHora, String dispositivo, String navegador,
+			String usuarioId, String resultadoAccion) {
 		super();
+		this.id = id;
 		this.accion = accion;
 		this.fechaHora = fechaHora;
 		this.dispositivo = dispositivo;
@@ -61,6 +64,25 @@ public class AuditoriaUsuario implements Serializable {
 		this.usuarioId = usuarioId;
 		this.resultadoAccion = resultadoAccion;
 	}
+
+
+
+
+
+	public int getId() {
+		return id;
+	}
+
+
+
+
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+
+
 
 
 	public String getAccion() {
@@ -68,9 +90,15 @@ public class AuditoriaUsuario implements Serializable {
 	}
 
 
+
+
+
 	public void setAccion(String accion) {
 		this.accion = accion;
 	}
+
+
+
 
 
 	public Calendar getFechaHora() {
@@ -78,9 +106,15 @@ public class AuditoriaUsuario implements Serializable {
 	}
 
 
+
+
+
 	public void setFechaHora(Calendar fechaHora) {
 		this.fechaHora = fechaHora;
 	}
+
+
+
 
 
 	public String getDispositivo() {
@@ -88,9 +122,15 @@ public class AuditoriaUsuario implements Serializable {
 	}
 
 
+
+
+
 	public void setDispositivo(String dispositivo) {
 		this.dispositivo = dispositivo;
 	}
+
+
+
 
 
 	public String getNavegador() {
@@ -98,19 +138,31 @@ public class AuditoriaUsuario implements Serializable {
 	}
 
 
+
+
+
 	public void setNavegador(String navegador) {
 		this.navegador = navegador;
 	}
 
 
-	public Usuario getUsuarioId() {
+
+
+
+	public String getUsuarioId() {
 		return usuarioId;
 	}
 
 
-	public void setUsuarioId(Usuario usuarioId) {
+
+
+
+	public void setUsuarioId(String usuarioId) {
 		this.usuarioId = usuarioId;
 	}
+
+
+
 
 
 	public String getResultadoAccion() {
@@ -118,69 +170,18 @@ public class AuditoriaUsuario implements Serializable {
 	}
 
 
+
+
+
 	public void setResultadoAccion(String resultadoAccion) {
 		this.resultadoAccion = resultadoAccion;
 	}
 
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((accion == null) ? 0 : accion.hashCode());
-		result = prime * result + ((dispositivo == null) ? 0 : dispositivo.hashCode());
-		result = prime * result + ((fechaHora == null) ? 0 : fechaHora.hashCode());
-		result = prime * result + id;
-		result = prime * result + ((navegador == null) ? 0 : navegador.hashCode());
-		result = prime * result + ((resultadoAccion == null) ? 0 : resultadoAccion.hashCode());
-		result = prime * result + ((usuarioId == null) ? 0 : usuarioId.hashCode());
-		return result;
-	}
 
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		AuditoriaUsuario other = (AuditoriaUsuario) obj;
-		if (accion == null) {
-			if (other.accion != null)
-				return false;
-		} else if (!accion.equals(other.accion))
-			return false;
-		if (dispositivo == null) {
-			if (other.dispositivo != null)
-				return false;
-		} else if (!dispositivo.equals(other.dispositivo))
-			return false;
-		if (fechaHora == null) {
-			if (other.fechaHora != null)
-				return false;
-		} else if (!fechaHora.equals(other.fechaHora))
-			return false;
-		if (id != other.id)
-			return false;
-		if (navegador == null) {
-			if (other.navegador != null)
-				return false;
-		} else if (!navegador.equals(other.navegador))
-			return false;
-		if (resultadoAccion == null) {
-			if (other.resultadoAccion != null)
-				return false;
-		} else if (!resultadoAccion.equals(other.resultadoAccion))
-			return false;
-		if (usuarioId == null) {
-			if (other.usuarioId != null)
-				return false;
-		} else if (!usuarioId.equals(other.usuarioId))
-			return false;
-		return true;
-	}
+
+	
 	
 	
 }

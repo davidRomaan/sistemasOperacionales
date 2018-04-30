@@ -36,9 +36,8 @@ public class AuditoriaPermisos implements Serializable {
 	@Column(name = "navegador", length = 30, nullable = false)
 	private String navegador;
 
-	@JoinColumns({ @JoinColumn(name = "codigo_modulo", referencedColumnName = "modulo_id"),
-			@JoinColumn(name = "codigo_tipoUsuario", referencedColumnName = "tipoUsuario_id") })
-	private ModulosUsuario modulosUsuario;
+	@Column(name="modulo_usuario")
+	private String modulosUsuario;
 	
 	
 	public AuditoriaPermisos(){
@@ -46,15 +45,22 @@ public class AuditoriaPermisos implements Serializable {
 	}
 
 
-	public AuditoriaPermisos(String accion, Date fechaHora, String dispositivo, String navegador,
-			ModulosUsuario modulosUsuario) {
+	
+
+
+	public AuditoriaPermisos(int id, String accion, Date fechaHora, String dispositivo, String navegador,
+			String modulosUsuario) {
 		super();
+		this.id = id;
 		this.accion = accion;
 		this.fechaHora = fechaHora;
 		this.dispositivo = dispositivo;
 		this.navegador = navegador;
 		this.modulosUsuario = modulosUsuario;
 	}
+
+
+
 
 
 	public int getId() {
@@ -62,9 +68,15 @@ public class AuditoriaPermisos implements Serializable {
 	}
 
 
+
+
+
 	public void setId(int id) {
 		this.id = id;
 	}
+
+
+
 
 
 	public String getAccion() {
@@ -72,9 +84,15 @@ public class AuditoriaPermisos implements Serializable {
 	}
 
 
+
+
+
 	public void setAccion(String accion) {
 		this.accion = accion;
 	}
+
+
+
 
 
 	public Date getFechaHora() {
@@ -82,9 +100,15 @@ public class AuditoriaPermisos implements Serializable {
 	}
 
 
+
+
+
 	public void setFechaHora(Date fechaHora) {
 		this.fechaHora = fechaHora;
 	}
+
+
+
 
 
 	public String getDispositivo() {
@@ -92,9 +116,15 @@ public class AuditoriaPermisos implements Serializable {
 	}
 
 
+
+
+
 	public void setDispositivo(String dispositivo) {
 		this.dispositivo = dispositivo;
 	}
+
+
+
 
 
 	public String getNavegador() {
@@ -102,72 +132,27 @@ public class AuditoriaPermisos implements Serializable {
 	}
 
 
+
+
+
 	public void setNavegador(String navegador) {
 		this.navegador = navegador;
 	}
 
 
-	public ModulosUsuario getModulosUsuario() {
+
+
+
+	public String getModulosUsuario() {
 		return modulosUsuario;
 	}
 
 
-	public void setModulosUsuario(ModulosUsuario modulosUsuario) {
+
+
+
+	public void setModulosUsuario(String modulosUsuario) {
 		this.modulosUsuario = modulosUsuario;
-	}
-
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((accion == null) ? 0 : accion.hashCode());
-		result = prime * result + ((dispositivo == null) ? 0 : dispositivo.hashCode());
-		result = prime * result + ((fechaHora == null) ? 0 : fechaHora.hashCode());
-		result = prime * result + id;
-		result = prime * result + ((modulosUsuario == null) ? 0 : modulosUsuario.hashCode());
-		result = prime * result + ((navegador == null) ? 0 : navegador.hashCode());
-		return result;
-	}
-
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		AuditoriaPermisos other = (AuditoriaPermisos) obj;
-		if (accion == null) {
-			if (other.accion != null)
-				return false;
-		} else if (!accion.equals(other.accion))
-			return false;
-		if (dispositivo == null) {
-			if (other.dispositivo != null)
-				return false;
-		} else if (!dispositivo.equals(other.dispositivo))
-			return false;
-		if (fechaHora == null) {
-			if (other.fechaHora != null)
-				return false;
-		} else if (!fechaHora.equals(other.fechaHora))
-			return false;
-		if (id != other.id)
-			return false;
-		if (modulosUsuario == null) {
-			if (other.modulosUsuario != null)
-				return false;
-		} else if (!modulosUsuario.equals(other.modulosUsuario))
-			return false;
-		if (navegador == null) {
-			if (other.navegador != null)
-				return false;
-		} else if (!navegador.equals(other.navegador))
-			return false;
-		return true;
 	}
 	
 	

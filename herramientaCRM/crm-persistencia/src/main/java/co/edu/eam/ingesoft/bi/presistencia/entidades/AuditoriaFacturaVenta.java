@@ -33,16 +33,17 @@ public class AuditoriaFacturaVenta {
 	@Column(name="navegador")
 	private String navegador;
 	
-	@JoinColumn(name="factura_venta_id")
-	@ManyToOne
-	private FacturaVenta facturaVenta;
+	@Column(name="factura_venta")
+	private String facturaVenta;
 	
 	public AuditoriaFacturaVenta() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public AuditoriaFacturaVenta(int id, Calendar fechaHora, String dispositivo, String accion,
-			String navegador, FacturaVenta facturaVenta) {
+	
+
+	public AuditoriaFacturaVenta(int id, Calendar fechaHora, String dispositivo, String accion, String navegador,
+			String facturaVenta) {
 		super();
 		this.id = id;
 		this.fechaHora = fechaHora;
@@ -52,53 +53,80 @@ public class AuditoriaFacturaVenta {
 		this.facturaVenta = facturaVenta;
 	}
 
+
+
 	public int getId() {
 		return id;
 	}
+
+
 
 	public void setId(int id) {
 		this.id = id;
 	}
 
+
+
 	public Calendar getFechaHora() {
 		return fechaHora;
 	}
+
+
 
 	public void setFechaHora(Calendar fechaHora) {
 		this.fechaHora = fechaHora;
 	}
 
+
+
 	public String getDispositivo() {
 		return dispositivo;
 	}
+
+
 
 	public void setDispositivo(String dispositivo) {
 		this.dispositivo = dispositivo;
 	}
 
+
+
 	public String getAccion() {
 		return accion;
 	}
+
+
 
 	public void setAccion(String accion) {
 		this.accion = accion;
 	}
 
+
+
 	public String getNavegador() {
 		return navegador;
 	}
+
+
 
 	public void setNavegador(String navegador) {
 		this.navegador = navegador;
 	}
 
-	public FacturaVenta getFacturaVenta() {
+
+
+	public String getFacturaVenta() {
 		return facturaVenta;
 	}
 
-	public void setFacturaVenta(FacturaVenta facturaVenta) {
+
+
+	public void setFacturaVenta(String facturaVenta) {
 		this.facturaVenta = facturaVenta;
 	}
+
+
+
 	
 	
 	

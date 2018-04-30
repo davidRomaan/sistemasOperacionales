@@ -35,16 +35,14 @@ public class AuditoriaDetalleVenta implements Serializable{
 	@Column(name="navegador")
 	private String navegador;
 	
-	@JoinColumns({
-		@JoinColumn(name="producto_id", referencedColumnName="producto_id"),
-		@JoinColumn(name="factura_venta_id", referencedColumnName="factura_venta_id")
-	})
-	@ManyToOne
-	private DetalleVenta detalleVenta;
+	@Column(name="detalle_venta")
+	private String detalleVenta;
+
+	
 
 
 	public AuditoriaDetalleVenta(int id, String seleccion, Calendar fechaHora, String dispositivo, String navegador,
-			DetalleVenta detalleVenta) {
+			String detalleVenta) {
 		super();
 		this.id = id;
 		this.seleccion = seleccion;
@@ -110,14 +108,17 @@ public class AuditoriaDetalleVenta implements Serializable{
 	}
 
 
-	public DetalleVenta getDetalleVenta() {
+	public String getDetalleVenta() {
 		return detalleVenta;
 	}
 
 
-	public void setDetalleVenta(DetalleVenta detalleVenta) {
+	public void setDetalleVenta(String detalleVenta) {
 		this.detalleVenta = detalleVenta;
 	}
+
+
+	
 	
 	
 

@@ -39,12 +39,13 @@ public class AuditoriaInventario implements Serializable{
 	@Column(name="navegador")
 	private String navegador;
 	
-	@JoinColumn(name="id_Inventario")
-	@ManyToOne
-	private Inventario inventario;
+	@Column(name="id_Inventario")
+	private String inventario;
+
+	
 
 	public AuditoriaInventario(int id, String nombreProducto, Calendar fechaHora, String dispositivo, String accion,
-			String navegador, Inventario inventario) {
+			String navegador, String inventario) {
 		super();
 		this.id = id;
 		this.nombreProducto = nombreProducto;
@@ -55,66 +56,83 @@ public class AuditoriaInventario implements Serializable{
 		this.inventario = inventario;
 	}
 
+
 	public AuditoriaInventario() {
 		super();
 	}
-	
+
 
 	public int getId() {
 		return id;
 	}
 
+
 	public void setId(int id) {
 		this.id = id;
 	}
+
 
 	public String getNombreProducto() {
 		return nombreProducto;
 	}
 
+
 	public void setNombreProducto(String nombreProducto) {
 		this.nombreProducto = nombreProducto;
 	}
+
 
 	public Calendar getFechaHora() {
 		return fechaHora;
 	}
 
+
 	public void setFechaHora(Calendar fechaHora) {
 		this.fechaHora = fechaHora;
 	}
+
 
 	public String getDispositivo() {
 		return dispositivo;
 	}
 
+
 	public void setDispositivo(String dispositivo) {
 		this.dispositivo = dispositivo;
 	}
+
 
 	public String getAccion() {
 		return accion;
 	}
 
+
 	public void setAccion(String accion) {
 		this.accion = accion;
 	}
+
 
 	public String getNavegador() {
 		return navegador;
 	}
 
+
 	public void setNavegador(String navegador) {
 		this.navegador = navegador;
 	}
 
-	public Inventario getInventario() {
+
+	public String getInventario() {
 		return inventario;
 	}
 
-	public void setInventario(Inventario inventario) {
+
+	public void setInventario(String inventario) {
 		this.inventario = inventario;
 	}
+	
+
+	
 	
 
 }

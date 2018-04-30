@@ -113,7 +113,7 @@ public class AuditoriaFacturaVentaEJB {
 		AuditoriaFacturaVenta auditoriaFacturaVenta = new AuditoriaFacturaVenta();
 		auditoriaFacturaVenta.setAccion(accion);
 		auditoriaFacturaVenta.setFechaHora(fechaGuardar);
-		auditoriaFacturaVenta.setFacturaVenta(fv);
+		auditoriaFacturaVenta.setFacturaVenta("FacturaVenta");
 		auditoriaFacturaVenta.setDispositivo(os);
 		auditoriaFacturaVenta.setNavegador(browser);	
 

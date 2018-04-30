@@ -118,7 +118,7 @@ public class AuditoriaDetalleVentaEJB {
 		AuditoriaDetalleVenta detalleVenta = new AuditoriaDetalleVenta();
 		detalleVenta.setSeleccion(accion);
 		detalleVenta.setFechaHora(fechaGuardar);
-		detalleVenta.setDetalleVenta(dt);
+		detalleVenta.setDetalleVenta("DetalleVenta");
 		detalleVenta.setDispositivo(os);
 		detalleVenta.setNavegador(browser);	
 
