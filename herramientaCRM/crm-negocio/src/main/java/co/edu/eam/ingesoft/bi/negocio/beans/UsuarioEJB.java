@@ -1,6 +1,7 @@
 package co.edu.eam.ingesoft.bi.negocio.beans;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -42,7 +43,16 @@ public class UsuarioEJB {
 		List<Persona> per = q.getResultList();
 		return per;
 	}
-
+	
+	/**
+	 * metodo que genera una clave aleatoria de 8 digitos
+	 * @return la clave
+	 */
+	public String generarClave(){
+		String clave = UUID.randomUUID().toString().toUpperCase().substring(0,8);
+		return clave;
+	}
+	
 	/**
 	 * Busca un usuario en la base de datos
 	 * 
