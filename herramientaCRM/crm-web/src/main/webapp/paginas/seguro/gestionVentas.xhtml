@@ -25,35 +25,69 @@
 					action="#{controladorGestionVentas.listarFacturasFecha}" />
 
 			</h:panelGrid>
-			
+
 			<br />
 
 			<h:panelGrid id="panelTablaFacturas" columns="1" width="80%">
 
 				<p:dataTable id="tablaTipos"
-					value="#{controladorTipoUsuario.tiposUsuario}" var="tipo"
+					value="#{controladorGestionVentas.facturas}" var="factura"
 					border="1">
 
 					<p:column headerText="Id">
-						<h:outputLabel value="#{tipo.id}" />
+						<h:outputLabel value="#{factura.id}" />
 					</p:column>
 
-					<p:column headerText="Nombre " filterBy="#{tipo.nombre}">
-						<h:outputLabel value="#{tipo.nombre}" />
+					<p:column headerText="Vendedor">
+						<h:outputLabel value="#{factura.empleadoId.cedula}" />
 					</p:column>
 
-					<p:column headerText="Descripcion">
-						<h:outputLabel value="#{tipo.descripcion}" />
+					<p:column headerText="Cliente">
+						<h:outputLabel value="#{factura.clienteId.cedula}" />
+					</p:column>
+
+					<p:column headerText="Total Compra">
+						<h:outputLabel value="#{factura.total}" />
 					</p:column>
 
 					<p:column headerText="Acción">
-						<p:commandButton value="Editar" process="@this,tablaTipos"
-							update="panelDatos"
-							action="#{controladorTipoUsuario.habilitarEdicion(tipo)}" />
-
 						<p:commandButton value="Eliminar" process="@this"
-							update="panelTabla"
-							action="#{controladorTipoUsuario.eliminarTipo(tipo)}" />
+							update="panelTablaFacturas"
+							action="#{controladorGestionVentas.eliminar(factura)}" />
+
+						<p:commandButton value="Ver productos comprados" process="@this"
+							update="panelTablaDetalles"
+							action="#{controladorGestionVentas.listarDetallesVentaFactura(factura)}" />
+					</p:column>
+
+				</p:dataTable>
+
+			</h:panelGrid> <br/>
+			
+			<h:panelGrid id="panelTablaDetalles" columns="1" width="80%">
+
+				<p:dataTable id="tablaTipos"
+					value="#{controladorGestionVentas.detallesVenta}" var="detalle"
+					border="1">
+
+					<p:column headerText="Id Producto">
+						<h:outputLabel value="#{detalle.producto.id}" />
+					</p:column>
+
+					<p:column headerText="Nombre Producto">
+						<h:outputLabel value="#{detalle.producto.nombre}" />
+					</p:column>
+
+					<p:column headerText="Precio">
+						<h:outputLabel value="#{detalle.producto.valorProducto}" />
+					</p:column>
+
+					<p:column headerText="Cantidad">
+						<h:outputLabel value="#{detalle.cantidad}" />
+					</p:column>
+					
+					<p:column headerText="Subtotal">
+						<h:outputLabel value="#{detalle.subtotal}" />
 					</p:column>
 
 				</p:dataTable>

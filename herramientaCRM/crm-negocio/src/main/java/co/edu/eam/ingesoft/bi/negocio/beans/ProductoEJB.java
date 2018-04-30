@@ -11,6 +11,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder.In;
 
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Inventario;
@@ -136,7 +137,28 @@ public class ProductoEJB {
 		em.remove(em.contains(producto) ? producto : em.merge(producto));
 	}
 	
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	public InventarioProducto buscarInventarioProducto (Producto producto){
+		Query q = em.createNamedQuery(InventarioProducto.BUSCAR_INVENTARIO_PRODUCTO);
+		q.setParameter(1, producto);
+		List<InventarioProducto> lista = q.getResultList();
+		return lista.get(0);
+	}
 	
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	public List<InventarioProducto> inventariosProducto (Producto prod){
+		Query q = em.createNamedQuery(InventarioProducto.BUSCAR_INVENTARIO_PRODUCTO);
+		q.setParameter(1, prod);
+		List<InventarioProducto> lista = q.getResultList();
+		return lista;
+	}
+	
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	public List<Inventario> listarInventarios(){
+		Query q = em.createNamedQuery(Inventario.LISTAR);
+		List<Inventario> lista = q.getResultList();
+		return lista;
+ 	}
 
 	/**
 	 * Obtiene la lista de lotes registrados en la base de datos
@@ -160,6 +182,11 @@ public class ProductoEJB {
 		}
 		return null;
 	}
+	
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	public Inventario buscarInventarioId (int id){
+		return em.find(Inventario.class, id);
+	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void registrarInventario(Inventario inventario) throws ExcepcionNegocio {
@@ -180,10 +207,16 @@ public class ProductoEJB {
 		em.remove(em.contains(inventario) ? inventario : em.merge(inventario));
 	}
 
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public List<Inventario> listarInventario() {
 		Query q = em.createNamedQuery(Inventario.LISTAR);
 		List<Inventario> lista = q.getResultList();
 		return lista;
+	}
+	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void registrarInventarioProducto (InventarioProducto ip){
+		em.merge(ip);
 	}
 
 }

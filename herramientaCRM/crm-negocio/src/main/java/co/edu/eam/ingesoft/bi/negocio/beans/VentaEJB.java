@@ -66,4 +66,9 @@ public class VentaEJB {
 		return lista;
 	}
 	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void eliminarVenta (FacturaVenta fv){
+		em.remove(em.contains(fv) ? fv : em.merge(fv));
+	}
+	
 }
