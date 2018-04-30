@@ -52,9 +52,6 @@ public class Persona implements Serializable{
 	@Temporal(TemporalType.TIMESTAMP)
 	protected Date fechaNacimiento;
 
-	@Column(name = "activo")
-	protected boolean activo;
-
 	@JoinColumn(name = "minicipio_id")
 	@ManyToOne
 	protected Municipio municipio;
@@ -67,13 +64,8 @@ public class Persona implements Serializable{
 		// TODO Auto-generated constructor stub
 	}
 
-	
-
-
-
-
 	public Persona(String cedula, String nombre, String apellido, String telefono, String correo, Date fechaNacimiento,
-			boolean activo, Municipio municipio, Genero genero) {
+			Municipio municipio, Genero genero) {
 		super();
 		this.cedula = cedula;
 		this.nombre = nombre;
@@ -81,15 +73,9 @@ public class Persona implements Serializable{
 		this.telefono = telefono;
 		this.correo = correo;
 		this.fechaNacimiento = fechaNacimiento;
-		this.activo = activo;
 		this.municipio = municipio;
 		this.genero = genero;
 	}
-
-
-
-
-
 
 	public String getTelefono() {
 		return telefono;
@@ -118,16 +104,6 @@ public class Persona implements Serializable{
 
 	public void setFechaNacimiento(Date fechaNacimiento) {
 		this.fechaNacimiento = fechaNacimiento;
-	}
-
-
-	public boolean isActivo() {
-		return activo;
-	}
-
-
-	public void setActivo(boolean activo) {
-		this.activo = activo;
 	}
 
 
@@ -172,77 +148,6 @@ public class Persona implements Serializable{
 	public void setMunicipio(Municipio municipio) {
 		this.municipio = municipio;
 	}
-
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (activo ? 1231 : 1237);
-		result = prime * result + ((apellido == null) ? 0 : apellido.hashCode());
-		result = prime * result + ((cedula == null) ? 0 : cedula.hashCode());
-		result = prime * result + ((correo == null) ? 0 : correo.hashCode());
-		result = prime * result + ((fechaNacimiento == null) ? 0 : fechaNacimiento.hashCode());
-		result = prime * result + ((genero == null) ? 0 : genero.hashCode());
-		result = prime * result + ((municipio == null) ? 0 : municipio.hashCode());
-		result = prime * result + ((nombre == null) ? 0 : nombre.hashCode());
-		result = prime * result + ((telefono == null) ? 0 : telefono.hashCode());
-		return result;
-	}
-
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Persona other = (Persona) obj;
-		if (activo != other.activo)
-			return false;
-		if (apellido == null) {
-			if (other.apellido != null)
-				return false;
-		} else if (!apellido.equals(other.apellido))
-			return false;
-		if (cedula == null) {
-			if (other.cedula != null)
-				return false;
-		} else if (!cedula.equals(other.cedula))
-			return false;
-		if (correo == null) {
-			if (other.correo != null)
-				return false;
-		} else if (!correo.equals(other.correo))
-			return false;
-		if (fechaNacimiento == null) {
-			if (other.fechaNacimiento != null)
-				return false;
-		} else if (!fechaNacimiento.equals(other.fechaNacimiento))
-			return false;
-		if (genero != other.genero)
-			return false;
-		if (municipio == null) {
-			if (other.municipio != null)
-				return false;
-		} else if (!municipio.equals(other.municipio))
-			return false;
-		if (nombre == null) {
-			if (other.nombre != null)
-				return false;
-		} else if (!nombre.equals(other.nombre))
-			return false;
-		if (telefono == null) {
-			if (other.telefono != null)
-				return false;
-		} else if (!telefono.equals(other.telefono))
-			return false;
-		return true;
-	}
-
-	
 
 
 }

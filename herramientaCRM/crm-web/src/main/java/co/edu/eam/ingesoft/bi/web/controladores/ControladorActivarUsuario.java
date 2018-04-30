@@ -27,6 +27,7 @@ import co.edu.eam.ingesoft.bi.presistencia.entidades.Cargo;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Municipio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Persona;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.TipoUsuario;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.Usuario;
 
 @Named("controladorActivar")
 @SessionScoped
