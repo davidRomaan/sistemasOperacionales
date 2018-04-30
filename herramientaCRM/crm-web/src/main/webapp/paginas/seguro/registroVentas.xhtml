@@ -14,7 +14,7 @@
 			<br></br>
 			<br></br>
 
-			<h:panelGrid id="panelTabla" columns="2">
+			<h:panelGrid id="panelTabla" style="height: 60px" columns="2">
 
 				<p:dataTable id="tablaProductos" width="80%"
 					value="#{controladorVentas.productos}" var="producto" border="1">
@@ -37,14 +37,15 @@
 
 					<p:column headerText="Acción">
 						<p:commandButton value="Agregar al carrito" style="align:center"
-							process="@this,tablaProductos" update="tablaProductos"
+							process="@this,tablaProductos"
+							update="tablaProductos,panelCantidad"
 							action="#{controladorVentas.crearDetalleVenta(producto)}" />
 					</p:column>
 
 				</p:dataTable>
 
 				<h:panelGrid id="panelCantidad" columns="2"
-					style="margin-top: 10px; margin-left:5px;"
+					style="margin-top: 30px; margin-left:5px;"
 					rendered="#{controladorVentas.btnAgregar}">
 
 					<p:outputLabel for="tfcantidad" value="Cantidad a comprar " />
@@ -53,10 +54,7 @@
 					<p:commandButton value="Agregar" process="@this,panelTabla"
 						update="@this,panelTablaDetalles"
 						action="#{controladorVentas.agregarCantidad}" />
-					<br />
 
-					<p:outputLabel id="lblTotal" style="color: green"
-						value="Total Venta: $#{controladorVentas.totalVenta}" />
 
 				</h:panelGrid>
 

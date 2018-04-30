@@ -1,0 +1,78 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" template="/templates/index.xhtml">
+
+	<ui:define name="cuerpo">
+		<h:form prependId="false">
+
+
+			<h1>GESTIÓN INVENTARIO</h1>
+
+			<br></br>
+			<br></br>
+			<br></br>
+
+			<h:panelGrid columns="2" id="panelDatos">
+
+				<h:outputLabel for="tfnombre" value="Nombre: " />
+				<h:inputText value="#{controladorInventario.nombre}" id="tfnombre" />
+
+				<h:outputLabel for="tfdesc" value="Descripción: " />
+				<h:inputTextarea value="#{controladorInventario.descripcion}"
+					id="tfdesc" />
+
+			</h:panelGrid>
+			<br />
+			<h:panelGrid columns="3" id="panelBotones">
+
+				<p:commandButton value="Registrar" process="@this,panelDatos"
+					update="panelDatos,panelTabla"
+					action="#{controladorInventario.registrar}" />
+
+				<p:commandButton value="Editar" process="@this,panelDatos"
+					rendered="#{controladorInventario.editando}"
+					update="@this,panelTabla"
+					action="#{controladorInventario.editar}" />
+
+			</h:panelGrid>
+			<br />
+
+			<h:panelGrid id="panelTabla" columns="1" width="80%">
+
+				<p:dataTable id="tablaInventario"
+					value="#{controladorInventario.inventarios}" var="inventario"
+					border="1">
+
+					<p:column headerText="Id">
+						<h:outputLabel value="#{inventario.id}" />
+					</p:column>
+
+					<p:column headerText="Nombre " filterBy="#{inventario.nombre}">
+						<h:outputLabel value="#{inventario.nombre}" />
+					</p:column>
+
+					<p:column headerText="Descripcion">
+						<h:outputLabel value="#{inventario.descripcion}" />
+					</p:column>
+
+					<p:column headerText="Acción">
+						<p:commandButton value="Editar" process="@this,tablaInventario"
+							update="panelDatos"
+							action="#{controladorInventario.habilitarEditar(inventario)}" />
+
+						<p:commandButton value="Eliminar" process="@this,tablaInventario"
+							update="panelTabla"
+							action="#{controladorInventario.eliminarInventario(inventario)}" />
+					</p:column>
+
+				</p:dataTable>
+
+			</h:panelGrid>
+
+
+		</h:form>
+	</ui:define>
+
+</ui:composition>
