@@ -1,6 +1,7 @@
 package co.edu.eam.ingesoft.bi.presistencia.entidades;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -27,7 +28,7 @@ public class AuditoriaInventario implements Serializable{
 	private String nombreProducto;
 	
 	@Column(name="fecha_hora")
-	private Date fechaHora;
+	private Calendar fechaHora;
 	
 	@Column(name="dispositivo")
 	private String dispositivo;
@@ -38,15 +39,12 @@ public class AuditoriaInventario implements Serializable{
 	@Column(name="navegador")
 	private String navegador;
 	
-	@JoinColumns({
-		@JoinColumn(name="inventario_id", referencedColumnName="inventario_id"),
-		@JoinColumn(name="producto_id", referencedColumnName="producto_id")
-	})
+	@JoinColumn(name="id_Inventario")
 	@ManyToOne
-	private InventarioProducto inventario;
+	private Inventario inventario;
 
-	public AuditoriaInventario(int id, String nombreProducto, Date fechaHora, String dispositivo, String accion,
-			String navegador, InventarioProducto inventario) {
+	public AuditoriaInventario(int id, String nombreProducto, Calendar fechaHora, String dispositivo, String accion,
+			String navegador, Inventario inventario) {
 		super();
 		this.id = id;
 		this.nombreProducto = nombreProducto;
@@ -60,6 +58,7 @@ public class AuditoriaInventario implements Serializable{
 	public AuditoriaInventario() {
 		super();
 	}
+	
 
 	public int getId() {
 		return id;
@@ -77,11 +76,11 @@ public class AuditoriaInventario implements Serializable{
 		this.nombreProducto = nombreProducto;
 	}
 
-	public Date getFechaHora() {
+	public Calendar getFechaHora() {
 		return fechaHora;
 	}
 
-	public void setFechaHora(Date fechaHora) {
+	public void setFechaHora(Calendar fechaHora) {
 		this.fechaHora = fechaHora;
 	}
 
@@ -109,11 +108,11 @@ public class AuditoriaInventario implements Serializable{
 		this.navegador = navegador;
 	}
 
-	public InventarioProducto getInventario() {
+	public Inventario getInventario() {
 		return inventario;
 	}
 
-	public void setInventario(InventarioProducto inventario) {
+	public void setInventario(Inventario inventario) {
 		this.inventario = inventario;
 	}
 	

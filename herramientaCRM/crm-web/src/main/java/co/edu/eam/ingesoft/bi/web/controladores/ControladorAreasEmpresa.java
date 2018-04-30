@@ -12,7 +12,8 @@ import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 
 import co.edu.eam.ingesoft.bi.negocio.beans.AreasEmpresaEJB;
-import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaAreaEJB;
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaPersonaEJB;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Area;
 
@@ -30,7 +31,7 @@ public class ControladorAreasEmpresa implements Serializable {
 
 	private List<Area> listaNueva;
 	
-	private AuditoriaEJB auditoriaEJB;
+	private AuditoriaAreaEJB auditoriaAreasEJB;
 	
 	private String accion;
 	
@@ -65,7 +66,7 @@ public class ControladorAreasEmpresa implements Serializable {
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
 				System.out.println(a);
 				System.out.println(browserDetail);
-				auditoriaEJB.crearAuditoriaArea(a, accion, browserDetail);
+				auditoriaAreasEJB.crearAuditoriaArea(a, accion, browserDetail);
 					
 				Messages.addFlashGlobalInfo("Registro exitoso");
 				listarAreas();

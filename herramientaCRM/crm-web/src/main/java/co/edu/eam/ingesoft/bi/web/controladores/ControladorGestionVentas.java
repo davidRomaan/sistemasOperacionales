@@ -48,6 +48,10 @@ public class ControladorGestionVentas implements Serializable {
 	public void listarDetallesVentaFactura(FacturaVenta factura) {
 		detallesVenta = ventasEJB.listarDetallesVentaFactura(factura);
 	}
+	
+	public void eliminar(FacturaVenta fv){
+		ventasEJB.eliminarVenta(fv);
+	}
 
 	public String getFechaCompra() {
 		return fechaCompra;
