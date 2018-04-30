@@ -34,9 +34,8 @@ public class Inventario implements Serializable {
 	@Column(name = "descripcion")
 	private String descripcion;
 
-	public Inventario(int id, String nombre, String descripcion) {
+	public Inventario(String nombre, String descripcion) {
 		super();
-		this.id = id;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 	}

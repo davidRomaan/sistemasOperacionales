@@ -141,7 +141,7 @@ public class ControladorVentas implements Serializable {
 	 */
 	private void registrarDetallesVenta() {
 		detalleEJB.registrarDetalleVenta(productosCompra, factura);
-		for (DetalleVenta detalleVenta : productosCompra) {
+		/**for (DetalleVenta detalleVenta : productosCompra) {
 			detalleVenta.setFacturaVenta(factura);
 			try {
 				accion = "Registrar Detalle Venta";
@@ -153,7 +153,7 @@ public class ControladorVentas implements Serializable {
 			}
 			// Registramos cada uno de los detalles venta
 			detalleEJB.registrarDetalleVenta(productosCompra, factura);
-		}
+		}**/
 	}
 
 	/**
@@ -365,6 +365,8 @@ public class ControladorVentas implements Serializable {
 		mostrarDatosCliente = true;
 
 		if (cliente != null) {
+			
+			System.out.println(cliente.getNombre());
 
 			nombre = cliente.getNombre();
 			apellido = cliente.getApellido();
