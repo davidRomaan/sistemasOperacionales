@@ -122,6 +122,15 @@ public class ControladorInventario implements Serializable {
 			
 			refrescarListaInventarios();
 			
+			inventarioEditar = null;
+			
+			try {
+				reload();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
 		
 	}

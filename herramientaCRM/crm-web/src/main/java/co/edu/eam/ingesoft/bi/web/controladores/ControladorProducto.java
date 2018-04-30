@@ -19,6 +19,7 @@ import co.edu.eam.ingesoft.bi.negocio.beans.ProductoEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.TipoProductoEJB;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Inventario;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.InventarioProducto;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Lote;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Producto;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.TipoProducto;
@@ -35,6 +36,7 @@ public class ControladorProducto implements Serializable {
 	private int cantidad;
 	private List<Inventario> inventarios;
 	private int inventarioSeleccionado;
+	private List<InventarioProducto> inventariosProducto;
 	private double valor;
 	private List<Lote> lotes;
 	private int loteSeleccionado;
@@ -57,6 +59,7 @@ public class ControladorProducto implements Serializable {
 	private void cargarDatos() {
 		lotes = productoEJB.lotes();
 		listarTiposProducto();
+		inventarios = productoEJB.listarInventario();
 	}
 
 	/**
@@ -82,6 +85,9 @@ public class ControladorProducto implements Serializable {
 			dimension = productoBuscado.getDimension();
 			valor = productoBuscado.getValorProducto();
 			loteSeleccionado = productoBuscado.getLote().getId();
+			inventarioSeleccionado = productoEJB.buscarInventarioProducto(productoBuscado).getInventarioId().getId();
+			
+			inventariosProducto = productoEJB.inventariosProducto(productoBuscado);
 
 		} else {
 
@@ -155,6 +161,15 @@ public class ControladorProducto implements Serializable {
 		try {
 
 			productoEJB.registrarProducto(producto);
+			
+			InventarioProducto inventario = new InventarioProducto();
+			inventario.setCantidad(cantidad);
+			inventario.setProductoId(producto);
+			Inventario i = productoEJB.buscarInventarioId(inventarioSeleccionado);
+			System.out.println("inven cod "+ i.getId());
+			inventario.setInventarioId(i);
+			
+			productoEJB.registrarInventarioProducto(inventario);
 
 			try {
 				
@@ -309,6 +324,14 @@ public class ControladorProducto implements Serializable {
 
 	public void setInventarioSeleccionado(int inventarioSeleccionado) {
 		this.inventarioSeleccionado = inventarioSeleccionado;
+	}
+
+	public List<InventarioProducto> getInventariosProducto() {
+		return inventariosProducto;
+	}
+
+	public void setInventariosProducto(List<InventarioProducto> inventariosProducto) {
+		this.inventariosProducto = inventariosProducto;
 	}
 
 }

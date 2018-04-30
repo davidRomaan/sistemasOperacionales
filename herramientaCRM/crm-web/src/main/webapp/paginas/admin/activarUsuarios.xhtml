@@ -47,9 +47,21 @@
 				<h:outputLabel id="lblTelefono" value="Telefono" />
 				<h:inputText id="tfTelefonno" value="#{controladorActivar.telefono}" />
 
-				<h:outputLabel for="cbMunicipio" id="lbMunicipio"
-					value="#{'Municipio'}" />
-				<h:selectOneMenu id="cbMunicipios"
+				<h:outputLabel for="cbDepto" id="lbDepto" value="Departamento: " />
+				<h:selectOneMenu id="cbDepto"
+					value="#{controladorActivar.deptoSeleccionado}">
+
+					<f:selectItems value="#{controladorActivar.departamentos}"
+						var="depto" itemValue="#{depto.id}" itemLabel="#{depto.nombre}" />
+
+					<f:ajax event="change" execute="@this" render="cbmunicipio"
+						listener="#{controladorActivar.listarMunicipios}" />
+
+				</h:selectOneMenu>
+
+				<h:outputLabel for="cbmunicipio" id="lbmunicipio"
+					value="Municipio: " />
+				<h:selectOneMenu id="cbmunicipio"
 					value="#{controladorActivar.municipioSeleccionado}">
 
 					<f:selectItems value="#{controladorActivar.municipios}"
@@ -112,7 +124,7 @@
 			<h:panelGrid id="panelBotones" columns="2">
 
 				<p:commandButton id="btnRegistrar" value="#{'Registrar Persona'}"
-					process="@this,panelDatos,panelContra" update="panelDatos,panelContra"
+					process="@this,panelDatos,panelContra" update="paneltabla"
 					action="#{controladorActivar.crearUsuario}" />
 
 			</h:panelGrid>

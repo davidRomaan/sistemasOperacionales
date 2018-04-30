@@ -102,10 +102,9 @@ public class ControladorPersona implements Serializable{
 			
 			personaEJB.crearPersona(persona);
 			
+			
 			try {
-				
-				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				
+				String browserDetail = Faces.getRequest().getHeader("User-Agent");	
 				auditoriaEJB.crearAuditoriaPersona(persona, accion, browserDetail);
 			
 			}catch (Exception e) {

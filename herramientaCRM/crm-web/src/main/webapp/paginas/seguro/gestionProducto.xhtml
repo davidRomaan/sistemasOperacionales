@@ -20,7 +20,7 @@
 					value="#{controladorProducto.codigo}" />
 					
 				<p:commandButton id="btnBuscarProd" value="Buscar"
-					process="@this,panelCodigo" update="@this,panelDatos"
+					process="@this,panelCodigo" update="@this,panelDatos,panelTablaInventarios"
 					action="#{controladorProducto.buscar}" />
 
 			</h:panelGrid><br/>
@@ -45,8 +45,8 @@
 				<h:outputLabel id="lblPrecio" value="Precio: " />
 				<h:inputText id="tfPrecio" value="#{controladorProducto.valor}" />
 				
-				<h:outputLabel id="lblPrecio" value="Cantidad: " />
-				<h:inputText id="tfPrecio" value="#{controladorProducto.cantidad}" />
+				<h:outputLabel id="lblCantidad" value="Cantidad: " />
+				<h:inputText id="tfCantidad" value="#{controladorProducto.cantidad}" />
 				
 				<h:outputLabel for="cbInventarios" id="lbInventario" value="Seleccione un inventario " />
 				<h:selectOneMenu id="cbInventarios"
@@ -122,6 +122,27 @@
 						<p:commandButton value="Eliminar" process="@this,tablaProductos"
 							update="tablaProductos"
 							action="#{controladorProducto.eliminarProducto(producto)}" />
+					</p:column>
+
+				</p:dataTable>
+
+			</h:panelGrid> <br/>
+			
+			<h:panelGrid id="panelTablaInventarios" columns="1" width="80%">
+
+				<p:dataTable id="tablaInventarios"
+					value="#{controladorProducto.inventariosProducto}" var="inventario" border="1">
+
+					<p:column headerText="Nombre " filterBy="#{inventario.inventarioId.nombre}">
+						<h:outputLabel value="#{inventario.inventarioId.nombre}" />
+					</p:column>
+
+					<p:column headerText="Descripción ">
+						<h:outputLabel value="#{inventario.inventarioId.descripcion}" />
+					</p:column>
+					
+					<p:column headerText="Cantidad">
+						<h:outputLabel value="#{inventario.cantidad}" />
 					</p:column>
 
 				</p:dataTable>

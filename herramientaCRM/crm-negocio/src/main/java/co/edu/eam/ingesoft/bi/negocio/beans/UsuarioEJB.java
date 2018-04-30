@@ -123,20 +123,30 @@ public class UsuarioEJB {
 		if (personas != null) {
 
 			List<UsuariosDTO> lista = new ArrayList<UsuariosDTO>();
-				for (int j = 0; j < usuarios.size(); j++) {
+			for (int j = 0; j < usuarios.size(); j++) {
 
-					String nombre = usuarios.get(j).getNombre();
-					String apellido = usuarios.get(j).getApellido();
-					String cedula = usuarios.get(j).getCedula();
-					boolean estado = usuarios.get(j).isActivo();
-	
-					UsuariosDTO objeto = new UsuariosDTO(nombre, apellido, cedula, estado);
-					lista.add(objeto);
-				}
+				String nombre = usuarios.get(j).getNombre();
+				String apellido = usuarios.get(j).getApellido();
+				String cedula = usuarios.get(j).getCedula();
+				boolean estado = usuarios.get(j).isActivo();
+
+				UsuariosDTO objeto = new UsuariosDTO(nombre, apellido, cedula, estado);
+				lista.add(objeto);
+			}
 			return lista;
-		}else{
+		} else {
 			throw new ExcepcionNegocio("no hay datos para mostrar");
 		}
-		
+
+	}
+
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void registrarUsu(Usuario u) throws ExcepcionNegocio {
+		em.persist(u);
+	}
+
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	public Usuario buscarUsu(String cedula) {
+		return em.find(Usuario.class, cedula);
 	}
 }
