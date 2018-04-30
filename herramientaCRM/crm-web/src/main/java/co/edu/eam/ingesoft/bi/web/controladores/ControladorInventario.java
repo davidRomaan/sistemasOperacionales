@@ -12,9 +12,12 @@ import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
+import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 import org.omnifaces.util.Messages.Message;
 
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaInventarioEJB;
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaPersonaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.ProductoEJB;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Inventario;
@@ -27,9 +30,13 @@ public class ControladorInventario implements Serializable {
 	private String descripcion;
 	private Inventario inventarioEditar;
 	private List<Inventario> inventarios;
+	private String accion;
 	
 	@EJB
 	private ProductoEJB productoEJB;
+	
+	@EJB
+	private AuditoriaInventarioEJB inventarioEJB;
 	
 	@PostConstruct
 	private void postConstruct(){
@@ -52,6 +59,16 @@ public class ControladorInventario implements Serializable {
 		
 		try{
 		productoEJB.registrarInventario(inventario);
+		
+		try {
+			accion = "Regitro Inventario";
+			String browserDetail = Faces.getRequest().getHeader("User-Agent");
+			
+			inventarioEJB.crearAuditoriaInventario(inventario, accion, browserDetail);
+		
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		Messages.addFlashGlobalInfo("Registro exitoso");
 		limpiarCampos();

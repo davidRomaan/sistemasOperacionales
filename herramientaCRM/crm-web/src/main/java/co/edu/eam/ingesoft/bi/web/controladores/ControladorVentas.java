@@ -17,6 +17,10 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
+import org.omnifaces.util.Faces;
+
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaDetalleVentaEJB;
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaPersonaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.DepartamentoEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.DetalleVentaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.ProductoEJB;
@@ -38,7 +42,7 @@ import co.edu.eam.ingesoft.bi.presistencia.entidades.Usuario;
 @SessionScoped
 public class ControladorVentas implements Serializable {
 
-	// Empleado que inció sesión
+	// Empleado que inciï¿½ sesiï¿½n
 	@Inject
 	private ControladorSesion sesion;
 
@@ -52,6 +56,7 @@ public class ControladorVentas implements Serializable {
 	private int deptoSeleccionado;
 	private int municipioSeleccionado;
 	private List<Genero> generos;
+	private String accion;
 
 	// Cliente que va a reliazar la compra
 	Usuario cliente;
@@ -88,9 +93,12 @@ public class ControladorVentas implements Serializable {
 
 	@EJB
 	private DepartamentoEJB departamentoEJB;
+	
+	@EJB
+	private AuditoriaDetalleVentaEJB auditoriaDetalleVentasEJB;
 
 	/**
-	 * Carga los elementos al iniciar la página
+	 * Carga los elementos al iniciar la pï¿½gina
 	 */
 	@PostConstruct
 	private void cargarElementos() {
@@ -133,10 +141,23 @@ public class ControladorVentas implements Serializable {
 	 */
 	private void registrarDetallesVenta() {
 		detalleEJB.registrarDetalleVenta(productosCompra, factura);
+		for (DetalleVenta detalleVenta : productosCompra) {
+			detalleVenta.setFacturaVenta(factura);
+			try {
+				accion = "Registrar Detalle Venta";
+				String browserDetail = Faces.getRequest().getHeader("User-Agent");
+				auditoriaDetalleVentasEJB.crearAuditoriaDetalleVenta(detalleVenta, accion, browserDetail);
+			
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+			// Registramos cada uno de los detalles venta
+			detalleEJB.registrarDetalleVenta(productosCompra, factura);
+		}
 	}
 
 	/**
-	 * Se crea un detalle venta que será agregado al carrito
+	 * Se crea un detalle venta que serï¿½ agregado al carrito
 	 * 
 	 * @param p
 	 *            InventarioProducto que se desea comprar
@@ -181,9 +202,9 @@ public class ControladorVentas implements Serializable {
 	}
 
 	/**
-	 * Para verificar si se seleccionó el botón agregar
+	 * Para verificar si se seleccionï¿½ el botï¿½n agregar
 	 * 
-	 * @return true si se seleccionó, de lo contrario false
+	 * @return true si se seleccionï¿½, de lo contrario false
 	 */
 	public boolean isBtnAgregar() {
 		return detalleAgregar != null;
@@ -256,7 +277,7 @@ public class ControladorVentas implements Serializable {
 	}
 
 	/**
-	 * Crea la factura que se asiganará a los detalle venta
+	 * Crea la factura que se asiganarï¿½ a los detalle venta
 	 */
 	public void vender() {
 

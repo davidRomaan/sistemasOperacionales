@@ -168,7 +168,6 @@ public class ControladorActivarUsuario implements Serializable {
 				usu.setTipoUsuario(tip);
 
 				try {
-					//personaEJB.crearPersona(persona);
 					usuarioEJB.registrarUsu(usu);
 					listarActivosInActivos();
 

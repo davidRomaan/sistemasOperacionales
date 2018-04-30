@@ -12,6 +12,10 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 
+import org.omnifaces.util.Faces;
+
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaPersonaEJB;
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaProductoEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.ProductoEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.TipoProductoEJB;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
@@ -41,6 +45,10 @@ public class ControladorProducto implements Serializable {
 	private List<TipoProducto> tiposProducto;
 	private Producto productoBuscado;
 	private int tipoProductoSeleccionado;
+	private String accion;
+	
+	@EJB
+	private AuditoriaProductoEJB auditoriaProductoEJB;
 
 	@EJB
 	private ProductoEJB productoEJB;
@@ -63,7 +71,7 @@ public class ControladorProducto implements Serializable {
 	}
 
 	/**
-	 * Busca un producto por su código
+	 * Busca un producto por su cï¿½digo
 	 */
 	public void buscar() {
 
@@ -113,7 +121,7 @@ public class ControladorProducto implements Serializable {
 			productoEJB.editarProducto(productoBuscado);
 
 			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, "Operación exitosa", null));
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Operaciï¿½n exitosa", null));
 
 			limpiarCampos();
 		}
@@ -163,6 +171,18 @@ public class ControladorProducto implements Serializable {
 			inventario.setInventarioId(i);
 			
 			productoEJB.registrarInventarioProducto(inventario);
+
+			try {
+				
+				accion = "Registrar Producto";
+
+				String browserDetail = Faces.getRequest().getHeader("User-Agent");
+
+				auditoriaProductoEJB.crearAuditoriaProducto(producto, accion, browserDetail);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "El producto ha sido registrado exitosamente", null));
