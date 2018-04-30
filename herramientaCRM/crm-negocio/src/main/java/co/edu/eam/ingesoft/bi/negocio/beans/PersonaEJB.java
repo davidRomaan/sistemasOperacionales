@@ -12,6 +12,8 @@ import javax.persistence.Query;
 
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Persona;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Area;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaPersona;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.Departamento;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Municipio;
 
 @LocalBean
@@ -72,12 +74,31 @@ public class PersonaEJB {
 	 * @return
 	 */
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-	public List<Municipio> listaMunicipios(){
-		Query q = em.createNamedQuery(Municipio.LISTAR_MUNICIPIO);
+	public List<Municipio> listaMunicipios(int idDepartamento){
+		Query q = em.createNamedQuery(Municipio.LISTAR_MUNICIPIO_DEPTO);
+		q.setParameter(1, idDepartamento);
 		List<Municipio> municipio = q.getResultList();
 		return municipio;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	public List<Departamento> listaDepartamentos(){
+		Query q = em.createNamedQuery(Departamento.LISTAR_DEPARTAMENTOS);
+		List<Departamento> departamento = q.getResultList();
+		return departamento;
+	}
 	
-
+	/**
+	 * Registra un cliente
+	 * @param c Cliente que se desea registrar
+	 */
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void crearAudiPersona(AuditoriaPersona ap){
+			em.persist(ap);
+	}
+	
 }
