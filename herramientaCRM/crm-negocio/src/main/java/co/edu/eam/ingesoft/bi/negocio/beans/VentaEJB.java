@@ -31,15 +31,6 @@ public class VentaEJB {
 	}
 	
 	/**
-	 * Registra un detalle venta en la base de datos
-	 * @param dv detalle venta que se desea registrar
-	 */
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void registrarDetalleVenta (DetalleVenta dv){
-		em.merge(dv);
-	}
-	
-	/**
 	 * Obtiene el último código de la factura generada a un cliente
 	 * @param cedulaCliente cédula del clienteal cual se le generó la factura
 	 * @return el id de la última factura

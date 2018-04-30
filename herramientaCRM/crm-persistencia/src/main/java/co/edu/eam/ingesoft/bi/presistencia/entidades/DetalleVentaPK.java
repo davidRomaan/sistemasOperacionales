@@ -7,6 +7,36 @@ public class DetalleVentaPK implements Serializable{
 	private int facturaVenta;
 	
 	private int producto;
+	
+	public DetalleVentaPK() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	
+
+	public int getFacturaVenta() {
+		return facturaVenta;
+	}
+
+
+
+	public void setFacturaVenta(int facturaVenta) {
+		this.facturaVenta = facturaVenta;
+	}
+
+
+
+	public int getProducto() {
+		return producto;
+	}
+
+
+
+	public void setProducto(int producto) {
+		this.producto = producto;
+	}
+
+
 
 	@Override
 	public int hashCode() {

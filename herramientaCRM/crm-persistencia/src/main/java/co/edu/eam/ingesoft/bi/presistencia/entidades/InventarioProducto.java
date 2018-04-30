@@ -32,12 +32,12 @@ public class InventarioProducto implements Serializable {
 
 	@Id
 	@JoinColumn(name = "inventario_id")
-	@ManyToOne
+	@ManyToOne(cascade={})
 	private Inventario inventarioId;
 
 	@Id
 	@JoinColumn(name = "producto_id")
-	@ManyToOne
+	@ManyToOne(cascade={})
 	private Producto productoId;
 
 	@Column(name = "cantidad", length = 30)
@@ -76,6 +76,37 @@ public class InventarioProducto implements Serializable {
 
 	public void setProductoId(Producto productoId) {
 		this.productoId = productoId;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((inventarioId == null) ? 0 : inventarioId.hashCode());
+		result = prime * result + ((productoId == null) ? 0 : productoId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		InventarioProducto other = (InventarioProducto) obj;
+		if (inventarioId == null) {
+			if (other.inventarioId != null)
+				return false;
+		} else if (!inventarioId.equals(other.inventarioId))
+			return false;
+		if (productoId == null) {
+			if (other.productoId != null)
+				return false;
+		} else if (!productoId.equals(other.productoId))
+			return false;
+		return true;
 	}
 
 }

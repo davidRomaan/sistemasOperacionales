@@ -18,6 +18,7 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
 import co.edu.eam.ingesoft.bi.negocio.beans.DepartamentoEJB;
+import co.edu.eam.ingesoft.bi.negocio.beans.DetalleVentaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.ProductoEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.UsuarioEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.VentaEJB;
@@ -81,6 +82,9 @@ public class ControladorVentas implements Serializable {
 
 	@EJB
 	private VentaEJB ventaEJB;
+	
+	@EJB
+	private DetalleVentaEJB detalleEJB;
 
 	@EJB
 	private DepartamentoEJB departamentoEJB;
@@ -128,11 +132,7 @@ public class ControladorVentas implements Serializable {
 	 * Se asigna la fatura a cada uno de los detalles de venta
 	 */
 	private void registrarDetallesVenta() {
-		for (DetalleVenta detalleVenta : productosCompra) {
-			detalleVenta.setFacturaVenta(factura);
-			// Registramos cada uno de los detalles venta
-			ventaEJB.registrarDetalleVenta(detalleVenta);
-		}
+		detalleEJB.registrarDetalleVenta(productosCompra, factura);
 	}
 
 	/**

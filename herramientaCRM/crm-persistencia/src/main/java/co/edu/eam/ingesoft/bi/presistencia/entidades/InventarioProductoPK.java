@@ -7,6 +7,26 @@ public class InventarioProductoPK implements Serializable{
 	private int inventarioId;
 	
 	private int productoId;
+	
+	public InventarioProductoPK() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public int getInventarioId() {
+		return inventarioId;
+	}
+
+	public void setInventarioId(int inventarioId) {
+		this.inventarioId = inventarioId;
+	}
+
+	public int getProductoId() {
+		return productoId;
+	}
+
+	public void setProductoId(int productoId) {
+		this.productoId = productoId;
+	}
 
 	@Override
 	public int hashCode() {

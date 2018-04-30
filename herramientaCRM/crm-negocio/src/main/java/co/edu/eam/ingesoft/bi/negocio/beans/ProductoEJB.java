@@ -14,8 +14,11 @@ import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder.In;
 
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.DetalleVenta;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.DetalleVentaPK;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Inventario;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.InventarioProducto;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.InventarioProductoPK;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Lote;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Producto;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.TipoProducto;
@@ -216,7 +219,24 @@ public class ProductoEJB {
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void registrarInventarioProducto (InventarioProducto ip){
-		em.merge(ip);
+					
+			InventarioProductoPK primaria = new InventarioProductoPK();
+			
+			primaria.setInventarioId(ip.getInventarioId().getId());
+			primaria.setProductoId(ip.getProductoId().getId());
+			
+			InventarioProducto inventario = buscarInventarioProdPK(primaria);
+			
+			if (inventario == null){
+							
+				em.persist(ip);
+							
+		}
+	}
+	
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	public InventarioProducto buscarInventarioProdPK (InventarioProductoPK inventario){
+		return em.find(InventarioProducto.class, inventario);
 	}
 
 }

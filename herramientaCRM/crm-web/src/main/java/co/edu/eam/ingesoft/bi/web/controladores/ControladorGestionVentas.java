@@ -9,6 +9,8 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 
+import org.omnifaces.util.Messages;
+
 import co.edu.eam.ingesoft.bi.negocio.beans.VentaEJB;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.DetalleVenta;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.FacturaVenta;
@@ -37,6 +39,9 @@ public class ControladorGestionVentas implements Serializable {
 	 */
 	public void listarFacturasFecha() {
 		facturas = ventasEJB.listarFacturasPorFecha(fechaCompra);
+		if (facturas.size() == 0){
+			Messages.addFlashGlobalError("No hay registros de esta fecha");
+		}
 	}
 
 	/**

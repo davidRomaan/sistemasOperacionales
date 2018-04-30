@@ -14,7 +14,7 @@
 			<br></br>
 			<br></br>
 
-			<h:panelGrid columns="2" id="panelFecha">
+			<h:panelGrid columns="3" id="panelFecha">
 
 				<p:outputLabel id="maskIngres" value="FechaIngreso" />
 				<p:inputMask id="dateIngreso"
@@ -66,7 +66,7 @@
 			
 			<h:panelGrid id="panelTablaDetalles" columns="1" width="80%">
 
-				<p:dataTable id="tablaTipos"
+				<p:dataTable id="tablaDetalles"
 					value="#{controladorGestionVentas.detallesVenta}" var="detalle"
 					border="1">
 

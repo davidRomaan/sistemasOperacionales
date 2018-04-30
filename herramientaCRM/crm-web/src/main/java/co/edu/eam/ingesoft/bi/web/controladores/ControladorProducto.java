@@ -158,8 +158,8 @@ public class ControladorProducto implements Serializable {
 			InventarioProducto inventario = new InventarioProducto();
 			inventario.setCantidad(cantidad);
 			inventario.setProductoId(producto);
+			
 			Inventario i = productoEJB.buscarInventarioId(inventarioSeleccionado);
-			System.out.println("inven cod "+ i.getId());
 			inventario.setInventarioId(i);
 			
 			productoEJB.registrarInventarioProducto(inventario);
