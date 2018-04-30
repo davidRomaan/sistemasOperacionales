@@ -70,12 +70,14 @@ public class ControladorPersona implements Serializable{
 	public void listares() {  
 		generos = Arrays.asList(Genero.values());
 		departamentos = personaEJB.listaDepartamentos();
+		municipios = personaEJB.listaMunicipiosPorDepartamento(1);
 		accion = "registrar";
 	}
 	
 	public void listarMunicipios () {
 		
-		municipios = personaEJB.listaMunicipios(departamentoSelccionado);
+		municipios = personaEJB.listaMunicipiosPorDepartamento(departamentoSelccionado);
+		
 	}
 	
 	

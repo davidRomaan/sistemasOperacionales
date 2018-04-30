@@ -1,6 +1,7 @@
 package co.edu.eam.ingesoft.bi.presistencia.entidades;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -26,7 +27,7 @@ public class AuditoriaDetalleVenta implements Serializable{
 	private String seleccion;
 	
 	@Column(name="fecha_hora")
-	private Date fechaHora;
+	private Calendar fechaHora;
 	
 	@Column(name="dispositivo")
 	private String dispositivo;
@@ -42,7 +43,7 @@ public class AuditoriaDetalleVenta implements Serializable{
 	private DetalleVenta detalleVenta;
 
 
-	public AuditoriaDetalleVenta(int id, String seleccion, Date fechaHora, String dispositivo, String navegador,
+	public AuditoriaDetalleVenta(int id, String seleccion, Calendar fechaHora, String dispositivo, String navegador,
 			DetalleVenta detalleVenta) {
 		super();
 		this.id = id;
@@ -79,12 +80,12 @@ public class AuditoriaDetalleVenta implements Serializable{
 	}
 
 
-	public Date getFechaHora() {
+	public Calendar getFechaHora() {
 		return fechaHora;
 	}
 
 
-	public void setFechaHora(Date fechaHora) {
+	public void setFechaHora(Calendar fechaHora) {
 		this.fechaHora = fechaHora;
 	}
 
