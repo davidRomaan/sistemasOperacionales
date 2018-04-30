@@ -16,7 +16,7 @@ import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 
 import co.edu.eam.ingesoft.bi.negocio.beans.AreasEmpresaEJB;
-import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaPersonaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.CargoEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.DepartamentoEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.MunicipioEJB;
@@ -82,7 +82,7 @@ public class ControladorPersona implements Serializable {
 	private MunicipioEJB municipioEJB;
 
 	@EJB
-	AuditoriaEJB auditoriaEJB;
+	private AuditoriaPersonaEJB auditoriaPersonaEJB;
 
 	@EJB
 	private UsuarioEJB usuarioEJB;
@@ -181,8 +181,8 @@ public class ControladorPersona implements Serializable {
 
 				try {
 					usuarioEJB.registrarUsu(usu);
-					//String browserDetail = Faces.getRequest().getHeader("User-Agent");	
-					//auditoriaEJB.crearAuditoriaPersona(Persona, accion, browserDetail);
+					String browserDetail = Faces.getRequest().getHeader("User-Agent");	
+					auditoriaPersonaEJB.crearAuditoriaPersona(usu, accion, browserDetail);
 
 				} catch (ExcepcionNegocio e) {
 					e.getMessage();
