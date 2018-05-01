@@ -91,7 +91,7 @@ public class UsuarioEJB {
 	 * @param cedula
 	 *            c�dula del cliente que se desea buscar
 	 * @return el cliente si lo encuentra, de lo contrario null
-	 */
+	 
 	public Usuario buscarCliente(String cedula) {
 		Usuario cliente = buscarUsuarioCedula(cedula);
 		if(cliente != null) {
@@ -101,7 +101,7 @@ public class UsuarioEJB {
 		
 		}
 		return null;
-	}
+	}*/
 
 	/**
 	 * Registra un usuario en la base de datos
@@ -116,6 +116,26 @@ public class UsuarioEJB {
 		} else {
 			em.persist(usuario);
 		}
+	}
+	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void registrarCliente (Persona p){
+		if (buscarCliente(p.getCedula()) != null){
+			throw new ExcepcionNegocio("El cliente ya existe");
+		} else {
+			em.persist(p);
+		}
+	}
+	
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	public Persona buscarCliente (String cedula){
+		Query q = em.createNativeQuery("SELECT * FROM USUARIO WHERE cedula = ?1");
+		q.setParameter(1, cedula);
+		List<Persona> lista = q.getResultList();
+		if (lista.size() == 0){
+			return em.find(Persona.class, cedula);
+		}
+		return null;
 	}
 
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
@@ -141,6 +161,15 @@ public class UsuarioEJB {
 			throw new ExcepcionNegocio("no hay datos para mostrar");
 		}
 
+	}
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void editarCliente(Persona p){
+		em.merge(p);
+	}
+	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void eliminarCliente(Persona p){
+		em.remove(em.merge(p));
 	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)

@@ -1,0 +1,138 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" template="/templates/index.xhtml">
+
+
+	<ui:define name="cuerpo">
+		<h:form prependId="false">
+
+			<h1>GESTIÓN DE CLIENTES</h1>
+
+			<br></br>
+			<br></br>
+			<br></br>
+
+			<h:panelGrid columns="3" id="panelCedula">
+
+				<p:outputLabel for="tfcedulaCliente" id="lblCedula"
+					value="Número de identificación " />
+				<h:inputText value="#{controladorGestioncliente.cedula}"
+					id="tfcedulaCliente" />
+
+				<p:commandButton value="Buscar" process="@this,panelCedula"
+					update="@this,panelDatosCliente" id="btnBuscarCedula"
+					action="#{controladorGestioncliente.buscar}" />
+
+			</h:panelGrid>
+			<br />
+
+			<h:panelGrid columns="2" id="panelDatosCliente">
+
+				<p:outputLabel for="tfnombre" value="Nombre: " />
+				<h:inputText value="#{controladorGestioncliente.nombre}"
+					id="tfnombre" placeholder="Ingrese el nombre" />
+
+				<p:outputLabel for="tfapellido" value="Apellido: " />
+				<h:inputText value="#{controladorGestioncliente.apellido}"
+					id="tfapellido" placeholder="Ingrese el apellido" />
+
+				<h:outputLabel id="lblGenero" value="Genero" />
+				<h:selectOneMenu id="cbGenero"
+					value="#{controladorGestioncliente.tipoGenero}">
+
+					<f:selectItems value="#{controladorGestioncliente.generos}"
+						var="genero" itemValue="#{genero}" itemLabel="#{genero}" />
+
+				</h:selectOneMenu>
+
+				<p:outputLabel for="tfcorreo" value="Correo: " />
+				<h:inputText value="#{controladorGestioncliente.correo}"
+					id="tfcorreo" placeholder="Ingrese el correo" />
+
+				<p:outputLabel for="tftelefono" value="Telefono: " />
+				<h:inputText value="#{controladorGestioncliente.telefono}"
+					id="tftelefono" placeholder="Ingrese el telefono" />
+
+				<h:outputLabel for="cbDepto" id="lbDepto" value="Departamento: " />
+				<h:selectOneMenu id="cbDepto"
+					value="#{controladorGestioncliente.deptoSeleccionado}">
+
+					<f:selectItems value="#{controladorGestioncliente.departamentos}"
+						var="depto" itemValue="#{depto.id}" itemLabel="#{depto.nombre}" />
+
+					<f:ajax event="change" execute="@this" render="cbmunicipio"
+						listener="#{controladorGestioncliente.listarMunicipios}" />
+
+				</h:selectOneMenu>
+
+				<h:outputLabel for="cbmunicipio" id="lbmunicipio"
+					value="Municipio: " />
+				<h:selectOneMenu id="cbmunicipio"
+					value="#{controladorGestioncliente.municipioSeleccionado}">
+
+					<f:selectItems value="#{controladorGestioncliente.municipios}"
+						var="municipio" itemValue="#{municipio.id}"
+						itemLabel="#{municipio.nombre}" />
+
+				</h:selectOneMenu>
+
+			</h:panelGrid>
+			<br />
+
+			<h:panelGrid id="panelBotones" columns="4">
+				<p:commandButton value="Registrar"
+					process="@this,panelCedula,panelDatosCliente"
+					update="@this,panelCedula,panelDatosCliente,panelTabla"
+					action="#{controladorGestioncliente.registrarCliente}" />
+
+				<p:commandButton value="Buscar" process="@this,panelCedula"
+					update="@this,panelCedula,panelDatosCliente"
+					action="#{controladorGestioncliente.buscar}" />
+
+				<p:commandButton value="Editar"
+					process="@this,panelCedula,panelDatosCliente"
+					update="@this,panelCedula,panelDatosCliente,panelTabla"
+					action="#{controladorGestioncliente.editar}" />
+
+			</h:panelGrid>
+			<br />
+
+			<h:panelGrid id="panelTabla" columns="1" width="80%">
+
+				<p:dataTable id="tablaTipos"
+					value="#{controladorGestioncliente.clientes}" var="cliente"
+					border="1">
+
+					<p:column headerText="Id" filterBy="#{cliente.cedula}">
+						<h:outputLabel value="#{cliente.cedula}" />
+					</p:column>
+
+					<p:column headerText="Nombre ">
+						<h:outputLabel value="#{cliente.nombre}" />
+					</p:column>
+
+					<p:column headerText="Apellido">
+						<h:outputLabel value="#{cliente.apellido}" />
+					</p:column>
+
+					<p:column headerText="Municipio">
+						<h:outputLabel value="#{cliente.municipio.nombre}" />
+					</p:column>
+
+					<p:column headerText="Accion">
+						<p:commandButton value="Eliminar" process="@this"
+							update="panelTabla"
+							action="#{controladorGestioncliente.eliminar(cliente)}" />
+					</p:column>
+
+				</p:dataTable>
+
+			</h:panelGrid>
+
+
+		</h:form>
+	</ui:define>
+
+</ui:composition>

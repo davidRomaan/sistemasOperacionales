@@ -1,5 +1,6 @@
 package co.edu.eam.ingesoft.bi.negocio.beans;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.LocalBean;
@@ -11,6 +12,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Persona;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.Usuario;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaPersona;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaProducto;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Departamento;
@@ -68,6 +70,8 @@ public class PersonaEJB {
 		List<Persona> clientes = q.getResultList();
 		return clientes;
 	}
+	
+	
 	
 	/**
 	 * 

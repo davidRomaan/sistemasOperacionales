@@ -57,7 +57,7 @@
 						</ul>
 					</h:panelGroup>
 					<h:form>
-						<h:panelGroup rendered="#{controladorSesion.sesion}">
+						<!-- <h:panelGroup rendered="#{controladorSesion.sesion}">
 							<ul class="nav navbar-nav main-navbar-nav">
 								<li class="active"><a
 									href="#{request.contextPath}/templates/index.xhtml" title="">Inicio</a></li>
@@ -86,14 +86,16 @@
 										<li><a
 											href="#{request.contextPath}/paginas/seguro/registroVentas.xhtml"
 											title="">Registro Venta</a></li>
-										<li><a href="#{request.contextPath}/paginas/seguro/gestionVentas.xhtml" title="">Gestion Ventas</a></li>
+										<li><a
+											href="#{request.contextPath}/paginas/seguro/gestionVentas.xhtml"
+											title="">Gestion Ventas</a></li>
 									</ul></li>
 								<li class="dropdown"><a href="#" title=""
 									class="dropdown-toggle" data-toggle="dropdown" role="button"
 									aria-haspopup="true" aria-expanded="false"> Productos <span
 										class="caret"></span></a>
 									<ul class="dropdown-menu">
-									<li><a
+										<li><a
 											href="#{request.contextPath}/paginas/seguro/gestionInventario.xhtml"
 											title="">Gestion Inventario</a></li>
 										<li><a
@@ -112,10 +114,12 @@
 									title="">Gestion Cargos</a></li>
 
 							</ul>
-							<li><h:commandLink
-									action="#{controladorSesion.cerrarSession}"
-									value="CERRAR SESIÓN"></h:commandLink></li>
-						</h:panelGroup>
+							<li></li>
+						</h:panelGroup> -->
+						<h:panelGroup rendered="#{controladorSesion.sesion}">
+						<h:commandLink action="#{controladorSesion.cerrarSession}"
+							value="CERRAR SESIÓN"></h:commandLink>
+							</h:panelGroup>
 					</h:form>
 				</div>
 			</div>
@@ -301,7 +305,7 @@
 
 
 
-	<footer class="site-footer" style="margin-top:40px">
+	<footer class="site-footer" style="margin-top: 40px">
 		<div class="container">
 			<div class="row">
 				<div class="col-md-3 col-sm-6 col-xs-12 fbox">

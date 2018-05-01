@@ -18,13 +18,16 @@ import co.edu.eam.ingesoft.bi.persistencia.enumeraciones.Genero;
 
 @NamedQueries({
 	@NamedQuery(name="Usuario.buscarUsuario",query="SELECT u FROM Usuario u WHERE u.nombreUsuario=?1"),
-	@NamedQuery(name=Usuario.LISTA_USUARIOS, query="SELECT U FROM Usuario U")
+	@NamedQuery(name=Usuario.LISTA_USUARIOS, query="SELECT U FROM Usuario U"),
+	@NamedQuery(name=Usuario.BUSCAR_CEDULA, query="SELECT u FROM Usuario u WHERE u.cedula = ?1")
 })
 @Entity
 @Table(name="USUARIO")
 public class Usuario extends Persona implements Serializable {
 
 	public static final String LISTA_USUARIOS = "Usuario.lista";
+	
+	public static final String BUSCAR_CEDULA = "Usuario.buscarCedula";
 	
 	@Column(name="contrasenia")
 	private String contrasenia;
