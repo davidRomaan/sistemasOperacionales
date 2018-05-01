@@ -91,14 +91,14 @@ public class UsuarioEJB {
 	 * @param cedula
 	 *            cédula del cliente que se desea buscar
 	 * @return el cliente si lo encuentra, de lo contrario null
-	 */
+	 
 	public Usuario buscarCliente(String cedula) {
 		Usuario cliente = buscarUsuarioCedula(cedula);
 		if (cliente.getTipoUsuario().getNombre().equalsIgnoreCase("cliente")) {
 			return cliente;
 		}
 		return null;
-	}
+	}*/
 
 	/**
 	 * Registra un usuario en la base de datos
@@ -113,6 +113,26 @@ public class UsuarioEJB {
 		} else {
 			em.persist(usuario);
 		}
+	}
+	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void registrarCliente (Persona p){
+		if (buscarCliente(p.getCedula()) != null){
+			throw new ExcepcionNegocio("El cliente ya existe");
+		} else {
+			em.persist(p);
+		}
+	}
+	
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	public Persona buscarCliente (String cedula){
+		Query q = em.createNativeQuery("SELECT * FROM USUARIO WHERE cedula = ?1");
+		q.setParameter(1, cedula);
+		List<Persona> lista = q.getResultList();
+		if (lista.size() == 0){
+			return em.find(Persona.class, cedula);
+		}
+		return null;
 	}
 
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
