@@ -12,11 +12,18 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="AUDITORIA_DETALLE_VENTA")
+@NamedQueries({
+	@NamedQuery(name=AuditoriaDetalleVenta.LISTA_AuditoriaDetalleVenta, query="SELECT p FROM AuditoriaDetalleVenta p")
+})
 public class AuditoriaDetalleVenta implements Serializable{
+	
+	public static final String LISTA_AuditoriaDetalleVenta = "lista.AuditoriaDetalleVenta";
 	
 	@Id
 	@Column(name="id")

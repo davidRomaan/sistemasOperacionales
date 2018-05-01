@@ -17,6 +17,8 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "AUDITORIA_PERMISOS")
 public class AuditoriaPermisos implements Serializable {
+	
+	public static final String LISTA = "lista";
 
 	@Id
 	@Column(name = "id", nullable = false)

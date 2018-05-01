@@ -18,6 +18,8 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name="AUDITORIA_USUARIO")
 public class AuditoriaUsuario implements Serializable {
+	
+	public static final String LISTA = "lista";
 
 	
 	@Id

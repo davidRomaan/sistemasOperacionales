@@ -14,7 +14,10 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="AUDITORIA_FACTURA_VENTA")
+
 public class AuditoriaFacturaVenta {
+	
+	public static final String LISTA = "lista";
 
 	@Id
 	@Column(name="id")

@@ -67,7 +67,7 @@ public class UsuarioEJB {
 	 * Busca un usuario en la base de datos
 	 * 
 	 * @param cedula
-	 *            cédula del usuario que se desea buscar
+	 *            cï¿½dula del usuario que se desea buscar
 	 * @return el usuario si lo encuentra, de lo contrario null
 	 */
 	public Usuario buscarUsuarioCedula(String cedula) {
@@ -89,13 +89,16 @@ public class UsuarioEJB {
 	 * Busca un cliente, verificando su tipo de usuario
 	 * 
 	 * @param cedula
-	 *            cédula del cliente que se desea buscar
+	 *            cï¿½dula del cliente que se desea buscar
 	 * @return el cliente si lo encuentra, de lo contrario null
 	 */
 	public Usuario buscarCliente(String cedula) {
 		Usuario cliente = buscarUsuarioCedula(cedula);
-		if (cliente.getTipoUsuario().getNombre().equalsIgnoreCase("cliente")) {
-			return cliente;
+		if(cliente != null) {
+			if (cliente.getTipoUsuario().getNombre().equalsIgnoreCase("cliente")) {
+				return cliente;
+		}
+		
 		}
 		return null;
 	}

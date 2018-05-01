@@ -1,5 +1,6 @@
 package co.edu.eam.ingesoft.bi.presistencia.entidades;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -10,11 +11,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="AUDITORIA_PRODUCTO")
-public class AuditoriaProducto {
+@NamedQueries({
+	@NamedQuery(name=AuditoriaProducto.LISTA_AuditoriaProducto, query="SELECT p FROM AuditoriaProducto p")
+})
+public class AuditoriaProducto implements Serializable{
+	
+	public static final String LISTA_AuditoriaProducto = "lista_AuditoriaProducto";
 
 	@Id
 	@Column(name="id")

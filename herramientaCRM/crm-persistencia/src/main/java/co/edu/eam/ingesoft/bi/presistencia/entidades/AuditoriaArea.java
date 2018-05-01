@@ -10,13 +10,20 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
 @Table(name="AUDITORIA_AREA")
+@NamedQueries({
+	@NamedQuery(name=AuditoriaArea.LISTA_AuditoriaArea, query="SELECT p FROM AuditoriaArea p")
+})
 public class AuditoriaArea implements Serializable{
+	
+	public static final String LISTA_AuditoriaArea = "lista.AuditoriaArea";
 
 	@Id
 	@Column(name="id")

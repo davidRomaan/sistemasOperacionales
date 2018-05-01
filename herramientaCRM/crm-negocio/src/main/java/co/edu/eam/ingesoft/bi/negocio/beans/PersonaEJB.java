@@ -12,6 +12,7 @@ import javax.persistence.Query;
 
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Persona;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaPersona;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaProducto;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Departamento;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Municipio;
 
@@ -96,6 +97,18 @@ public class PersonaEJB {
 	public List<Departamento> listaDepartamentos(){
 		Query q = em.createNamedQuery(Departamento.LISTAR_DEPARTAMENTOS);
 		List<Departamento> departamento = q.getResultList();
+		return departamento;
+	}
+	
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	public List<AuditoriaProducto> listaaudi(){
+		Query q = em.createNamedQuery(AuditoriaProducto.LISTA_AuditoriaProducto);
+		List<AuditoriaProducto> departamento = q.getResultList();
 		return departamento;
 	}
 	

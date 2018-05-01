@@ -19,6 +19,8 @@ import javax.persistence.TemporalType;
 @Table(name="AUDITORIA_TIPO_USUARIO")
 public class AuditoriaTipoUsuario implements Serializable{
 	
+	public static final String LISTA = "lista";
+	
 	@Id
 	@Column(name="id")
 	@GeneratedValue(strategy=GenerationType.AUTO)

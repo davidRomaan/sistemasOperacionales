@@ -115,7 +115,6 @@ public class ControladorPersona implements Serializable {
 		generos = Arrays.asList(Genero.values());
 		departamentos = personaEJB.listaDepartamentos();
 		listarDepartamentos();
-		// municipios = personaEJB.listaMunicipiosPorDepartamento(1);
 		municipios = departamentoEJB.listarMunicipiosDepartamento(departamentos.get(0).getId());
 
 		accion = "registrar";
