@@ -159,6 +159,15 @@ public class UsuarioEJB {
 		}
 
 	}
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void editarCliente(Persona p){
+		em.merge(p);
+	}
+	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void eliminarCliente(Persona p){
+		em.remove(em.merge(p));
+	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void registrarUsu(Usuario u) throws ExcepcionNegocio {

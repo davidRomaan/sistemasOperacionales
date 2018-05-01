@@ -17,29 +17,29 @@
 			<h:panelGrid columns="2" id="panelDatosCliente">
 
 				<p:outputLabel for="tfnombre" value="Nombre: " />
-				<h:inputText value="#{controladorGestioncliente.nombre}" id="tfnombre"
-					placeholder="Ingrese el nombre" />
+				<h:inputText value="#{controladorGestioncliente.nombre}"
+					id="tfnombre" placeholder="Ingrese el nombre" />
 
 				<p:outputLabel for="tfapellido" value="Apellido: " />
-				<h:inputText value="#{controladorGestioncliente.apellido}" id="tfapellido"
-					placeholder="Ingrese el apellido" />
+				<h:inputText value="#{controladorGestioncliente.apellido}"
+					id="tfapellido" placeholder="Ingrese el apellido" />
 
 				<h:outputLabel id="lblGenero" value="Genero" />
 				<h:selectOneMenu id="cbGenero"
 					value="#{controladorGestioncliente.tipoGenero}">
 
-					<f:selectItems value="#{controladorGestioncliente.generos}" var="genero"
-						itemValue="#{genero}" itemLabel="#{genero}" />
+					<f:selectItems value="#{controladorGestioncliente.generos}"
+						var="genero" itemValue="#{genero}" itemLabel="#{genero}" />
 
 				</h:selectOneMenu>
 
 				<p:outputLabel for="tfcorreo" value="Correo: " />
-				<h:inputText value="#{controladorGestioncliente.correo}" id="tfcorreo"
-					placeholder="Ingrese el correo" />
+				<h:inputText value="#{controladorGestioncliente.correo}"
+					id="tfcorreo" placeholder="Ingrese el correo" />
 
 				<p:outputLabel for="tftelefono" value="Telefono: " />
-				<h:inputText value="#{controladorGestioncliente.telefono}" id="tftelefono"
-					placeholder="Ingrese el telefono" />
+				<h:inputText value="#{controladorGestioncliente.telefono}"
+					id="tftelefono" placeholder="Ingrese el telefono" />
 
 				<h:outputLabel for="cbDepto" id="lbDepto" value="Departamento: " />
 				<h:selectOneMenu id="cbDepto"
@@ -64,13 +64,56 @@
 
 				</h:selectOneMenu>
 
+			</h:panelGrid>
+
+			<h:panelGrid id="panelBotones" columns="4">
 				<p:commandButton value="Registrar"
 					process="@this,panelCedula,panelDatosCliente"
-					update="@this,panelCedula"
+					update="@this,panelCedula,panelDatosCliente"
 					action="#{controladorGestioncliente.registrarCliente}" />
 
+				<p:commandButton value="Buscar" process="@this,panelCedula"
+					update="@this,panelCedula,panelDatosCliente"
+					action="#{controladorGestioncliente.buscar}" />
+
+				<p:commandButton value="Editar"
+					process="@this,panelCedula,panelDatosCliente"
+					update="@this,panelCedula,panelDatosCliente"
+					action="#{controladorGestioncliente.editar}" />
+
 			</h:panelGrid>
-			
+
+			<h:panelGrid id="panelTabla" columns="1" width="80%">
+
+				<p:dataTable id="tablaTipos"
+					value="#{controladorGestioncliente.clientes}" var="cliente"
+					border="1">
+
+					<p:column headerText="Id" filterBy="#{cliente.cedula}">
+						<h:outputLabel value="#{cliente.cedula}" />
+					</p:column>
+
+					<p:column headerText="Nombre ">
+						<h:outputLabel value="#{cliente.nombre}" />
+					</p:column>
+
+					<p:column headerText="Apellido">
+						<h:outputLabel value="#{cliente.apellido}" />
+					</p:column>
+					
+					<p:column headerText="Municipio">
+						<h:outputLabel value="#{cliente.municipio.nombre}" />
+					</p:column>
+
+						<p:commandButton value="Eliminar" process="@this"
+							update="panelTabla"
+							action="#{controladorGestioncliente.eliminar(cliente)}" />
+					</p:column>
+
+				</p:dataTable>
+
+			</h:panelGrid>
+
 
 		</h:form>
 	</ui:define>

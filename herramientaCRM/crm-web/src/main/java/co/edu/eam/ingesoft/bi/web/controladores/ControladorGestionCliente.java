@@ -11,7 +11,10 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 
+import org.omnifaces.util.Messages;
+
 import co.edu.eam.ingesoft.bi.negocio.beans.DepartamentoEJB;
+import co.edu.eam.ingesoft.bi.negocio.beans.PersonaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.UsuarioEJB;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.persistencia.enumeraciones.Genero;
@@ -36,6 +39,7 @@ public class ControladorGestionCliente implements Serializable {
 	private List<Genero> generos;
 	private List<Departamento> departamentos;
 	private List<Municipio> municipios;
+	private List<Persona> clientes;
 	
 	private Persona cliente;
 	
@@ -45,12 +49,16 @@ public class ControladorGestionCliente implements Serializable {
 	@EJB
 	private DepartamentoEJB deptoEJB;
 	
+    @EJB
+	private PersonaEJB personaEJB;
+	
 	@PostConstruct
 	private void cargarCampos(){
 		
 		generos = Arrays.asList(Genero.values());
 		departamentos = deptoEJB.listarDepartamentos();
 		municipios = deptoEJB.listarMunicipiosDepartamento(departamentos.get(0).getId());
+		clientes = personaEJB.listarPersona();
 		
 	}
 	
@@ -77,6 +85,7 @@ public class ControladorGestionCliente implements Serializable {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Cliente Registrado Exitosamente", null));
 			
+			refrescarClientes();			
 			
 
 		} catch (ExcepcionNegocio e) {
@@ -88,10 +97,48 @@ public class ControladorGestionCliente implements Serializable {
 
 	}
 	
-	public void buscarCliente (){
+	public void buscar(){
 		
+		cliente = usuarioEJB.buscarCliente(cedula);
 		
+		if (cliente != null){
+			
+			nombre = cliente.getNombre();
+			apellido = cliente.getApellido();
+			cedula = cliente.getCedula();
+			telefono = cliente.getTelefono();
+			tipoGenero = cliente.getGenero();
+			municipioSeleccionado = cliente.getMunicipio().getId();
+			correo = cliente.getCorreo();
+			
+		} else {
+			
+			Messages.addFlashGlobalError("El cliente no existe");
+			
+		}
 		
+	}
+	
+	private void refrescarClientes (){
+		clientes = personaEJB.listarPersona();
+	}
+	
+	public void editar(){
+		
+		if (cliente != null){
+			
+			usuarioEJB.editarCliente(cliente);
+			
+			Messages.addFlashGlobalInfo("Se ha editado correctamente");
+			refrescarClientes();
+			
+		}
+		
+	}
+	
+	public void eliminar(Persona p){
+		usuarioEJB.eliminarCliente(p);
+		refrescarClientes();
 	}
 
 	public String getCedula() {
@@ -180,6 +227,14 @@ public class ControladorGestionCliente implements Serializable {
 
 	public void setMunicipios(List<Municipio> municipios) {
 		this.municipios = municipios;
+	}
+
+	public List<Persona> getClientes() {
+		return clientes;
+	}
+
+	public void setClientes(List<Persona> clientes) {
+		this.clientes = clientes;
 	}
 	
 	
