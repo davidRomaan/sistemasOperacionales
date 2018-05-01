@@ -22,7 +22,6 @@ public class ControladorSesion implements Serializable {
 	private String password;
 	private Usuario user;
 
-	
 	@EJB
 	private UsuarioEJB usuarioEJB;
 
@@ -32,17 +31,29 @@ public class ControladorSesion implements Serializable {
 		if ((usuarioTemporal != null)) {
 
 			if (usuarioTemporal.getContrasenia().equals(password)
-					&& (usuarioTemporal.getTipoUsuario().getNombre().equalsIgnoreCase("Administrador"))) {
+					&& (usuarioTemporal.getTipoUsuario().getNombre().equalsIgnoreCase("Administrador")
+							&& usuarioTemporal.isActivo() == true)) {
 				user = usuarioTemporal;
 				Faces.setSessionAttribute("user", user);
-				return "/paginas/admin/inicioAdministrador.xhtml?faces-redirect=true";
-			} else {
-				
-				user = usuarioTemporal;
-				Faces.setSessionAttribute("user", user);
-				return "/paginas/seguro/gestionProducto.xhtml?faces-redirect=true";
-			}
+				return "/paginas/publico/inicioAdministrador.xhtml?faces-redirect=true";
 
+			}
+			if (usuarioTemporal.getContrasenia().equals(password)
+					&& (usuarioTemporal.getTipoUsuario().getNombre().equalsIgnoreCase("CRM")
+							&& usuarioTemporal.isActivo() == true)) {
+				user = usuarioTemporal;
+				Faces.setSessionAttribute("user", user);
+				return "/paginas/publico/inicioCRM.xhtml?faces-redirect=true";
+
+			}
+			if (usuarioTemporal.getContrasenia().equals(password)
+					&& (usuarioTemporal.getTipoUsuario().getNombre().equalsIgnoreCase("ERP")
+							&& usuarioTemporal.isActivo() == true)) {
+				user = usuarioTemporal;
+				Faces.setSessionAttribute("user", user);
+				return "/paginas/publico/inicioERP.xhtml?faces-redirect=true";
+
+			}
 		} else {
 			Messages.addFlashGlobalError("este usuario no existe");
 		}

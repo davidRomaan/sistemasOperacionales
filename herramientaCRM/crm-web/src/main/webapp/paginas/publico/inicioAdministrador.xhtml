@@ -1,0 +1,340 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta charset="utf-8"></meta>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+	<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+	<title>BUSINESS FORCE</title>
+
+	<link
+		href="#{request.contextPath}/https://fonts.googleapis.com/css?family=Open+Sans:400,600&amp;subset=latin-ext"
+		rel="stylesheet"></link>
+
+	<link href="#{request.contextPath}/css/bootstrap.min.css"
+		rel="stylesheet"></link>
+	<link href="#{request.contextPath}/css/font-awesome.min.css"
+		rel="stylesheet"></link>
+	<link href="#{request.contextPath}/style.css" rel="stylesheet"></link>
+
+	<!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</h:head>
+<h:body>
+	<header class="site-header">
+
+		<nav class="navbar navbar-default">
+			<div class="container">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#bs-navbar-collapse">
+					<span class="sr-only">Toggle Navigation</span> <i
+						class="fa fa-bars"></i>
+				</button>
+				<a href="#{request.contextPath}/templates/index.xhtml"
+					class="navbar-brand"> <img
+					src="#{request.contextPath}/img/logotipo.png" alt="Post"></img>
+
+				</a>
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="collapse navbar-collapse" id="bs-navbar-collapse">
+
+
+					<h:form>
+
+						<ul class="nav navbar-nav main-navbar-nav">
+
+							<li class="dropdown"><a href="#" title=""
+								class="dropdown-toggle" data-toggle="dropdown" role="button"
+								aria-haspopup="true" aria-expanded="false"> Usuarios <span
+									class="caret"></span></a>
+								<ul class="dropdown-menu">
+									<li><a
+										href="#{request.contextPath}/paginas/admin/activarUsuarios.xhtml"
+										title="">Registro Usuarios</a></li>
+									<li><a
+										href="#{request.contextPath}/paginas/seguro/gestionTipoUsuario.xhtml"
+										title="">Gestion Tipo Usuario</a></li>
+								</ul></li>
+
+							<li><ul class="dropdown-menu">
+									<li><a
+										href="#{request.contextPath}/paginas/seguro/gestionAreas.xhtml"
+										title="">Gestion Areas</a></li>
+									<li><a
+										href="#{request.contextPath}/paginas/seguro/gestionTipoProducto.xhtml"
+										title="">Gestion Tipo Producto</a></li>
+								</ul></li>
+
+							<li><a
+								href="#{request.contextPath}/paginas/seguro/gestionAreas.xhtml"
+								title="">Gestion Areas</a></li>
+							<li><a
+								href="#{request.contextPath}/paginas/seguro/gestionCargos.xhtml"
+								title="">Gestion Cargos</a></li>
+
+						</ul>
+						<li><h:commandLink
+								action="#{controladorSesion.cerrarSession}"
+								value="CERRAR SESIÓN"></h:commandLink></li>
+					</h:form>
+				</div>
+			</div>
+		</nav>
+	</header>
+	<main class="site-main">
+	rendered="#{!controladorSesion.sesion}">
+	<section class="hero_area">
+		<div class="hero_content">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-12">
+						<h1>SISTEMA DE GESTION EMPRESARIAL</h1>
+						<h2>Bienvenido #{controladorSesion.username}</h2>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<br></br>
+	<br></br>
+
+	<section>
+
+		<div id="divCuerpo" align="center" width="100%">
+			<p:messages id="facesMessage" autoUpdate="true" globalOnly="true"
+				closable="true" />
+			<ui:insert name="cuerpo" />
+		</div>
+
+	</section>
+	<section class="services">
+		<h2 class="section-title">SERVICIOS</h2>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4 col-sm-6 col-xs-12">
+					<div class="media">
+						<div class="media-left media-middle">
+							<i class="fa fa-cogs"></i>
+						</div>
+						<div class="media-body">
+							<h4 class="media-heading">GESTIONA TUS VENTAS</h4>
+							<p>puedes medir la efectividad de cada uno de tus
+								comerciales, analizando el proceso de venta en tiempo real y las
+								metas alcanzadas.</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4 col-sm-6 col-xs-12">
+					<div class="media">
+						<div class="media-left media-middle">
+							<i class="fa fa-user-md"></i>
+						</div>
+						<div class="media-body">
+							<h4 class="media-heading">GESTIONA TUS USUARIOS</h4>
+							<p>De manera fácil puedes hacer seguimiento a tus negocios,
+								con una sola herramienta que te permite conocer todos los
+								procesos .</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4 col-sm-6 col-xs-12">
+					<div class="media">
+						<div class="media-left media-middle">
+							<i class="fa fa-stethoscope"></i>
+						</div>
+						<div class="media-body">
+							<h4 class="media-heading">BASES DE DATOS</h4>
+							<p>Trabaja con diferentes bases de datos donde podras obtener
+								y registrar todos tus datos de manera segura.</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4 col-sm-6 col-xs-12">
+					<div class="media">
+						<div class="media-left media-middle">
+							<i class="fa fa-graduation-cap"></i>
+						</div>
+						<div class="media-body">
+							<h4 class="media-heading">IMPULSE SU NEGOCIO</h4>
+							<p>Unifique las funcionalidades de CRM y ERP,.</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4 col-sm-6 col-xs-12">
+					<div class="media">
+						<div class="media-left media-middle">
+							<i class="fa fa-file-text-o"></i>
+						</div>
+						<div class="media-body">
+							<h4 class="media-heading">CONVIERTA LAS RELACIONES EN
+								INGRESOS</h4>
+							<p>Capacite a los vendedores con información práctica para
+								personalizar relaciones, predecir las necesidades de los
+								clientes y aumentar las ventas.</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4 col-sm-6 col-xs-12">
+					<div class="media">
+						<div class="media-left media-middle">
+							<i class="fa fa-heartbeat"></i>
+						</div>
+						<div class="media-body">
+							<h4 class="media-heading">AUDITORIA</h4>
+							<p>Lleva a cabo un proceso de auditoria de toda tu empresa
+								asi podras tener un control total sobre esta.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section class="home-area">
+		<div class="home_content">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-12">
+						<h2 class="sub_title">ULTIMAS NOTICIAS</h2>
+					</div>
+					<div class="home_list">
+						<ul>
+							<li class="col-md-3 col-sm-6 col-xs-12">
+								<div class="thumbnail">
+									<img src="#{request.contextPath}/img/h1.jpeg" alt="Post"></img>
+									<div class="caption">
+										<h3>
+											<a href="#">EQUIPO</a>
+										</h3>
+										<p>Estamos ampliando nuestro grupo de trabajo con mas de
+											dos mil empleados en diferentes ciudades de Colombia.</p>
+									</div>
+								</div>
+							</li>
+							<li class="col-md-3 col-sm-6 col-xs-12">
+								<div class="thumbnail">
+									<img src="#{request.contextPath}/img/h2.jpg"
+										class="img-responsive" alt="Post"></img>
+									<div class="caption">
+										<h3>
+											<a href="#">SEDES</a>
+										</h3>
+										<p>Estamos ampliandonos en diferentes ciudades con mas de
+											50 sedes que prestan servicios para su empresa.</p>
+									</div>
+								</div>
+							</li>
+							<li class="col-md-3 col-sm-6 col-xs-12">
+								<div class="thumbnail">
+									<img src="#{request.contextPath}/img/h3.jpeg"
+										class="img-responsive" alt="Post"></img>
+									<div class="caption">
+										<h3>
+											<a href="#">PUNTO DE ATENCION</a>
+										</h3>
+										<p>En cada ciudad usted puede ir a las sedes donde podra
+											obtener informacion mas detallada de nuestros servicios.</p>
+									</div>
+								</div>
+							</li>
+							<li class="col-md-3 col-sm-6 col-xs-12">
+								<div class="thumbnail">
+									<img src="#{request.contextPath}/img/h4.jpeg"
+										class="img-responsive" alt="Post"></img>
+									<div class="caption">
+										<h3>
+											<a href="#">SEDE CENTRAL</a>
+										</h3>
+										<p>Nuestra sede central se encuentra ubicada en
+											Armenia-Quindio.</p>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	</main>
+
+
+
+	<footer class="site-footer" style="margin-top: 40px">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-3 col-sm-6 col-xs-12 fbox">
+					<h4>BUSSINESFORCE</h4>
+					<p class="text">Empresa dedicada a solucionar y hacer el manejo
+						simple de su empresa con el simple manejo de este software.</p>
+					<ul class="list-inline">
+						<li><a href="#"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="#"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-md-3 col-sm-6 col-xs-12 fbox">
+					<h4>SERVICES</h4>
+					<ul class="big">
+						<li><a href="#" title="">Ventas</a></li>
+						<li><a href="#" title="">Usuarios</a></li>
+						<li><a href="#" title="">Base de datos</a></li>
+						<li><a href="#" title="">Auditoria</a></li>
+						<li><a href="#" title="">Ingresos</a></li>
+
+					</ul>
+				</div>
+
+				<div class="col-md-3 col-sm-6 col-xs-12 fbox">
+					<h4>Contactenos</h4>
+					<p class="text">Contactenos por los siguientes medios:.</p>
+					<p>
+						<a href="tel:+902222222222"><span
+							class="glyphicon glyphicon-earphone" aria-hidden="true"></span>
+							+90 222 222 22 22</a>
+					</p>
+					<p>
+						<a href="mailto:iletisim@agrisosgb.com"><span
+							class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+							bussinesforce@awebsitename.com</a>
+					</p>
+				</div>
+			</div>
+		</div>
+		<div id="copyright">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-4">
+						<p class="pull-left"></p>
+					</div>
+					<div class="col-md-8"></div>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<!-- <script type="text/javascript">
+        $('.carousel[data-type="multi"] .item').each(function(){
+          var next = $(this).next();
+          if (!next.length) {
+            next = $(this).siblings(':first');
+          }
+          next.children(':first-child').clone().appendTo($(this));
+
+          for (var i=0;i<4;i++) {
+            next=next.next();
+            if (!next.length) {
+                next = $(this).siblings(':first');
+            }
+
+            next.children(':first-child').clone().appendTo($(this));
+          }
+        });        
+    </script> -->
+</h:body>
+</html>

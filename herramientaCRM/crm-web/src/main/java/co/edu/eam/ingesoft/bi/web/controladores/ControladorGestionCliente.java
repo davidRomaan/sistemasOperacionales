@@ -62,6 +62,10 @@ public class ControladorGestionCliente implements Serializable {
 		
 	}
 	
+	public void listarMunicipios() {
+		municipios = deptoEJB.listarMunicipiosDepartamento(deptoSeleccionado);
+	}
+	
 	/**
 	 * Registra un cliente
 	 */

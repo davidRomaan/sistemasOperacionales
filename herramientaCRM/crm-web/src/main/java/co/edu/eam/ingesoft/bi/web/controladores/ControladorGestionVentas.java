@@ -1,7 +1,9 @@
 package co.edu.eam.ingesoft.bi.web.controladores;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -28,10 +30,13 @@ public class ControladorGestionVentas implements Serializable {
 
 	@PostConstruct
 	private void constructor() {
-		Date fechaActual = new Date();
-		String fecha = fechaActual.getDate() + "/" + fechaActual.getMonth() 
-		+ 1 + "/" + fechaActual.getYear();
-		facturas = ventasEJB.listarFacturasPorFecha(fecha);
+		Calendar fechaActual = new GregorianCalendar();
+		int dia = fechaActual.get(Calendar.DAY_OF_MONTH);
+		int mes = fechaActual.get(Calendar.MONTH);
+		int anio = fechaActual.get(Calendar.YEAR);
+
+		String nuevaFecha = dia + "/" + mes + "/" + anio;
+		facturas = ventasEJB.listarFacturasPorFecha(nuevaFecha);
 	}
 
 	/**
