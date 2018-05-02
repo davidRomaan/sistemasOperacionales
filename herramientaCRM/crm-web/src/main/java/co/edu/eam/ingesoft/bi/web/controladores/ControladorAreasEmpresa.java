@@ -6,6 +6,8 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
 
 import org.omnifaces.util.Faces;
@@ -30,11 +32,11 @@ public class ControladorAreasEmpresa implements Serializable {
 	private List<Area> areasEmpresa;
 
 	private List<Area> listaNueva;
-	
+
 	private AuditoriaAreaEJB auditoriaAreasEJB;
-	
+
 	private String accion;
-	
+
 	@PostConstruct
 	public void postconstructor() {
 		listarAreas();
@@ -57,18 +59,19 @@ public class ControladorAreasEmpresa implements Serializable {
 			a.setNombre(nombre);
 			a.setDescripcion(descripcion);
 			a.setId(codigo);
-			
+
 			accion = "RegistrarArea";
 			try {
-				
-				areas.registrarAreas(a);		
-				
+
+				areas.registrarAreas(a);
+
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
 				System.out.println(a);
 				System.out.println(browserDetail);
 				auditoriaAreasEJB.crearAuditoriaArea(a, accion, browserDetail);
-					
-				Messages.addFlashGlobalInfo("Registro exitoso");
+
+				FacesContext context = FacesContext.getCurrentInstance();
+				context.addMessage(null, new FacesMessage("Exitoso", "el area se ha registrado"));
 				listarAreas();
 				codigo = 0;
 				nombre = "";
@@ -113,7 +116,6 @@ public class ControladorAreasEmpresa implements Serializable {
 				areas.editarArea(area);
 				listarAreas();
 				Messages.addFlashGlobalInfo("se edito exitosamente");
-				
 
 			} else {
 				Messages.addFlashGlobalError("No existe esta area de la empresa");
@@ -127,7 +129,7 @@ public class ControladorAreasEmpresa implements Serializable {
 		areas.eliminarArea(a);
 		listarAreas();
 		Messages.addFlashGlobalInfo("se elimino correctamente");
-		
+
 	}
 
 	public int getCodigo() {
