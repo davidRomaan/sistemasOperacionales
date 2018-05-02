@@ -4,11 +4,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import co.edu.eam.ingesoft.bi.negocio.persistencia.Persistencia;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Area;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaArea;
 
@@ -18,8 +20,8 @@ public class AuditoriaAreaEJB {
 	
 	
 	
-	@PersistenceContext
-	private EntityManager em;
+	@EJB
+	private Persistencia em;
 
 	private String userAgent = "";
 	private String os = "";
@@ -121,7 +123,8 @@ public class AuditoriaAreaEJB {
 		auditoriaArea.setDispositivo(os);
 		auditoriaArea.setNavegador(browser);	
 
-		em.persist(auditoriaArea);
+		em.setBd(ConexionEJB.getBd());
+		em.crear(auditoriaArea);
 
 	}
 

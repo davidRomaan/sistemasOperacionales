@@ -4,11 +4,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import co.edu.eam.ingesoft.bi.negocio.persistencia.Persistencia;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaInventario;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Inventario;
 
@@ -18,8 +20,8 @@ import co.edu.eam.ingesoft.bi.presistencia.entidades.Inventario;
 public class AuditoriaInventarioEJB {
 	
 	
-	@PersistenceContext
-	private EntityManager em;
+	@EJB
+	private Persistencia em;
 
 	private String userAgent = "";
 	private String os = "";
@@ -118,7 +120,8 @@ public class AuditoriaInventarioEJB {
 		invenProducto.setDispositivo(os);
 		invenProducto.setNavegador(browser);	
 
-		em.persist(invenProducto);
+		em.setBd(ConexionEJB.getBd());
+		em.crear(invenProducto);
 
 	}
 

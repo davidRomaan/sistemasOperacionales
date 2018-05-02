@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -11,6 +12,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import co.edu.eam.ingesoft.bi.negocio.persistencia.Persistencia;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaDetalleVenta;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.DetalleVenta;
 
@@ -19,8 +21,8 @@ import co.edu.eam.ingesoft.bi.presistencia.entidades.DetalleVenta;
 @Stateless
 public class AuditoriaDetalleVentaEJB {
 	
-	@PersistenceContext
-	private EntityManager em;
+	@EJB
+	private Persistencia em;
 
 	private String userAgent = "";
 	private String os = "";
@@ -122,7 +124,8 @@ public class AuditoriaDetalleVentaEJB {
 		detalleVenta.setDispositivo(os);
 		detalleVenta.setNavegador(browser);	
 
-		em.persist(detalleVenta);
+		em.setBd(ConexionEJB.getBd());
+		em.crear(detalleVenta);
 
 	}
 

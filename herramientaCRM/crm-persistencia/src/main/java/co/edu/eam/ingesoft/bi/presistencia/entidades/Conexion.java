@@ -15,20 +15,23 @@ public class Conexion implements Serializable{
 	
 	@Id
 	@Column(name="id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	
 	@Column(name="base_datos")
 	private String baseDatos;
 	
+	@Column(name="codigo")
+	private int codigo;
+	
 	public Conexion() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Conexion(int id, String baseDatos) {
+	public Conexion(int id, String baseDatos, int codigo) {
 		super();
 		this.id = id;
 		this.baseDatos = baseDatos;
+		this.codigo = codigo;
 	}
 
 	public int getId() {
@@ -46,6 +49,15 @@ public class Conexion implements Serializable{
 	public void setBaseDatos(String baseDatos) {
 		this.baseDatos = baseDatos;
 	}
+
+	public int getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(int codigo) {
+		this.codigo = codigo;
+	}
+	
 	
 
 }

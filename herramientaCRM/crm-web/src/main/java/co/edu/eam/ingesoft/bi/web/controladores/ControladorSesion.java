@@ -24,20 +24,20 @@ public class ControladorSesion implements Serializable {
 	private String password;
 	private Usuario user;
 	
-	private static int bd = 0;
-	
 	@EJB
 	private ConexionEJB conexionEJB;
 
 	@EJB
 	private UsuarioEJB usuarioEJB;
 	
-	private void cambiarBD(){
-		Conexion con = conexionEJB.obtenerBD();
-		bd = con.getId();
+	private void obtenerBD (){
+		conexionEJB.ultimaBD();
 	}
 
 	public String login() {
+		
+		obtenerBD();
+		
 		Usuario usuarioTemporal = usuarioEJB.buscarUsuario(username);
 
 		if ((usuarioTemporal != null)) {

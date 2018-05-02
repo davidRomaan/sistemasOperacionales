@@ -1,5 +1,6 @@
 package co.edu.eam.ingesoft.bi.negocio.beans;
 
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import java.util.Calendar;
@@ -9,6 +10,7 @@ import java.util.GregorianCalendar;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import co.edu.eam.ingesoft.bi.negocio.persistencia.Persistencia;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Area;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaArea;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaDetalleVenta;
@@ -27,8 +29,8 @@ import co.edu.eam.ingesoft.bi.presistencia.entidades.Usuario;
 @Stateless
 public class AuditoriaPersonaEJB {
 
-	@PersistenceContext
-	private EntityManager em;
+	@EJB
+	private Persistencia em;
 
 	private String userAgent = "";
 	private String os = "";
@@ -127,7 +129,8 @@ public class AuditoriaPersonaEJB {
 		audiUsuario.setDispositivo(os);
 		audiUsuario.setNavegador(browser);		
 
-		em.persist(audiUsuario);
+		em.setBd(ConexionEJB.getBd());
+		em.crear(audiUsuario);
 	
 
 	}
