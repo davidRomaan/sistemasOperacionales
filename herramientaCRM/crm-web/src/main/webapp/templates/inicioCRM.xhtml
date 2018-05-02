@@ -39,7 +39,6 @@
 					src="#{request.contextPath}/img/logotipo.png" alt="Post"></img>
 
 				</a>
-				<!-- Collect the nav links, forms, and other content for toggling -->
 				<div class="collapse navbar-collapse" id="bs-navbar-collapse">
 
 
@@ -47,42 +46,24 @@
 
 						<ul class="nav navbar-nav main-navbar-nav">
 
-							<li><ul class="dropdown-menu">
+							<li class="dropdown"><a href="#" title=""
+								class="dropdown-toggle" data-toggle="dropdown" role="button"
+								aria-haspopup="true" aria-expanded="false"> Clientes <span
+									class="caret"></span></a>
+								<ul class="dropdown-menu">
 									<li><a
-										href="#{request.contextPath}/paginas/seguro/gestionInventario.xhtml"
-										title="">Gestion Inventario</a></li>
-									<li><a
-										href="#{request.contextPath}/paginas/seguro/gestionVentas.xhtml"
-										title="">Gestion Ventas</a></li>
-
+										href="#{request.contextPath}/paginas/seguro/gestionClientes.xhtml"
+										title="">Registro clientes</a></li>
 								</ul></li>
 
-							<li><a
-								href="#{request.contextPath}/paginas/seguro/gestionInventario.xhtml"
-								title="">Gestion Inventario</a></li>
-							<li><a
-								href="#{request.contextPath}/paginas/seguro/gestionVentas.xhtml"
-								title="">Gestion Ventas</a></li>
-							<li><a
-								href="#{request.contextPath}/paginas/seguro/gestionProducto.xhtml"
-								title="">Gestion Producto</a></li>
-							<li><a
-								href="#{request.contextPath}/paginas/seguro/registroVentas.xhtml"
-								title="">Registro Ventas</a></li>
-
-							<li><a><h:commandLink
-										action="#{controladorSesion.cerrarSession}"
-										value="CERRAR SESIÓN"></h:commandLink></a></li>
-
 						</ul>
-
+					
 					</h:form>
 				</div>
 			</div>
 		</nav>
 	</header>
 	<main class="site-main">
-	rendered="#{!controladorSesion.sesion}">
 	<section class="hero_area">
 		<div class="hero_content">
 			<div class="container">
@@ -90,6 +71,10 @@
 					<div class="col-sm-12">
 						<h1>SISTEMA DE GESTION EMPRESARIAL</h1>
 						<h2>Bienvenido #{controladorSesion.username}</h2>
+						<h:form>
+							<h:commandButton action="#{controladorSesion.cerrarSession}"
+								value="CERRAR SESIÓN" style="color:black"></h:commandButton>
+						</h:form>
 					</div>
 				</div>
 			</div>
@@ -103,7 +88,7 @@
 		<div id="divCuerpo" align="center" width="100%">
 			<p:messages id="facesMessage" autoUpdate="true" globalOnly="true"
 				closable="true" />
-			<ui:insert name="cuerpo" />
+			<ui:insert name="cuerpoCRM" />
 		</div>
 
 	</section>
@@ -311,26 +296,5 @@
 			</div>
 		</div>
 	</footer>
-	<script
-		src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<!-- <script type="text/javascript">
-        $('.carousel[data-type="multi"] .item').each(function(){
-          var next = $(this).next();
-          if (!next.length) {
-            next = $(this).siblings(':first');
-          }
-          next.children(':first-child').clone().appendTo($(this));
-
-          for (var i=0;i<4;i++) {
-            next=next.next();
-            if (!next.length) {
-                next = $(this).siblings(':first');
-            }
-
-            next.children(':first-child').clone().appendTo($(this));
-          }
-        });        
-    </script> -->
 </h:body>
 </html>

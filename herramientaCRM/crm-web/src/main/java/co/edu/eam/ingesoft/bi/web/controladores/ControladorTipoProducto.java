@@ -13,7 +13,6 @@ import javax.inject.Named;
 import org.omnifaces.util.Messages;
 
 import co.edu.eam.ingesoft.bi.negocio.beans.TipoProductoEJB;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.Area;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.TipoProducto;
 
 @Named("controladorTipoProd")
@@ -45,8 +44,7 @@ public class ControladorTipoProducto implements Serializable {
 	public void registrar() {
 
 		if (codigo == 0 || nombre.isEmpty() || descripcion.isEmpty()) {
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, "ingrese todos los campos", null));
+			Messages.addFlashGlobalInfo("ingrese todos los campos");
 		} else {
 			TipoProducto tipo = tipoEJB.buscar(codigo);
 
@@ -59,24 +57,24 @@ public class ControladorTipoProducto implements Serializable {
 
 				tipoEJB.registrarTipoProd(tip);
 				listarTipos();
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, "se ha sido registrada exitosamente", null));
+				FacesContext context = FacesContext.getCurrentInstance();
+				context.addMessage(null, new FacesMessage("Exitoso", "se ha registrado correctamente"));
 
 				codigo = 0;
 				nombre = "";
 				descripcion = "";
 			} else {
 
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, "este tipo ya ha sido creado", null));
+				FacesContext context = FacesContext.getCurrentInstance();
+				context.addMessage(null, new FacesMessage("este tipo no existe"));
 			}
 		}
 	}
 
 	public void buscarTipo() {
 
-		if (codigo == 0){
-			System.out.println("----------------------"+codigo);
+		if (codigo == 0) {
+			System.out.println("----------------------" + codigo);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 					"complete el campo codigo para realizar la busqueda", null));
 		} else {

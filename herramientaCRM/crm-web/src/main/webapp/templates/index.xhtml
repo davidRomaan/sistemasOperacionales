@@ -48,12 +48,8 @@
 								href="#{request.contextPath}/paginas/publico/login.xhtml">Iniciar
 									Sesión</a> <a
 								href="#{request.contextPath}/paginas/publico/registroPersona.xhtml">Registro
-									Usuario</a>
-									
-									</li>
-									
-									
-
+									Usuario</a>	</li>
+							<li></li>
 						</ul>
 					</h:panelGroup>
 					<h:form>
@@ -117,9 +113,9 @@
 							<li></li>
 						</h:panelGroup> -->
 						<h:panelGroup rendered="#{controladorSesion.sesion}">
-						<h:commandLink action="#{controladorSesion.cerrarSession}"
-							value="CERRAR SESIÓN"></h:commandLink>
-							</h:panelGroup>
+							<h:commandLink action="#{controladorSesion.cerrarSession}"
+								value="CERRAR SESIÓN"></h:commandLink>
+						</h:panelGroup>
 					</h:form>
 				</div>
 			</div>

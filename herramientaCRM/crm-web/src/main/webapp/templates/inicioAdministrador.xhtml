@@ -54,7 +54,7 @@
 								<ul class="dropdown-menu">
 									<li><a
 										href="#{request.contextPath}/paginas/admin/activarUsuarios.xhtml"
-										title="">Registro Usuarios</a></li>
+										title="">Activar Usuarios</a></li>
 									<li><a
 										href="#{request.contextPath}/paginas/seguro/gestionTipoUsuario.xhtml"
 										title="">Gestion Tipo Usuario</a></li>
@@ -85,16 +85,13 @@
 								title="">Gestion Tipo Producto</a></li>
 
 						</ul>
-						<li><h:commandLink
-								action="#{controladorSesion.cerrarSession}"
-								value="CERRAR SESIÓN"></h:commandLink></li>
+
 					</h:form>
 				</div>
 			</div>
 		</nav>
 	</header>
 	<main class="site-main">
-	rendered="#{!controladorSesion.sesion}">
 	<section class="hero_area">
 		<div class="hero_content">
 			<div class="container">
@@ -102,6 +99,10 @@
 					<div class="col-sm-12">
 						<h1>SISTEMA DE GESTION EMPRESARIAL</h1>
 						<h2>Bienvenido #{controladorSesion.username}</h2>
+						<h:form>
+							<h:commandButton action="#{controladorSesion.cerrarSession}"
+								value="CERRAR SESIÓN" style="color:black"></h:commandButton>
+						</h:form>
 					</div>
 				</div>
 			</div>
@@ -109,166 +110,12 @@
 	</section>
 	<br></br>
 	<br></br>
-
-	<section>
-
-		<div id="divCuerpo" align="center" width="100%">
-			<p:messages id="facesMessage" autoUpdate="true" globalOnly="true"
-				closable="true" />
-			<ui:insert name="cuerpo" />
-		</div>
-
-	</section>
-	<section class="services">
-		<h2 class="section-title">SERVICIOS</h2>
-		<div class="container">
-			<div class="row">
-				<div class="col-md-4 col-sm-6 col-xs-12">
-					<div class="media">
-						<div class="media-left media-middle">
-							<i class="fa fa-cogs"></i>
-						</div>
-						<div class="media-body">
-							<h4 class="media-heading">GESTIONA TUS VENTAS</h4>
-							<p>puedes medir la efectividad de cada uno de tus
-								comerciales, analizando el proceso de venta en tiempo real y las
-								metas alcanzadas.</p>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-4 col-sm-6 col-xs-12">
-					<div class="media">
-						<div class="media-left media-middle">
-							<i class="fa fa-user-md"></i>
-						</div>
-						<div class="media-body">
-							<h4 class="media-heading">GESTIONA TUS USUARIOS</h4>
-							<p>De manera fácil puedes hacer seguimiento a tus negocios,
-								con una sola herramienta que te permite conocer todos los
-								procesos .</p>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-4 col-sm-6 col-xs-12">
-					<div class="media">
-						<div class="media-left media-middle">
-							<i class="fa fa-stethoscope"></i>
-						</div>
-						<div class="media-body">
-							<h4 class="media-heading">BASES DE DATOS</h4>
-							<p>Trabaja con diferentes bases de datos donde podras obtener
-								y registrar todos tus datos de manera segura.</p>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-4 col-sm-6 col-xs-12">
-					<div class="media">
-						<div class="media-left media-middle">
-							<i class="fa fa-graduation-cap"></i>
-						</div>
-						<div class="media-body">
-							<h4 class="media-heading">IMPULSE SU NEGOCIO</h4>
-							<p>Unifique las funcionalidades de CRM y ERP,.</p>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-4 col-sm-6 col-xs-12">
-					<div class="media">
-						<div class="media-left media-middle">
-							<i class="fa fa-file-text-o"></i>
-						</div>
-						<div class="media-body">
-							<h4 class="media-heading">CONVIERTA LAS RELACIONES EN
-								INGRESOS</h4>
-							<p>Capacite a los vendedores con información práctica para
-								personalizar relaciones, predecir las necesidades de los
-								clientes y aumentar las ventas.</p>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-4 col-sm-6 col-xs-12">
-					<div class="media">
-						<div class="media-left media-middle">
-							<i class="fa fa-heartbeat"></i>
-						</div>
-						<div class="media-body">
-							<h4 class="media-heading">AUDITORIA</h4>
-							<p>Lleva a cabo un proceso de auditoria de toda tu empresa
-								asi podras tener un control total sobre esta.</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-	<section class="home-area">
-		<div class="home_content">
-			<div class="container">
-				<div class="row">
-					<div class="col-sm-12">
-						<h2 class="sub_title">ULTIMAS NOTICIAS</h2>
-					</div>
-					<div class="home_list">
-						<ul>
-							<li class="col-md-3 col-sm-6 col-xs-12">
-								<div class="thumbnail">
-									<img src="#{request.contextPath}/img/h1.jpeg" alt="Post"></img>
-									<div class="caption">
-										<h3>
-											<a href="#">EQUIPO</a>
-										</h3>
-										<p>Estamos ampliando nuestro grupo de trabajo con mas de
-											dos mil empleados en diferentes ciudades de Colombia.</p>
-									</div>
-								</div>
-							</li>
-							<li class="col-md-3 col-sm-6 col-xs-12">
-								<div class="thumbnail">
-									<img src="#{request.contextPath}/img/h2.jpg"
-										class="img-responsive" alt="Post"></img>
-									<div class="caption">
-										<h3>
-											<a href="#">SEDES</a>
-										</h3>
-										<p>Estamos ampliandonos en diferentes ciudades con mas de
-											50 sedes que prestan servicios para su empresa.</p>
-									</div>
-								</div>
-							</li>
-							<li class="col-md-3 col-sm-6 col-xs-12">
-								<div class="thumbnail">
-									<img src="#{request.contextPath}/img/h3.jpeg"
-										class="img-responsive" alt="Post"></img>
-									<div class="caption">
-										<h3>
-											<a href="#">PUNTO DE ATENCION</a>
-										</h3>
-										<p>En cada ciudad usted puede ir a las sedes donde podra
-											obtener informacion mas detallada de nuestros servicios.</p>
-									</div>
-								</div>
-							</li>
-							<li class="col-md-3 col-sm-6 col-xs-12">
-								<div class="thumbnail">
-									<img src="#{request.contextPath}/img/h4.jpeg"
-										class="img-responsive" alt="Post"></img>
-									<div class="caption">
-										<h3>
-											<a href="#">SEDE CENTRAL</a>
-										</h3>
-										<p>Nuestra sede central se encuentra ubicada en
-											Armenia-Quindio.</p>
-									</div>
-								</div>
-							</li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
+	<div id="divCuerpo" align="center" width="100%">
+		<p:messages id="facesMessage" autoUpdate="true" globalOnly="true"
+			closable="true" />
+		<ui:insert name="cuerpoAdmin" />
+	</div>
 	</main>
-
 
 
 	<footer class="site-footer" style="margin-top: 40px">

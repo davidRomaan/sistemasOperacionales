@@ -47,7 +47,7 @@ public class ControladorSesion implements Serializable {
 							&& usuarioTemporal.isActivo() == true)) {
 				user = usuarioTemporal;
 				Faces.setSessionAttribute("user", user);
-				return "/paginas/publico/inicioAdministrador.xhtml?faces-redirect=true";
+				return "/templates/inicioAdministrador.xhtml?faces-redirect=true";
 
 			}
 			if (usuarioTemporal.getContrasenia().equals(password)
@@ -55,7 +55,7 @@ public class ControladorSesion implements Serializable {
 							&& usuarioTemporal.isActivo() == true)) {
 				user = usuarioTemporal;
 				Faces.setSessionAttribute("user", user);
-				return "/paginas/publico/inicioCRM.xhtml?faces-redirect=true";
+				return "/templates/inicioCRM.xhtml?faces-redirect=true";
 
 			}
 			if (usuarioTemporal.getContrasenia().equals(password)
@@ -63,7 +63,7 @@ public class ControladorSesion implements Serializable {
 							&& usuarioTemporal.isActivo() == true)) {
 				user = usuarioTemporal;
 				Faces.setSessionAttribute("user", user);
-				return "/paginas/publico/inicioERP.xhtml?faces-redirect=true";
+				return "/templates/inicioERP.xhtml?faces-redirect=true";
 
 			}
 		} else {
