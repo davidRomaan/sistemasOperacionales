@@ -11,7 +11,9 @@ import javax.servlet.http.HttpSession;
 import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 
+import co.edu.eam.ingesoft.bi.negocio.beans.ConexionEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.UsuarioEJB;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.Conexion;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Usuario;
 
 @Named("controladorSesion")
@@ -21,9 +23,19 @@ public class ControladorSesion implements Serializable {
 	private String username;
 	private String password;
 	private Usuario user;
+	
+	private static int bd = 0;
+	
+	@EJB
+	private ConexionEJB conexionEJB;
 
 	@EJB
 	private UsuarioEJB usuarioEJB;
+	
+	private void cambiarBD(){
+		Conexion con = conexionEJB.obtenerBD();
+		bd = con.getId();
+	}
 
 	public String login() {
 		Usuario usuarioTemporal = usuarioEJB.buscarUsuario(username);
