@@ -1,26 +1,29 @@
 package co.edu.eam.ingesoft.bi.negocio.beans;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
-import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
-import co.edu.eam.ingesoft.bi.negocio.persistencia.Persistencia;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaTipoUsuario;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaPermisos;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaUsuario;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Usuario;
 
 @LocalBean
 @Stateless
-public class AuditoriaTipoUsuarioEJB {
+public class AuditoriaPermisoEJB implements Serializable {
 	
-	
-	@EJB
-	private Persistencia em;
+	@PersistenceContext
+	private EntityManager em;
 
 	private String userAgent = "";
 	private String os = "";
@@ -89,7 +92,7 @@ public class AuditoriaTipoUsuarioEJB {
 	 * @param usuario
 	 * @param usuarioAf
 	 */
-	public void crearAuditoriaTipoUsusario(Usuario usu, String accion, String browserDeta) {
+	public void crearAuditoriaPersona(String usu, String accion, String browserDeta) {
 
 		this.browserDetails = browserDeta;
 		userAgent = browserDetails;
@@ -112,29 +115,28 @@ public class AuditoriaTipoUsuarioEJB {
 		fechaGuardar.set(anio, mes, dia);
 		fechaGuardar.setTime(horaGuadar);
 		
-		AuditoriaTipoUsuario audiUsuario = new AuditoriaTipoUsuario();
-		audiUsuario.setAccion(accion);
-		audiUsuario.setFechaHora(fechaGuardar);
-		audiUsuario.setTipoUsuario("TipoUsuario");;
-		audiUsuario.setDispositivo(os);
-		audiUsuario.setNavegador(browser);		
+		AuditoriaPermisos audiPermisos = new AuditoriaPermisos();
+		audiPermisos.setAccion(accion);
+		audiPermisos.setFechaHora(fechaGuardar);
+		audiPermisos.setModulosUsuario(usu);;
+		audiPermisos.setDispositivo(os);
+		audiPermisos.setNavegador(browser);		
 
-		em.setBd(ConexionEJB.getBd());
-		em.crear(audiUsuario);
+		em.persist(audiPermisos);
 	
 
 	}
+	
 	
 	/**
 	 * 
 	 * @return
 	 */
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-	public List<AuditoriaTipoUsuario> listAudi(){
-		Query q = em.createNamedQuery(AuditoriaTipoUsuario.LISTA_TIPO_USUARIO);
-		List<AuditoriaTipoUsuario> departamento = q.getResultList();
+	public List<AuditoriaPermisos> listAudi(){
+		Query q = em.createNamedQuery(AuditoriaPermisos.LISTA_PERMISOS);
+		List<AuditoriaPermisos> departamento = q.getResultList();
 		return departamento;
 	}
-	
 
 }

@@ -3,16 +3,21 @@ package co.edu.eam.ingesoft.bi.negocio.beans;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import co.edu.eam.ingesoft.bi.negocio.persistencia.Persistencia;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Area;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaArea;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaDetalleVenta;
 
 @LocalBean
 @Stateless
@@ -126,6 +131,17 @@ public class AuditoriaAreaEJB {
 		em.setBd(ConexionEJB.getBd());
 		em.crear(auditoriaArea);
 
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	public List<AuditoriaArea> listaAuditoria() {
+		Query q = em.createNamedQuery(AuditoriaArea.LISTA_AuditoriaArea);
+		List<AuditoriaArea> departamento = q.getResultList();
+		return departamento;
 	}
 
 }
