@@ -1,6 +1,8 @@
 package co.edu.eam.ingesoft.bi.negocio.beans;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.ejb.LocalBean;
@@ -58,8 +60,42 @@ public class VentaEJB {
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void eliminarDetalleVenta (DetalleVenta dv){
+		
+		Query q = em.createNativeQuery("DELETE FROM DETALLE_VENTA WHERE "
+				+ "factura_venta_id = ?1 AND producto_id = ?2");
+		q.setParameter(1, dv.getFacturaVenta().getId());
+		q.setParameter(2, dv.getProducto().getId());
+		q.executeUpdate();
+		
+	}
+	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void eliminarVenta (FacturaVenta fv){
 		em.remove(em.contains(fv) ? fv : em.merge(fv));
+	}
+	
+	public String obtenerFechaActual(){
+		
+		Calendar fechaActual = new GregorianCalendar();
+		int dia = fechaActual.get(Calendar.DAY_OF_MONTH);
+		int mes = fechaActual.get(Calendar.MONTH)+1;
+		int anio = fechaActual.get(Calendar.YEAR);
+		
+		String diaActual = String.valueOf(dia);
+		String mesActual = String.valueOf(mes);
+		
+		if (dia <= 9){
+			diaActual = "0" + dia;
+		}
+		
+		if (mes <= 9){
+			mesActual = "0" + mes;
+		}
+
+		String nuevaFecha = diaActual + "/" + mesActual + "/" + anio;
+		
+		return nuevaFecha;
 	}
 	
 }

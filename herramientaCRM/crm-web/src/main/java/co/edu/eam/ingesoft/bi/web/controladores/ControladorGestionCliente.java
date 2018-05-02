@@ -40,107 +40,173 @@ public class ControladorGestionCliente implements Serializable {
 	private List<Departamento> departamentos;
 	private List<Municipio> municipios;
 	private List<Persona> clientes;
-	
+	private String fechaNacimiento;
+
 	private Persona cliente;
-	
+
 	@EJB
 	private UsuarioEJB usuarioEJB;
-	
+
 	@EJB
 	private DepartamentoEJB deptoEJB;
-	
-    @EJB
+
+	@EJB
 	private PersonaEJB personaEJB;
-	
+
 	@PostConstruct
-	private void cargarCampos(){
-		
+	private void cargarCampos() {
+
 		generos = Arrays.asList(Genero.values());
 		departamentos = deptoEJB.listarDepartamentos();
 		municipios = deptoEJB.listarMunicipiosDepartamento(departamentos.get(0).getId());
-		clientes = personaEJB.listarPersona();
-		
+		clientes = personaEJB.listarClientes();
+
 	}
-	
+
 	public void listarMunicipios() {
 		municipios = deptoEJB.listarMunicipiosDepartamento(deptoSeleccionado);
 	}
-	
+
+	/**
+	 * Valida que se hayan ingresado todos los campos
+	 * 
+	 * @return true si se llenaron los campos, de lo contrario false
+	 */
+	private boolean validarCampos() {
+		if (cedula.equals("") || nombre.equals("") || apellido.equals("") || telefono.equals("")) {
+			return false;
+		}
+		return true;
+	}
+
 	/**
 	 * Registra un cliente
 	 */
 	public void registrarCliente() {
 
-		cliente = new Persona();
-		cliente.setApellido(apellido);
-		cliente.setNombre(nombre);
-		cliente.setCedula(cedula);
-		cliente.setCorreo(correo);
-		cliente.setTelefono(telefono);
-		cliente.setGenero(tipoGenero);
-
-		Municipio municipio = deptoEJB.buscarMunicipio(municipioSeleccionado);
-		cliente.setMunicipio(municipio);
-
-		try {
-
-			usuarioEJB.registrarCliente(cliente);
+		if (!validarCampos()) {
 
 			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, "Cliente Registrado Exitosamente", null));
-			
-			refrescarClientes();			
-			
+					new FacesMessage(FacesMessage.SEVERITY_WARN, "Debe ingresar todos los campos", null));
 
-		} catch (ExcepcionNegocio e) {
+		} else {
 
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), null));
+			cliente = new Persona();
+			cliente.setApellido(apellido);
+			cliente.setNombre(nombre);
+			cliente.setCedula(cedula);
+			cliente.setCorreo(correo);
+			cliente.setTelefono(telefono);
+			cliente.setGenero(tipoGenero);
+			// cliente.setFechaNacimiento(fechaNacimiento);
+
+			Municipio municipio = deptoEJB.buscarMunicipio(municipioSeleccionado);
+			cliente.setMunicipio(municipio);
+
+			try {
+
+				usuarioEJB.registrarCliente(cliente);
+
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, "Cliente Registrado Exitosamente", null));
+
+				refrescarClientes();
+
+			} catch (ExcepcionNegocio e) {
+
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), null));
+
+			}
 
 		}
 
 	}
-	
-	public void buscar(){
-		
+
+	public void buscar() {
+
 		cliente = usuarioEJB.buscarCliente(cedula);
-		
-		if (cliente != null){
-			
+
+		if (cliente != null) {
+
+			cedula = cliente.getCedula();
 			nombre = cliente.getNombre();
 			apellido = cliente.getApellido();
 			cedula = cliente.getCedula();
 			telefono = cliente.getTelefono();
 			tipoGenero = cliente.getGenero();
+			deptoSeleccionado = cliente.getMunicipio().getDepartamento().getId();
+
+			municipios = deptoEJB.listarMunicipiosDepartamento(deptoSeleccionado);
+
 			municipioSeleccionado = cliente.getMunicipio().getId();
 			correo = cliente.getCorreo();
-			
+
+			// fechaNacimiento = cliente.getFechaNacimiento();
+
 		} else {
-			
+
 			Messages.addFlashGlobalError("El cliente no existe");
-			
+
 		}
-		
+
 	}
-	
-	private void refrescarClientes (){
-		clientes = personaEJB.listarPersona();
+
+	private void refrescarClientes() {
+		clientes = personaEJB.listarClientes();
 	}
-	
-	public void editar(){
-		
-		if (cliente != null){
-			
-			usuarioEJB.editarCliente(cliente);
-			
-			Messages.addFlashGlobalInfo("Se ha editado correctamente");
-			refrescarClientes();
-			
+
+	public void editar() {
+
+		if (cliente != null) {
+
+			if (validarCampos()) {
+
+				cliente.setNombre(nombre);
+				cliente.setApellido(apellido);
+				cliente.setGenero(tipoGenero);
+				cliente.setMunicipio(deptoEJB.buscarMunicipio(municipioSeleccionado));
+				cliente.setTelefono(telefono);
+				// cliente.setFechaNacimiento(fechaNacimiento);
+				cliente.setCorreo(correo);
+
+				usuarioEJB.editarCliente(cliente);
+
+				Messages.addFlashGlobalInfo("Se ha editado correctamente");
+				refrescarClientes();
+				limpiarCampos();
+				cliente = null;
+
+			} else {
+
+				Messages.addFlashGlobalError("Debe ingresar todos los campos");
+
+			}
+
+		} else {
+
+			Messages.addFlashGlobalError("Debe buscar un cliente previamente");
+
 		}
-		
+
 	}
-	
-	public void eliminar(Persona p){
+
+	/**
+	 * 
+	 * <p:outputLabel id="maskNacimiento" value="Fecha de nacimiento" />
+	 * <p:inputMask id="dateNacimiento" value=
+	 * "#{controladorGestioncliente.fechaNacimiento}" mask="99/99/9999" />
+	 */
+
+	private void limpiarCampos() {
+		nombre = "";
+		apellido = "";
+		correo = "";
+		telefono = "";
+		//fechaNacimiento = "";
+	}
+
+	public void eliminar(Persona p) {
 		usuarioEJB.eliminarCliente(p);
 		refrescarClientes();
 	}
@@ -240,7 +306,13 @@ public class ControladorGestionCliente implements Serializable {
 	public void setClientes(List<Persona> clientes) {
 		this.clientes = clientes;
 	}
-	
-	
-	
+
+	public String getFechaNacimiento() {
+		return fechaNacimiento;
+	}
+
+	public void setFechaNacimiento(String fechaNacimiento) {
+		this.fechaNacimiento = fechaNacimiento;
+	}
+
 }

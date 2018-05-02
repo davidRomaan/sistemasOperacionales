@@ -16,7 +16,7 @@
 
 			<h:panelGrid columns="3" id="panelFecha">
 
-				<p:outputLabel id="maskIngres" value="FechaIngreso" />
+				<p:outputLabel id="maskIngres" value="Fecha de la venta" />
 				<p:inputMask id="dateIngreso"
 					value="#{controladorGestionVentas.fechaCompra}" mask="99/99/9999" />
 
@@ -27,6 +27,10 @@
 			</h:panelGrid>
 
 			<br />
+			
+			<h3>Facturas</h3>
+			
+			<br/>
 
 			<h:panelGrid id="panelTablaFacturas" columns="1" width="80%">
 
@@ -54,13 +58,23 @@
 						<p:commandButton value="Ver productos" process="@this"
 							update="panelTablaDetalles"
 							action="#{controladorGestionVentas.listarDetallesVentaFactura(factura)}" />
+
+						<p:commandButton value="Eliminar" process="@this"
+							update="panelTablaFacturas"
+							action="#{controladorGestionVentas.eliminar(factura)}" />
 					</p:column>
 
 				</p:dataTable>
 
-			</h:panelGrid> <br/>
+			</h:panelGrid>
+			<br />
 			
-			<h:panelGrid id="panelTablaDetalles" columns="1" width="80%">
+			<p:commandButton value="Eliminar Todos los Detalles De la Venta" process="@this"
+							update="panelTablaDetalles"
+							action="#{controladorGestionVentas.eliminarTodosDetallesVenta}" /> 
+							
+
+			<h:panelGrid id="panelTablaDetalles" columns="1" width="80%" style="margin-top:10px">
 
 				<p:dataTable id="tablaDetalles"
 					value="#{controladorGestionVentas.detallesVenta}" var="detalle"
@@ -81,9 +95,15 @@
 					<p:column headerText="Cantidad">
 						<h:outputLabel value="#{detalle.cantidad}" />
 					</p:column>
-					
+
 					<p:column headerText="Subtotal">
 						<h:outputLabel value="#{detalle.subtotal}" />
+					</p:column>
+					
+					<p:column headerText="Accion">
+						<p:commandButton value="Eliminar" process="@this"
+							update="panelTablaDetalles"
+							action="#{controladorGestionVentas.eliminarDetalleVenta(detalle)}" />
 					</p:column>
 
 				</p:dataTable>

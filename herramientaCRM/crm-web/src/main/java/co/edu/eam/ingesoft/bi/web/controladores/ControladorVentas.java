@@ -58,6 +58,7 @@ public class ControladorVentas implements Serializable {
 	private int municipioSeleccionado;
 	private List<Genero> generos;
 	private String accion;
+	private String fechaNacimiento;
 
 	// Cliente que va a reliazar la compra
 	Persona cliente;
@@ -115,6 +116,18 @@ public class ControladorVentas implements Serializable {
 	}
 
 	/**
+	 * Valida que se hayan ingresado todos los campos
+	 * 
+	 * @return true si se llenaron los campos, de lo contrario false
+	 */
+	private boolean validarCampos() {
+		if (cedula.equals("") || nombre.equals("") || apellido.equals("") || telefono.equals("")) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
 	 * Carga la lista de productos
 	 */
 	private void cargarProductos() {
@@ -135,9 +148,14 @@ public class ControladorVentas implements Serializable {
 		municipios = departamentoEJB.listarMunicipiosDepartamento(deptoSeleccionado);
 	}
 
-	private void reload() throws IOException {
+	private void reload() {
 		ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-		ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
+		try {
+			ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -169,11 +187,7 @@ public class ControladorVentas implements Serializable {
 		detalleAgregar = new DetalleVenta();
 		detalleAgregar.setProducto(p.getProductoId());
 		inventarioProductoComprar = p;
-		try {
-			reload();
-		} catch (IOException e) {
-
-		}
+		reload();
 	}
 
 	/**
@@ -189,11 +203,8 @@ public class ControladorVentas implements Serializable {
 				productosCompra.add(detalleAgregar);
 				inventariosEditar.add(inventarioProductoComprar);
 				detalleAgregar = null;
-				try {
-					reload();
-				} catch (IOException e) {
+				reload();
 
-				}
 			} else {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 						"No existe esta cantidad en el inventario", null));
@@ -224,11 +235,8 @@ public class ControladorVentas implements Serializable {
 		inventariosEditar.remove(inventarioProductoComprar);
 		inventarioProductoComprar.setCantidad(inventarioProductoComprar.getCantidad() + dv.getCantidad());
 		productosCompra.remove(dv);
-		try {
-			reload();
-		} catch (IOException e) {
+		reload();
 
-		}
 	}
 
 	/**
@@ -258,12 +266,10 @@ public class ControladorVentas implements Serializable {
 
 	private void limpiarCampos() {
 
-		productosCompra = new ArrayList<DetalleVenta>();
 		nombre = "";
 		apellido = "";
 		correo = "";
 		telefono = "";
-		cedula = "";
 		totalVenta = 0;
 		cliente = null;
 
@@ -276,6 +282,10 @@ public class ControladorVentas implements Serializable {
 		for (InventarioProducto inventarioProducto : inventariosEditar) {
 			productoEJB.editarInventarioProducto(inventarioProducto);
 		}
+	}
+	
+	public boolean isClienteExiste(){
+		return cliente == null;
 	}
 
 	/**
@@ -296,12 +306,8 @@ public class ControladorVentas implements Serializable {
 
 				if (cliente != null) {
 					factura.setClienteId(cliente);
-					Calendar fechaActual = new GregorianCalendar();
-					int dia = fechaActual.get(Calendar.DAY_OF_MONTH);
-					int mes = fechaActual.get(Calendar.MONTH);
-					int anio = fechaActual.get(Calendar.YEAR);
-
-					String nuevaFecha = dia + "/" + mes + "/" + anio;
+					
+					String nuevaFecha = ventaEJB.obtenerFechaActual();
 
 					factura.setFechaVenta(nuevaFecha);
 					factura.setTotal(totalVenta);
@@ -321,6 +327,9 @@ public class ControladorVentas implements Serializable {
 
 					limpiarCampos();
 					mostrarDatosCliente = false;
+					productosCompra = new ArrayList<DetalleVenta>();
+
+					reload();
 
 				} else {
 
@@ -331,8 +340,8 @@ public class ControladorVentas implements Serializable {
 			}
 
 		} else {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Debe buscar el cliente", null));
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Debe buscar el cliente", null));
 		}
 
 	}
@@ -342,38 +351,43 @@ public class ControladorVentas implements Serializable {
 	 */
 	public void registrarCliente() {
 
-		cliente = new Persona();
-		cliente.setApellido(apellido);
-		cliente.setNombre(nombre);
-		cliente.setCedula(cedula);
-		cliente.setCorreo(correo);
-		cliente.setTelefono(telefono);
-		cliente.setGenero(tipoGenero);
+		if (validarCampos()) {
 
-		Municipio municipio = departamentoEJB.buscarMunicipio(municipioSeleccionado);
-		cliente.setMunicipio(municipio);
+			cliente = new Persona();
+			cliente.setApellido(apellido);
+			cliente.setNombre(nombre);
+			cliente.setCedula(cedula);
+			cliente.setCorreo(correo);
+			cliente.setTelefono(telefono);
+			cliente.setGenero(tipoGenero);
+			cliente.setFechaNacimiento(fechaNacimiento);
 
-		try {
+			Municipio municipio = departamentoEJB.buscarMunicipio(municipioSeleccionado);
+			cliente.setMunicipio(municipio);
 
-			usuarioEJB.registrarCliente(cliente);
-
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, "Cliente Registrado Exitosamente", null));
-
-			limpiarCampos();
-			mostrarDatosCliente = false;
-			
 			try {
+
+				usuarioEJB.registrarCliente(cliente);
+
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, "Cliente Registrado Exitosamente", null));
+
+				limpiarCampos();
+				mostrarDatosCliente = false;
+
 				reload();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+
+			} catch (ExcepcionNegocio e) {
+
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), null));
+
 			}
 
-		} catch (ExcepcionNegocio e) {
+		} else {
 
 			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), null));
+					new FacesMessage(FacesMessage.SEVERITY_WARN, "Debe ingresar todos los campos", null));
 
 		}
 
@@ -388,20 +402,24 @@ public class ControladorVentas implements Serializable {
 
 		mostrarDatosCliente = true;
 
-		if (cliente != null) {
+		reload();
 
-			System.out.println(cliente.getNombre());
+		if (cliente != null) {
 
 			nombre = cliente.getNombre();
 			apellido = cliente.getApellido();
 			correo = cliente.getCorreo();
 			telefono = cliente.getTelefono();
 			deptoSeleccionado = cliente.getMunicipio().getDepartamento().getId();
+			
+			municipios = departamentoEJB.listarMunicipiosDepartamento(deptoSeleccionado);
+			
 			municipioSeleccionado = cliente.getMunicipio().getId();
 			tipoGenero = cliente.getGenero();
+			fechaNacimiento = cliente.getFechaNacimiento();
 
 		} else {
-			
+
 			limpiarCampos();
 
 			FacesContext.getCurrentInstance().addMessage(null,
@@ -410,11 +428,7 @@ public class ControladorVentas implements Serializable {
 							null));
 
 		}
-		try {
-			reload();
-		} catch (IOException e) {
 
-		}
 	}
 
 	public String getCedula() {
@@ -544,5 +558,15 @@ public class ControladorVentas implements Serializable {
 	public void setMostrarDatosCliente(boolean mostrarDatosCliente) {
 		this.mostrarDatosCliente = mostrarDatosCliente;
 	}
+
+	public String getFechaNacimiento() {
+		return fechaNacimiento;
+	}
+
+	public void setFechaNacimiento(String fechaNacimiento) {
+		this.fechaNacimiento = fechaNacimiento;
+	}
+	
+	
 
 }

@@ -22,7 +22,7 @@
 					id="tfcedulaCliente" />
 
 				<p:commandButton value="Buscar" process="@this,panelCedula"
-					update="@this,panelDatosCliente" id="btnBuscarCedula"
+					update="@this,panelDatosCliente,panelCedula" id="btnBuscarCedula"
 					action="#{controladorGestioncliente.buscar}" />
 
 			</h:panelGrid>
@@ -87,10 +87,6 @@
 					update="@this,panelCedula,panelDatosCliente,panelTabla"
 					action="#{controladorGestioncliente.registrarCliente}" />
 
-				<p:commandButton value="Buscar" process="@this,panelCedula"
-					update="@this,panelCedula,panelDatosCliente"
-					action="#{controladorGestioncliente.buscar}" />
-
 				<p:commandButton value="Editar"
 					process="@this,panelCedula,panelDatosCliente"
 					update="@this,panelCedula,panelDatosCliente,panelTabla"
@@ -101,11 +97,11 @@
 
 			<h:panelGrid id="panelTabla" columns="1" width="80%">
 
-				<p:dataTable id="tablaTipos"
+				<p:dataTable id="tablaClientes"
 					value="#{controladorGestioncliente.clientes}" var="cliente"
 					border="1">
 
-					<p:column headerText="Id" filterBy="#{cliente.cedula}">
+					<p:column headerText="Cédula" filterBy="#{cliente.cedula}">
 						<h:outputLabel value="#{cliente.cedula}" />
 					</p:column>
 
