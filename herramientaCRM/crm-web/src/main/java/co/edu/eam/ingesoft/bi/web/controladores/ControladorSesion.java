@@ -24,12 +24,13 @@ public class ControladorSesion implements Serializable {
 	private String password;
 	private Usuario user;
 	
+	
 	@EJB
 	private ConexionEJB conexionEJB;
 
 	@EJB
 	private UsuarioEJB usuarioEJB;
-	
+
 	private void obtenerBD (){
 		conexionEJB.ultimaBD();
 	}

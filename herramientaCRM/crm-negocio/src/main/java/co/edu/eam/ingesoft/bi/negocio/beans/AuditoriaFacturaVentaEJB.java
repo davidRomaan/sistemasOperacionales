@@ -94,7 +94,7 @@ public class AuditoriaFacturaVentaEJB {
 	 * @param usuario
 	 * @param usuarioAf
 	 */
-	public void crearAuditoriaFacturaVenta(FacturaVenta fv, String accion, String browserDeta) {
+	public void crearAuditoriaFacturaVenta(String fv, String accion, String browserDeta) {
 
 		this.browserDetails = browserDeta;
 		userAgent = browserDetails;
@@ -120,7 +120,7 @@ public class AuditoriaFacturaVentaEJB {
 		AuditoriaFacturaVenta auditoriaFacturaVenta = new AuditoriaFacturaVenta();
 		auditoriaFacturaVenta.setAccion(accion);
 		auditoriaFacturaVenta.setFechaHora(fechaGuardar);
-		auditoriaFacturaVenta.setFacturaVenta("FacturaVenta");
+		auditoriaFacturaVenta.setFacturaVenta(fv);
 		auditoriaFacturaVenta.setDispositivo(os);
 		auditoriaFacturaVenta.setNavegador(browser);	
 

@@ -95,7 +95,7 @@ public class AuditoriaInventarioEJB {
 	 * @param usuario
 	 * @param usuarioAf
 	 */
-	public void crearAuditoriaInventario( Inventario inventario, String accion, String browserDeta) {
+	public void crearAuditoriaInventario( String inventario, String accion, String browserDeta) {
 
 		this.browserDetails = browserDeta;
 		userAgent = browserDetails;
@@ -121,7 +121,7 @@ public class AuditoriaInventarioEJB {
 		AuditoriaInventario invenProducto = new AuditoriaInventario();
 		invenProducto.setAccion(accion);
 		invenProducto.setFechaHora(fechaGuardar);
-		invenProducto.setInventario("Inventario");
+		invenProducto.setInventario(inventario);
 		invenProducto.setDispositivo(os);
 		invenProducto.setNavegador(browser);	
 

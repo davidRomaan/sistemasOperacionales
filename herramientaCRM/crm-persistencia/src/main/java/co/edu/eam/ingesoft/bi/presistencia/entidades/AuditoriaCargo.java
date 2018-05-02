@@ -2,131 +2,119 @@ package co.edu.eam.ingesoft.bi.presistencia.entidades;
 
 import java.io.Serializable;
 import java.util.Calendar;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
-@Table(name="AUDITORIA_DETALLE_VENTA")
+@Table(name="AUDITORIA_AREA")
 @NamedQueries({
-	@NamedQuery(name=AuditoriaDetalleVenta.LISTA_AuditoriaDetalleVenta, query="SELECT p FROM AuditoriaDetalleVenta p")
+	@NamedQuery(name=AuditoriaCargo.LISTA_CARGO, query="SELECT p FROM AuditoriaCargo p")
 })
-public class AuditoriaDetalleVenta implements Serializable{
-	
-	public static final String LISTA_AuditoriaDetalleVenta = "lista.AuditoriaDetalleVenta";
-	
+public class AuditoriaCargo implements Serializable{
+
+	public static final String LISTA_CARGO = "lista.cargo";
+
 	@Id
 	@Column(name="id")
-	@GeneratedValue(strategy= GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
 	
-	@Column(name="accion")
+	@Column(name="accion", length=30)
 	private String accion;
 	
 	@Column(name="fecha_hora")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar fechaHora;
 	
-	@Column(name="dispositivo")
+	@Column(name="dispositivo", length=30)
 	private String dispositivo;
 	
-	@Column(name="navegador")
+	@Column(name="navegador", length=30)
 	private String navegador;
 	
-	@Column(name="detalle_venta")
-	private String detalleVenta;
+	@Column(name="cargo")
+	private String cargo;
 
-	
-
-
-	public AuditoriaDetalleVenta(int id, String accion, Calendar fechaHora, String dispositivo, String navegador,
-			String detalleVenta) {
+	public AuditoriaCargo(int id, String accion, Calendar fechaHora, String dispositivo, String navegador, String cargo) {
 		super();
 		this.id = id;
 		this.accion = accion;
 		this.fechaHora = fechaHora;
 		this.dispositivo = dispositivo;
 		this.navegador = navegador;
-		this.detalleVenta = detalleVenta;
+		this.cargo = cargo;
 	}
+	
+	
 
-
-	public AuditoriaDetalleVenta() {
+	public AuditoriaCargo() {
 		super();
 	}
+
 
 
 	public int getId() {
 		return id;
 	}
 
-
 	public void setId(int id) {
 		this.id = id;
 	}
-
 
 	public String getAccion() {
 		return accion;
 	}
 
-
 	public void setAccion(String accion) {
 		this.accion = accion;
 	}
-
 
 	public Calendar getFechaHora() {
 		return fechaHora;
 	}
 
-
 	public void setFechaHora(Calendar fechaHora) {
 		this.fechaHora = fechaHora;
 	}
-
 
 	public String getDispositivo() {
 		return dispositivo;
 	}
 
-
 	public void setDispositivo(String dispositivo) {
 		this.dispositivo = dispositivo;
 	}
 
-
 	public String getNavegador() {
 		return navegador;
 	}
-
 
 	public void setNavegador(String navegador) {
 		this.navegador = navegador;
 	}
 
 
-	public String getDetalleVenta() {
-		return detalleVenta;
+
+	public String getCargo() {
+		return cargo;
 	}
 
 
-	public void setDetalleVenta(String detalleVenta) {
-		this.detalleVenta = detalleVenta;
+
+	public void setCargo(String cargo) {
+		this.cargo = cargo;
 	}
-
-
 	
 	
 	
-
+	
 }

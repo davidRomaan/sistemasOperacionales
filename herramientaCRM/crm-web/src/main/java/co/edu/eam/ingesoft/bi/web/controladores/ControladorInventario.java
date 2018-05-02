@@ -64,7 +64,7 @@ public class ControladorInventario implements Serializable {
 			accion = "Regitro Inventario";
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
 			
-			inventarioEJB.crearAuditoriaInventario(inventario, accion, browserDetail);
+			inventarioEJB.crearAuditoriaInventario(inventario.getNombre(), accion, browserDetail);
 		
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -119,6 +119,16 @@ public class ControladorInventario implements Serializable {
 			
 			productoEJB.editarInventario(inventarioEditar);
 			
+			try {
+				accion = "Editar Inventario";
+				String browserDetail = Faces.getRequest().getHeader("User-Agent");
+				
+				inventarioEJB.crearAuditoriaInventario(inventarioEditar.getNombre() + "cambio a " + nombre.toUpperCase(), accion, browserDetail);
+			
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 			Messages.addFlashGlobalInfo("Se ha editado correctamente");
 			limpiarCampos();
 			
@@ -138,6 +148,16 @@ public class ControladorInventario implements Serializable {
 	}
 	
 	public void eliminarInventario(Inventario inventario){	
+		productoEJB.eliminarInventario(inventario);
+		try {
+			accion = "Eliminar Inventario";
+			String browserDetail = Faces.getRequest().getHeader("User-Agent");
+			
+			inventarioEJB.crearAuditoriaInventario(inventario.getNombre(), accion, browserDetail);
+		
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 		productoEJB.eliminarInventario(inventario); 
 		refrescarListaInventarios();
 	}
