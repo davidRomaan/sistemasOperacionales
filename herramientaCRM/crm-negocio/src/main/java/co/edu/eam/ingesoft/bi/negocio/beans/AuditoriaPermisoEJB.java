@@ -1,5 +1,6 @@
 package co.edu.eam.ingesoft.bi.negocio.beans;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -13,13 +14,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaFacturaVenta;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaPermisos;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaUsuario;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.FacturaVenta;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.Usuario;
 
 @LocalBean
 @Stateless
-public class AuditoriaFacturaVentaEJB {
+public class AuditoriaPermisoEJB implements Serializable {
 	
 	@PersistenceContext
 	private EntityManager em;
@@ -82,7 +83,6 @@ public class AuditoriaFacturaVentaEJB {
 
 	}
 	
-	
 	/**
 	 * 
 	 * @param persona
@@ -92,7 +92,7 @@ public class AuditoriaFacturaVentaEJB {
 	 * @param usuario
 	 * @param usuarioAf
 	 */
-	public void crearAuditoriaFacturaVenta(FacturaVenta fv, String accion, String browserDeta) {
+	public void crearAuditoriaPersona(String usu, String accion, String browserDeta) {
 
 		this.browserDetails = browserDeta;
 		userAgent = browserDetails;
@@ -115,25 +115,27 @@ public class AuditoriaFacturaVentaEJB {
 		fechaGuardar.set(anio, mes, dia);
 		fechaGuardar.setTime(horaGuadar);
 		
-		AuditoriaFacturaVenta auditoriaFacturaVenta = new AuditoriaFacturaVenta();
-		auditoriaFacturaVenta.setAccion(accion);
-		auditoriaFacturaVenta.setFechaHora(fechaGuardar);
-		auditoriaFacturaVenta.setFacturaVenta("FacturaVenta");
-		auditoriaFacturaVenta.setDispositivo(os);
-		auditoriaFacturaVenta.setNavegador(browser);	
+		AuditoriaPermisos audiPermisos = new AuditoriaPermisos();
+		audiPermisos.setAccion(accion);
+		audiPermisos.setFechaHora(fechaGuardar);
+		audiPermisos.setModulosUsuario(usu);;
+		audiPermisos.setDispositivo(os);
+		audiPermisos.setNavegador(browser);		
 
-		em.persist(auditoriaFacturaVenta);
+		em.persist(audiPermisos);
+	
 
 	}
+	
 	
 	/**
 	 * 
 	 * @return
 	 */
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-	public List<AuditoriaFacturaVenta> listAudi(){
-		Query q = em.createNamedQuery(AuditoriaFacturaVenta.LISTA_FACTURA_VENTA);
-		List<AuditoriaFacturaVenta> departamento = q.getResultList();
+	public List<AuditoriaPermisos> listAudi(){
+		Query q = em.createNamedQuery(AuditoriaPermisos.LISTA_PERMISOS);
+		List<AuditoriaPermisos> departamento = q.getResultList();
 		return departamento;
 	}
 

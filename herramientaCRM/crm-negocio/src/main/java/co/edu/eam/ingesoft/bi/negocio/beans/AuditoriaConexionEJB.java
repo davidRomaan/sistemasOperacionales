@@ -13,13 +13,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaFacturaVenta;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaConexion;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaUsuario;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.FacturaVenta;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.Conexion;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.Usuario;
 
 @LocalBean
 @Stateless
-public class AuditoriaFacturaVentaEJB {
+public class AuditoriaConexionEJB {
 	
 	@PersistenceContext
 	private EntityManager em;
@@ -92,7 +93,7 @@ public class AuditoriaFacturaVentaEJB {
 	 * @param usuario
 	 * @param usuarioAf
 	 */
-	public void crearAuditoriaFacturaVenta(FacturaVenta fv, String accion, String browserDeta) {
+	public void crearAuditoriaConexion(String usu, String accion, String browserDeta) {
 
 		this.browserDetails = browserDeta;
 		userAgent = browserDetails;
@@ -115,14 +116,15 @@ public class AuditoriaFacturaVentaEJB {
 		fechaGuardar.set(anio, mes, dia);
 		fechaGuardar.setTime(horaGuadar);
 		
-		AuditoriaFacturaVenta auditoriaFacturaVenta = new AuditoriaFacturaVenta();
-		auditoriaFacturaVenta.setAccion(accion);
-		auditoriaFacturaVenta.setFechaHora(fechaGuardar);
-		auditoriaFacturaVenta.setFacturaVenta("FacturaVenta");
-		auditoriaFacturaVenta.setDispositivo(os);
-		auditoriaFacturaVenta.setNavegador(browser);	
+		AuditoriaConexion audiConexion = new AuditoriaConexion();
+		audiConexion.setSeleccion(accion);
+		audiConexion.setFechaHora(fechaGuardar);
+		audiConexion.setConexion("Conexion");
+		audiConexion.setDispositivo(os);
+		audiConexion.setNavegador(browser);		
 
-		em.persist(auditoriaFacturaVenta);
+		em.persist(audiConexion);
+	
 
 	}
 	
@@ -131,10 +133,11 @@ public class AuditoriaFacturaVentaEJB {
 	 * @return
 	 */
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-	public List<AuditoriaFacturaVenta> listAudi(){
-		Query q = em.createNamedQuery(AuditoriaFacturaVenta.LISTA_FACTURA_VENTA);
-		List<AuditoriaFacturaVenta> departamento = q.getResultList();
+	public List<AuditoriaConexion> listAudi(){
+		Query q = em.createNamedQuery(AuditoriaConexion.LISTA_AuditoriaConexion);
+		List<AuditoriaConexion> departamento = q.getResultList();
 		return departamento;
 	}
+
 
 }

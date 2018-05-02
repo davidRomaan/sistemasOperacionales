@@ -1,6 +1,7 @@
 package co.edu.eam.ingesoft.bi.presistencia.entidades;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -10,15 +11,20 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "AUDITORIA_PERMISOS")
+@NamedQueries({
+	@NamedQuery(name=AuditoriaPermisos.LISTA_PERMISOS, query="SELECT p FROM AuditoriaPermisos p")
+})
 public class AuditoriaPermisos implements Serializable {
 	
-	public static final String LISTA = "lista";
+	public static final String LISTA_PERMISOS = "lista.permisos";
 
 	@Id
 	@Column(name = "id", nullable = false)
@@ -30,7 +36,7 @@ public class AuditoriaPermisos implements Serializable {
 
 	@Column(name = "fecha_hora")
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date fechaHora;
+	private Calendar fechaHora;
 
 	@Column(name = "dispositivo", length = 30, nullable = false)
 	private String dispositivo;
@@ -50,7 +56,7 @@ public class AuditoriaPermisos implements Serializable {
 	
 
 
-	public AuditoriaPermisos(int id, String accion, Date fechaHora, String dispositivo, String navegador,
+	public AuditoriaPermisos(int id, String accion, Calendar fechaHora, String dispositivo, String navegador,
 			String modulosUsuario) {
 		super();
 		this.id = id;
@@ -97,7 +103,7 @@ public class AuditoriaPermisos implements Serializable {
 
 
 
-	public Date getFechaHora() {
+	public Calendar getFechaHora() {
 		return fechaHora;
 	}
 
@@ -105,7 +111,7 @@ public class AuditoriaPermisos implements Serializable {
 
 
 
-	public void setFechaHora(Date fechaHora) {
+	public void setFechaHora(Calendar fechaHora) {
 		this.fechaHora = fechaHora;
 	}
 

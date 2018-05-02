@@ -3,13 +3,18 @@ package co.edu.eam.ingesoft.bi.negocio.beans;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaInventario;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaProducto;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Inventario;
 
 
@@ -120,6 +125,17 @@ public class AuditoriaInventarioEJB {
 
 		em.persist(invenProducto);
 
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	public List<AuditoriaInventario> listaAuditoria() {
+		Query q = em.createNamedQuery(AuditoriaInventario.LISTA_AuditoriaInventario);
+		List<AuditoriaInventario> departamento = q.getResultList();
+		return departamento;
 	}
 
 }
