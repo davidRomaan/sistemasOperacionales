@@ -32,7 +32,7 @@ public class ControladorProducto implements Serializable {
 
 	@Inject
 	private ControladorSesion sesion;
-	
+
 	private int codigo;
 	private String nombre;
 	private String descripcion;
@@ -50,7 +50,7 @@ public class ControladorProducto implements Serializable {
 	private Producto productoBuscado;
 	private int tipoProductoSeleccionado;
 	private String accion;
-	
+
 	@EJB
 	private AuditoriaProductoEJB auditoriaProductoEJB;
 
@@ -65,6 +65,7 @@ public class ControladorProducto implements Serializable {
 		lotes = productoEJB.lotes();
 		listarTiposProducto();
 		inventarios = productoEJB.listarInventario();
+		listar();
 	}
 
 	/**
@@ -91,7 +92,7 @@ public class ControladorProducto implements Serializable {
 			valor = productoBuscado.getValorProducto();
 			loteSeleccionado = productoBuscado.getLote().getId();
 			inventarioSeleccionado = productoEJB.buscarInventarioProducto(productoBuscado).getInventarioId().getId();
-			
+
 			inventariosProducto = productoEJB.inventariosProducto(productoBuscado);
 
 		} else {
@@ -113,8 +114,8 @@ public class ControladorProducto implements Serializable {
 					new FacesMessage(FacesMessage.SEVERITY_WARN, "Debe buscar un producto previamente", null));
 		} else {
 
-			productos.remove(productoBuscado);
-
+			if (validarCampos()){
+			
 			productoBuscado.setDescripcion(descripcion);
 			productoBuscado.setNombre(nombre);
 			productoBuscado.setDimension(dimension);
@@ -128,6 +129,12 @@ public class ControladorProducto implements Serializable {
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Operaci�n exitosa", null));
 
 			limpiarCampos();
+			listar();
+			
+			} else {
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_WARN, "Debe ingresar todos los campos", null));
+			}
 		}
 
 	}
@@ -145,60 +152,74 @@ public class ControladorProducto implements Serializable {
 		peso = 0;
 	}
 
+	private boolean validarCampos() {
+		if (codigo <= 0 || dimension <= 0 || peso <= 0 || nombre.equals("") || valor <= 0) {
+			return false;
+		}
+		return true;
+	}
+
 	/**
 	 * Registra el producto
 	 */
 	public void registrar() {
 
-		Producto producto = new Producto();
-		producto.setId(codigo);
-		producto.setDimension(dimension);
-		producto.setFechaIngreso(new Date());
-		producto.setPeso(peso);
-		producto.setNombre(nombre);
-		producto.setDescripcion(descripcion);
-		producto.setValorProducto(valor);
-		producto.setLote(productoEJB.buscarloteProducto(loteSeleccionado));
-		producto.setUsuairoPersonaId(sesion.getUser());
-		
-		TipoProducto tipoProducto = tipoProductoEJB.buscar(tipoProductoSeleccionado);
+		if (validarCampos()) {
 
-		producto.setTipoProducto(tipoProducto);
+			Producto producto = new Producto();
+			producto.setId(codigo);
+			producto.setDimension(dimension);
+			producto.setFechaIngreso(new Date());
+			producto.setPeso(peso);
+			producto.setNombre(nombre);
+			producto.setDescripcion(descripcion);
+			producto.setValorProducto(valor);
+			producto.setLote(productoEJB.buscarloteProducto(loteSeleccionado));
+			producto.setUsuairoPersonaId(sesion.getUser());
 
-		try {
+			TipoProducto tipoProducto = tipoProductoEJB.buscar(tipoProductoSeleccionado);
 
-			productoEJB.registrarProducto(producto);
-			
-			InventarioProducto inventario = new InventarioProducto();
-			inventario.setCantidad(cantidad);
-			inventario.setProductoId(producto);
-			
-			Inventario i = productoEJB.buscarInventarioId(inventarioSeleccionado);
-			inventario.setInventarioId(i);
-			
-			productoEJB.registrarInventarioProducto(inventario);
+			producto.setTipoProducto(tipoProducto);
 
 			try {
-				
-				accion = "Registrar Producto";
 
-				String browserDetail = Faces.getRequest().getHeader("User-Agent");
+				productoEJB.registrarProducto(producto);
 
-				auditoriaProductoEJB.crearAuditoriaProducto(producto, accion, browserDetail);
+				InventarioProducto inventario = new InventarioProducto();
+				inventario.setCantidad(cantidad);
+				inventario.setProductoId(producto);
 
-			} catch (Exception e) {
-				e.printStackTrace();
+				Inventario i = productoEJB.buscarInventarioId(inventarioSeleccionado);
+				inventario.setInventarioId(i);
+
+				productoEJB.registrarInventarioProducto(inventario);
+
+				try {
+
+					accion = "Registrar Producto";
+
+					String browserDetail = Faces.getRequest().getHeader("User-Agent");
+
+					auditoriaProductoEJB.crearAuditoriaProducto(producto, accion, browserDetail);
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+						"El producto ha sido registrado exitosamente", null));
+				limpiarCampos();
+				listar();
+
+			} catch (ExcepcionNegocio e) {
+
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), null));
+
 			}
-
+		} else {
 			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, "El producto ha sido registrado exitosamente", null));
-			limpiarCampos();
-
-		} catch (ExcepcionNegocio e) {
-
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), null));
-
+					new FacesMessage(FacesMessage.SEVERITY_WARN, "Debe ingresar todos los campos", null));
 		}
 
 	}

@@ -111,7 +111,7 @@
 					id="tfcedulaCliente" />
 
 				<p:commandButton value="Buscar" process="@this,panelCedula"
-					update="@this,panelDatosCliente" id="btnBuscarCedula"
+					update="panelDatosCliente" id="btnBuscarCedula"
 					action="#{controladorVentas.buscarCliente}" />
 
 			</h:panelGrid>
@@ -127,6 +127,11 @@
 				<p:outputLabel for="tfapellido" value="Apellido: " />
 				<h:inputText value="#{controladorVentas.apellido}" id="tfapellido"
 					placeholder="Ingrese el apellido" />
+
+				<p:outputLabel id="maskNacimiento" value="Fecha de nacimiento" />
+				<p:inputMask id="dateNacimiento"
+					value="#{controladorVentas.fechaNacimiento}"
+					mask="99/99/9999" />
 
 				<h:outputLabel id="lblGenero" value="Genero" />
 				<h:selectOneMenu id="cbGenero"
@@ -169,6 +174,7 @@
 				</h:selectOneMenu>
 
 				<p:commandButton value="Registrar"
+					rendered="#{controladorVentas.clienteExiste}"
 					process="@this,panelCedula,panelDatosCliente"
 					update="@this,panelCedula"
 					action="#{controladorVentas.registrarCliente}" />

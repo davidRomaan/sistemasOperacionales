@@ -86,24 +86,6 @@ public class UsuarioEJB {
 	}
 
 	/**
-	 * Busca un cliente, verificando su tipo de usuario
-	 * 
-	 * @param cedula
-	 *            c�dula del cliente que se desea buscar
-	 * @return el cliente si lo encuentra, de lo contrario null
-	 
-	public Usuario buscarCliente(String cedula) {
-		Usuario cliente = buscarUsuarioCedula(cedula);
-		if(cliente != null) {
-			if (cliente.getTipoUsuario().getNombre().equalsIgnoreCase("cliente")) {
-				return cliente;
-		}
-		
-		}
-		return null;
-	}*/
-
-	/**
 	 * Registra un usuario en la base de datos
 	 * 
 	 * @param usuario

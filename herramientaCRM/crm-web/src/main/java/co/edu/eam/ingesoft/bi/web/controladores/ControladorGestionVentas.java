@@ -24,19 +24,14 @@ public class ControladorGestionVentas implements Serializable {
 	private String fechaCompra;
 	private List<FacturaVenta> facturas;
 	private List<DetalleVenta> detallesVenta;
+	private FacturaVenta facturaSeleccionada;
 
 	@EJB
 	private VentaEJB ventasEJB;
 
 	@PostConstruct
 	private void constructor() {
-		Calendar fechaActual = new GregorianCalendar();
-		int dia = fechaActual.get(Calendar.DAY_OF_MONTH);
-		int mes = fechaActual.get(Calendar.MONTH);
-		int anio = fechaActual.get(Calendar.YEAR);
-
-		String nuevaFecha = dia + "/" + mes + "/" + anio;
-		facturas = ventasEJB.listarFacturasPorFecha(nuevaFecha);
+		facturas = ventasEJB.listarFacturasPorFecha(ventasEJB.obtenerFechaActual());
 	}
 
 	/**
@@ -44,7 +39,7 @@ public class ControladorGestionVentas implements Serializable {
 	 */
 	public void listarFacturasFecha() {
 		facturas = ventasEJB.listarFacturasPorFecha(fechaCompra);
-		if (facturas.size() == 0){
+		if (facturas.size() == 0) {
 			Messages.addFlashGlobalError("No hay registros de esta fecha");
 		}
 	}
@@ -56,11 +51,47 @@ public class ControladorGestionVentas implements Serializable {
 	 *            la factura
 	 */
 	public void listarDetallesVentaFactura(FacturaVenta factura) {
+		facturaSeleccionada = factura;
 		detallesVenta = ventasEJB.listarDetallesVentaFactura(factura);
+		if (detallesVenta.size() == 0) {
+			Messages.addFlashGlobalWarn("Los detalles de venta de esta factura han sido eliminados");
+		}
 	}
-	
-	public void eliminar(FacturaVenta fv){
-		ventasEJB.eliminarVenta(fv);
+
+	public void eliminarDetalleVenta(DetalleVenta dv) {
+		ventasEJB.eliminarDetalleVenta(dv);
+		detallesVenta = ventasEJB.listarDetallesVentaFactura(facturaSeleccionada);
+	}
+
+	/**
+	 * Elimina todos los detalles de venta una factura
+	 */
+	public void eliminarTodosDetallesVenta() {
+		if (facturaSeleccionada == null) {
+			Messages.addFlashGlobalError("Debe listar los detalles de una factura");
+		} else {
+			if (detallesVenta.size() == 0) {
+				Messages.addFlashGlobalError("No existen detalles de venta de la factura seleccionada");
+			} else {
+				for (DetalleVenta detalleVenta : detallesVenta) {
+					ventasEJB.eliminarDetalleVenta(detalleVenta);
+				}
+				Messages.addFlashGlobalInfo("Se han eliminado todos los detalles de esta venta");
+				detallesVenta = ventasEJB.listarDetallesVentaFactura(facturaSeleccionada);
+				facturaSeleccionada = null;
+			}
+		}
+	}
+
+	public void eliminar(FacturaVenta fv) {
+		try {
+			String fechaVenta = fv.getFechaVenta();
+			ventasEJB.eliminarVenta(fv);
+			facturas = ventasEJB.listarFacturasPorFecha(fechaVenta);
+		} catch (Exception e) {
+			// TODO: handle exception
+			Messages.addFlashGlobalWarn("Antes de eliminar esta factura debe eliminar todos sus detalles de venta");
+		}
 	}
 
 	public String getFechaCompra() {

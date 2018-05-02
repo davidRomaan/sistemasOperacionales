@@ -78,10 +78,20 @@ public class PersonaEJB {
 
 	public List<Persona> listarClientes() {
 		Query q = em.createNativeQuery(
-				"select p.* from persona p left" + " join usuario u on u.cedula = p.cedula where u.cedula is null");
-		List<Persona> lista = q.getResultList();
-		getClass();
-		return lista;
+				"select p.cedula from persona p left join usuario u on u.cedula = p.cedula where u.cedula is null");
+		List<String> lista = q.getResultList();
+		
+		List<Persona> clientes = new ArrayList<Persona>();
+		
+		for (String cedula : lista) {
+			
+			Persona p = buscar(cedula);
+			
+			clientes.add(p);
+			
+		}
+		
+		return clientes;
 	}
 
 	/**
