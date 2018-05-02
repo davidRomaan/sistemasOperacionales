@@ -137,11 +137,9 @@ public class AuditoriaAreaEJB {
 	 * 
 	 * @return
 	 */
-	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public List<AuditoriaArea> listaAuditoria() {
-		Query q = em.createNamedQuery(AuditoriaArea.LISTA_AuditoriaArea);
-		List<AuditoriaArea> departamento = q.getResultList();
-		return departamento;
+		em.setBd(ConexionEJB.getBd());
+		return (List<AuditoriaArea>)(Object) em.listar(AuditoriaArea.LISTA_AuditoriaArea);
 	}
 
 }

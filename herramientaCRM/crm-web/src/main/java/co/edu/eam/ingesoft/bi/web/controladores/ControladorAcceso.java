@@ -22,7 +22,10 @@ public class ControladorAcceso implements Serializable {
 	private void cargarCampos() {
 
 		lista = Arrays.asList(BaseDatos.values());
+		
 	}
+	
+	
 
 	public List<BaseDatos> getLista() {
 		return lista;
