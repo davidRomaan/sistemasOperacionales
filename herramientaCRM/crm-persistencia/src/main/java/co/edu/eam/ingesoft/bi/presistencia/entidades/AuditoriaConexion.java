@@ -31,8 +31,8 @@ public class AuditoriaConexion implements Serializable {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
 	
-	@Column(name="seleccion", length=30)
-	private String seleccion;
+	@Column(name="accion", length=30)
+	private String accion;
 	
 	@Column(name="fecha_hora")
 	@Temporal(TemporalType.TIMESTAMP)
@@ -51,11 +51,11 @@ public class AuditoriaConexion implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
-	public AuditoriaConexion(int id, String seleccion, Calendar fechaHora, String dispositivo, String navegador,
+	public AuditoriaConexion(int id, String accion, Calendar fechaHora, String dispositivo, String navegador,
 			String conexion) {
 		super();
 		this.id = id;
-		this.seleccion = seleccion;
+		this.accion = accion;
 		this.fechaHora = fechaHora;
 		this.dispositivo = dispositivo;
 		this.navegador = navegador;
@@ -70,12 +70,12 @@ public class AuditoriaConexion implements Serializable {
 		this.id = id;
 	}
 
-	public String getSeleccion() {
-		return seleccion;
+	public String getAccion() {
+		return accion;
 	}
 
-	public void setSeleccion(String seleccion) {
-		this.seleccion = seleccion;
+	public void setAccion(String accion) {
+		this.accion = accion;
 	}
 
 	public Calendar getFechaHora() {

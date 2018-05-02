@@ -96,7 +96,7 @@ public class AuditoriaAreaEJB {
 	 * @param usuario
 	 * @param usuarioAf
 	 */
-	public void crearAuditoriaArea(Area area, String accion, String browserDeta) {
+	public void crearAuditoriaArea(String area, String accion, String browserDeta) {
 
 		this.browserDetails = browserDeta;
 		userAgent = browserDetails;
@@ -122,7 +122,7 @@ public class AuditoriaAreaEJB {
 		AuditoriaArea auditoriaArea = new AuditoriaArea();
 		auditoriaArea.setAccion(accion);
 		auditoriaArea.setFechaHora(fechaGuardar);
-		auditoriaArea.setArea("Area");
+		auditoriaArea.setArea(area);
 		auditoriaArea.setDispositivo(os);
 		auditoriaArea.setNavegador(browser);	
 

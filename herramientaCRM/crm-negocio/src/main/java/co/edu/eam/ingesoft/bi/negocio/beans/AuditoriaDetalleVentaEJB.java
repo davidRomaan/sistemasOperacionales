@@ -95,7 +95,7 @@ public class AuditoriaDetalleVentaEJB {
 	 * @param usuarioAf
 	 */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void crearAuditoriaDetalleVenta(DetalleVenta dt, String accion, String browserDeta) {
+	public void crearAuditoriaDetalleVenta(String detalleV, String accion, String browserDeta) {
 
 		this.browserDetails = browserDeta;
 		userAgent = browserDetails;
@@ -119,9 +119,9 @@ public class AuditoriaDetalleVentaEJB {
 		fechaGuardar.setTime(horaGuadar);
 		
 		AuditoriaDetalleVenta detalleVenta = new AuditoriaDetalleVenta();
-		detalleVenta.setSeleccion(accion);
+		detalleVenta.setAccion(accion);
 		detalleVenta.setFechaHora(fechaGuardar);
-		detalleVenta.setDetalleVenta("DetalleVenta");
+		detalleVenta.setDetalleVenta(detalleV);
 		detalleVenta.setDispositivo(os);
 		detalleVenta.setNavegador(browser);	
 

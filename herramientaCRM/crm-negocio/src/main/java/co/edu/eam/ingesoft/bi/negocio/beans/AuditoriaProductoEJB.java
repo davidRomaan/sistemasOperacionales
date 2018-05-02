@@ -88,7 +88,7 @@ public class AuditoriaProductoEJB {
 	 * @param usuario
 	 * @param usuarioAf
 	 */
-	public void crearAuditoriaProducto( Producto producto, String accion, String browserDeta) {
+	public void crearAuditoriaProducto( String producto, String accion, String browserDeta) {
 
 		this.browserDetails = browserDeta;
 		userAgent = browserDetails;
@@ -114,7 +114,7 @@ public class AuditoriaProductoEJB {
 		AuditoriaProducto pro = new AuditoriaProducto();
 		pro.setAccion(accion);
 		pro.setFechaHora(fechaGuardar);
-		pro.setProducto("Producto");
+		pro.setProducto(producto);
 		pro.setDispositivo(os);
 		pro.setNavegador(browser);	
 

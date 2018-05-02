@@ -32,10 +32,10 @@ public class ControladorSesion implements Serializable {
 	@EJB
 	private UsuarioEJB usuarioEJB;
 	
-	private void cambiarBD(){
-		Conexion con = conexionEJB.obtenerBD();
-		bd = con.getId();
-	}
+//	private void cambiarBD(){
+//		Conexion con = conexionEJB.obtenerBD();
+//		bd = con.getId();
+//	}
 
 	public String login() {
 		Usuario usuarioTemporal = usuarioEJB.buscarUsuario(username);

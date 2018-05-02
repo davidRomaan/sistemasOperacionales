@@ -12,8 +12,10 @@ import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
+import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaTipoUsuarioEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.TipoUsuarioEJB;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.TipoUsuario;
@@ -24,12 +26,16 @@ public class ControladorTipoUsuario implements Serializable {
 
 	private String nombre;
 	private String descripcion;
+	private String accion;
 
 	private List<TipoUsuario> tiposUsuario;
 	private TipoUsuario tipoEditar;	
 
 	@EJB
 	private TipoUsuarioEJB tipoUsuarioEJB;
+	
+	@EJB
+	private AuditoriaTipoUsuarioEJB tipoUsuEJB;
 
 	@PostConstruct
 	private void cargarDatos() {
@@ -45,6 +51,14 @@ public class ControladorTipoUsuario implements Serializable {
 				tipoUsuarioEJB.registrar(tu);
 				listarTipos();
 				Messages.addFlashGlobalInfo("Registro exitoso");
+				try {
+					accion = "Registrar Tipo Usuario";
+					String browserDetail = Faces.getRequest().getHeader("User-Agent");	
+					tipoUsuEJB.crearAuditoriaTipoUsusario(tu.getNombre(), accion, browserDetail);
+
+				} catch (ExcepcionNegocio e) {
+					e.getMessage();
+				}
 				limpiarCampos();
 				tipoEditar = null;
 			} catch (ExcepcionNegocio e) {
@@ -70,6 +84,14 @@ public class ControladorTipoUsuario implements Serializable {
 	public void eliminarTipo(TipoUsuario tu) {
 		tipoUsuarioEJB.eliminar(tu);
 		listarTipos();
+		try {
+			accion = "Eliminar Tipo Usuario";
+			String browserDetail = Faces.getRequest().getHeader("User-Agent");	
+			tipoUsuEJB.crearAuditoriaTipoUsusario(tu.getNombre(), accion, browserDetail);
+
+		} catch (ExcepcionNegocio e) {
+			e.getMessage();
+		}
 	}
 
 	/**
@@ -86,6 +108,14 @@ public class ControladorTipoUsuario implements Serializable {
 			Messages.addFlashGlobalInfo("Se ha editado correctamente");
 			tipoEditar = null;
 			limpiarCampos();
+			try {
+				accion = "Editar Tipo Usuario";
+				String browserDetail = Faces.getRequest().getHeader("User-Agent");	
+				tipoUsuEJB.crearAuditoriaTipoUsusario(nombre, accion, browserDetail);
+
+			} catch (ExcepcionNegocio e) {
+				e.getMessage();
+			}
 		}
 	}
 	
@@ -98,7 +128,7 @@ public class ControladorTipoUsuario implements Serializable {
 	}
 	
 	/**
-	 * Habilita la opción de editar tipo de usuario
+	 * Habilita la opciï¿½n de editar tipo de usuario
 	 * @param tu tipo de usuario a editar
 	 */
 	public void habilitarEdicion(TipoUsuario tu){
@@ -126,8 +156,8 @@ public class ControladorTipoUsuario implements Serializable {
 	}
 
 	/**
-	 * Validas si los campos nombre y descripcion están vacios
-	 * @return true si no lo están, de lo contrario false
+	 * Validas si los campos nombre y descripcion estï¿½n vacios
+	 * @return true si no lo estï¿½n, de lo contrario false
 	 */
 	private boolean validarCamposVacios() {
 		if (nombre.isEmpty() && descripcion.isEmpty()) {

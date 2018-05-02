@@ -23,6 +23,7 @@ import org.omnifaces.util.Faces;
 
 import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaDetalleVentaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaFacturaVentaEJB;
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaPersonaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.DepartamentoEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.DetalleVentaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.ProductoEJB;
@@ -83,6 +84,9 @@ public class ControladorVentas implements Serializable {
 	// EJB
 	@EJB
 	private ProductoEJB productoEJB;
+
+	@EJB
+	private AuditoriaPersonaEJB audiPersonaEJB;
 
 	@EJB
 	private UsuarioEJB usuarioEJB;
@@ -163,17 +167,28 @@ public class ControladorVentas implements Serializable {
 	 */
 	private void registrarDetallesVenta() {
 		detalleEJB.registrarDetalleVenta(productosCompra, factura);
+
+		try {
+
+			accion = "Registrar Detalle Venta";
+
+			String browserDetail = Faces.getRequest().getHeader("User-Agent");
+
+			auditoriaDetalleVentasEJB.crearAuditoriaDetalleVenta(factura.getEmpleadoId().toString(), accion,
+					browserDetail);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		/**
 		 * for (DetalleVenta detalleVenta : productosCompra) {
-		 * detalleVenta.setFacturaVenta(factura); try { accion = "Registrar
-		 * Detalle Venta"; String browserDetail =
-		 * Faces.getRequest().getHeader("User-Agent");
-		 * auditoriaDetalleVentasEJB.crearAuditoriaDetalleVenta(detalleVenta,
-		 * accion, browserDetail);
+		 * detalleVenta.setFacturaVenta(factura); try { accion = "Registrar Detalle
+		 * Venta"; String browserDetail = Faces.getRequest().getHeader("User-Agent");
+		 * auditoriaDetalleVentasEJB.crearAuditoriaDetalleVenta(detalleVenta, accion,
+		 * browserDetail);
 		 * 
-		 * }catch (Exception e) { e.printStackTrace(); } // Registramos cada uno
-		 * de los detalles venta
-		 * detalleEJB.registrarDetalleVenta(productosCompra, factura); }
+		 * }catch (Exception e) { e.printStackTrace(); } // Registramos cada uno de los
+		 * detalles venta detalleEJB.registrarDetalleVenta(productosCompra, factura); }
 		 **/
 	}
 
@@ -237,6 +252,19 @@ public class ControladorVentas implements Serializable {
 		productosCompra.remove(dv);
 		reload();
 
+		try {
+
+			accion = "Eliminar Detalle Venta";
+
+			String browserDetail = Faces.getRequest().getHeader("User-Agent");
+
+			auditoriaDetalleVentasEJB.crearAuditoriaDetalleVenta(factura.getEmpleadoId().toString(), accion,
+					browserDetail);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	/**
@@ -283,8 +311,8 @@ public class ControladorVentas implements Serializable {
 			productoEJB.editarInventarioProducto(inventarioProducto);
 		}
 	}
-	
-	public boolean isClienteExiste(){
+
+	public boolean isClienteExiste() {
 		return cliente == null;
 	}
 
@@ -306,7 +334,7 @@ public class ControladorVentas implements Serializable {
 
 				if (cliente != null) {
 					factura.setClienteId(cliente);
-					
+
 					String nuevaFecha = ventaEJB.obtenerFechaActual();
 
 					factura.setFechaVenta(nuevaFecha);
@@ -314,9 +342,9 @@ public class ControladorVentas implements Serializable {
 					factura.setEmpleadoId(sesion.getUser());
 					ventaEJB.registrarVenta(factura);
 
-					accion = "Registrar Detalle Venta";
+					accion = "Registrar Factura Venta";
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
-					auditoriaFacturaVentaEJB.crearAuditoriaFacturaVenta(factura, accion, browserDetail);
+					auditoriaFacturaVentaEJB.crearAuditoriaFacturaVenta(cliente.getNombre(), accion, browserDetail);
 
 					factura.setId(ventaEJB.codigoUltimaFacturaCliente(cliente.getCedula()));
 					registrarDetallesVenta();
@@ -369,6 +397,12 @@ public class ControladorVentas implements Serializable {
 
 				usuarioEJB.registrarCliente(cliente);
 
+				accion = "Registrar Cliente";
+
+				String browserDetail = Faces.getRequest().getHeader("User-Agent");
+
+				audiPersonaEJB.crearAuditoriaPersona(cliente.getNombre(), accion, browserDetail);
+
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, "Cliente Registrado Exitosamente", null));
 
@@ -382,6 +416,8 @@ public class ControladorVentas implements Serializable {
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), null));
 
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 
 		} else {
@@ -406,14 +442,24 @@ public class ControladorVentas implements Serializable {
 
 		if (cliente != null) {
 
+			try {
+				accion = "Buscar Cliente";
+
+				String browserDetail = Faces.getRequest().getHeader("User-Agent");
+
+				audiPersonaEJB.crearAuditoriaPersona(cliente.getNombre(), accion, browserDetail);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 			nombre = cliente.getNombre();
 			apellido = cliente.getApellido();
 			correo = cliente.getCorreo();
 			telefono = cliente.getTelefono();
 			deptoSeleccionado = cliente.getMunicipio().getDepartamento().getId();
-			
+
 			municipios = departamentoEJB.listarMunicipiosDepartamento(deptoSeleccionado);
-			
+
 			municipioSeleccionado = cliente.getMunicipio().getId();
 			tipoGenero = cliente.getGenero();
 			fechaNacimiento = cliente.getFechaNacimiento();
@@ -422,10 +468,9 @@ public class ControladorVentas implements Serializable {
 
 			limpiarCampos();
 
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_WARN,
-							"El cliente no se encuentra registrado, este debe ser registrado para continuar con la venta",
-							null));
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
+					"El cliente no se encuentra registrado, este debe ser registrado para continuar con la venta",
+					null));
 
 		}
 
@@ -566,7 +611,5 @@ public class ControladorVentas implements Serializable {
 	public void setFechaNacimiento(String fechaNacimiento) {
 		this.fechaNacimiento = fechaNacimiento;
 	}
-	
-	
 
 }

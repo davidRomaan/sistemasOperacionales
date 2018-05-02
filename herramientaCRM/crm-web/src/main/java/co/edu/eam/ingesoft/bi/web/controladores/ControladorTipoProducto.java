@@ -10,8 +10,10 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 
+import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaTipoProductoEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.TipoProductoEJB;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.TipoProducto;
 
@@ -28,9 +30,14 @@ public class ControladorTipoProducto implements Serializable {
 	private List<TipoProducto> tipoProducto;
 
 	private List<TipoProducto> listaNueva;
+	
+	private String accion;
 
 	@EJB
 	private TipoProductoEJB tipoEJB;
+	
+	@EJB
+	private AuditoriaTipoProductoEJB tipoProductoEJB;
 
 	@PostConstruct
 	public void postconstructor() {
@@ -57,6 +64,17 @@ public class ControladorTipoProducto implements Serializable {
 
 				tipoEJB.registrarTipoProd(tip);
 				listarTipos();
+				try {
+
+					accion = "Registrar Producto";
+
+					String browserDetail = Faces.getRequest().getHeader("User-Agent");
+
+					tipoProductoEJB.crearAuditoriaProducto(tip.getNombre(), accion, browserDetail);
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				FacesContext context = FacesContext.getCurrentInstance();
 				context.addMessage(null, new FacesMessage("Exitoso", "se ha registrado correctamente"));
 
@@ -84,6 +102,17 @@ public class ControladorTipoProducto implements Serializable {
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, "no se ha encontrado el registro", null));
 			} else {
+				try {
+
+					accion = "Buscar Producto";
+
+					String browserDetail = Faces.getRequest().getHeader("User-Agent");
+
+					tipoProductoEJB.crearAuditoriaProducto(tipo.getNombre(), accion, browserDetail);
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				nombre = tipo.getNombre();
 				descripcion = tipo.getDescripcion();
 			}
@@ -106,6 +135,17 @@ public class ControladorTipoProducto implements Serializable {
 				tipoEJB.editarTipoProducto(tipo);
 				listarTipos();
 				Messages.addFlashGlobalInfo("se edito exitosamente");
+				try {
+
+					accion = "Editar Producto";
+
+					String browserDetail = Faces.getRequest().getHeader("User-Agent");
+
+					tipoProductoEJB.crearAuditoriaProducto(tipo.getNombre(), accion, browserDetail);
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 
 			} else {
 				Messages.addFlashGlobalError("No existe esta area de la empresa");
@@ -118,6 +158,17 @@ public class ControladorTipoProducto implements Serializable {
 	public void eliminarTipo(TipoProducto t) {
 		tipoEJB.eliminarTipoProd(t);
 		Messages.addFlashGlobalInfo("se elimino correctamente");
+		try {
+
+			accion = "Eliminar Producto";
+
+			String browserDetail = Faces.getRequest().getHeader("User-Agent");
+
+			tipoProductoEJB.crearAuditoriaProducto(t.getNombre(), accion, browserDetail);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		listarTipos();
 	}
 

@@ -92,7 +92,7 @@ public class AuditoriaTipoUsuarioEJB {
 	 * @param usuario
 	 * @param usuarioAf
 	 */
-	public void crearAuditoriaTipoUsusario(Usuario usu, String accion, String browserDeta) {
+	public void crearAuditoriaTipoUsusario(String usu, String accion, String browserDeta) {
 
 		this.browserDetails = browserDeta;
 		userAgent = browserDetails;
@@ -118,7 +118,7 @@ public class AuditoriaTipoUsuarioEJB {
 		AuditoriaTipoUsuario audiUsuario = new AuditoriaTipoUsuario();
 		audiUsuario.setAccion(accion);
 		audiUsuario.setFechaHora(fechaGuardar);
-		audiUsuario.setTipoUsuario("TipoUsuario");;
+		audiUsuario.setTipoUsuario(usu);;
 		audiUsuario.setDispositivo(os);
 		audiUsuario.setNavegador(browser);		
 
