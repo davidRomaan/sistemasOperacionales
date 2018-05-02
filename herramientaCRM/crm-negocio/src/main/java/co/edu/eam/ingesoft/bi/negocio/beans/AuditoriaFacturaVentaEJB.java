@@ -133,11 +133,8 @@ public class AuditoriaFacturaVentaEJB {
 	 * 
 	 * @return
 	 */
-	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public List<AuditoriaFacturaVenta> listAudi(){
-		Query q = em.createNamedQuery(AuditoriaFacturaVenta.LISTA_FACTURA_VENTA);
-		List<AuditoriaFacturaVenta> departamento = q.getResultList();
-		return departamento;
+		return (List<AuditoriaFacturaVenta>)(Object) em.listar(AuditoriaFacturaVenta.LISTA_FACTURA_VENTA);
 	}
 
 }

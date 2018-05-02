@@ -46,8 +46,10 @@ public class ControladorCargo implements Serializable {
 			if (c == null) {
 				Cargo cargo = new Cargo(codigo, nombre, salario);
 				cargoEJB.registrarCargo(cargo);
-				listarCargos();
+				
 				Messages.addFlashGlobalInfo("Registro exitoso");
+				
+				listarCargos();
 
 				codigo = 0;
 				nombre = "";
