@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -13,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import co.edu.eam.ingesoft.bi.negocio.persistencia.Persistencia;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaInventario;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaProducto;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Inventario;
@@ -23,8 +25,8 @@ import co.edu.eam.ingesoft.bi.presistencia.entidades.Inventario;
 public class AuditoriaInventarioEJB {
 	
 	
-	@PersistenceContext
-	private EntityManager em;
+	@EJB
+	private Persistencia em;
 
 	private String userAgent = "";
 	private String os = "";
@@ -93,7 +95,7 @@ public class AuditoriaInventarioEJB {
 	 * @param usuario
 	 * @param usuarioAf
 	 */
-	public void crearAuditoriaInventario( Inventario inventario, String accion, String browserDeta) {
+	public void crearAuditoriaInventario( String inventario, String accion, String browserDeta) {
 
 		this.browserDetails = browserDeta;
 		userAgent = browserDetails;
@@ -119,11 +121,12 @@ public class AuditoriaInventarioEJB {
 		AuditoriaInventario invenProducto = new AuditoriaInventario();
 		invenProducto.setAccion(accion);
 		invenProducto.setFechaHora(fechaGuardar);
-		invenProducto.setInventario("Inventario");
+		invenProducto.setInventario(inventario);
 		invenProducto.setDispositivo(os);
 		invenProducto.setNavegador(browser);	
 
-		em.persist(invenProducto);
+		em.setBd(ConexionEJB.getBd());
+		em.crear(invenProducto);
 
 	}
 	

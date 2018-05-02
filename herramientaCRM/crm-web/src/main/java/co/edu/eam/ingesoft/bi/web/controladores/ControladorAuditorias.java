@@ -65,26 +65,6 @@ public class ControladorAuditorias implements Serializable {
 	
 	@EJB
 	private AuditoriaPermisoEJB permisoEJB;
-
-	private List<AuditoriaProducto> productosListar;
-
-	private List<AuditoriaUsuario> usuariosListar;
-	
-	private List<AuditoriaInventario> inventariosListar;
-	
-	private List<AuditoriaPersona> personasListar;
-	
-	private List<AuditoriaDetalleVenta> detalleVentasListar;
-	
-	private List<AuditoriaArea> areasListar;
-	
-	private List<AuditoriaConexion> conexionesListar;
-	
-	private List<AuditoriaTipoUsuario> tipoUsuariosListar;
-	
-	private List<AuditoriaFacturaVenta> facturaVentasListar;
-	
-	private List<AuditoriaPermisos> permisosListar;
 	
 	private List list;
 
@@ -100,7 +80,6 @@ public class ControladorAuditorias implements Serializable {
 
 			List<AuditoriaProducto> producto = per.listaaudi();
 			list = producto;
-			list  = new ArrayList();
 
 		}
 
@@ -108,7 +87,6 @@ public class ControladorAuditorias implements Serializable {
 			
 			List<AuditoriaInventario> inventario = inventarioEJB.listaAuditoria();
 			list = inventario;
-			list  = new ArrayList();
 			
 		}
 
@@ -116,14 +94,12 @@ public class ControladorAuditorias implements Serializable {
 			
 			List<AuditoriaUsuario> usuario = audiEJB.listAudiUsu();
 			list = usuario;
-			list  = new ArrayList();
 		}
 
 		if (tipoAuditorias.equals("AuditoriaPersona")) {
 			
 			List<AuditoriaPersona> persona = audiEJB.listAudiPer();
 			list = persona;
-			list  = new ArrayList();
 
 		}
 		
@@ -131,14 +107,12 @@ public class ControladorAuditorias implements Serializable {
 			
 			List<AuditoriaDetalleVenta> detalleVenta = detalleVentaEJB.listaAuditoria();
 			list = detalleVenta;
-			list  = new ArrayList();
 
 		}
 		if (tipoAuditorias.equals("AuditoriaArea")) {
 			
 			List<AuditoriaArea> area = areaEJB.listaAuditoria();
 			list = area;
-			list  = new ArrayList();
 
 		}
 
@@ -146,7 +120,6 @@ public class ControladorAuditorias implements Serializable {
 			
 			List<AuditoriaConexion> conexion = conexionEJB.listAudi();
 			list = conexion;
-			list  = new ArrayList();
 
 		}
 
@@ -154,7 +127,6 @@ public class ControladorAuditorias implements Serializable {
 			
 			List<AuditoriaTipoUsuario> tipoUsuario = tipoUsuarioEJB.listAudi();
 			list = tipoUsuario;
-			list  = new ArrayList();
 
 		}
 
@@ -162,7 +134,6 @@ public class ControladorAuditorias implements Serializable {
 			
 			List<AuditoriaFacturaVenta> facturaVenta = facturaVentaEJB.listAudi();
 			list = facturaVenta;
-			list  = new ArrayList();
 
 		}
 
@@ -170,7 +141,6 @@ public class ControladorAuditorias implements Serializable {
 			
 			List<AuditoriaPermisos> permisos = permisoEJB.listAudi();
 			list = permisos;
-			list  = new ArrayList();
 
 		}
 
@@ -186,86 +156,6 @@ public class ControladorAuditorias implements Serializable {
 
 	public void setList(List list) {
 		this.list = list;
-	}
-
-	public List<AuditoriaProducto> getProductosListar() {
-		return productosListar;
-	}
-
-	public void setProductosListar(List<AuditoriaProducto> productosListar) {
-		this.productosListar = productosListar;
-	}
-
-	public List<AuditoriaUsuario> getUsuariosListar() {
-		return usuariosListar;
-	}
-
-	public void setUsuariosListar(List<AuditoriaUsuario> usuariosListar) {
-		this.usuariosListar = usuariosListar;
-	}
-
-	public List<AuditoriaInventario> getInvetariosListar() {
-		return inventariosListar;
-	}
-
-	public void setInvetariosListar(List<AuditoriaInventario> invetariosListar) {
-		this.inventariosListar = invetariosListar;
-	}
-
-	public List<AuditoriaPersona> getPersonasListar() {
-		return personasListar;
-	}
-
-	public void setPersonasListar(List<AuditoriaPersona> personasListar) {
-		this.personasListar = personasListar;
-	}
-
-	public List<AuditoriaDetalleVenta> getDetalleVentasListar() {
-		return detalleVentasListar;
-	}
-
-	public void setDetalleVentasListar(List<AuditoriaDetalleVenta> detalleVentasListar) {
-		this.detalleVentasListar = detalleVentasListar;
-	}
-
-	public List<AuditoriaArea> getAreasListar() {
-		return areasListar;
-	}
-
-	public void setAreasListar(List<AuditoriaArea> areasListar) {
-		this.areasListar = areasListar;
-	}
-
-	public List<AuditoriaConexion> getConexionesListar() {
-		return conexionesListar;
-	}
-
-	public void setConexionesListar(List<AuditoriaConexion> conexionesListar) {
-		this.conexionesListar = conexionesListar;
-	}
-
-	public List<AuditoriaTipoUsuario> getTipoUsuariosListar() {
-		return tipoUsuariosListar;
-	}
-
-	public void setTipoUsuariosListar(List<AuditoriaTipoUsuario> tipoUsuariosListar) {
-		this.tipoUsuariosListar = tipoUsuariosListar;
-	}
-
-	public List<AuditoriaFacturaVenta> getFacturaVentasListar() {
-		return facturaVentasListar;
-	}
-
-	public void setFacturaVentasListar(List<AuditoriaFacturaVenta> facturaVentasListar) {
-		this.facturaVentasListar = facturaVentasListar;
-	}
-
-	public List<AuditoriaPermisos> getPermisosListar() {
-		return permisosListar;
-	}
-
-	public void setPermisosListar(List<AuditoriaPermisos> permisosListar) {
-		this.permisosListar = permisosListar;
 	}
 
 	public String getTipoAuditorias() {
@@ -290,14 +180,6 @@ public class ControladorAuditorias implements Serializable {
 
 	public void setPer(PersonaEJB per) {
 		this.per = per;
-	}
-
-	public List<AuditoriaProducto> getProductoListar() {
-		return productosListar;
-	}
-
-	public void setProductoListar(List<AuditoriaProducto> productoListar) {
-		this.productosListar = productoListar;
 	}
 
 }

@@ -1,6 +1,7 @@
 package co.edu.eam.ingesoft.bi.web.controladores;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -38,6 +39,8 @@ public class ControladorGestionVentas implements Serializable {
 	 * Lista las facturas por la fecha ingresada
 	 */
 	public void listarFacturasFecha() {
+		detallesVenta = new ArrayList<DetalleVenta>();
+		facturaSeleccionada = null;
 		facturas = ventasEJB.listarFacturasPorFecha(fechaCompra);
 		if (facturas.size() == 0) {
 			Messages.addFlashGlobalError("No hay registros de esta fecha");

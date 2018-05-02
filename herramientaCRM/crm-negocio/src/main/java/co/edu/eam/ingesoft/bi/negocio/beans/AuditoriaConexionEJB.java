@@ -117,7 +117,7 @@ public class AuditoriaConexionEJB {
 		fechaGuardar.setTime(horaGuadar);
 		
 		AuditoriaConexion audiConexion = new AuditoriaConexion();
-		audiConexion.setSeleccion(accion);
+		audiConexion.setAccion(accion);
 		audiConexion.setFechaHora(fechaGuardar);
 		audiConexion.setConexion("Conexion");
 		audiConexion.setDispositivo(os);

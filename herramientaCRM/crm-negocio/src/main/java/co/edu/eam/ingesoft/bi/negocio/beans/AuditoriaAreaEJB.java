@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -13,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import co.edu.eam.ingesoft.bi.negocio.persistencia.Persistencia;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Area;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaArea;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaDetalleVenta;
@@ -23,8 +25,8 @@ public class AuditoriaAreaEJB {
 	
 	
 	
-	@PersistenceContext
-	private EntityManager em;
+	@EJB
+	private Persistencia em;
 
 	private String userAgent = "";
 	private String os = "";
@@ -96,7 +98,7 @@ public class AuditoriaAreaEJB {
 	 * @param usuario
 	 * @param usuarioAf
 	 */
-	public void crearAuditoriaArea(Area area, String accion, String browserDeta) {
+	public void crearAuditoriaArea(String area, String accion, String browserDeta) {
 
 		this.browserDetails = browserDeta;
 		userAgent = browserDetails;
@@ -122,11 +124,12 @@ public class AuditoriaAreaEJB {
 		AuditoriaArea auditoriaArea = new AuditoriaArea();
 		auditoriaArea.setAccion(accion);
 		auditoriaArea.setFechaHora(fechaGuardar);
-		auditoriaArea.setArea("Area");
+		auditoriaArea.setArea(area);
 		auditoriaArea.setDispositivo(os);
 		auditoriaArea.setNavegador(browser);	
 
-		em.persist(auditoriaArea);
+		em.setBd(ConexionEJB.getBd());
+		em.crear(auditoriaArea);
 
 	}
 	

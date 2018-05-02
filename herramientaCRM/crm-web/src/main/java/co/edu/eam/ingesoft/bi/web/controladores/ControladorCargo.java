@@ -8,8 +8,10 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 
+import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaCargoEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.CargoEJB;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Cargo;
 
@@ -22,11 +24,16 @@ public class ControladorCargo implements Serializable {
 	private String nombre;
 
 	private double salario;
+	
+	private String accion;
 
 	private List<Cargo> cargosEmpresa;
 
 	@EJB
 	private CargoEJB cargoEJB;
+	
+	@EJB
+	private AuditoriaCargoEJB audiCargoEJB;
 
 	@PostConstruct
 	public void postconstructor() {
@@ -46,8 +53,21 @@ public class ControladorCargo implements Serializable {
 			if (c == null) {
 				Cargo cargo = new Cargo(codigo, nombre, salario);
 				cargoEJB.registrarCargo(cargo);
-				listarCargos();
+				
 				Messages.addFlashGlobalInfo("Registro exitoso");
+				
+				listarCargos();
+				try {
+
+					accion = "Registrar Cargo";
+
+					String browserDetail = Faces.getRequest().getHeader("User-Agent");
+
+					audiCargoEJB.crearAuditoriaCargo(cargo.getDescripcion(), accion, browserDetail);
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 
 				codigo = 0;
 				nombre = "";
@@ -66,6 +86,19 @@ public class ControladorCargo implements Serializable {
 		} else {
 			Cargo c = cargoEJB.buscarCargo(codigo);
 			if (c != null) {
+				
+				try {
+
+					accion = "Buscar Cargo";
+
+					String browserDetail = Faces.getRequest().getHeader("User-Agent");
+
+					audiCargoEJB.crearAuditoriaCargo(c.getDescripcion(), accion, browserDetail);
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
 				codigo = c.getId();
 				nombre = c.getDescripcion();
 				salario = c.getSalario();
@@ -87,6 +120,17 @@ public class ControladorCargo implements Serializable {
 				cargoEJB.editarCargo(cargo);
 				listarCargos();
 				Messages.addFlashGlobalInfo("se edito exitosamente");
+				try {
+
+					accion = "Editar Cargo";
+
+					String browserDetail = Faces.getRequest().getHeader("User-Agent");
+
+					audiCargoEJB.crearAuditoriaCargo(cargo.getDescripcion(), accion, browserDetail);
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 
 			} else {
 				Messages.addFlashGlobalError("No existe este cargo");
@@ -100,6 +144,17 @@ public class ControladorCargo implements Serializable {
 		cargoEJB.eliminarCargo(c);
 		listarCargos();
 		Messages.addFlashGlobalError("se elimino correctamente");
+		try {
+
+			accion = "Eliminar Cargo";
+
+			String browserDetail = Faces.getRequest().getHeader("User-Agent");
+
+			audiCargoEJB.crearAuditoriaCargo(c.getDescripcion(), accion, browserDetail);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 	}
 

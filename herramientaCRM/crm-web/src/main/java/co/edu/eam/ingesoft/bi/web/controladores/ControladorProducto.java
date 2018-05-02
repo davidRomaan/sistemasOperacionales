@@ -83,6 +83,18 @@ public class ControladorProducto implements Serializable {
 		productoBuscado = productoEJB.buscarProducto(codigo);
 
 		if (productoBuscado != null) {
+			
+			try {
+
+				accion = "Buscar Producto";
+
+				String browserDetail = Faces.getRequest().getHeader("User-Agent");
+
+				auditoriaProductoEJB.crearAuditoriaProducto(productoBuscado.getNombre(), accion, browserDetail);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
 			codigo = productoBuscado.getId();
 			nombre = productoBuscado.getNombre();
@@ -124,6 +136,18 @@ public class ControladorProducto implements Serializable {
 			productoBuscado.setPeso(peso);
 
 			productoEJB.editarProducto(productoBuscado);
+			
+			try {
+
+				accion = "Editar Producto";
+
+				String browserDetail = Faces.getRequest().getHeader("User-Agent");
+
+				auditoriaProductoEJB.crearAuditoriaProducto(nombre, accion, browserDetail);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Operaci�n exitosa", null));
@@ -200,7 +224,7 @@ public class ControladorProducto implements Serializable {
 
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
 
-					auditoriaProductoEJB.crearAuditoriaProducto(producto, accion, browserDetail);
+					auditoriaProductoEJB.crearAuditoriaProducto(producto.getNombre(), accion, browserDetail);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -240,6 +264,18 @@ public class ControladorProducto implements Serializable {
 	public void eliminarProducto(Producto p) {
 		productos.remove(p);
 		productoEJB.eliminarProducto(p);
+		
+		try {
+
+			accion = "Eliminar Producto";
+
+			String browserDetail = Faces.getRequest().getHeader("User-Agent");
+
+			auditoriaProductoEJB.crearAuditoriaProducto(p.getNombre(), accion, browserDetail);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public String getNombre() {

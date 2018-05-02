@@ -14,12 +14,23 @@ public class ConexionEJB {
 	@EJB
 	private Persistencia em;
 	
+	private static int bd = 0;
+	
 	/**
 	 * Obtiene la conexión que se guardó la última vez
-	 * @return la base de datos a la cual se estaba apuntando la última vez
 	 */
-	public Conexion obtenerBD (){
-		return (Conexion) em.buscar(Conexion.class, 1);
+	public void ultimaBD (){
+		em.setBd(2);
+		Conexion con  = (Conexion) em.buscar(Conexion.class, 1);
+		bd = 2;
+	}
+
+	public static int getBd() {
+		return bd;
+	}
+
+	public static void setBd(int bd) {
+		ConexionEJB.bd = bd;
 	}
 	
 }

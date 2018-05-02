@@ -113,7 +113,7 @@ public class ControladorPersona implements Serializable {
 	@PostConstruct
 	public void listares() {
 		generos = Arrays.asList(Genero.values());
-		departamentos = personaEJB.listaDepartamentos();
+		departamentos = departamentoEJB.listarDepartamentos();
 		listarDepartamentos();
 		municipios = departamentoEJB.listarMunicipiosDepartamento(departamentos.get(0).getId());
 
@@ -180,7 +180,7 @@ public class ControladorPersona implements Serializable {
 				try {
 					usuarioEJB.registrarUsu(usu);
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");	
-					auditoriaPersonaEJB.crearAuditoriaPersona(usu, accion, browserDetail);
+					auditoriaPersonaEJB.crearAuditoriaPersona(usu.getNombre(), accion, browserDetail);
 
 				} catch (ExcepcionNegocio e) {
 					e.getMessage();

@@ -2,36 +2,29 @@ package co.edu.eam.ingesoft.bi.presistencia.entidades;
 
 import java.io.Serializable;
 import java.util.Calendar;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="AUDITORIA_DETALLE_VENTA")
+@Table(name="AUDITORIA_PRODUCTO")
 @NamedQueries({
-	@NamedQuery(name=AuditoriaDetalleVenta.LISTA_AuditoriaDetalleVenta, query="SELECT p FROM AuditoriaDetalleVenta p")
+	@NamedQuery(name=AuditoriaTipoProducto.LISTA_AuditoriaTipoProducto, query="SELECT p FROM AuditoriaTipoProducto p")
 })
-public class AuditoriaDetalleVenta implements Serializable{
+public class AuditoriaTipoProducto implements Serializable{
 	
-	public static final String LISTA_AuditoriaDetalleVenta = "lista.AuditoriaDetalleVenta";
-	
+	public static final String LISTA_AuditoriaTipoProducto = "lista.AuditoriaTipoProducto";
+
 	@Id
 	@Column(name="id")
 	@GeneratedValue(strategy= GenerationType.AUTO)
 	private int id;
-	
-	@Column(name="accion")
-	private String accion;
 	
 	@Column(name="fecha_hora")
 	private Calendar fechaHora;
@@ -39,30 +32,32 @@ public class AuditoriaDetalleVenta implements Serializable{
 	@Column(name="dispositivo")
 	private String dispositivo;
 	
+	@Column(name="accion")
+	private String accion;
+	
 	@Column(name="navegador")
 	private String navegador;
 	
-	@Column(name="detalle_venta")
-	private String detalleVenta;
+	@Column(name="tipo_pro_nombre")
+	private String tipoNombre;
+	
+	public AuditoriaTipoProducto() {
+		// TODO Auto-generated constructor stub
+	}
 
 	
-
-
-	public AuditoriaDetalleVenta(int id, String accion, Calendar fechaHora, String dispositivo, String navegador,
-			String detalleVenta) {
+	
+	public AuditoriaTipoProducto(int id, Calendar fechaHora, String dispositivo, String accion, String navegador,
+			String tipoNombre) {
 		super();
 		this.id = id;
-		this.accion = accion;
 		this.fechaHora = fechaHora;
 		this.dispositivo = dispositivo;
+		this.accion = accion;
 		this.navegador = navegador;
-		this.detalleVenta = detalleVenta;
+		this.tipoNombre = tipoNombre;
 	}
 
-
-	public AuditoriaDetalleVenta() {
-		super();
-	}
 
 
 	public int getId() {
@@ -70,19 +65,11 @@ public class AuditoriaDetalleVenta implements Serializable{
 	}
 
 
+
 	public void setId(int id) {
 		this.id = id;
 	}
 
-
-	public String getAccion() {
-		return accion;
-	}
-
-
-	public void setAccion(String accion) {
-		this.accion = accion;
-	}
 
 
 	public Calendar getFechaHora() {
@@ -90,9 +77,11 @@ public class AuditoriaDetalleVenta implements Serializable{
 	}
 
 
+
 	public void setFechaHora(Calendar fechaHora) {
 		this.fechaHora = fechaHora;
 	}
+
 
 
 	public String getDispositivo() {
@@ -100,9 +89,23 @@ public class AuditoriaDetalleVenta implements Serializable{
 	}
 
 
+
 	public void setDispositivo(String dispositivo) {
 		this.dispositivo = dispositivo;
 	}
+
+
+
+	public String getAccion() {
+		return accion;
+	}
+
+
+
+	public void setAccion(String accion) {
+		this.accion = accion;
+	}
+
 
 
 	public String getNavegador() {
@@ -110,22 +113,22 @@ public class AuditoriaDetalleVenta implements Serializable{
 	}
 
 
+
 	public void setNavegador(String navegador) {
 		this.navegador = navegador;
 	}
 
 
-	public String getDetalleVenta() {
-		return detalleVenta;
+
+	public String getTipoNombre() {
+		return tipoNombre;
 	}
 
 
-	public void setDetalleVenta(String detalleVenta) {
-		this.detalleVenta = detalleVenta;
+
+	public void setTipoNombre(String tipoNombre) {
+		this.tipoNombre = tipoNombre;
 	}
-
-
-	
 	
 	
 

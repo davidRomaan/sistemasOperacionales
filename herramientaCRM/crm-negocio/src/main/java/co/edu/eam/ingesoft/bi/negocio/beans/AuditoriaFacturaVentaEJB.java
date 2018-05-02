@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -13,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import co.edu.eam.ingesoft.bi.negocio.persistencia.Persistencia;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaFacturaVenta;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaUsuario;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.FacturaVenta;
@@ -21,8 +23,8 @@ import co.edu.eam.ingesoft.bi.presistencia.entidades.FacturaVenta;
 @Stateless
 public class AuditoriaFacturaVentaEJB {
 	
-	@PersistenceContext
-	private EntityManager em;
+	@EJB
+	private Persistencia em;
 
 	private String userAgent = "";
 	private String os = "";
@@ -92,7 +94,7 @@ public class AuditoriaFacturaVentaEJB {
 	 * @param usuario
 	 * @param usuarioAf
 	 */
-	public void crearAuditoriaFacturaVenta(FacturaVenta fv, String accion, String browserDeta) {
+	public void crearAuditoriaFacturaVenta(String fv, String accion, String browserDeta) {
 
 		this.browserDetails = browserDeta;
 		userAgent = browserDetails;
@@ -118,11 +120,12 @@ public class AuditoriaFacturaVentaEJB {
 		AuditoriaFacturaVenta auditoriaFacturaVenta = new AuditoriaFacturaVenta();
 		auditoriaFacturaVenta.setAccion(accion);
 		auditoriaFacturaVenta.setFechaHora(fechaGuardar);
-		auditoriaFacturaVenta.setFacturaVenta("FacturaVenta");
+		auditoriaFacturaVenta.setFacturaVenta(fv);
 		auditoriaFacturaVenta.setDispositivo(os);
 		auditoriaFacturaVenta.setNavegador(browser);	
 
-		em.persist(auditoriaFacturaVenta);
+		em.setBd(ConexionEJB.getBd());
+		em.crear(auditoriaFacturaVenta);
 
 	}
 	
@@ -130,11 +133,8 @@ public class AuditoriaFacturaVentaEJB {
 	 * 
 	 * @return
 	 */
-	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public List<AuditoriaFacturaVenta> listAudi(){
-		Query q = em.createNamedQuery(AuditoriaFacturaVenta.LISTA_FACTURA_VENTA);
-		List<AuditoriaFacturaVenta> departamento = q.getResultList();
-		return departamento;
+		return (List<AuditoriaFacturaVenta>)(Object) em.listar(AuditoriaFacturaVenta.LISTA_FACTURA_VENTA);
 	}
 
 }

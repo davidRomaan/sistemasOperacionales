@@ -1,5 +1,6 @@
 package co.edu.eam.ingesoft.bi.negocio.beans;
 
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -14,6 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import co.edu.eam.ingesoft.bi.negocio.persistencia.Persistencia;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Area;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaArea;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaDetalleVenta;
@@ -32,8 +34,8 @@ import co.edu.eam.ingesoft.bi.presistencia.entidades.Usuario;
 @Stateless
 public class AuditoriaPersonaEJB {
 
-	@PersistenceContext
-	private EntityManager em;
+	@EJB
+	private Persistencia em;
 
 	private String userAgent = "";
 	private String os = "";
@@ -102,7 +104,7 @@ public class AuditoriaPersonaEJB {
 	 * @param usuario
 	 * @param usuarioAf
 	 */
-	public void crearAuditoriaPersona(Usuario usu, String accion, String browserDeta) {
+	public void crearAuditoriaPersona(String usu, String accion, String browserDeta) {
 
 		this.browserDetails = browserDeta;
 		userAgent = browserDetails;
@@ -128,11 +130,56 @@ public class AuditoriaPersonaEJB {
 		AuditoriaUsuario audiUsuario = new AuditoriaUsuario();
 		audiUsuario.setAccion(accion);
 		audiUsuario.setFechaHora(fechaGuardar);
-		audiUsuario.setUsuarioId("Usuario");
+		audiUsuario.setUsuarioId(usu);
 		audiUsuario.setDispositivo(os);
 		audiUsuario.setNavegador(browser);		
 
-		em.persist(audiUsuario);
+		em.setBd(ConexionEJB.getBd());
+		em.crear(audiUsuario);
+	
+
+	}
+	
+	/**
+	 * 
+	 * @param persona
+	 * @param accion
+	 * @param nombreReg
+	 * @param browserDeta
+	 * @param usuario
+	 * @param usuarioAf
+	 */
+	public void crearAuditoriaCliente(String usu, String accion, String browserDeta) {
+
+		this.browserDetails = browserDeta;
+		userAgent = browserDetails;
+		user2 = userAgent.toLowerCase();
+
+		identificarNavegadorPeticion();
+
+		Calendar fechaActual = new GregorianCalendar();
+		int dia = fechaActual.get(Calendar.DAY_OF_MONTH);
+		int mes = fechaActual.get(Calendar.MONTH);
+		int anio = fechaActual.get(Calendar.YEAR);
+		int minutos = fechaActual.get(Calendar.SECOND);
+		int hora = fechaActual.get(Calendar.HOUR);
+		
+		Date horaGuadar = new Date();
+		horaGuadar.setMinutes(minutos);
+		horaGuadar.setHours(hora);
+		
+		Calendar fechaGuardar = new GregorianCalendar();
+		fechaGuardar.set(anio, mes, dia);
+		fechaGuardar.setTime(horaGuadar);
+		
+		AuditoriaPersona audiPersona = new AuditoriaPersona();
+		audiPersona.setAccion(accion);
+		audiPersona.setFechaHora(fechaGuardar);
+		audiPersona.setPersona(usu);
+		audiPersona.setDispositivo(os);
+		audiPersona.setNavegador(browser);		
+
+		em.persist(audiPersona);
 	
 
 	}

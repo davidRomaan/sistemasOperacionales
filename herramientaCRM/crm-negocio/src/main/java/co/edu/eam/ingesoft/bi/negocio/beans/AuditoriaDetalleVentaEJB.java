@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -13,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import co.edu.eam.ingesoft.bi.negocio.persistencia.Persistencia;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaDetalleVenta;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaInventario;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.DetalleVenta;
@@ -22,8 +24,8 @@ import co.edu.eam.ingesoft.bi.presistencia.entidades.DetalleVenta;
 @Stateless
 public class AuditoriaDetalleVentaEJB {
 	
-	@PersistenceContext
-	private EntityManager em;
+	@EJB
+	private Persistencia em;
 
 	private String userAgent = "";
 	private String os = "";
@@ -95,7 +97,7 @@ public class AuditoriaDetalleVentaEJB {
 	 * @param usuarioAf
 	 */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void crearAuditoriaDetalleVenta(DetalleVenta dt, String accion, String browserDeta) {
+	public void crearAuditoriaDetalleVenta(String detalleV, String accion, String browserDeta) {
 
 		this.browserDetails = browserDeta;
 		userAgent = browserDetails;
@@ -119,13 +121,14 @@ public class AuditoriaDetalleVentaEJB {
 		fechaGuardar.setTime(horaGuadar);
 		
 		AuditoriaDetalleVenta detalleVenta = new AuditoriaDetalleVenta();
-		detalleVenta.setSeleccion(accion);
+		detalleVenta.setAccion(accion);
 		detalleVenta.setFechaHora(fechaGuardar);
-		detalleVenta.setDetalleVenta("DetalleVenta");
+		detalleVenta.setDetalleVenta(detalleV);
 		detalleVenta.setDispositivo(os);
 		detalleVenta.setNavegador(browser);	
 
-		em.persist(detalleVenta);
+		em.setBd(ConexionEJB.getBd());
+		em.crear(detalleVenta);
 
 	}
 	

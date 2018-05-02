@@ -4,23 +4,20 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import co.edu.eam.ingesoft.bi.negocio.persistencia.Persistencia;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaProducto;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.Producto;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaCargo;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaUsuario;
 
 @LocalBean
 @Stateless
-public class AuditoriaProductoEJB {
+public class AuditoriaCargoEJB {
 	
-	
-	@EJB
-	private Persistencia em;
+	@PersistenceContext
+	private EntityManager em;
 
 	private String userAgent = "";
 	private String os = "";
@@ -79,8 +76,7 @@ public class AuditoriaProductoEJB {
 		}
 
 	}
-	
-	
+
 	/**
 	 * 
 	 * @param persona
@@ -90,7 +86,7 @@ public class AuditoriaProductoEJB {
 	 * @param usuario
 	 * @param usuarioAf
 	 */
-	public void crearAuditoriaProducto( String producto, String accion, String browserDeta) {
+	public void crearAuditoriaCargo(String cargo, String accion, String browserDeta) {
 
 		this.browserDetails = browserDeta;
 		userAgent = browserDetails;
@@ -113,15 +109,15 @@ public class AuditoriaProductoEJB {
 		fechaGuardar.set(anio, mes, dia);
 		fechaGuardar.setTime(horaGuadar);
 		
-		AuditoriaProducto pro = new AuditoriaProducto();
-		pro.setAccion(accion);
-		pro.setFechaHora(fechaGuardar);
-		pro.setProducto(producto);
-		pro.setDispositivo(os);
-		pro.setNavegador(browser);	
+		AuditoriaCargo audiCargo = new AuditoriaCargo();
+		audiCargo.setAccion(accion);
+		audiCargo.setFechaHora(fechaGuardar);
+		audiCargo.setCargo(cargo);
+		audiCargo.setDispositivo(os);
+		audiCargo.setNavegador(browser);		
 
-		em.setBd(ConexionEJB.getBd());
-		em.crear(pro);
+		em.persist(audiCargo);
+	
 
 	}
 

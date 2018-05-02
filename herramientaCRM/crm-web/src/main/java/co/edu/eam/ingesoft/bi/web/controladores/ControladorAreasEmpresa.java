@@ -60,19 +60,16 @@ public class ControladorAreasEmpresa implements Serializable {
 			a.setDescripcion(descripcion);
 			a.setId(codigo);
 
-			accion = "RegistrarArea";
 			try {
-
 				areas.registrarAreas(a);
-
-				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				System.out.println(a);
-				System.out.println(browserDetail);
-				auditoriaAreasEJB.crearAuditoriaArea(a, accion, browserDetail);
 
 				FacesContext context = FacesContext.getCurrentInstance();
 				context.addMessage(null, new FacesMessage("Exitoso", "el area se ha registrado"));
 				listarAreas();
+
+				accion = "RegistrarArea";
+				String browserDetail = Faces.getRequest().getHeader("User-Agent");
+				auditoriaAreasEJB.crearAuditoriaArea(a.getNombre(), accion, browserDetail);
 				codigo = 0;
 				nombre = "";
 				descripcion = "";
@@ -95,6 +92,14 @@ public class ControladorAreasEmpresa implements Serializable {
 			if (a != null) {
 				nombre = a.getNombre();
 				descripcion = a.getDescripcion();
+				
+				try {
+					accion = "Buscar Area";
+					String browserDetail = Faces.getRequest().getHeader("User-Agent");
+					auditoriaAreasEJB.crearAuditoriaArea(a.getNombre(), accion, browserDetail);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			} else {
 				Messages.addFlashGlobalError("No existe esta area de la empresa");
 
@@ -116,6 +121,13 @@ public class ControladorAreasEmpresa implements Serializable {
 				areas.editarArea(area);
 				listarAreas();
 				Messages.addFlashGlobalInfo("se edito exitosamente");
+				try {
+					accion = "Editar Area";
+					String browserDetail = Faces.getRequest().getHeader("User-Agent");
+					auditoriaAreasEJB.crearAuditoriaArea(a.getNombre(), accion, browserDetail);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 
 			} else {
 				Messages.addFlashGlobalError("No existe esta area de la empresa");
@@ -129,7 +141,13 @@ public class ControladorAreasEmpresa implements Serializable {
 		areas.eliminarArea(a);
 		listarAreas();
 		Messages.addFlashGlobalInfo("se elimino correctamente");
-
+		try {
+			accion = "Eliminar Area";
+			String browserDetail = Faces.getRequest().getHeader("User-Agent");
+			auditoriaAreasEJB.crearAuditoriaArea(a.getNombre(), accion, browserDetail);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public int getCodigo() {
