@@ -17,7 +17,7 @@ import co.edu.eam.ingesoft.bi.persistencia.enumeraciones.Genero;
 
 
 @NamedQueries({
-	@NamedQuery(name="Usuario.buscarUsuario",query="SELECT u FROM Usuario u WHERE u.nombreUsuario=?1"),
+	@NamedQuery(name=Usuario.BUSCAR_USUARIO,query="SELECT u FROM Usuario u WHERE u.nombreUsuario=?1"),
 	@NamedQuery(name=Usuario.LISTA_USUARIOS, query="SELECT U FROM Usuario U"),
 	@NamedQuery(name=Usuario.BUSCAR_CEDULA, query="SELECT u FROM Usuario u WHERE u.cedula = ?1")
 })
@@ -26,6 +26,8 @@ import co.edu.eam.ingesoft.bi.persistencia.enumeraciones.Genero;
 public class Usuario extends Persona implements Serializable {
 
 	public static final String LISTA_USUARIOS = "Usuario.lista";
+	
+	public static final String BUSCAR_USUARIO = "Usuario.buscarUsuario";
 	
 	public static final String BUSCAR_CEDULA = "Usuario.buscarCedula";
 	

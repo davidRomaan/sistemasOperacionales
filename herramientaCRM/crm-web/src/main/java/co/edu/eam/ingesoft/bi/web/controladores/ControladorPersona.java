@@ -113,7 +113,7 @@ public class ControladorPersona implements Serializable {
 	@PostConstruct
 	public void listares() {
 		generos = Arrays.asList(Genero.values());
-		departamentos = personaEJB.listaDepartamentos();
+		departamentos = departamentoEJB.listarDepartamentos();
 		listarDepartamentos();
 		municipios = departamentoEJB.listarMunicipiosDepartamento(departamentos.get(0).getId());
 

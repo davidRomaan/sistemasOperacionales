@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -13,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import co.edu.eam.ingesoft.bi.negocio.persistencia.Persistencia;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaFacturaVenta;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaUsuario;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.FacturaVenta;
@@ -21,8 +23,8 @@ import co.edu.eam.ingesoft.bi.presistencia.entidades.FacturaVenta;
 @Stateless
 public class AuditoriaFacturaVentaEJB {
 	
-	@PersistenceContext
-	private EntityManager em;
+	@EJB
+	private Persistencia em;
 
 	private String userAgent = "";
 	private String os = "";
@@ -122,7 +124,8 @@ public class AuditoriaFacturaVentaEJB {
 		auditoriaFacturaVenta.setDispositivo(os);
 		auditoriaFacturaVenta.setNavegador(browser);	
 
-		em.persist(auditoriaFacturaVenta);
+		em.setBd(ConexionEJB.getBd());
+		em.crear(auditoriaFacturaVenta);
 
 	}
 	

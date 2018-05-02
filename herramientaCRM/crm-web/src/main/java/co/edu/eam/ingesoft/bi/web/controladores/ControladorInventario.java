@@ -158,6 +158,8 @@ public class ControladorInventario implements Serializable {
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
+		productoEJB.eliminarInventario(inventario); 
+		refrescarListaInventarios();
 	}
 	
 	private void limpiarCampos(){

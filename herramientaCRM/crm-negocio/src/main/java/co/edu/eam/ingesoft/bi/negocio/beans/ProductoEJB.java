@@ -3,6 +3,7 @@ package co.edu.eam.ingesoft.bi.negocio.beans;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
@@ -13,6 +14,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder.In;
 
+import co.edu.eam.ingesoft.bi.negocio.persistencia.Persistencia;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.DetalleVenta;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.DetalleVentaPK;
@@ -27,8 +29,8 @@ import co.edu.eam.ingesoft.bi.presistencia.entidades.TipoProducto;
 @Stateless
 public class ProductoEJB {
 
-	@PersistenceContext
-	private EntityManager em;
+	@EJB
+	private Persistencia em;
 
 	/**
 	 * Edita un producto en la BD
@@ -36,9 +38,9 @@ public class ProductoEJB {
 	 * @param producto
 	 *            producto que se desea editar
 	 */
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void editarProducto(Producto producto) {
-		em.merge(producto);
+		em.setBd(ConexionEJB.getBd());
+		em.editar(producto);
 	}
 
 	/**
@@ -47,14 +49,9 @@ public class ProductoEJB {
 	 * @param ip
 	 *            inventario del producto a editar
 	 */
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void editarInventarioProducto(InventarioProducto ip) {
-		Query q = em.createNativeQuery("UPDATE INVENTARIO_PRODUCTO SET cantidad = ?1 "
-				+ "WHERE inventario_id = ?2 AND producto_id = ?3");
-		q.setParameter(1, ip.getCantidad());
-		q.setParameter(2, ip.getInventarioId().getId());
-		q.setParameter(3, ip.getProductoId().getId());
-		q.executeUpdate();
+		em.setBd(ConexionEJB.getBd());
+		em.editarInventarioProducto(ip);
 	}
 
 	/**
@@ -62,11 +59,9 @@ public class ProductoEJB {
 	 * 
 	 * @return la lista de tipos de producto registrados
 	 */
-	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public List<TipoProducto> listarTiposProducto() {
-		Query q = em.createNamedQuery(TipoProducto.LISTAR);
-		List<TipoProducto> tipos = q.getResultList();
-		return tipos;
+		em.setBd(ConexionEJB.getBd());
+		return (List<TipoProducto>) (Object) em.listar(TipoProducto.LISTAR);
 	}
 
 	/**
@@ -75,13 +70,13 @@ public class ProductoEJB {
 	 * @param producto
 	 *            producto que se desea registrar
 	 */
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void registrarProducto(Producto producto) throws ExcepcionNegocio {
 		// TODO Auto-generated method stub
 		if (buscarProducto(producto.getId()) != null) {
 			throw new ExcepcionNegocio("El código del producto ya existe");
 		} else {
-			em.persist(producto);
+			em.setBd(ConexionEJB.getBd());
+			em.crear(producto);
 		}
 	}
 
@@ -92,10 +87,10 @@ public class ProductoEJB {
 	 *            id del producto a buscar
 	 * @return el producto si lo encuentra, de lo contrario null
 	 */
-	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public Producto buscarProducto(int id) {
 		// TODO Auto-generated method stub
-		return em.find(Producto.class, id);
+		em.setBd(ConexionEJB.getBd());
+		return (Producto) em.buscar(Producto.class, id);
 	}
 
 	/**
@@ -105,9 +100,9 @@ public class ProductoEJB {
 	 *            código del lote
 	 * @return el lote si lo encuetra, de lo contrario null
 	 */
-	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public Lote buscarloteProducto(int codigo) {
-		return em.find(Lote.class, codigo);
+		em.setBd(ConexionEJB.getBd());
+		return (Lote) em.buscar(Lote.class, codigo);
 	}
 
 	/**
@@ -115,11 +110,9 @@ public class ProductoEJB {
 	 * 
 	 * @return la lista de productos registrados
 	 */
-	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public List<Producto> listarProductos() {
-		Query q = em.createNamedQuery(Producto.LISTAR);
-		List<Producto> lista = q.getResultList();
-		return lista;
+		em.setBd(ConexionEJB.getBd());
+		return (List<Producto>) (Object) em.listar(Producto.LISTAR);
 	}
 
 	/**
@@ -127,11 +120,9 @@ public class ProductoEJB {
 	 * 
 	 * @return la lista de productos registrados
 	 */
-	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public List<InventarioProducto> listarInventariosProductos() {
-		Query q = em.createNamedQuery(InventarioProducto.LISTAR);
-		List<InventarioProducto> lista = q.getResultList();
-		return lista;
+		em.setBd(ConexionEJB.getBd());
+		return (List<InventarioProducto>)(Object) em.listar(InventarioProducto.LISTAR);
 	}
 
 	/**
@@ -140,32 +131,30 @@ public class ProductoEJB {
 	 * @param producto
 	 *            producto que se desea eliminar
 	 */
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void eliminarProducto(Producto producto) {
-		em.remove(em.contains(producto) ? producto : em.merge(producto));
+		em.setBd(ConexionEJB.getBd());
+		em.eliminar(producto);
 	}
 
-	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public InventarioProducto buscarInventarioProducto(Producto producto) {
-		Query q = em.createNamedQuery(InventarioProducto.BUSCAR_INVENTARIO_PRODUCTO);
-		q.setParameter(1, producto);
-		List<InventarioProducto> lista = q.getResultList();
+		em.setBd(ConexionEJB.getBd());
+		List<InventarioProducto> lista = (List<InventarioProducto>)(Object)
+				em.listarConParametroObjeto(InventarioProducto.
+						BUSCAR_INVENTARIO_PRODUCTO, producto);
 		return lista.get(0);
 	}
 
-	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public List<InventarioProducto> inventariosProducto(Producto prod) {
-		Query q = em.createNamedQuery(InventarioProducto.BUSCAR_INVENTARIO_PRODUCTO);
-		q.setParameter(1, prod);
-		List<InventarioProducto> lista = q.getResultList();
+		em.setBd(ConexionEJB.getBd());
+		List<InventarioProducto> lista = (List<InventarioProducto>)(Object)
+				em.listarConParametroObjeto(InventarioProducto.
+						BUSCAR_INVENTARIO_PRODUCTO, prod);
 		return lista;
 	}
 
-	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public List<Inventario> listarInventarios() {
-		Query q = em.createNamedQuery(Inventario.LISTAR);
-		List<Inventario> lista = q.getResultList();
-		return lista;
+		em.setBd(ConexionEJB.getBd());
+		return (List<Inventario>)(Object) em.listar(Inventario.LISTAR);
 	}
 
 	/**
@@ -173,70 +162,58 @@ public class ProductoEJB {
 	 * 
 	 * @return la lista de lotes
 	 */
-	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public List<Lote> lotes() {
-		Query q = em.createNamedQuery(Lote.LISTA_LOTES);
-		List<Lote> lotes = q.getResultList();
-		return lotes;
+		em.setBd(ConexionEJB.getBd());
+		return (List<Lote>)(Object) em.listar(Lote.LISTA_LOTES);
 	}
 
-	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public Inventario buscarNombre(String nombre) {
-		Query q = em.createNamedQuery(Inventario.BUSCAR_NOMBRE);
-		q.setParameter(1, nombre);
-		List<Inventario> lista = q.getResultList();
+		em.setBd(ConexionEJB.getBd());
+		List<Inventario> lista = (List<Inventario>)(Object) 
+				em.listarConParametroString(Inventario.BUSCAR_NOMBRE, nombre);
 		if (lista.size() != 0) {
 			return lista.get(0);
 		}
 		return null;
 	}
 
-	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public Inventario buscarInventarioId(int id) {
-		return em.find(Inventario.class, id);
+		em.setBd(ConexionEJB.getBd());
+		return (Inventario) em.buscar(Inventario.class, id);
 	}
 
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void registrarInventario(Inventario inventario) throws ExcepcionNegocio {
 		if (buscarNombre(inventario.getNombre()) != null) {
 			throw new ExcepcionNegocio("Ya existe un inventario con este nombre");
 		} else {
-			em.persist(inventario);
+			em.setBd(ConexionEJB.getBd());
+			em.crear(inventario);
 		}
 	}
 
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void editarInventario(Inventario inventario) {
-		em.merge(inventario);
+		em.setBd(ConexionEJB.getBd());
+		em.editar(inventario);
 	}
 
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void eliminarInventario(Inventario inventario) {
-		em.remove(em.contains(inventario) ? inventario : em.merge(inventario));
+		em.setBd(ConexionEJB.getBd());
+		em.eliminar(inventario);
 	}
 
-	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public List<Inventario> listarInventario() {
-		Query q = em.createNamedQuery(Inventario.LISTAR);
-		List<Inventario> lista = q.getResultList();
-		return lista;
+		em.setBd(ConexionEJB.getBd());
+		return (List<Inventario>)(Object) em.listar(Inventario.LISTAR);
 	}
 
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void registrarInventarioProducto(InventarioProducto ip) {
-
-		Query q = em.createNativeQuery("INSERT INTO INVENTARIO_PRODUCTO (inventario_id, "
-				+ "producto_id, cantidad) VALUES (?1,?2,?3)");
-		q.setParameter(1, ip.getInventarioId().getId());
-		q.setParameter(2, ip.getProductoId().getId());
-		q.setParameter(3, ip.getCantidad());
-		System.out.println("Query " + q.toString());
-		q.executeUpdate();
+		em.setBd(ConexionEJB.getBd());
+		em.registrarInventarioProducto(ip);
 	}
 
-	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public InventarioProducto buscarInventarioProdPK(InventarioProductoPK inventario) {
-		return em.find(InventarioProducto.class, inventario);
+		em.setBd(ConexionEJB.getBd());
+		return (InventarioProducto) em.buscar(InventarioProducto.class, inventario);
 	}
 
 }

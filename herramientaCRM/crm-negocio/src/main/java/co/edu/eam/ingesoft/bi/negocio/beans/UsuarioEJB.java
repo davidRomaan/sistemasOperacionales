@@ -13,6 +13,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import co.edu.eam.ingesoft.bi.negocio.persistencia.Persistencia;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.persistencia.DTO.UsuariosDTO;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Area;
@@ -23,8 +24,8 @@ import co.edu.eam.ingesoft.bi.presistencia.entidades.Usuario;
 @Stateless
 public class UsuarioEJB {
 
-	@PersistenceContext
-	private EntityManager em;
+	@EJB
+	private Persistencia em;
 
 	@EJB
 	private PersonaEJB personaEJB;
@@ -32,9 +33,9 @@ public class UsuarioEJB {
 	@EJB
 	private UsuarioEJB usuarioEJB;
 
-	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public Usuario buscarUsuario(String user) {
-		List<Usuario> us = em.createNamedQuery("Usuario.buscarUsuario").setParameter(1, user).getResultList();
+		em.setBd(ConexionEJB.getBd());
+		List<Usuario> us = (List<Usuario>)(Object) em.listarConParametroString(Usuario.BUSCAR_USUARIO, user);
 		if (us.isEmpty()) {
 			return null;
 		} else {
@@ -48,9 +49,8 @@ public class UsuarioEJB {
 	 * @return lista con las personas inactivas
 	 */
 	public List<Usuario> listarActivosInactivos() {
-		Query q = em.createNamedQuery(Usuario.LISTA_USUARIOS);
-		List<Usuario> lista = q.getResultList();
-		return lista;
+		em.setBd(ConexionEJB.getBd());
+		return (List<Usuario>)(Object) em.listar(Usuario.LISTA_USUARIOS);
 	}
 
 	/**
@@ -71,7 +71,8 @@ public class UsuarioEJB {
 	 * @return el usuario si lo encuentra, de lo contrario null
 	 */
 	public Usuario buscarUsuarioCedula(String cedula) {
-		return em.find(Usuario.class, cedula);
+		em.setBd(ConexionEJB.getBd());
+		return (Usuario) em.buscar(Usuario.class, cedula);
 	}
 
 	/**
@@ -80,9 +81,9 @@ public class UsuarioEJB {
 	 * @param u
 	 *            el usuario a editar
 	 */
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void editarUsuario(Usuario u) {
-		em.merge(u);
+		em.setBd(ConexionEJB.getBd());
+		em.editar(u);
 	}
 
 	/**
@@ -91,36 +92,29 @@ public class UsuarioEJB {
 	 * @param usuario
 	 *            usuario que se desea registrar
 	 */
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void registrarUsuario(Usuario usuario) throws ExcepcionNegocio {
 		if (buscarCliente(usuario.getCedula()) != null) {
 			throw new ExcepcionNegocio("El cliente ya existe");
 		} else {
-			em.persist(usuario);
+			em.setBd(ConexionEJB.getBd());
+			em.crear(usuario);
 		}
 	}
 	
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void registrarCliente (Persona p){
 		if (buscarCliente(p.getCedula()) != null){
 			throw new ExcepcionNegocio("El cliente ya existe");
 		} else {
-			em.persist(p);
+			em.setBd(ConexionEJB.getBd());
+			em.crear(p);
 		}
 	}
 	
-	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public Persona buscarCliente (String cedula){
-		Query q = em.createNativeQuery("SELECT * FROM USUARIO WHERE cedula = ?1");
-		q.setParameter(1, cedula);
-		List<Persona> lista = q.getResultList();
-		if (lista.size() == 0){
-			return em.find(Persona.class, cedula);
-		}
-		return null;
+		em.setBd(ConexionEJB.getBd());
+		return em.buscarCliente(cedula);
 	}
 
-	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public List<UsuariosDTO> llenarDTO() {
 
 		List<Persona> personas = personaEJB.listarPersona();
@@ -144,23 +138,24 @@ public class UsuarioEJB {
 		}
 
 	}
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	
 	public void editarCliente(Persona p){
-		em.merge(p);
+		em.setBd(ConexionEJB.getBd());
+		em.editar(p);
 	}
 	
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void eliminarCliente(Persona p){
-		em.remove(em.merge(p));
+		em.setBd(ConexionEJB.getBd());
+		em.eliminar(p);
 	}
 
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void registrarUsu(Usuario u) throws ExcepcionNegocio {
-		em.persist(u);
+		em.setBd(ConexionEJB.getBd());
+		em.crear(u);
 	}
 
-	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public Usuario buscarUsu(String cedula) {
-		return em.find(Usuario.class, cedula);
+		em.setBd(ConexionEJB.getBd());
+		return (Usuario) em.buscar(Usuario.class, cedula);
 	}
 }
