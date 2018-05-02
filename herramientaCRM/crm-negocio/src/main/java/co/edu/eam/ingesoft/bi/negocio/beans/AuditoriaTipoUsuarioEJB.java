@@ -3,6 +3,7 @@ package co.edu.eam.ingesoft.bi.negocio.beans;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
@@ -129,11 +130,9 @@ public class AuditoriaTipoUsuarioEJB {
 	 * 
 	 * @return
 	 */
-	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public List<AuditoriaTipoUsuario> listAudi(){
-		Query q = em.createNamedQuery(AuditoriaTipoUsuario.LISTA_TIPO_USUARIO);
-		List<AuditoriaTipoUsuario> departamento = q.getResultList();
-		return departamento;
+		em.setBd(ConexionEJB.getBd());
+		return (List<AuditoriaTipoUsuario>)(Object) em.listar(AuditoriaTipoUsuario.LISTA_TIPO_USUARIO);
 	}
 	
 

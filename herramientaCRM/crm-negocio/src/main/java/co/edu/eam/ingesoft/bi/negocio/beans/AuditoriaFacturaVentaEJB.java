@@ -134,6 +134,7 @@ public class AuditoriaFacturaVentaEJB {
 	 * @return
 	 */
 	public List<AuditoriaFacturaVenta> listAudi(){
+		em.setBd(ConexionEJB.getBd());
 		return (List<AuditoriaFacturaVenta>)(Object) em.listar(AuditoriaFacturaVenta.LISTA_FACTURA_VENTA);
 	}
 

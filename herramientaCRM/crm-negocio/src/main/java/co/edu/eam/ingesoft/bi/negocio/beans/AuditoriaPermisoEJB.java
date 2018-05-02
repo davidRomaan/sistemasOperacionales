@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -14,6 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import co.edu.eam.ingesoft.bi.negocio.persistencia.Persistencia;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaPermisos;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaUsuario;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Usuario;
@@ -22,8 +24,8 @@ import co.edu.eam.ingesoft.bi.presistencia.entidades.Usuario;
 @Stateless
 public class AuditoriaPermisoEJB implements Serializable {
 	
-	@PersistenceContext
-	private EntityManager em;
+	@EJB
+	private Persistencia em;
 
 	private String userAgent = "";
 	private String os = "";
@@ -122,7 +124,8 @@ public class AuditoriaPermisoEJB implements Serializable {
 		audiPermisos.setDispositivo(os);
 		audiPermisos.setNavegador(browser);		
 
-		em.persist(audiPermisos);
+		em.setBd(ConexionEJB.getBd());
+		em.crear(audiPermisos);
 	
 
 	}
@@ -132,11 +135,9 @@ public class AuditoriaPermisoEJB implements Serializable {
 	 * 
 	 * @return
 	 */
-	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public List<AuditoriaPermisos> listAudi(){
-		Query q = em.createNamedQuery(AuditoriaPermisos.LISTA_PERMISOS);
-		List<AuditoriaPermisos> departamento = q.getResultList();
-		return departamento;
+		em.setBd(ConexionEJB.getBd());
+		return (List<AuditoriaPermisos>)(Object) em.listar(AuditoriaPermisos.LISTA_PERMISOS);
 	}
 
 }

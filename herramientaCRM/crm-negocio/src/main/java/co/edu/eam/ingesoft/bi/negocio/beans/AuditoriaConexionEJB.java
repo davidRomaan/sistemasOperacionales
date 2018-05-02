@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -13,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import co.edu.eam.ingesoft.bi.negocio.persistencia.Persistencia;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaConexion;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaUsuario;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Conexion;
@@ -22,8 +24,8 @@ import co.edu.eam.ingesoft.bi.presistencia.entidades.Usuario;
 @Stateless
 public class AuditoriaConexionEJB {
 	
-	@PersistenceContext
-	private EntityManager em;
+	@EJB
+	private Persistencia em;
 
 	private String userAgent = "";
 	private String os = "";
@@ -123,7 +125,8 @@ public class AuditoriaConexionEJB {
 		audiConexion.setDispositivo(os);
 		audiConexion.setNavegador(browser);		
 
-		em.persist(audiConexion);
+		em.setBd(ConexionEJB.getBd());
+		em.crear(audiConexion);
 	
 
 	}
@@ -132,11 +135,10 @@ public class AuditoriaConexionEJB {
 	 * 
 	 * @return
 	 */
-	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public List<AuditoriaConexion> listAudi(){
-		Query q = em.createNamedQuery(AuditoriaConexion.LISTA_AuditoriaConexion);
-		List<AuditoriaConexion> departamento = q.getResultList();
-		return departamento;
+		em.setBd(ConexionEJB.getBd());
+		return (List<AuditoriaConexion>)(Object) 
+				em.listar(AuditoriaConexion.LISTA_AuditoriaConexion);
 	}
 
 

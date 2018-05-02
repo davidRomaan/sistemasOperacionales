@@ -179,7 +179,8 @@ public class AuditoriaPersonaEJB {
 		audiPersona.setDispositivo(os);
 		audiPersona.setNavegador(browser);		
 
-		em.persist(audiPersona);
+		em.setBd(ConexionEJB.getBd());
+		em.crear(audiPersona);
 	
 
 	}
@@ -189,22 +190,18 @@ public class AuditoriaPersonaEJB {
 	 * 
 	 * @return
 	 */
-	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public List<AuditoriaUsuario> listAudiUsu(){
-		Query q = em.createNamedQuery(AuditoriaUsuario.LISTA_USUA);
-		List<AuditoriaUsuario> departamento = q.getResultList();
-		return departamento;
+		em.setBd(ConexionEJB.getBd());
+		return (List<AuditoriaUsuario>)(Object) em.listar(AuditoriaUsuario.LISTA_USUA);
 	}
 	
 	/**
 	 * 
 	 * @return
 	 */
-	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public List<AuditoriaPersona> listAudiPer(){
-		Query q = em.createNamedQuery(AuditoriaPersona.LISTA);
-		List<AuditoriaPersona> departamento = q.getResultList();
-		return departamento;
+		em.setBd(ConexionEJB.getBd());
+		return (List<AuditoriaPersona>)(Object) em.listar(AuditoriaPersona.LISTA);
 	}
 	
 	
