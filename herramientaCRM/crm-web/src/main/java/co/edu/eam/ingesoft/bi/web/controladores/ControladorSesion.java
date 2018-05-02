@@ -24,13 +24,14 @@ public class ControladorSesion implements Serializable {
 	private String password;
 	private Usuario user;
 	
+	private static int bd = 0;
 	
 	@EJB
 	private ConexionEJB conexionEJB;
 
 	@EJB
 	private UsuarioEJB usuarioEJB;
-
+	
 	private void obtenerBD (){
 		conexionEJB.ultimaBD();
 	}
@@ -48,7 +49,7 @@ public class ControladorSesion implements Serializable {
 							&& usuarioTemporal.isActivo() == true)) {
 				user = usuarioTemporal;
 				Faces.setSessionAttribute("user", user);
-				return "/templates/inicioAdministrador.xhtml?faces-redirect=true";
+				return "/templates/inicioBases.xhtml?faces-redirect=true";
 
 			}
 			if (usuarioTemporal.getContrasenia().equals(password)

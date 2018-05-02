@@ -1,5 +1,6 @@
 package co.edu.eam.ingesoft.bi.web.controladores;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
@@ -8,8 +9,10 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
 
 import org.omnifaces.util.Messages;
 
@@ -196,6 +199,66 @@ public class ControladorActivarUsuario implements Serializable {
 			}
 		}
 
+	}
+
+	public void buscarUsuario() {
+
+		Usuario u = usuarioEJB.buscarUsu(cedula);
+		Persona p = usuarioEJB.buscarCliente(cedula);
+
+		if (cedula.isEmpty()) {
+			FacesContext context = FacesContext.getCurrentInstance();
+			context.addMessage(null, new FacesMessage("Exitoso", "el area se ha registrado"));
+		} else {
+			if (u != null) {
+
+				apellido = u.getApellido();
+				correo = u.getCorreo();
+				fechaNacimiento = u.getFechaNacimiento();
+				tipoGenero = u.getGenero();
+				nombre = u.getNombre();
+				telefono = u.getTelefono();
+				contrasenia = u.getContrasenia();
+				fechaIngreso = u.getFechaIngreso();
+				nombreUsuario = u.getNombreUsuario();
+				deptoSeleccionado = u.getMunicipio().getDepartamento().getId();
+
+				municipios = departamentoEJB.listarMunicipiosDepartamento(deptoSeleccionado);
+				municipioSeleccionado = u.getMunicipio().getId();
+
+				areaSeleccionada = u.getArea().getId();
+				cargoSeleccionado = u.getCargo().getId();
+				tipoUsuarioSeleccionado = u.getTipoUsuario().getNombre();
+				reload();
+
+			} else if (p != null) {
+				apellido = p.getApellido();
+				correo = p.getCorreo();
+				fechaNacimiento = p.getFechaNacimiento();
+				tipoGenero = p.getGenero();
+				nombre = p.getNombre();
+				telefono = p.getTelefono();
+				deptoSeleccionado = p.getMunicipio().getDepartamento().getId();
+
+				municipios = departamentoEJB.listarMunicipiosDepartamento(deptoSeleccionado);
+				municipioSeleccionado = p.getMunicipio().getId();
+			
+			} else {
+				FacesContext context = FacesContext.getCurrentInstance();
+				context.addMessage(null, new FacesMessage("esta persona no se encuentra en la base"));
+			}
+		}
+
+	}
+
+	private void reload() {
+		ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+		try {
+			ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void generarClave() {

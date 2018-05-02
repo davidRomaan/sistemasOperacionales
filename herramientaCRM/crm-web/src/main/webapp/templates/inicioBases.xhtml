@@ -116,10 +116,22 @@
 		<ui:insert name="cuerpoAdmin" />
 	</div>
 	</main>
-
+	<div id="hdos" align="center">
+		<h2>elija la base de datos en la que desee trabajar</h2>
+	</div>
 	<br></br>
 	<br></br>
+	<div id="combo" align="center">
+	<h:panelGrid>
+		<h:outputLabel id="lblBD" value="Base de datos" />
+		<h:selectOneMenu id="cbBase" value="#{controladoAcceso.base}">
 
+			<f:selectItems value="#{controladoAcceso.lista}" var="list"
+				itemValue="#{basesdatos}" itemLabel="#{basesdatos}" />
+
+		</h:selectOneMenu>
+	</h:panelGrid>
+	</div>
 	<footer class="site-footer" style="margin-top: 40px">
 		<div class="container">
 			<div class="row">
