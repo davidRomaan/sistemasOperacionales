@@ -13,7 +13,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="AUDITORIA_PRODUCTO")
+@Table(name="AUDITORIA")
 @NamedQueries({
 	@NamedQuery(name=Auditoria.LISTA_AUDITORIA, query="SELECT p FROM Auditoria p WHERE p.referencia = ?1")
 })
