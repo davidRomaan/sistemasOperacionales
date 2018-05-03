@@ -26,11 +26,15 @@
 		<h:panelGrid id="panelTablaDetalles" columns="1" width="80%">
 
 				<p:dataTable id="tablaDetalles"
-					value="#{controladorAuditoria.list}" var="detalle"
+					value="#{controladorAuditoria.auditariasListar}" var="detalle"
 					border="1">
 
 					<p:column headerText="Id">
 						<h:outputLabel value="#{detalle.id}" />
+					</p:column>
+					
+					<p:column headerText="Id">
+						<h:outputLabel value="#{detalle.fechaHora}" />
 					</p:column>
 
 					<p:column headerText="dispositivo">

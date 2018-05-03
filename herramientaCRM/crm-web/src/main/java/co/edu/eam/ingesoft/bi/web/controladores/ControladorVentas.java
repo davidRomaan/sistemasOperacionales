@@ -21,9 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.omnifaces.util.Faces;
 
-import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaDetalleVentaEJB;
-import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaFacturaVentaEJB;
-import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaPersonaEJB;
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.DepartamentoEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.DetalleVentaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.ProductoEJB;
@@ -60,6 +58,7 @@ public class ControladorVentas implements Serializable {
 	private List<Genero> generos;
 	private String accion;
 	private String fechaNacimiento;
+	private Usuario usuario;
 
 	// Cliente que va a reliazar la compra
 	Persona cliente;
@@ -86,7 +85,7 @@ public class ControladorVentas implements Serializable {
 	private ProductoEJB productoEJB;
 
 	@EJB
-	private AuditoriaPersonaEJB audiPersonaEJB;
+	private AuditoriaEJB auditoriaEJB;
 
 	@EJB
 	private UsuarioEJB usuarioEJB;
@@ -100,17 +99,12 @@ public class ControladorVentas implements Serializable {
 	@EJB
 	private DepartamentoEJB departamentoEJB;
 
-	@EJB
-	private AuditoriaDetalleVentaEJB auditoriaDetalleVentasEJB;
-
-	@EJB
-	private AuditoriaFacturaVentaEJB auditoriaFacturaVentaEJB;
-
 	/**
 	 * Carga los elementos al iniciar la p�gina
 	 */
 	@PostConstruct
 	private void cargarElementos() {
+		usuario = Faces.getApplicationAttribute("usu");
 		cargarProductos();
 		listarDepartamentos();
 		productosCompra = new ArrayList<DetalleVenta>();
@@ -170,12 +164,9 @@ public class ControladorVentas implements Serializable {
 
 		try {
 
-			accion = "Registrar Detalle Venta";
-
+			accion = "Crear DetalleVenta";
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
-
-			auditoriaDetalleVentasEJB.crearAuditoriaDetalleVenta(factura.getEmpleadoId().toString(), accion,
-					browserDetail);
+			auditoriaEJB.crearAuditoria("AuditoriaDetalleVenta", accion, "DT creada: " + factura.getId(), usuario.getNombre(), browserDetail);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -254,12 +245,9 @@ public class ControladorVentas implements Serializable {
 
 		try {
 
-			accion = "Eliminar Detalle Venta";
-
+			accion = "Eliminar DetalleVenta";
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
-
-			auditoriaDetalleVentasEJB.crearAuditoriaDetalleVenta(factura.getEmpleadoId().toString(), accion,
-					browserDetail);
+			auditoriaEJB.crearAuditoria("AuditoriaDetalleVenta", accion, "DT eliminado: " + factura.getId(), usuario.getNombre(), browserDetail);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -342,9 +330,9 @@ public class ControladorVentas implements Serializable {
 					factura.setEmpleadoId(sesion.getUser());
 					ventaEJB.registrarVenta(factura);
 
-					accion = "Registrar Factura Venta";
+					accion = "Registar FacturaVenta";
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
-					auditoriaFacturaVentaEJB.crearAuditoriaFacturaVenta(cliente.getNombre(), accion, browserDetail);
+					auditoriaEJB.crearAuditoria("AuditoriaFacturaVenta", accion, "FV creada: " + factura.getId(), usuario.getNombre(), browserDetail);
 
 					factura.setId(ventaEJB.codigoUltimaFacturaCliente(cliente.getCedula()));
 					registrarDetallesVenta();
@@ -397,11 +385,9 @@ public class ControladorVentas implements Serializable {
 
 				usuarioEJB.registrarCliente(cliente);
 
-				accion = "Registrar Cliente";
-
-				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-
-				audiPersonaEJB.crearAuditoriaPersona(cliente.getNombre(), accion, browserDetail);
+				accion = "Crear Persona";
+				String browserDetail2 = Faces.getRequest().getHeader("User-Agent");
+				auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona creada: " + cliente.getNombre(), usuario.getNombre(), browserDetail2);
 
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, "Cliente Registrado Exitosamente", null));
@@ -443,11 +429,11 @@ public class ControladorVentas implements Serializable {
 		if (cliente != null) {
 
 			try {
-				accion = "Buscar Cliente";
-
+				
+				accion = "Buscar Persona";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-
-				audiPersonaEJB.crearAuditoriaPersona(cliente.getNombre(), accion, browserDetail);
+				auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona buscada: " + cliente.getNombre(), usuario.getNombre(), browserDetail);
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

@@ -15,7 +15,7 @@ import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 
 import co.edu.eam.ingesoft.bi.negocio.beans.AreasEmpresaEJB;
-import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaPersonaEJB;
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.CargoEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.DepartamentoEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.MunicipioEJB;
@@ -73,6 +73,8 @@ public class ControladorPersona implements Serializable {
 	private int deptoSeleccionado;
 
 	private String accion;
+	
+	private Usuario usuario;
 
 	@EJB
 	private PersonaEJB personaEJB;
@@ -81,7 +83,7 @@ public class ControladorPersona implements Serializable {
 	private MunicipioEJB municipioEJB;
 
 	@EJB
-	private AuditoriaPersonaEJB auditoriaPersonaEJB;
+	private AuditoriaEJB auditoriaEJB;
 
 	@EJB
 	private UsuarioEJB usuarioEJB;
@@ -112,6 +114,8 @@ public class ControladorPersona implements Serializable {
 
 	@PostConstruct
 	public void listares() {
+		
+		usuario = Faces.getApplicationAttribute("usu");
 		generos = Arrays.asList(Genero.values());
 		departamentos = departamentoEJB.listarDepartamentos();
 		listarDepartamentos();
@@ -179,8 +183,14 @@ public class ControladorPersona implements Serializable {
 
 				try {
 					usuarioEJB.registrarUsu(usu);
-					String browserDetail = Faces.getRequest().getHeader("User-Agent");	
-					auditoriaPersonaEJB.crearAuditoriaPersona(usu.getNombre(), accion, browserDetail);
+					
+					accion = "Crear Usuario";
+					String browserDetail = Faces.getRequest().getHeader("User-Agent");
+					auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario creado: " + usu.getNombre(), usuario.getNombre(), browserDetail);
+					
+					accion = "Crear Persona";
+					String browserDetail2 = Faces.getRequest().getHeader("User-Agent");
+					auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona creada: " + usu.getNombre(), usuario.getNombre(), browserDetail2);
 
 				} catch (ExcepcionNegocio e) {
 					e.getMessage();
