@@ -231,18 +231,6 @@ public class ControladorActivarUsuario implements Serializable {
 				tipoUsuarioSeleccionado = u.getTipoUsuario().getNombre();
 				reload();
 
-			} else if (p != null) {
-				apellido = p.getApellido();
-				correo = p.getCorreo();
-				fechaNacimiento = p.getFechaNacimiento();
-				tipoGenero = p.getGenero();
-				nombre = p.getNombre();
-				telefono = p.getTelefono();
-				deptoSeleccionado = p.getMunicipio().getDepartamento().getId();
-
-				municipios = departamentoEJB.listarMunicipiosDepartamento(deptoSeleccionado);
-				municipioSeleccionado = p.getMunicipio().getId();
-			
 			} else {
 				FacesContext context = FacesContext.getCurrentInstance();
 				context.addMessage(null, new FacesMessage("esta persona no se encuentra en la base"));

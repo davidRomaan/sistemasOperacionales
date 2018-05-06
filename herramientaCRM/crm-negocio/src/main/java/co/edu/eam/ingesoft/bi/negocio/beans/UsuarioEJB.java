@@ -35,7 +35,7 @@ public class UsuarioEJB {
 
 	public Usuario buscarUsuario(String user) {
 		em.setBd(ConexionEJB.getBd());
-		List<Usuario> us = (List<Usuario>)(Object) em.listarConParametroString(Usuario.BUSCAR_USUARIO, user);
+		List<Usuario> us = (List<Usuario>) (Object) em.listarConParametroString(Usuario.BUSCAR_USUARIO, user);
 		if (us.isEmpty()) {
 			return null;
 		} else {
@@ -50,7 +50,7 @@ public class UsuarioEJB {
 	 */
 	public List<Usuario> listarActivosInactivos() {
 		em.setBd(ConexionEJB.getBd());
-		return (List<Usuario>)(Object) em.listar(Usuario.LISTA_USUARIOS);
+		return (List<Usuario>) (Object) em.listar(Usuario.LISTA_USUARIOS);
 	}
 
 	/**
@@ -100,17 +100,17 @@ public class UsuarioEJB {
 			em.crear(usuario);
 		}
 	}
-	
-	public void registrarCliente (Persona p){
-		if (buscarCliente(p.getCedula()) != null){
+
+	public void registrarCliente(Persona p) {
+		if (buscarCliente(p.getCedula()) != null) {
 			throw new ExcepcionNegocio("El cliente ya existe");
 		} else {
 			em.setBd(ConexionEJB.getBd());
 			em.crear(p);
 		}
 	}
-	
-	public Persona buscarCliente (String cedula){
+
+	public Persona buscarCliente(String cedula) {
 		em.setBd(ConexionEJB.getBd());
 		return em.buscarCliente(cedula);
 	}
@@ -138,20 +138,24 @@ public class UsuarioEJB {
 		}
 
 	}
-	
-	public void editarCliente(Persona p){
+
+	public void editarCliente(Persona p) {
 		em.setBd(ConexionEJB.getBd());
 		em.editar(p);
 	}
-	
-	public void eliminarCliente(Persona p){
+
+	public void eliminarCliente(Persona p) {
 		em.setBd(ConexionEJB.getBd());
 		em.eliminar(p);
 	}
 
 	public void registrarUsu(Usuario u) throws ExcepcionNegocio {
 		em.setBd(ConexionEJB.getBd());
+		if (buscarUsu(u.getCedula()) != null){
+			throw new ExcepcionNegocio("Este usuario ya existe");
+		} else {
 		em.crear(u);
+		}
 	}
 
 	public Usuario buscarUsu(String cedula) {

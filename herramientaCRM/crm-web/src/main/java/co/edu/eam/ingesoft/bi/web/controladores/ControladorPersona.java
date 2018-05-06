@@ -17,6 +17,7 @@ import org.omnifaces.util.Messages;
 import co.edu.eam.ingesoft.bi.negocio.beans.AreasEmpresaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaPersonaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.CargoEJB;
+import co.edu.eam.ingesoft.bi.negocio.beans.ConexionEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.DepartamentoEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.MunicipioEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.PersonaEJB;
@@ -109,6 +110,9 @@ public class ControladorPersona implements Serializable {
 
 	@EJB
 	private DepartamentoEJB departamentoEJB;
+	
+	@EJB
+	private ConexionEJB conexionEJB;
 
 	@PostConstruct
 	public void listares() {
@@ -121,6 +125,7 @@ public class ControladorPersona implements Serializable {
 		areas = areasEJB.listarAreas();
 		cargos = cargoEJB.listarCargos();
 		tiposUsu = tipoEJB.listar();
+		conexionEJB.ultimaBD();
 	}
 
 	public void listarMunicipios() {

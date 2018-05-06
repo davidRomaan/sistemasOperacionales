@@ -39,6 +39,30 @@ public class Persistencia implements Serializable {
 	private int bd;
 
 	/**
+	 * Crea un objeto en todas las bases de datos
+	 * 
+	 * @param objeto
+	 *            el objeto que se desea persistir
+	 */
+	public void crearEnTodasBD(Object objeto) {
+		emM.persist(objeto);
+		emP.persist(objeto);
+	}
+
+	public Object buscarEnTodasBD(Class c, Object pk) {
+		Object objectMysql = emM.find(c, pk);
+		Object objetoPostgres = emP.find(c, pk);
+
+		if (objectMysql != null) {
+			return objectMysql;
+		}
+		if (objetoPostgres != null) {
+			return objetoPostgres;
+		}
+		return null;
+	}
+
+	/**
 	 * Guarda en la base de datos
 	 */
 	public void crear(Object objeto) {

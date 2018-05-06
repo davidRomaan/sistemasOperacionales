@@ -122,15 +122,24 @@
 	<br></br>
 	<br></br>
 	<div id="combo" align="center">
-	<h:panelGrid>
-		<h:outputLabel id="lblBD" value="Base de datos" />
-		<h:selectOneMenu id="cbBase" value="#{controladoAcceso.base}">
+		<h:form>
+			<h:panelGrid id="panelCambio">
+				<h:outputLabel id="lblBD" value="Base de datos" />
 
-			<f:selectItems value="#{controladoAcceso.lista}" var="list"
-				itemValue="#{basesdatos}" itemLabel="#{basesdatos}" />
+				<h:selectOneMenu id="cbBase" value="#{controladoAcceso.base}">
 
-		</h:selectOneMenu>
-	</h:panelGrid>
+					<f:selectItem itemValue="MYSQL" itemLabel="MYSQL" />
+					<f:selectItem itemValue="POSTGRES" itemLabel="POSTGRES" />
+
+				</h:selectOneMenu>
+
+				<p:commandButton id="btnCambiar" value="Cambiar"
+					process="@this,panelCambio" update="panelCambio"
+					action="#{controladoAcceso.cambiarBD}" />
+
+			</h:panelGrid>
+		</h:form>
+
 	</div>
 	<footer class="site-footer" style="margin-top: 40px">
 		<div class="container">

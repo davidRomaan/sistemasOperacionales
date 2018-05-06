@@ -397,11 +397,11 @@ public class ControladorVentas implements Serializable {
 
 				usuarioEJB.registrarCliente(cliente);
 
-				accion = "Registrar Cliente";
-
-				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-
-				audiPersonaEJB.crearAuditoriaPersona(cliente.getNombre(), accion, browserDetail);
+//				accion = "Registrar Cliente";
+//
+//				String browserDetail = Faces.getRequest().getHeader("User-Agent");
+//
+//				audiPersonaEJB.crearAuditoriaPersona(cliente.getNombre(), accion, browserDetail);
 
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, "Cliente Registrado Exitosamente", null));

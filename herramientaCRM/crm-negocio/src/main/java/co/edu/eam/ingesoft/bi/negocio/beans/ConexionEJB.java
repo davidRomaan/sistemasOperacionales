@@ -22,7 +22,12 @@ public class ConexionEJB {
 	public void ultimaBD (){
 		em.setBd(2);
 		Conexion con  = (Conexion) em.buscar(Conexion.class, 1);
-		bd = 2;
+		bd = con.getCodigo();
+	}
+	
+	public void cambiarBD (Conexion conexion){
+		em.setBd(2);
+		em.editar(conexion);
 	}
 
 	public static int getBd() {
