@@ -1,24 +1,13 @@
 package co.edu.eam.ingesoft.bi.negocio.beans;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Persona;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.Usuario;
 import co.edu.eam.ingesoft.bi.negocio.persistencia.Persistencia;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaPersona;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaProducto;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.Departamento;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.Municipio;
 
 @LocalBean
 @Stateless
@@ -79,26 +68,6 @@ public class PersonaEJB {
 	public List<Persona> listarClientes() {
 		em.setBd(ConexionEJB.getBd());
 		return em.listarClientes();
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public List<AuditoriaProducto> listaaudi() {
-		em.setBd(ConexionEJB.getBd());
-		return (List<AuditoriaProducto>) (Object) em.listar(AuditoriaProducto.LISTA_AuditoriaProducto);
-	}
-
-	/**
-	 * Registra un cliente
-	 * 
-	 * @param c
-	 *            Cliente que se desea registrar
-	 */
-	public void crearAudiPersona(AuditoriaPersona ap) {
-		em.setBd(ConexionEJB.getBd());
-		em.crear(ap);
 	}
 
 }

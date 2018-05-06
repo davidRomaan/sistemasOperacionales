@@ -11,8 +11,10 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 
+import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.DepartamentoEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.PersonaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.UsuarioEJB;
@@ -33,7 +35,9 @@ public class ControladorGestionCliente implements Serializable {
 	private String apellido;
 	private String correo;
 	private String telefono;
+	private String accion;
 	private Genero tipoGenero;
+	private Usuario usuario;
 	private int deptoSeleccionado;
 	private int municipioSeleccionado;
 	private List<Genero> generos;
@@ -52,10 +56,14 @@ public class ControladorGestionCliente implements Serializable {
 
 	@EJB
 	private PersonaEJB personaEJB;
+	
+	@EJB
+	private AuditoriaEJB auditoriaEJB;
 
 	@PostConstruct
 	private void cargarCampos() {
 
+		usuario = Faces.getApplicationAttribute("usu");
 		generos = Arrays.asList(Genero.values());
 		departamentos = deptoEJB.listarDepartamentos();
 		municipios = deptoEJB.listarMunicipiosDepartamento(departamentos.get(0).getId());
@@ -111,6 +119,10 @@ public class ControladorGestionCliente implements Serializable {
 						new FacesMessage(FacesMessage.SEVERITY_INFO, "Cliente Registrado Exitosamente", null));
 
 				refrescarClientes();
+				
+				accion = "Crear Persona";
+				String browserDetail2 = Faces.getRequest().getHeader("User-Agent");
+				auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona creada: " + cliente.getNombre(), usuario.getNombre(), browserDetail2);
 
 			} catch (ExcepcionNegocio e) {
 
@@ -128,6 +140,10 @@ public class ControladorGestionCliente implements Serializable {
 		cliente = usuarioEJB.buscarCliente(cedula);
 
 		if (cliente != null) {
+			
+			accion = "Buscar Persona";
+			String browserDetail = Faces.getRequest().getHeader("User-Agent");
+			auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona buscada: " + cliente.getNombre(), usuario.getNombre(), browserDetail);
 
 			cedula = cliente.getCedula();
 			nombre = cliente.getNombre();
@@ -175,6 +191,11 @@ public class ControladorGestionCliente implements Serializable {
 				Messages.addFlashGlobalInfo("Se ha editado correctamente");
 				refrescarClientes();
 				limpiarCampos();
+				
+				accion = "Editar Persona";
+				String browserDetail = Faces.getRequest().getHeader("User-Agent");
+				auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona editada: " + cliente.getNombre(), usuario.getNombre(), browserDetail);
+				
 				cliente = null;
 
 			} else {

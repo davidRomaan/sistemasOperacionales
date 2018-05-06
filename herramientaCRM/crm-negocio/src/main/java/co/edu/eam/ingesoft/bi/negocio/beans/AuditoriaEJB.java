@@ -3,20 +3,19 @@ package co.edu.eam.ingesoft.bi.negocio.beans;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import co.edu.eam.ingesoft.bi.negocio.persistencia.Persistencia;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.AuditoriaProducto;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.Producto;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.Auditoria;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.Municipio;
 
 @LocalBean
 @Stateless
-public class AuditoriaProductoEJB {
+public class AuditoriaEJB {
 	
 	
 	@EJB
@@ -90,7 +89,7 @@ public class AuditoriaProductoEJB {
 	 * @param usuario
 	 * @param usuarioAf
 	 */
-	public void crearAuditoriaProducto( String producto, String accion, String browserDeta) {
+	public void crearAuditoria( String referencia, String accion, String descripcion, String usuario, String browserDeta) {
 
 		this.browserDetails = browserDeta;
 		userAgent = browserDetails;
@@ -113,15 +112,30 @@ public class AuditoriaProductoEJB {
 		fechaGuardar.set(anio, mes, dia);
 		fechaGuardar.setTime(horaGuadar);
 		
-		AuditoriaProducto pro = new AuditoriaProducto();
-		pro.setAccion(accion);
-		pro.setFechaHora(fechaGuardar);
-		pro.setProducto(producto);
-		pro.setDispositivo(os);
-		pro.setNavegador(browser);	
+		Auditoria auditoria = new Auditoria();
+		auditoria.setAccion(accion);
+		auditoria.setFechaHora(fechaGuardar);
+		auditoria.setReferencia(referencia);
+		auditoria.setDescripcion(descripcion);
+		auditoria.setUsuario(usuario);
+		auditoria.setDispositivo(os);
+		auditoria.setNavegador(browser);	
 
 		em.setBd(ConexionEJB.getBd());
-		em.crear(pro);
+		em.crear(auditoria);
+
+	}
+	
+	/**
+	 *
+	 * 
+	 * @param 
+	 * @return 
+	 */
+	public List<Auditoria> listarAuditorias(String condicion) {
+		em.setBd(ConexionEJB.getBd());
+		return (List<Auditoria>) (Object) em.listarConParametroString
+				(Auditoria.LISTA_AUDITORIA, condicion);
 
 	}
 

@@ -15,10 +15,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 
-import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaTipoUsuarioEJB;
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.TipoUsuarioEJB;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.TipoUsuario;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.Usuario;
 
 @Named("controladorTipoUsuario")
 @SessionScoped
@@ -30,15 +31,17 @@ public class ControladorTipoUsuario implements Serializable {
 
 	private List<TipoUsuario> tiposUsuario;
 	private TipoUsuario tipoEditar;	
+	private Usuario usuario;
 
 	@EJB
 	private TipoUsuarioEJB tipoUsuarioEJB;
 	
 	@EJB
-	private AuditoriaTipoUsuarioEJB tipoUsuEJB;
+	private AuditoriaEJB auditoriaEJB;
 
 	@PostConstruct
 	private void cargarDatos() {
+		usuario = Faces.getApplicationAttribute("usu");
 		listarTipos();
 	}
 
@@ -52,9 +55,10 @@ public class ControladorTipoUsuario implements Serializable {
 				listarTipos();
 				Messages.addFlashGlobalInfo("Registro exitoso");
 				try {
-					accion = "Registrar Tipo Usuario";
-					String browserDetail = Faces.getRequest().getHeader("User-Agent");	
-					tipoUsuEJB.crearAuditoriaTipoUsusario(tu.getNombre(), accion, browserDetail);
+					
+					accion = "Registrar TipoUsuario";
+					String browserDetail = Faces.getRequest().getHeader("User-Agent");
+					auditoriaEJB.crearAuditoria("AuditoriaTiposUsuarios", accion, "TU creado: " + tu.getNombre(), usuario.getNombre(), browserDetail);
 
 				} catch (ExcepcionNegocio e) {
 					e.getMessage();
@@ -85,9 +89,9 @@ public class ControladorTipoUsuario implements Serializable {
 		tipoUsuarioEJB.eliminar(tu);
 		listarTipos();
 		try {
-			accion = "Eliminar Tipo Usuario";
-			String browserDetail = Faces.getRequest().getHeader("User-Agent");	
-			tipoUsuEJB.crearAuditoriaTipoUsusario(tu.getNombre(), accion, browserDetail);
+			accion = "Eliminar TipoUsuario";
+			String browserDetail = Faces.getRequest().getHeader("User-Agent");
+			auditoriaEJB.crearAuditoria("AuditoriaTiposUsuarios", accion, "TU eliminado: " + tu.getNombre(), usuario.getNombre(), browserDetail);
 
 		} catch (ExcepcionNegocio e) {
 			e.getMessage();
@@ -109,9 +113,9 @@ public class ControladorTipoUsuario implements Serializable {
 			tipoEditar = null;
 			limpiarCampos();
 			try {
-				accion = "Editar Tipo Usuario";
-				String browserDetail = Faces.getRequest().getHeader("User-Agent");	
-				tipoUsuEJB.crearAuditoriaTipoUsusario(nombre, accion, browserDetail);
+				accion = "Editar TipoUsuario";
+				String browserDetail = Faces.getRequest().getHeader("User-Agent");
+				auditoriaEJB.crearAuditoria("AuditoriaTiposUsuarios", accion, "TU editado: " + nombre, usuario.getNombre(), browserDetail);
 
 			} catch (ExcepcionNegocio e) {
 				e.getMessage();

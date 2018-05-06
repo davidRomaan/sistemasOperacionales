@@ -2,9 +2,6 @@ package co.edu.eam.ingesoft.bi.web.controladores;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -12,26 +9,36 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 
+import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.VentaEJB;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.DetalleVenta;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.FacturaVenta;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.Usuario;
 
 @SessionScoped
 @Named("controladorGestionVentas")
 public class ControladorGestionVentas implements Serializable {
 
 	private String fechaCompra;
+	private String accion;
+
 	private List<FacturaVenta> facturas;
 	private List<DetalleVenta> detallesVenta;
 	private FacturaVenta facturaSeleccionada;
+	private Usuario usuario;
 
 	@EJB
 	private VentaEJB ventasEJB;
 
+	@EJB
+	private AuditoriaEJB auditoriaEJB;
+
 	@PostConstruct
 	private void constructor() {
+		usuario = Faces.getApplicationAttribute("usu");
 		facturas = ventasEJB.listarFacturasPorFecha(ventasEJB.obtenerFechaActual());
 	}
 
@@ -64,6 +71,15 @@ public class ControladorGestionVentas implements Serializable {
 	public void eliminarDetalleVenta(DetalleVenta dv) {
 		ventasEJB.eliminarDetalleVenta(dv);
 		detallesVenta = ventasEJB.listarDetallesVentaFactura(facturaSeleccionada);
+
+		try {
+			accion = "Eliminar DetalleVenta";
+			String browserDetail = Faces.getRequest().getHeader("User-Agent");
+			auditoriaEJB.crearAuditoria("AuditoriaDetalleVenta", accion,
+					"DT eliminado: " + dv.getFacturaVenta().getId(), usuario.getNombre(), browserDetail);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -82,6 +98,15 @@ public class ControladorGestionVentas implements Serializable {
 				Messages.addFlashGlobalInfo("Se han eliminado todos los detalles de esta venta");
 				detallesVenta = ventasEJB.listarDetallesVentaFactura(facturaSeleccionada);
 				facturaSeleccionada = null;
+				
+				try {
+					accion = "Eliminar DetalleVenta";
+					String browserDetail = Faces.getRequest().getHeader("User-Agent");
+					auditoriaEJB.crearAuditoria("AuditoriaDetalleVenta", accion,
+							"DT eliminado: todos", usuario.getNombre(), browserDetail);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}

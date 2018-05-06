@@ -14,10 +14,10 @@ import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 
 import co.edu.eam.ingesoft.bi.negocio.beans.AreasEmpresaEJB;
-import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaAreaEJB;
-import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaPersonaEJB;
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Area;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.Usuario;
 
 @Named("controladorAreas")
 @SessionScoped
@@ -28,18 +28,21 @@ public class ControladorAreasEmpresa implements Serializable {
 	private String nombre;
 
 	private String descripcion;
+	
+	private Usuario usuario;
 
 	private List<Area> areasEmpresa;
 
 	private List<Area> listaNueva;
 
-	private AuditoriaAreaEJB auditoriaAreasEJB;
+	private AuditoriaEJB auditoriaEJB;
 
 	private String accion;
 
 	@PostConstruct
 	public void postconstructor() {
 		listarAreas();
+		usuario = Faces.getApplicationAttribute("usu");
 	}
 
 	public void listarAreas() {
@@ -66,10 +69,12 @@ public class ControladorAreasEmpresa implements Serializable {
 				FacesContext context = FacesContext.getCurrentInstance();
 				context.addMessage(null, new FacesMessage("Exitoso", "el area se ha registrado"));
 				listarAreas();
+				
 
-				accion = "RegistrarArea";
+				accion = "Registrar Area";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaAreasEJB.crearAuditoriaArea(a.getNombre(), accion, browserDetail);
+				auditoriaEJB.crearAuditoria("AuditoriaArea", accion, "area creada: " + a.getNombre(), usuario.getNombre(), browserDetail);
+				
 				codigo = 0;
 				nombre = "";
 				descripcion = "";
@@ -96,7 +101,7 @@ public class ControladorAreasEmpresa implements Serializable {
 				try {
 					accion = "Buscar Area";
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
-					auditoriaAreasEJB.crearAuditoriaArea(a.getNombre(), accion, browserDetail);
+					auditoriaEJB.crearAuditoria("AuditoriaArea", accion, "area buscada: " + a.getNombre(), usuario.getNombre(), browserDetail);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -124,7 +129,7 @@ public class ControladorAreasEmpresa implements Serializable {
 				try {
 					accion = "Editar Area";
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
-					auditoriaAreasEJB.crearAuditoriaArea(a.getNombre(), accion, browserDetail);
+					auditoriaEJB.crearAuditoria("AuditoriaArea", accion, "area editada: " + a.getNombre(), usuario.getNombre(), browserDetail);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -144,7 +149,7 @@ public class ControladorAreasEmpresa implements Serializable {
 		try {
 			accion = "Eliminar Area";
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
-			auditoriaAreasEJB.crearAuditoriaArea(a.getNombre(), accion, browserDetail);
+			auditoriaEJB.crearAuditoria("AuditoriaArea", accion, "area eliminada: " + a.getNombre(), usuario.getNombre(), browserDetail);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

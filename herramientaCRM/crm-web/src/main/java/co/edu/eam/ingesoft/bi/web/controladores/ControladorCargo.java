@@ -11,9 +11,10 @@ import javax.inject.Named;
 import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 
-import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaCargoEJB;
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.CargoEJB;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Cargo;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.Usuario;
 
 @Named("controladorCargo")
 @SessionScoped
@@ -26,6 +27,8 @@ public class ControladorCargo implements Serializable {
 	private double salario;
 	
 	private String accion;
+	
+	private Usuario usuario;
 
 	private List<Cargo> cargosEmpresa;
 
@@ -33,10 +36,11 @@ public class ControladorCargo implements Serializable {
 	private CargoEJB cargoEJB;
 	
 	@EJB
-	private AuditoriaCargoEJB audiCargoEJB;
+	private AuditoriaEJB auditoriaEJB;
 
 	@PostConstruct
 	public void postconstructor() {
+		usuario = Faces.getApplicationAttribute("usu");
 		listarCargos();
 	}
 
@@ -63,7 +67,7 @@ public class ControladorCargo implements Serializable {
 
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
 
-					audiCargoEJB.crearAuditoriaCargo(cargo.getDescripcion(), accion, browserDetail);
+					auditoriaEJB.crearAuditoria("AuditoriaCargo", accion, "cargo creado: "+c.getDescripcion(), usuario.getNombre(), browserDetail);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -93,7 +97,7 @@ public class ControladorCargo implements Serializable {
 
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
 
-					audiCargoEJB.crearAuditoriaCargo(c.getDescripcion(), accion, browserDetail);
+					auditoriaEJB.crearAuditoria("AuditoriaCargo", accion, "cargo buscado: "+c.getDescripcion(), usuario.getNombre(), browserDetail);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -126,7 +130,7 @@ public class ControladorCargo implements Serializable {
 
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
 
-					audiCargoEJB.crearAuditoriaCargo(cargo.getDescripcion(), accion, browserDetail);
+					auditoriaEJB.crearAuditoria("AuditoriaCargo", accion, "cargo editado: "+c.getDescripcion(), usuario.getNombre(), browserDetail);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -150,7 +154,7 @@ public class ControladorCargo implements Serializable {
 
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
 
-			audiCargoEJB.crearAuditoriaCargo(c.getDescripcion(), accion, browserDetail);
+			auditoriaEJB.crearAuditoria("AuditoriaCargo", accion, "cargo eliminado: "+c.getDescripcion(), usuario.getNombre(), browserDetail);
 
 		} catch (Exception e) {
 			e.printStackTrace();

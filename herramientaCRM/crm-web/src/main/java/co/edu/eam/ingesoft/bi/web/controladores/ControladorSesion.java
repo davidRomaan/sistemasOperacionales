@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.ConexionEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.UsuarioEJB;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Conexion;
@@ -22,6 +23,7 @@ public class ControladorSesion implements Serializable {
 
 	private String username;
 	private String password;
+	private String accion;
 	private Usuario user;
 	
 	private static int bd = 0;
@@ -31,6 +33,8 @@ public class ControladorSesion implements Serializable {
 
 	@EJB
 	private UsuarioEJB usuarioEJB;
+	
+	private AuditoriaEJB auditoriaEJB;
 	
 	private void obtenerBD (){
 		conexionEJB.ultimaBD();
@@ -49,6 +53,11 @@ public class ControladorSesion implements Serializable {
 							&& usuarioTemporal.isActivo() == true)) {
 				user = usuarioTemporal;
 				Faces.setSessionAttribute("user", user);
+				
+				accion = "Iniciar Sesion";
+				String browserDetail = Faces.getRequest().getHeader("User-Agent");
+				auditoriaEJB.crearAuditoria("AuditoriaSesion", accion, "sesion creado por: Administrador", user.getNombre(), browserDetail);
+				
 				return "/templates/inicioBases.xhtml?faces-redirect=true";
 
 			}
@@ -57,6 +66,11 @@ public class ControladorSesion implements Serializable {
 							&& usuarioTemporal.isActivo() == true)) {
 				user = usuarioTemporal;
 				Faces.setSessionAttribute("user", user);
+				
+				accion = "Iniciar Sesion";
+				String browserDetail = Faces.getRequest().getHeader("User-Agent");
+				auditoriaEJB.crearAuditoria("AuditoriaSesion", accion, "sesion creado por: CRM", user.getNombre(), browserDetail);
+				
 				return "/templates/inicioCRM.xhtml?faces-redirect=true";
 
 			}
@@ -65,11 +79,22 @@ public class ControladorSesion implements Serializable {
 							&& usuarioTemporal.isActivo() == true)) {
 				user = usuarioTemporal;
 				Faces.setSessionAttribute("user", user);
+				
+				accion = "Iniciar Sesion";
+				String browserDetail = Faces.getRequest().getHeader("User-Agent");
+				auditoriaEJB.crearAuditoria("AuditoriaSesion", accion, "sesion creado por: ERP", user.getNombre(), browserDetail);
+				
 				return "/templates/inicioERP.xhtml?faces-redirect=true";
 
 			}
 		} else {
+			
+			accion = "Error Log-In";
+			String browserDetail = Faces.getRequest().getHeader("User-Agent");
+			auditoriaEJB.crearAuditoria("AuditoriaSesion", accion, "error Inicion Sesion", "error Inicion Sesion", browserDetail);
+			
 			Messages.addFlashGlobalError("este usuario no existe");
+			
 		}
 		return null;
 	}

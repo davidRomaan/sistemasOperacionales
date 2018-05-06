@@ -14,13 +14,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
-import org.omnifaces.util.Messages.Message;
 
-import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaInventarioEJB;
-import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaPersonaEJB;
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.ProductoEJB;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Inventario;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.Usuario;
 
 @SessionScoped
 @Named("controladorInventario")
@@ -31,15 +30,17 @@ public class ControladorInventario implements Serializable {
 	private Inventario inventarioEditar;
 	private List<Inventario> inventarios;
 	private String accion;
+	private Usuario usuario;
 	
 	@EJB
 	private ProductoEJB productoEJB;
 	
 	@EJB
-	private AuditoriaInventarioEJB inventarioEJB;
+	private AuditoriaEJB auditoriaEJB;
 	
 	@PostConstruct
 	private void postConstruct(){
+		usuario = Faces.getApplicationAttribute("usu");
 		refrescarListaInventarios();
 	}
 	
@@ -64,7 +65,7 @@ public class ControladorInventario implements Serializable {
 			accion = "Regitro Inventario";
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
 			
-			inventarioEJB.crearAuditoriaInventario(inventario.getNombre(), accion, browserDetail);
+			auditoriaEJB.crearAuditoria("AuditoriaIventario", accion, "inventario creado: "+inventario.getNombre(), usuario.getNombre(), browserDetail);
 		
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -123,7 +124,7 @@ public class ControladorInventario implements Serializable {
 				accion = "Editar Inventario";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
 				
-				inventarioEJB.crearAuditoriaInventario(inventarioEditar.getNombre() + "cambio a " + nombre.toUpperCase(), accion, browserDetail);
+				auditoriaEJB.crearAuditoria("AuditoriaIventario", accion, "inventario editado: "+nombre, usuario.getNombre(), browserDetail);
 			
 			}catch (Exception e) {
 				e.printStackTrace();
@@ -153,7 +154,7 @@ public class ControladorInventario implements Serializable {
 			accion = "Eliminar Inventario";
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
 			
-			inventarioEJB.crearAuditoriaInventario(inventario.getNombre(), accion, browserDetail);
+			auditoriaEJB.crearAuditoria("AuditoriaIventario", accion, "inventario eliminado: "+inventario.getNombre(), usuario.getNombre(), browserDetail);
 		
 		}catch (Exception e) {
 			e.printStackTrace();

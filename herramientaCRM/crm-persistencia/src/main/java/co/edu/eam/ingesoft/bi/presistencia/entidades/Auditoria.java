@@ -2,27 +2,24 @@ package co.edu.eam.ingesoft.bi.presistencia.entidades;
 
 import java.io.Serializable;
 import java.util.Calendar;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="AUDITORIA_FACTURA_VENTA")
+@Table(name="AUDITORIA")
 @NamedQueries({
-	@NamedQuery(name=AuditoriaFacturaVenta.LISTA_FACTURA_VENTA, query="SELECT p FROM AuditoriaFacturaVenta p")
+	@NamedQuery(name=Auditoria.LISTA_AUDITORIA, query="SELECT p FROM Auditoria p WHERE p.referencia = ?1")
 })
-public class AuditoriaFacturaVenta implements Serializable{
+public class Auditoria implements Serializable{
 	
-	public static final String LISTA_FACTURA_VENTA = "lista.facturaVenta";
+	public static final String LISTA_AUDITORIA = "lista_auditoria";
 
 	@Id
 	@Column(name="id")
@@ -41,24 +38,32 @@ public class AuditoriaFacturaVenta implements Serializable{
 	@Column(name="navegador")
 	private String navegador;
 	
-	@Column(name="factura_venta")
-	private String facturaVenta;
+	@Column(name="descripcion")
+	private String descripcion;
 	
-	public AuditoriaFacturaVenta() {
+	@Column(name="referencia")
+	private String referencia;
+	
+	@Column(name="usuario_acciones")
+	private String usuario;
+	
+	public Auditoria() {
 		// TODO Auto-generated constructor stub
 	}
 
 	
 
-	public AuditoriaFacturaVenta(int id, Calendar fechaHora, String dispositivo, String accion, String navegador,
-			String facturaVenta) {
+	public Auditoria(int id, Calendar fechaHora, String dispositivo, String accion, String navegador,
+			String descripcion, String referencia, String usuario) {
 		super();
 		this.id = id;
 		this.fechaHora = fechaHora;
 		this.dispositivo = dispositivo;
 		this.accion = accion;
 		this.navegador = navegador;
-		this.facturaVenta = facturaVenta;
+		this.descripcion = descripcion;
+		this.referencia = referencia;
+		this.usuario = usuario;
 	}
 
 
@@ -67,74 +72,69 @@ public class AuditoriaFacturaVenta implements Serializable{
 		return id;
 	}
 
-
-
 	public void setId(int id) {
 		this.id = id;
 	}
-
-
 
 	public Calendar getFechaHora() {
 		return fechaHora;
 	}
 
-
-
 	public void setFechaHora(Calendar fechaHora) {
 		this.fechaHora = fechaHora;
 	}
-
-
 
 	public String getDispositivo() {
 		return dispositivo;
 	}
 
-
-
 	public void setDispositivo(String dispositivo) {
 		this.dispositivo = dispositivo;
 	}
-
-
 
 	public String getAccion() {
 		return accion;
 	}
 
-
-
 	public void setAccion(String accion) {
 		this.accion = accion;
 	}
-
-
 
 	public String getNavegador() {
 		return navegador;
 	}
 
-
-
 	public void setNavegador(String navegador) {
 		this.navegador = navegador;
 	}
 
+	public String getDescripcion() {
+		return descripcion;
+	}
 
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
 
-	public String getFacturaVenta() {
-		return facturaVenta;
+	public String getReferencia() {
+		return referencia;
+	}
+
+	public void setReferencia(String referencia) {
+		this.referencia = referencia;
 	}
 
 
 
-	public void setFacturaVenta(String facturaVenta) {
-		this.facturaVenta = facturaVenta;
+	public String getUsuario() {
+		return usuario;
 	}
 
 
 
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
+	}
 	
 	
 	
