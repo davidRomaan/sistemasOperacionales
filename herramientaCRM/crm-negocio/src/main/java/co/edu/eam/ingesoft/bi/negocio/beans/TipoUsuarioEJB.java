@@ -30,8 +30,7 @@ public class TipoUsuarioEJB {
 		if (buscar(tu.getNombre()) != null){
 			throw new ExcepcionNegocio("Ya existe un tipo de usuario con este nombre");
 		} else {
-			em.setBd(ConexionEJB.getBd());
-			em.crear(tu);
+			em.crearEnTodasBD(tu);
 		}
 	}
 	
@@ -64,8 +63,7 @@ public class TipoUsuarioEJB {
 	 * @param tu tipo de usuario que se desea elminar
 	 */
 	public void eliminar(TipoUsuario tu){
-		em.setBd(ConexionEJB.getBd());
-		em.eliminar(tu);
+		em.eliminarEnTodasBD(tu);
 	}
 	
 	/**
@@ -73,8 +71,7 @@ public class TipoUsuarioEJB {
 	 * @param tu tipo de usuario a editar
 	 */
 	public void editar(TipoUsuario tu){
-		em.setBd(ConexionEJB.getBd());
-		em.editar(tu);
+		em.editarEnTodasBD(tu);
 	}
 	
 }

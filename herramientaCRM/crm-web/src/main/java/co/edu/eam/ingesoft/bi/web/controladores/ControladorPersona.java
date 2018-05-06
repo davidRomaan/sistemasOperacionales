@@ -117,11 +117,12 @@ public class ControladorPersona implements Serializable {
 	private ConexionEJB conexionEJB;
 
 	@PostConstruct
-	public void listares() {
+	public void listar() {
+		
+		conexionEJB.ultimaBD();
 		
 		usuario = Faces.getApplicationAttribute("usu");
 		generos = Arrays.asList(Genero.values());
-		departamentos = departamentoEJB.listarDepartamentos();
 		listarDepartamentos();
 		municipios = departamentoEJB.listarMunicipiosDepartamento(departamentos.get(0).getId());
 
@@ -129,11 +130,11 @@ public class ControladorPersona implements Serializable {
 		areas = areasEJB.listarAreas();
 		cargos = cargoEJB.listarCargos();
 		tiposUsu = tipoEJB.listar();
-		conexionEJB.ultimaBD();
+	
 	}
 
 	public void listarMunicipios() {
-
+		
 		municipios = departamentoEJB.listarMunicipiosDepartamento(deptoSeleccionado);
 
 	}

@@ -34,6 +34,7 @@ public class ControladorSesion implements Serializable {
 	@EJB
 	private UsuarioEJB usuarioEJB;
 	
+	@EJB
 	private AuditoriaEJB auditoriaEJB;
 	
 	private void obtenerBD (){

@@ -48,7 +48,31 @@ public class Persistencia implements Serializable {
 		emM.persist(objeto);
 		emP.persist(objeto);
 	}
+	
+	/**
+	 * Edita un objeto en todas las bases de datos
+	 * @param objeto el objeto que se editar
+	 */
+	public void editarEnTodasBD(Object objeto){
+		emM.merge(objeto);
+		emP.merge(objeto);
+	}
+	
+	/**
+	 * Elimina un objeto en todas las bases de datos
+	 * @param objeto el objeto que se desea eliminar
+	 */
+	public void eliminarEnTodasBD(Object objeto){
+		emM.remove(emM.merge(objeto));
+		emP.remove(emP.merge(objeto));
+	}
 
+	/**
+	 * Busca un objeto en todas las beses de datos
+	 * @param c clase que se desea buscar
+	 * @param pk identificador de la clase
+	 * @return el objeto si lo ecuentra, de lo contrario null
+	 */
 	public Object buscarEnTodasBD(Class c, Object pk) {
 		Object objectMysql = emM.find(c, pk);
 		Object objetoPostgres = emP.find(c, pk);
@@ -307,7 +331,7 @@ public class Persistencia implements Serializable {
 	 */
 	public void editarInventarioProducto(InventarioProducto ip) {
 
-		String sql = "UPDATE INVENTARIO_PRODUCTO SET cantidad = ?1 " + "WHERE inventario_id = ?2 AND producto_id = ?3";
+		String sql = "UPDATE INVENTARIO_PRODUCTO SET cantidad = ?1 WHERE inventario_id = ?2 AND producto_id = ?3";
 
 		switch (this.bd) {
 		case 1:
