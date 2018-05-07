@@ -116,7 +116,7 @@ public class ControladorActivarUsuario implements Serializable {
 
 	@PostConstruct
 	public void postconstructor() {
-		usuario = Faces.getApplicationAttribute("usu");
+		usuario = Faces.getApplicationAttribute("user");
 		listarActivosInActivos();
 		listarDepartamentos();
 		municipios = departamentoEJB.listarMunicipiosDepartamento(departamentos.get(0).getId());
@@ -186,11 +186,11 @@ public class ControladorActivarUsuario implements Serializable {
 					
 					accion = "Crear Usuario";
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
-					auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario creado: " + usu.getNombre(), usuario.getNombre(), browserDetail);
+					auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario creado: " + usu.getNombre(), "", browserDetail);
 					
 					accion = "Crear Persona";
 					String browserDetail2 = Faces.getRequest().getHeader("User-Agent");
-					auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona creada: " + usu.getNombre(), usuario.getNombre(), browserDetail2);
+					auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona creada: " + usu.getNombre(), "", browserDetail2);
 
 				} catch (ExcepcionNegocio e) {
 					e.getMessage();
@@ -232,7 +232,7 @@ public class ControladorActivarUsuario implements Serializable {
 				
 				accion = "Buscar Usuario";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario buscado: " + u.getNombre(), usuario.getNombre(), browserDetail);
+				auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario buscado: " + u.getNombre(), "", browserDetail);
 
 				apellido = u.getApellido();
 				correo = u.getCorreo();
@@ -257,7 +257,7 @@ public class ControladorActivarUsuario implements Serializable {
 				
 				accion = "Buscar Persona";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona buscada: " + p.getNombre(), usuario.getNombre(), browserDetail);
+				auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona buscada: " + p.getNombre(), "", browserDetail);
 				
 				apellido = p.getApellido();
 				correo = p.getCorreo();
@@ -309,7 +309,7 @@ public class ControladorActivarUsuario implements Serializable {
 				
 				accion = "Activar Usuario";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario activado: " + usuar.getNombre(), usuario.getNombre(), browserDetail);
+				auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario activado: " + usuar.getNombre(), "", browserDetail);
 			}
 
 		} else {
@@ -329,7 +329,7 @@ public class ControladorActivarUsuario implements Serializable {
 				
 				accion = "Desactivar Usuario";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario desactivado: " + usuar.getNombre(), usuario.getNombre(), browserDetail);
+				auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario desactivado: " + usuar.getNombre(), "", browserDetail);
 			} else {
 				Messages.addFlashGlobalInfo("este usuario ya esta desactivado");
 			}

@@ -40,7 +40,7 @@ public class ControladorInventario implements Serializable {
 	
 	@PostConstruct
 	private void postConstruct(){
-		usuario = Faces.getApplicationAttribute("usu");
+		usuario = Faces.getApplicationAttribute("user");
 		refrescarListaInventarios();
 	}
 	
@@ -65,7 +65,7 @@ public class ControladorInventario implements Serializable {
 			accion = "Regitro Inventario";
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
 			
-			auditoriaEJB.crearAuditoria("AuditoriaIventario", accion, "inventario creado: "+inventario.getNombre(), usuario.getNombre(), browserDetail);
+			auditoriaEJB.crearAuditoria("AuditoriaIventario", accion, "inventario creado: "+inventario.getNombre(), "", browserDetail);
 		
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -124,7 +124,7 @@ public class ControladorInventario implements Serializable {
 				accion = "Editar Inventario";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
 				
-				auditoriaEJB.crearAuditoria("AuditoriaIventario", accion, "inventario editado: "+nombre, usuario.getNombre(), browserDetail);
+				auditoriaEJB.crearAuditoria("AuditoriaIventario", accion, "inventario editado: "+nombre, "", browserDetail);
 			
 			}catch (Exception e) {
 				e.printStackTrace();
@@ -154,7 +154,7 @@ public class ControladorInventario implements Serializable {
 			accion = "Eliminar Inventario";
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
 			
-			auditoriaEJB.crearAuditoria("AuditoriaIventario", accion, "inventario eliminado: "+inventario.getNombre(), usuario.getNombre(), browserDetail);
+			auditoriaEJB.crearAuditoria("AuditoriaIventario", accion, "inventario eliminado: "+inventario.getNombre(), "", browserDetail);
 		
 		}catch (Exception e) {
 			e.printStackTrace();

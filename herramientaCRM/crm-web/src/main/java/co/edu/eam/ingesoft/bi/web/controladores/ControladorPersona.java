@@ -121,7 +121,7 @@ public class ControladorPersona implements Serializable {
 		
 		conexionEJB.ultimaBD();
 		
-		usuario = Faces.getApplicationAttribute("usu");
+		usuario = Faces.getApplicationAttribute("user");
 		generos = Arrays.asList(Genero.values());
 		listarDepartamentos();
 		municipios = departamentoEJB.listarMunicipiosDepartamento(departamentos.get(0).getId());
@@ -185,22 +185,25 @@ public class ControladorPersona implements Serializable {
 				usu.setActivo(false);
 				usu.setArea(a);
 				usu.setCargo(c);
-				usu.setTipoUsuario(tip);
-
+				
+				System.out.println(nombre);
+				System.out.println(usuario.getNombre());
+				
 				try {
 					usuarioEJB.registrarUsu(usu);
 					
 					accion = "Crear Usuario";
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
-					auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario creado: " + usu.getNombre(), usuario.getNombre(), browserDetail);
+					auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario creado: " + nombre, "", browserDetail);
 					
 					accion = "Crear Persona";
 					String browserDetail2 = Faces.getRequest().getHeader("User-Agent");
-					auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona creada: " + usu.getNombre(), usuario.getNombre(), browserDetail2);
+					auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona creada: " + nombre, "", browserDetail2);
 
 				} catch (ExcepcionNegocio e) {
 					e.getMessage();
 				}
+				usu.setTipoUsuario(tip);
 
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, "se ha registrado correctamente", null));

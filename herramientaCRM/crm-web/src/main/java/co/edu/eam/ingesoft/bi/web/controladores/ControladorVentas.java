@@ -104,7 +104,7 @@ public class ControladorVentas implements Serializable {
 	 */
 	@PostConstruct
 	private void cargarElementos() {
-		usuario = Faces.getApplicationAttribute("usu");
+		usuario = Faces.getApplicationAttribute("user");
 		cargarProductos();
 		listarDepartamentos();
 		productosCompra = new ArrayList<DetalleVenta>();
@@ -166,7 +166,7 @@ public class ControladorVentas implements Serializable {
 
 			accion = "Crear DetalleVenta";
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
-			auditoriaEJB.crearAuditoria("AuditoriaDetalleVenta", accion, "DT creada: " + factura.getId(), usuario.getNombre(), browserDetail);
+			auditoriaEJB.crearAuditoria("AuditoriaDetalleVenta", accion, "DT creada: " + factura.getId(), "", browserDetail);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -247,7 +247,7 @@ public class ControladorVentas implements Serializable {
 
 			accion = "Eliminar DetalleVenta";
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
-			auditoriaEJB.crearAuditoria("AuditoriaDetalleVenta", accion, "DT eliminado: " + factura.getId(), usuario.getNombre(), browserDetail);
+			auditoriaEJB.crearAuditoria("AuditoriaDetalleVenta", accion, "DT eliminado: " + factura.getId(), "", browserDetail);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -332,7 +332,7 @@ public class ControladorVentas implements Serializable {
 
 					accion = "Registar FacturaVenta";
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
-					auditoriaEJB.crearAuditoria("AuditoriaFacturaVenta", accion, "FV creada: " + factura.getId(), usuario.getNombre(), browserDetail);
+					auditoriaEJB.crearAuditoria("AuditoriaFacturaVenta", accion, "FV creada: " + factura.getId(), "", browserDetail);
 
 					factura.setId(ventaEJB.codigoUltimaFacturaCliente(cliente.getCedula()));
 					registrarDetallesVenta();
@@ -387,7 +387,7 @@ public class ControladorVentas implements Serializable {
 				
 				accion = "Crear Persona";
 				String browserDetail2 = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona creada: " + cliente.getNombre(), usuario.getNombre(), browserDetail2);
+				auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona creada: " + cliente.getNombre(), "", browserDetail2);
 
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, "Cliente Registrado Exitosamente", null));
@@ -432,7 +432,7 @@ public class ControladorVentas implements Serializable {
 				
 				accion = "Buscar Persona";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona buscada: " + cliente.getNombre(), usuario.getNombre(), browserDetail);
+				auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona buscada: " + cliente.getNombre(), "", browserDetail);
 				
 			} catch (Exception e) {
 				e.printStackTrace();
