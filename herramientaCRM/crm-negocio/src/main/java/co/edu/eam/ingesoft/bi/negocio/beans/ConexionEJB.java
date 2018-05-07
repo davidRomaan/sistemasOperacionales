@@ -17,9 +17,9 @@ public class ConexionEJB {
 	private static int bd = 0;
 	
 	/**
-	 * Obtiene la conexión que se guardó la última vez
+	 * Obtiene la conexiï¿½n que se guardï¿½ la ï¿½ltima vez
 	 */
-	public void ultimaBD (){
+	public void ultimaBD () {
 		em.setBd(2);
 		Conexion con  = (Conexion) em.buscar(Conexion.class, 1);
 		bd = con.getCodigo();
