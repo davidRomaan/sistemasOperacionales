@@ -71,9 +71,9 @@ public class ControladorActivarUsuario implements Serializable {
 	private int cargoSeleccionado;
 
 	private String tipoUsuarioSeleccionado;
-	
+
 	private String accion;
-	
+
 	private Usuario usuario;
 
 	private List<Municipio> municipios;
@@ -110,7 +110,7 @@ public class ControladorActivarUsuario implements Serializable {
 
 	@EJB
 	private DepartamentoEJB departamentoEJB;
-	
+
 	@EJB
 	private AuditoriaEJB auditoriaEJB;
 
@@ -128,7 +128,12 @@ public class ControladorActivarUsuario implements Serializable {
 	}
 
 	public void listarActivosInActivos() {
-		usuarios = usuarioEJB.llenarDTO();
+		try {
+			usuarios = usuarioEJB.llenarDTO();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block		
+			Messages.addFlashGlobalInfo(e.getMessage());
+		}
 	}
 
 	/**
@@ -183,14 +188,16 @@ public class ControladorActivarUsuario implements Serializable {
 				try {
 					usuarioEJB.registrarUsu(usu);
 					listarActivosInActivos();
-					
+
 					accion = "Crear Usuario";
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
-					auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario creado: " + usu.getNombre(), usuario.getNombre(), browserDetail);
-					
+					auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario creado: " + usu.getNombre(),
+							usuario.getNombre(), browserDetail);
+
 					accion = "Crear Persona";
 					String browserDetail2 = Faces.getRequest().getHeader("User-Agent");
-					auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona creada: " + usu.getNombre(), usuario.getNombre(), browserDetail2);
+					auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona creada: " + usu.getNombre(),
+							usuario.getNombre(), browserDetail2);
 
 				} catch (ExcepcionNegocio e) {
 					e.getMessage();
@@ -222,17 +229,12 @@ public class ControladorActivarUsuario implements Serializable {
 	public void buscarUsuario() {
 
 		Usuario u = usuarioEJB.buscarUsu(cedula);
-		Persona p = usuarioEJB.buscarCliente(cedula);
 
 		if (cedula.isEmpty()) {
 			FacesContext context = FacesContext.getCurrentInstance();
-			context.addMessage(null, new FacesMessage("Exitoso", "el area se ha registrado"));
+			context.addMessage(null, new FacesMessage("ingrese un numero de cedula para buscar"));
 		} else {
 			if (u != null) {
-				
-				accion = "Buscar Usuario";
-				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario buscado: " + u.getNombre(), usuario.getNombre(), browserDetail);
 
 				apellido = u.getApellido();
 				correo = u.getCorreo();
@@ -252,30 +254,74 @@ public class ControladorActivarUsuario implements Serializable {
 				cargoSeleccionado = u.getCargo().getId();
 				tipoUsuarioSeleccionado = u.getTipoUsuario().getNombre();
 				reload();
+				Messages.addFlashGlobalInfo("usuario encontrado");
 
-			} else if (p != null) {
-				
-				accion = "Buscar Persona";
+
+				accion = "Buscar Usuario";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona buscada: " + p.getNombre(), usuario.getNombre(), browserDetail);
-				
-				apellido = p.getApellido();
-				correo = p.getCorreo();
-				fechaNacimiento = p.getFechaNacimiento();
-				tipoGenero = p.getGenero();
-				nombre = p.getNombre();
-				telefono = p.getTelefono();
-				deptoSeleccionado = p.getMunicipio().getDepartamento().getId();
+				auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario buscado: " + u.getNombre(),
+						usuario.getNombre(), browserDetail);
 
-				municipios = departamentoEJB.listarMunicipiosDepartamento(deptoSeleccionado);
-				municipioSeleccionado = p.getMunicipio().getId();
-			
 			} else {
 				FacesContext context = FacesContext.getCurrentInstance();
 				context.addMessage(null, new FacesMessage("esta persona no se encuentra registrada"));
 			}
 		}
 
+	}
+
+	public void modificarUsuario() {
+
+		Usuario us = usuarioEJB.buscarUsu(cedula);
+
+		if (cedula.isEmpty()) {
+			FacesContext context = FacesContext.getCurrentInstance();
+			context.addMessage(null, new FacesMessage("ingrese el numero de cedula para buscar"));
+		} else {
+
+			if (us != null) {
+				Area a = areasEJB.buscarArea(areaSeleccionada);
+				Cargo c = cargoEJB.buscarCargo(cargoSeleccionado);
+				TipoUsuario tip = tipoEJB.buscar(tipoUsuarioSeleccionado);
+				Municipio m = municipioEJB.buscar(municipioSeleccionado);
+				
+				Usuario usu = new Usuario();
+				usu.setCedula(cedula);
+				usu.setApellido(apellido);
+				usu.setCorreo(correo);
+				usu.setFechaNacimiento(fechaNacimiento);
+				usu.setGenero(tipoGenero);
+				usu.setNombre(nombre);
+				usu.setTelefono(telefono);
+				usu.setMunicipio(m);
+				
+				usu.setContrasenia(contrasenia);
+				usu.setFechaIngreso(fechaIngreso);
+				usu.setNombreUsuario(nombreUsuario);
+				usu.setCedula(cedula);
+				usu.setActivo(true);
+				usu.setArea(a);
+				usu.setCargo(c);
+				usu.setTipoUsuario(tip);
+
+				usuarioEJB.editarUsuario(usu);
+				Messages.addFlashGlobalInfo("se edito correctamente");
+				reload();
+				listarActivosInActivos();
+
+			}else{
+				Messages.addFlashGlobalInfo("esta persona no existe");
+			}
+
+		}
+
+	}
+	
+	public void eliminarUsuario(Usuario u){
+		
+		usuarioEJB.eliminarUsuario(u);
+		Messages.addFlashGlobalInfo("se elimino correctamente");
+		
 	}
 
 	private void reload() {
@@ -306,10 +352,11 @@ public class ControladorActivarUsuario implements Serializable {
 				usuarioEJB.editarUsuario(usuar);
 				listarActivosInActivos();
 				Messages.addFlashGlobalInfo("se activo correctamente");
-				
+
 				accion = "Activar Usuario";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario activado: " + usuar.getNombre(), usuario.getNombre(), browserDetail);
+				auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario activado: " + usuar.getNombre(),
+						usuario.getNombre(), browserDetail);
 			}
 
 		} else {
@@ -326,10 +373,11 @@ public class ControladorActivarUsuario implements Serializable {
 				usuarioEJB.editarUsuario(usuar);
 				listarActivosInActivos();
 				Messages.addFlashGlobalInfo("se desactivo correctamente");
-				
+
 				accion = "Desactivar Usuario";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario desactivado: " + usuar.getNombre(), usuario.getNombre(), browserDetail);
+				auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario desactivado: " + usuar.getNombre(),
+						usuario.getNombre(), browserDetail);
 			} else {
 				Messages.addFlashGlobalInfo("este usuario ya esta desactivado");
 			}

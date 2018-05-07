@@ -81,7 +81,7 @@
 					value="#{controladorActivar.nombreUsuario}" />
 
 
-				<h:outputLabel for="cbArea" id="lbArea" value="#{'AreaEmpresa'}" />
+				<h:outputLabel for="cbAreas" id="lbArea" value="#{'AreaEmpresa'}" />
 				<h:selectOneMenu id="cbAreas"
 					value="#{controladorActivar.areaSeleccionada}">
 
@@ -102,7 +102,7 @@
 
 				<h:outputLabel for="cbtipoUsuario" id="lbtipo"
 					value="#{'TipoUsuario'}" />
-				<h:selectOneMenu id="cbtipo"
+				<h:selectOneMenu id="cbtipoUsuario"
 					value="#{controladorActivar.tipoUsuarioSeleccionado}">
 
 					<f:selectItems value="#{controladorActivar.tiposUsu}" var="tipo"
@@ -114,8 +114,7 @@
 			<br></br>
 			<h:panelGrid id="panelContra" columns="3">
 				<h:outputLabel id="lblContra" value="Contrasenia" />
-				<h:inputText id="tfContra" value="#{controladorActivar.contrasenia}"
-					disabled="true" />
+				<h:inputText id="tfContra" value="#{controladorActivar.contrasenia}" />
 
 				<p:commandButton id="btngenerar" value="#{'Generar Clave'}"
 					process="@this,panelContra" update="panelContra"
@@ -123,22 +122,28 @@
 			</h:panelGrid>
 			<br></br>
 			<br></br>
-			<h:panelGrid id="panelBotones" columns="2">
+			<h:panelGrid id="panelBotones" columns="3">
 
 				<p:commandButton id="btnRegistrar" value="#{'Registrar Persona'}"
 					process="@this,panelDatos,panelContra" update="paneltabla"
 					action="#{controladorActivar.crearUsuario}" />
 
 				<p:commandButton id="btnBuscar" value="Buscar"
-					process="@this,panelDatos,panelContra" update="panelDatos,panelContra"
+					process="@this,panelDatos,panelContra"
+					update="panelDatos,panelContra"
 					action="#{controladorActivar.buscarUsuario}" />
+					
+				<p:commandButton id="btnEditar" value="Editar"
+					process="@this,panelDatos,panelContra"
+					update="paneltabla"
+					action="#{controladorActivar.modificarUsuario}" />
 
 			</h:panelGrid>
 
 
 			<br></br>
 			<br></br>
-			<h:panelGrid id="paneltabla" columns="5" width="80%">
+			<h:panelGrid id="paneltabla" columns="5" width="90%">
 
 				<p:dataTable id="tablatipos" emptyMessage="Ningun resultado"
 					value="#{controladorActivar.usuarios}" var="us" border="1">
@@ -160,7 +165,7 @@
 						<h:outputLabel value="#{us.estado}"></h:outputLabel>
 					</p:column>
 
-					<p:column headerText="Accion">
+					<p:column headerText="Accion 1">
 						<p:commandButton
 							action="#{controladorActivar.activarUsuario(us.cedula)}"
 							process="@this,paneltabla" value="Activar"
@@ -170,6 +175,12 @@
 							action="#{controladorActivar.desactivarUsuario(us.cedula)}"
 							process="@this,paneltabla" value="Desactivar"
 							update="@this,paneltabla" />
+					</p:column>
+					<p:column headerText="Accion 2">
+						<p:commandButton
+							action="#{controladorActivar.eliminarUsuario(us)}"
+							process="@this,paneltabla,panelDatos" value="Eliminar"
+							update="@this,paneltabla,panelDatos" />
 					</p:column>
 
 				</p:dataTable>
