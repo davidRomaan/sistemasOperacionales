@@ -41,7 +41,7 @@ public class ControladorTipoUsuario implements Serializable {
 
 	@PostConstruct
 	private void cargarDatos() {
-		usuario = Faces.getApplicationAttribute("usu");
+		usuario = Faces.getApplicationAttribute("user");
 		listarTipos();
 	}
 
@@ -58,7 +58,7 @@ public class ControladorTipoUsuario implements Serializable {
 					
 					accion = "Registrar TipoUsuario";
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
-					auditoriaEJB.crearAuditoria("AuditoriaTiposUsuarios", accion, "TU creado: " + tu.getNombre(), usuario.getNombre(), browserDetail);
+					auditoriaEJB.crearAuditoria("AuditoriaTiposUsuarios", accion, "TU creado: " + tu.getNombre(), "", browserDetail);
 
 				} catch (ExcepcionNegocio e) {
 					e.getMessage();
@@ -91,7 +91,7 @@ public class ControladorTipoUsuario implements Serializable {
 		try {
 			accion = "Eliminar TipoUsuario";
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
-			auditoriaEJB.crearAuditoria("AuditoriaTiposUsuarios", accion, "TU eliminado: " + tu.getNombre(), usuario.getNombre(), browserDetail);
+			auditoriaEJB.crearAuditoria("AuditoriaTiposUsuarios", accion, "TU eliminado: " + tu.getNombre(), "", browserDetail);
 
 		} catch (ExcepcionNegocio e) {
 			e.getMessage();
@@ -115,7 +115,7 @@ public class ControladorTipoUsuario implements Serializable {
 			try {
 				accion = "Editar TipoUsuario";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaTiposUsuarios", accion, "TU editado: " + nombre, usuario.getNombre(), browserDetail);
+				auditoriaEJB.crearAuditoria("AuditoriaTiposUsuarios", accion, "TU editado: " + nombre, "", browserDetail);
 
 			} catch (ExcepcionNegocio e) {
 				e.getMessage();

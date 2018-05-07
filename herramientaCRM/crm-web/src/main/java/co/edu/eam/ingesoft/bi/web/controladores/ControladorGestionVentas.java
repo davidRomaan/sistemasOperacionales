@@ -38,7 +38,7 @@ public class ControladorGestionVentas implements Serializable {
 
 	@PostConstruct
 	private void constructor() {
-		usuario = Faces.getApplicationAttribute("usu");
+		usuario = Faces.getApplicationAttribute("user");
 		facturas = ventasEJB.listarFacturasPorFecha(ventasEJB.obtenerFechaActual());
 	}
 
@@ -76,7 +76,7 @@ public class ControladorGestionVentas implements Serializable {
 			accion = "Eliminar DetalleVenta";
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
 			auditoriaEJB.crearAuditoria("AuditoriaDetalleVenta", accion,
-					"DT eliminado: " + dv.getFacturaVenta().getId(), usuario.getNombre(), browserDetail);
+					"DT eliminado: " + dv.getFacturaVenta().getId(), "", browserDetail);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -103,7 +103,7 @@ public class ControladorGestionVentas implements Serializable {
 					accion = "Eliminar DetalleVenta";
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
 					auditoriaEJB.crearAuditoria("AuditoriaDetalleVenta", accion,
-							"DT eliminado: todos", usuario.getNombre(), browserDetail);
+							"DT eliminado: todos", "", browserDetail);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

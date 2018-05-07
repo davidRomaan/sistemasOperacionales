@@ -191,13 +191,8 @@ public class ControladorActivarUsuario implements Serializable {
 
 					accion = "Crear Usuario";
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
-					auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario creado: " + usu.getNombre(),
-							usuario.getNombre(), browserDetail);
-
-					accion = "Crear Persona";
-					String browserDetail2 = Faces.getRequest().getHeader("User-Agent");
-					auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona creada: " + usu.getNombre(),
-							usuario.getNombre(), browserDetail2);
+					auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario creado: " + usu.getNombre(), "", browserDetail);
+						
 
 				} catch (ExcepcionNegocio e) {
 					e.getMessage();
@@ -235,6 +230,7 @@ public class ControladorActivarUsuario implements Serializable {
 			context.addMessage(null, new FacesMessage("ingrese un numero de cedula para buscar"));
 		} else {
 			if (u != null) {
+			
 
 				apellido = u.getApellido();
 				correo = u.getCorreo();
@@ -259,8 +255,7 @@ public class ControladorActivarUsuario implements Serializable {
 
 				accion = "Buscar Usuario";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario buscado: " + u.getNombre(),
-						usuario.getNombre(), browserDetail);
+				auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario buscado: " + u.getNombre(), "", browserDetail);
 
 			} else {
 				FacesContext context = FacesContext.getCurrentInstance();
@@ -355,8 +350,7 @@ public class ControladorActivarUsuario implements Serializable {
 
 				accion = "Activar Usuario";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario activado: " + usuar.getNombre(),
-						usuario.getNombre(), browserDetail);
+				auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario activado: " + usuar.getNombre(), "", browserDetail);
 			}
 
 		} else {
@@ -376,8 +370,7 @@ public class ControladorActivarUsuario implements Serializable {
 
 				accion = "Desactivar Usuario";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario desactivado: " + usuar.getNombre(),
-						usuario.getNombre(), browserDetail);
+				auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario desactivado: " + usuar.getNombre(), "", browserDetail);
 			} else {
 				Messages.addFlashGlobalInfo("este usuario ya esta desactivado");
 			}

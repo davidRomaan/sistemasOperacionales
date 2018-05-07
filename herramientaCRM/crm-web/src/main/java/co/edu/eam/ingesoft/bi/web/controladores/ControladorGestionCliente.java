@@ -63,7 +63,7 @@ public class ControladorGestionCliente implements Serializable {
 	@PostConstruct
 	private void cargarCampos() {
 
-		usuario = Faces.getApplicationAttribute("usu");
+		usuario = Faces.getApplicationAttribute("user");
 		generos = Arrays.asList(Genero.values());
 		departamentos = deptoEJB.listarDepartamentos();
 		municipios = deptoEJB.listarMunicipiosDepartamento(departamentos.get(0).getId());
@@ -122,7 +122,7 @@ public class ControladorGestionCliente implements Serializable {
 				
 				accion = "Crear Persona";
 				String browserDetail2 = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona creada: " + cliente.getNombre(), usuario.getNombre(), browserDetail2);
+				auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona creada: " + cliente.getNombre(), "", browserDetail2);
 
 			} catch (ExcepcionNegocio e) {
 
@@ -143,7 +143,7 @@ public class ControladorGestionCliente implements Serializable {
 			
 			accion = "Buscar Persona";
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
-			auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona buscada: " + cliente.getNombre(), usuario.getNombre(), browserDetail);
+			auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona buscada: " + cliente.getNombre(), "", browserDetail);
 
 			cedula = cliente.getCedula();
 			nombre = cliente.getNombre();
@@ -194,7 +194,7 @@ public class ControladorGestionCliente implements Serializable {
 				
 				accion = "Editar Persona";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona editada: " + cliente.getNombre(), usuario.getNombre(), browserDetail);
+				auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona editada: " + cliente.getNombre(), "", browserDetail);
 				
 				cliente = null;
 

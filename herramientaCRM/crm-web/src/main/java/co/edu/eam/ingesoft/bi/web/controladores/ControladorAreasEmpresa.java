@@ -42,7 +42,7 @@ public class ControladorAreasEmpresa implements Serializable {
 	@PostConstruct
 	public void postconstructor() {
 		listarAreas();
-		usuario = Faces.getApplicationAttribute("usu");
+		usuario = Faces.getApplicationAttribute("user");
 	}
 
 	public void listarAreas() {
@@ -73,7 +73,7 @@ public class ControladorAreasEmpresa implements Serializable {
 
 				accion = "Registrar Area";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaArea", accion, "area creada: " + a.getNombre(), usuario.getNombre(), browserDetail);
+				auditoriaEJB.crearAuditoria("AuditoriaArea", accion, "area creada: " + a.getNombre(), "", browserDetail);
 				
 				codigo = 0;
 				nombre = "";
@@ -101,7 +101,7 @@ public class ControladorAreasEmpresa implements Serializable {
 				try {
 					accion = "Buscar Area";
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
-					auditoriaEJB.crearAuditoria("AuditoriaArea", accion, "area buscada: " + a.getNombre(), usuario.getNombre(), browserDetail);
+					auditoriaEJB.crearAuditoria("AuditoriaArea", accion, "area buscada: " + a.getNombre(), "", browserDetail);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -129,7 +129,7 @@ public class ControladorAreasEmpresa implements Serializable {
 				try {
 					accion = "Editar Area";
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
-					auditoriaEJB.crearAuditoria("AuditoriaArea", accion, "area editada: " + a.getNombre(), usuario.getNombre(), browserDetail);
+					auditoriaEJB.crearAuditoria("AuditoriaArea", accion, "area editada: " + a.getNombre(), "", browserDetail);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -149,7 +149,7 @@ public class ControladorAreasEmpresa implements Serializable {
 		try {
 			accion = "Eliminar Area";
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
-			auditoriaEJB.crearAuditoria("AuditoriaArea", accion, "area eliminada: " + a.getNombre(), usuario.getNombre(), browserDetail);
+			auditoriaEJB.crearAuditoria("AuditoriaArea", accion, "area eliminada: " + a.getNombre(), "", browserDetail);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

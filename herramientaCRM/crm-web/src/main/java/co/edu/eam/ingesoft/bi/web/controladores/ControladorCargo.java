@@ -40,7 +40,7 @@ public class ControladorCargo implements Serializable {
 
 	@PostConstruct
 	public void postconstructor() {
-		usuario = Faces.getApplicationAttribute("usu");
+		usuario = Faces.getApplicationAttribute("user");
 		listarCargos();
 	}
 
@@ -67,7 +67,7 @@ public class ControladorCargo implements Serializable {
 
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
 
-					auditoriaEJB.crearAuditoria("AuditoriaCargo", accion, "cargo creado: "+c.getDescripcion(), usuario.getNombre(), browserDetail);
+					auditoriaEJB.crearAuditoria("AuditoriaCargo", accion, "cargo creado: "+c.getDescripcion(), "", browserDetail);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -97,7 +97,7 @@ public class ControladorCargo implements Serializable {
 
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
 
-					auditoriaEJB.crearAuditoria("AuditoriaCargo", accion, "cargo buscado: "+c.getDescripcion(), usuario.getNombre(), browserDetail);
+					auditoriaEJB.crearAuditoria("AuditoriaCargo", accion, "cargo buscado: "+c.getDescripcion(), "", browserDetail);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -130,7 +130,7 @@ public class ControladorCargo implements Serializable {
 
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
 
-					auditoriaEJB.crearAuditoria("AuditoriaCargo", accion, "cargo editado: "+c.getDescripcion(), usuario.getNombre(), browserDetail);
+					auditoriaEJB.crearAuditoria("AuditoriaCargo", accion, "cargo editado: "+c.getDescripcion(), "", browserDetail);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -154,7 +154,7 @@ public class ControladorCargo implements Serializable {
 
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
 
-			auditoriaEJB.crearAuditoria("AuditoriaCargo", accion, "cargo eliminado: "+c.getDescripcion(), usuario.getNombre(), browserDetail);
+			auditoriaEJB.crearAuditoria("AuditoriaCargo", accion, "cargo eliminado: "+c.getDescripcion(), "", browserDetail);
 
 		} catch (Exception e) {
 			e.printStackTrace();
