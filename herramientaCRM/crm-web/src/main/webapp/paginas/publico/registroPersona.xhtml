@@ -25,8 +25,8 @@
 				<h:inputText id="tfCorreo" value="#{controladorPersonas.correo}" />
 
 				<p:outputLabel id="mask" value="FechaNacimiento" />
-				<p:inputMask id="date" value="#{controladorPersonas.fechaNacimiento}"
-					mask="99/99/9999" />
+				<p:inputMask id="date"
+					value="#{controladorPersonas.fechaNacimiento}" mask="99/99/9999" />
 
 				<h:outputLabel id="lblGenero" value="Genero" />
 				<h:selectOneMenu id="cbGenero"
@@ -38,7 +38,8 @@
 				</h:selectOneMenu>
 
 				<h:outputLabel id="lblTelefono" value="Telefono" />
-				<h:inputText id="tfTelefonno" value="#{controladorPersonas.telefono}" />
+				<h:inputText id="tfTelefonno"
+					value="#{controladorPersonas.telefono}" />
 
 				<h:outputLabel for="cbDepto" id="lbDepto" value="Departamento: " />
 				<h:selectOneMenu id="cbDepto"
@@ -73,7 +74,7 @@
 					value="#{controladorPersonas.nombreUsuario}" />
 
 
-				<h:outputLabel for="cbArea" id="lbArea" value="#{'AreaEmpresa'}" />
+				<h:outputLabel for="cbAreas" id="lbArea" value="#{'AreaEmpresa'}" />
 				<h:selectOneMenu id="cbAreas"
 					value="#{controladorPersonas.areaSeleccionada}">
 
@@ -94,10 +95,10 @@
 
 				<h:outputLabel for="cbtipoUsuario" id="lbtipo"
 					value="#{'TipoUsuario'}" />
-				<h:selectOneMenu id="cbtipo"
+				<h:selectOneMenu id="cbtipoUsuario"
 					value="#{controladorPersonas.tipoUsuarioSeleccionado}">
 
-					<f:selectItems value="#{controladorActivar.tiposUsu}" var="tipo"
+					<f:selectItems value="#{controladorPersonas.tiposUsu}" var="tipo"
 						itemValue="#{tipo.nombre}" itemLabel="#{tipo.nombre}" />
 
 				</h:selectOneMenu>
@@ -106,7 +107,8 @@
 			<br></br>
 			<h:panelGrid id="panelContra" columns="3">
 				<h:outputLabel id="lblContra" value="Contrasenia" />
-				<h:inputText id="tfContra" value="#{controladorPersonas.contrasenia}" disabled="true"/>
+				<h:inputText id="tfContra"
+					value="#{controladorPersonas.contrasenia}" disabled="true" />
 
 				<p:commandButton id="btngenerar" value="#{'Generar Clave'}"
 					process="@this,panelContra" update="panelContra"
@@ -120,6 +122,9 @@
 					process="@this,panelDatos,panelContra" update="@this"
 					action="#{controladorPersonas.registrar}" />
 
+				<p:commandButton id="btnLimpiar" value="#{'limpiar Campos'}"
+					process="@this,panelDatos,panelContra" update="panelDatos,panelContra"
+					action="#{controladorPersonas.limpiarCampos()}" />
 			</h:panelGrid>
 
 		</h:form>
