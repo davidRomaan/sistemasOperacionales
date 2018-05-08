@@ -186,8 +186,6 @@ public class ControladorPersona implements Serializable {
 				usu.setArea(a);
 				usu.setCargo(c);
 				
-				System.out.println(nombre);
-				System.out.println(usuario.getNombre());
 				
 				try {
 					usuarioEJB.registrarUsu(usu);

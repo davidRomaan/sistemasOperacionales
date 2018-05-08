@@ -178,9 +178,9 @@
 					</p:column>
 					<p:column headerText="Accion 2">
 						<p:commandButton
-							action="#{controladorActivar.eliminarUsuario(us)}"
+							action="#{controladorActivar.eliminarUsuario(us.cedula)}"
 							process="@this,paneltabla,panelDatos" value="Eliminar"
-							update="@this,paneltabla,panelDatos" />
+							update="@this,paneltabla" />
 					</p:column>
 
 				</p:dataTable>

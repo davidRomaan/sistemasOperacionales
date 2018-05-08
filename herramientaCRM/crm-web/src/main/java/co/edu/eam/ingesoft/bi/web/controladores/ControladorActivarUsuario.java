@@ -226,6 +226,7 @@ public class ControladorActivarUsuario implements Serializable {
 		Usuario u = usuarioEJB.buscarUsu(cedula);
 
 		if (cedula.isEmpty()) {
+			reload();
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.addMessage(null, new FacesMessage("ingrese un numero de cedula para buscar"));
 		} else {
@@ -249,8 +250,9 @@ public class ControladorActivarUsuario implements Serializable {
 				areaSeleccionada = u.getArea().getId();
 				cargoSeleccionado = u.getCargo().getId();
 				tipoUsuarioSeleccionado = u.getTipoUsuario().getNombre();
-				reload();
 				Messages.addFlashGlobalInfo("usuario encontrado");
+				reload();
+				
 
 
 				accion = "Buscar Usuario";
@@ -258,6 +260,7 @@ public class ControladorActivarUsuario implements Serializable {
 				auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario buscado: " + u.getNombre(), "", browserDetail);
 
 			} else {
+				reload();
 				FacesContext context = FacesContext.getCurrentInstance();
 				context.addMessage(null, new FacesMessage("esta persona no se encuentra registrada"));
 			}
@@ -312,10 +315,19 @@ public class ControladorActivarUsuario implements Serializable {
 
 	}
 	
-	public void eliminarUsuario(Usuario u){
+	public void eliminarUsuario(String ced){
 		
-		usuarioEJB.eliminarUsuario(u);
-		Messages.addFlashGlobalInfo("se elimino correctamente");
+		Usuario us = usuarioEJB.buscarUsu(ced);
+		
+		if(us !=null){		
+			usuarioEJB.eliminarUsuario(us);
+			Messages.addFlashGlobalInfo("se elimino correctamente");
+			reload();
+			listarActivosInActivos();
+		}else{
+			Messages.addFlashGlobalInfo("esta persona no existe");
+		}
+		
 		
 	}
 
