@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.omnifaces.util.Faces;
@@ -28,7 +29,9 @@ public class ControladorGestionVentas implements Serializable {
 	private List<FacturaVenta> facturas;
 	private List<DetalleVenta> detallesVenta;
 	private FacturaVenta facturaSeleccionada;
-	private Usuario usuario;
+	
+	@Inject
+	private ControladorSesion sesion;
 
 	@EJB
 	private VentaEJB ventasEJB;
@@ -38,7 +41,6 @@ public class ControladorGestionVentas implements Serializable {
 
 	@PostConstruct
 	private void constructor() {
-		usuario = Faces.getApplicationAttribute("usu");
 		facturas = ventasEJB.listarFacturasPorFecha(ventasEJB.obtenerFechaActual());
 	}
 
@@ -76,7 +78,7 @@ public class ControladorGestionVentas implements Serializable {
 			accion = "Eliminar DetalleVenta";
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
 			auditoriaEJB.crearAuditoria("AuditoriaDetalleVenta", accion,
-					"DT eliminado: " + dv.getFacturaVenta().getId(), usuario.getNombre(), browserDetail);
+					"DT eliminado: " + dv.getFacturaVenta().getId(), sesion.getUser().getCedula(), browserDetail);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -103,7 +105,7 @@ public class ControladorGestionVentas implements Serializable {
 					accion = "Eliminar DetalleVenta";
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
 					auditoriaEJB.crearAuditoria("AuditoriaDetalleVenta", accion,
-							"DT eliminado: todos", usuario.getNombre(), browserDetail);
+							"DT eliminado: todos", sesion.getUser().getCedula(), browserDetail);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

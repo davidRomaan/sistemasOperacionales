@@ -28,7 +28,7 @@ public class ControladorSesion implements Serializable {
 	private String password;
 	private String accion;
 	private Usuario user;
-	
+
 	private List<Modulo> modulos;
 		
 	@EJB
@@ -36,7 +36,7 @@ public class ControladorSesion implements Serializable {
 
 	@EJB
 	private UsuarioEJB usuarioEJB;
-	
+
 	@EJB
 	private AuditoriaEJB auditoriaEJB;
 	
@@ -48,9 +48,9 @@ public class ControladorSesion implements Serializable {
 	}
 
 	public String login() {
-		
+
 		obtenerBD();
-		
+
 		Usuario usuarioTemporal = usuarioEJB.buscarUsuario(username);
 
 		if ((usuarioTemporal != null)) {
@@ -59,7 +59,7 @@ public class ControladorSesion implements Serializable {
 							&& usuarioTemporal.isActivo() == true) {
 				user = usuarioTemporal;
 				Faces.setSessionAttribute("user", user);
-				
+
 				modulos = moduloEJB.listarModuloPorTipoUsuario(usuarioTemporal.getTipoUsuario().getId());
 								
 				if (modulos.size() == 0){
@@ -68,8 +68,10 @@ public class ControladorSesion implements Serializable {
 				
 				accion = "Iniciar Sesion";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaSesion", accion, "sesion creado por: Administrador", user.getNombre(), browserDetail);
-				
+				auditoriaEJB.crearAuditoria("AuditoriaSesion", accion, "sesion creado por: Administrador",
+						user.getNombre(), browserDetail);
+				System.out.println(user.getNombre());
+
 				return "/paginas/seguro/bienvenido.xhtml?faces-redirect=true";
 
 			}
@@ -99,14 +101,16 @@ public class ControladorSesion implements Serializable {
 //				return "/templates/inicioERP.xhtml?faces-redirect=true";
 //
 //			}
+
 		} else {
-			
-			accion = "Error Log-In";
+
+			accion = "Error iniciando session";
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
-			auditoriaEJB.crearAuditoria("AuditoriaSesion", accion, "error Inicion Sesion", "error Inicion Sesion", browserDetail);
-			
+			auditoriaEJB.crearAuditoria("AuditoriaSesion", accion, "intento acceder: "+username, "error Inicio Sesion",
+					browserDetail);
+
 			Messages.addFlashGlobalError("este usuario no existe");
-			
+
 		}
 		return null;
 	}

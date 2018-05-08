@@ -115,7 +115,7 @@ public class UsuarioEJB {
 		return em.buscarCliente(cedula);
 	}
 
-	public List<UsuariosDTO> llenarDTO() {
+	public List<UsuariosDTO> llenarDTO()throws Exception {
 
 		List<Persona> personas = personaEJB.listarPersona();
 		List<Usuario> usuarios = usuarioEJB.listarActivosInactivos();
@@ -147,6 +147,11 @@ public class UsuarioEJB {
 	public void eliminarCliente(Persona p) {
 		em.setBd(ConexionEJB.getBd());
 		em.eliminar(p);
+	}
+	
+	public void eliminarUsuario(Usuario u){
+		em.setBd(ConexionEJB.getBd());
+		em.eliminar(u);
 	}
 
 	public void registrarUsu(Usuario u) throws ExcepcionNegocio {

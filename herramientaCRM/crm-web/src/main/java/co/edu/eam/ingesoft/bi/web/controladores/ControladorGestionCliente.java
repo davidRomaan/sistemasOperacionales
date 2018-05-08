@@ -9,6 +9,7 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.omnifaces.util.Faces;
@@ -47,6 +48,9 @@ public class ControladorGestionCliente implements Serializable {
 	private String fechaNacimiento;
 
 	private Persona cliente;
+	
+	@Inject
+	private ControladorSesion sesion;
 
 	@EJB
 	private UsuarioEJB usuarioEJB;
@@ -62,8 +66,7 @@ public class ControladorGestionCliente implements Serializable {
 
 	@PostConstruct
 	private void cargarCampos() {
-
-		usuario = Faces.getApplicationAttribute("usu");
+		
 		generos = Arrays.asList(Genero.values());
 		departamentos = deptoEJB.listarDepartamentos();
 		municipios = deptoEJB.listarMunicipiosDepartamento(departamentos.get(0).getId());
@@ -122,7 +125,7 @@ public class ControladorGestionCliente implements Serializable {
 				
 				accion = "Crear Persona";
 				String browserDetail2 = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona creada: " + cliente.getNombre(), usuario.getNombre(), browserDetail2);
+				auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona creada: " + cliente.getNombre(), sesion.getUser().getCedula(), browserDetail2);
 
 			} catch (ExcepcionNegocio e) {
 
@@ -143,7 +146,7 @@ public class ControladorGestionCliente implements Serializable {
 			
 			accion = "Buscar Persona";
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
-			auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona buscada: " + cliente.getNombre(), usuario.getNombre(), browserDetail);
+			auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona buscada: " + cliente.getNombre(), sesion.getUser().getCedula(), browserDetail);
 
 			cedula = cliente.getCedula();
 			nombre = cliente.getNombre();
@@ -194,7 +197,7 @@ public class ControladorGestionCliente implements Serializable {
 				
 				accion = "Editar Persona";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona editada: " + cliente.getNombre(), usuario.getNombre(), browserDetail);
+				auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona editada: " + cliente.getNombre(), sesion.getUser().getCedula(), browserDetail);
 				
 				cliente = null;
 
@@ -228,7 +231,13 @@ public class ControladorGestionCliente implements Serializable {
 	}
 
 	public void eliminar(Persona p) {
+		
+		accion = "Eliminar Persona";
+		String browserDetail = Faces.getRequest().getHeader("User-Agent");
+		auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona eliminada: " + p.getNombre(), sesion.getUser().getCedula(), browserDetail);
+		
 		usuarioEJB.eliminarCliente(p);
+		
 		refrescarClientes();
 	}
 

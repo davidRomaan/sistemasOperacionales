@@ -1,5 +1,6 @@
 package co.edu.eam.ingesoft.bi.web.controladores;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
@@ -8,8 +9,11 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
 
 import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
@@ -74,8 +78,11 @@ public class ControladorPersona implements Serializable {
 	private int deptoSeleccionado;
 
 	private String accion;
-	
+
 	private Usuario usuario;
+
+	@Inject
+	private ControladorSesion sesion;
 
 	@EJB
 	private PersonaEJB personaEJB;
@@ -112,16 +119,16 @@ public class ControladorPersona implements Serializable {
 
 	@EJB
 	private DepartamentoEJB departamentoEJB;
-	
+
 	@EJB
 	private ConexionEJB conexionEJB;
 
 	@PostConstruct
 	public void listar() {
-		
+
 		conexionEJB.ultimaBD();
-		
-		usuario = Faces.getApplicationAttribute("usu");
+
+		usuario = Faces.getApplicationAttribute("user");
 		generos = Arrays.asList(Genero.values());
 		listarDepartamentos();
 		municipios = departamentoEJB.listarMunicipiosDepartamento(departamentos.get(0).getId());
@@ -130,11 +137,11 @@ public class ControladorPersona implements Serializable {
 		areas = areasEJB.listarAreas();
 		cargos = cargoEJB.listarCargos();
 		tiposUsu = tipoEJB.listar();
-	
+
 	}
 
 	public void listarMunicipios() {
-		
+
 		municipios = departamentoEJB.listarMunicipiosDepartamento(deptoSeleccionado);
 
 	}
@@ -189,14 +196,16 @@ public class ControladorPersona implements Serializable {
 
 				try {
 					usuarioEJB.registrarUsu(usu);
-					
+
 					accion = "Crear Usuario";
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
-					auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario creado: " + usu.getNombre(), usuario.getNombre(), browserDetail);
-					
+					auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario creado: " + nombre, "",
+							browserDetail);
+
 					accion = "Crear Persona";
 					String browserDetail2 = Faces.getRequest().getHeader("User-Agent");
-					auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona creada: " + usu.getNombre(), usuario.getNombre(), browserDetail2);
+					auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona creada: " + nombre, "",
+							browserDetail2);
 
 				} catch (ExcepcionNegocio e) {
 					e.getMessage();
@@ -204,16 +213,6 @@ public class ControladorPersona implements Serializable {
 
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, "se ha registrado correctamente", null));
-
-				cedula = "";
-				nombre = "";
-				apellido = "";
-				correo = "";
-				telefono = "";
-				fechaNacimiento = null;
-				contrasenia = "";
-				fechaIngreso = null;
-				nombreUsuario = "";
 
 			} else {
 
@@ -223,6 +222,30 @@ public class ControladorPersona implements Serializable {
 			}
 		}
 
+	}
+
+	private void reload() {
+		ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+		try {
+			ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void limpiarCampos() {
+
+		cedula = "";
+		nombre = "";
+		apellido = "";
+		correo = "";
+		telefono = "";
+		fechaNacimiento = null;
+		contrasenia = "";
+		fechaIngreso = null;
+		nombreUsuario = "";
+		reload();
 	}
 
 	public String getCedula() {
@@ -252,6 +275,7 @@ public class ControladorPersona implements Serializable {
 	public String controladorPersonas() {
 		return telefono;
 	}
+
 	public String getTelefono() {
 		return telefono;
 	}
