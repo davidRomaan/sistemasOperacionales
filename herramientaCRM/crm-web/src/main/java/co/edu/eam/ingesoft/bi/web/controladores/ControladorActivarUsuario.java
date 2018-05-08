@@ -226,17 +226,12 @@ public class ControladorActivarUsuario implements Serializable {
 	public void buscarUsuario() {
 
 		Usuario u = usuarioEJB.buscarUsu(cedula);
-		Persona p = usuarioEJB.buscarCliente(cedula);
 
 		if (cedula.isEmpty()) {
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.addMessage(null, new FacesMessage("Exitoso", "el area se ha registrado"));
 		} else {
 			if (u != null) {
-				
-				accion = "Buscar Usuario";
-				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario buscado: " + u.getNombre(), sesion.getUser().getNombreUsuario(), browserDetail);
 
 				apellido = u.getApellido();
 				correo = u.getCorreo();
@@ -256,30 +251,74 @@ public class ControladorActivarUsuario implements Serializable {
 				cargoSeleccionado = u.getCargo().getId();
 				tipoUsuarioSeleccionado = u.getTipoUsuario().getNombre();
 				reload();
-
-			} else if (p != null) {
 				
-				accion = "Buscar Persona";
+				Messages.addFlashGlobalInfo("usuario encontrado");
+				
+				accion = "Buscar Usuario";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona buscada: " + p.getNombre(), sesion.getUser().getNombreUsuario(), browserDetail);
+				auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario buscado: " + u.getNombre(), sesion.getUser().getNombreUsuario(), browserDetail);
 				
-				apellido = p.getApellido();
-				correo = p.getCorreo();
-				fechaNacimiento = p.getFechaNacimiento();
-				tipoGenero = p.getGenero();
-				nombre = p.getNombre();
-				telefono = p.getTelefono();
-				deptoSeleccionado = p.getMunicipio().getDepartamento().getId();
 
-				municipios = departamentoEJB.listarMunicipiosDepartamento(deptoSeleccionado);
-				municipioSeleccionado = p.getMunicipio().getId();
-			
-			} else {
+			}  else {
 				FacesContext context = FacesContext.getCurrentInstance();
 				context.addMessage(null, new FacesMessage("esta persona no se encuentra registrada"));
 			}
 		}
 
+	}
+
+	public void modificarUsuario() {
+
+		Usuario us = usuarioEJB.buscarUsu(cedula);
+
+		if (cedula.isEmpty()) {
+			FacesContext context = FacesContext.getCurrentInstance();
+			context.addMessage(null, new FacesMessage("ingrese el numero de cedula para buscar"));
+		} else {
+
+			if (us != null) {
+				Area a = areasEJB.buscarArea(areaSeleccionada);
+				Cargo c = cargoEJB.buscarCargo(cargoSeleccionado);
+				TipoUsuario tip = tipoEJB.buscar(tipoUsuarioSeleccionado);
+				Municipio m = municipioEJB.buscar(municipioSeleccionado);
+				
+				Usuario usu = new Usuario();
+				usu.setCedula(cedula);
+				usu.setApellido(apellido);
+				usu.setCorreo(correo);
+				usu.setFechaNacimiento(fechaNacimiento);
+				usu.setGenero(tipoGenero);
+				usu.setNombre(nombre);
+				usu.setTelefono(telefono);
+				usu.setMunicipio(m);
+				
+				usu.setContrasenia(contrasenia);
+				usu.setFechaIngreso(fechaIngreso);
+				usu.setNombreUsuario(nombreUsuario);
+				usu.setCedula(cedula);
+				usu.setActivo(true);
+				usu.setArea(a);
+				usu.setCargo(c);
+				usu.setTipoUsuario(tip);
+
+				usuarioEJB.editarUsuario(usu);
+				Messages.addFlashGlobalInfo("se edito correctamente");
+				reload();
+				listarActivosInActivos();
+
+			}else{
+				Messages.addFlashGlobalInfo("esta persona no existe");
+			}
+
+		}
+
+	}
+	
+	public void eliminarUsuario(Usuario u){
+		
+		usuarioEJB.eliminarUsuario(u);
+		Messages.addFlashGlobalInfo("se elimino correctamente");
+		
 	}
 
 	private void reload() {
