@@ -25,7 +25,8 @@ public class AreasEmpresaEJB {
 	public void registrarAreas(Area a) throws ExcepcionNegocio {
 		Area buscado = buscarArea(a.getId());
 		if (buscado == null) {
-			em.crearEnTodasBD(a);
+			em.setBd(ConexionEJB.getBd());
+			em.crear(a);
 		} else {
 			throw new ExcepcionNegocio("esta area ya se encuentra creada");
 		}
@@ -37,11 +38,13 @@ public class AreasEmpresaEJB {
 	}
 
 	public void editarArea(Area a) {
-		em.editarEnTodasBD(a);
+		em.setBd(ConexionEJB.getBd());
+		em.editar(a);
 	}
 
 	public void eliminarArea(Area a) {
-		em.eliminarEnTodasBD(a);
+		em.setBd(ConexionEJB.getBd());
+		em.eliminar(a);
 
 	}
 

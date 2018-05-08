@@ -25,7 +25,8 @@ public class CargoEJB {
 	public void registrarCargo(Cargo c) throws ExcepcionNegocio {
 		Cargo buscado = buscarCargo(c.getId());
 		if (buscado == null) {
-			em.crearEnTodasBD(c);
+			em.setBd(ConexionEJB.getBd());
+			em.crear(c);
 		} else {
 			throw new ExcepcionNegocio("este cargo ya se encuentra creado");
 		}
@@ -37,11 +38,13 @@ public class CargoEJB {
 	}
 
 	public void editarCargo(Cargo c) {
-		em.editarEnTodasBD(c);
+		em.setBd(ConexionEJB.getBd());
+		em.editar(c);
 	}
 
 	public void eliminarCargo(Cargo c) {
-		em.eliminarEnTodasBD(c);
+		em.setBd(ConexionEJB.getBd());
+		em.eliminar(c);
 
 	}
 

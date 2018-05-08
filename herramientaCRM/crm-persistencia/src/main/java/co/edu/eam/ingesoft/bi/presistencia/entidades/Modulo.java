@@ -7,12 +7,16 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="MODULO")
+@NamedQuery(name = Modulo.LISTAR, query="SELECT m FROM Modulo m")
 public class Modulo implements Serializable{
 
+	public static final String LISTAR = "modulo.listar";
+	
 	@Id
 	@Column(name="id")
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -21,15 +25,18 @@ public class Modulo implements Serializable{
 	@Column(name="nombre")
 	private String nombre;
 	
+	@Column(name="url")
+	private String url;
 	
 	public Modulo(){
 		
 	}
 
-	public Modulo(int id, String nombre) {
+	public Modulo(int id, String nombre, String url) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
+		this.url = url;
 	}
 	
 	public int getId() {
@@ -46,6 +53,16 @@ public class Modulo implements Serializable{
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
+	}
+
+	
+	
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	@Override

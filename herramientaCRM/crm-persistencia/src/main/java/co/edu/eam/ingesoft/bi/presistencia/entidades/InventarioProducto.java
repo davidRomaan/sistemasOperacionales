@@ -17,7 +17,10 @@ import javax.persistence.Table;
 @Table(name = "INVENTARIO_PRODUCTO")
 @NamedQueries({ @NamedQuery(name = InventarioProducto.LISTAR, query = "SELECT ip FROM InventarioProducto ip"),
 		@NamedQuery(name = InventarioProducto.BUSCAR_INVENTARIO_PRODUCTO, query = "SELECT ip FROM InventarioProducto ip "
-				+ "WHERE ip.productoId = ?1") })
+				+ "WHERE ip.productoId = ?1"),
+		@NamedQuery(name = InventarioProducto.BUSCAR_POR_PRODUCTO_INVENTARIO, 
+		query = "SELECT ip FROM InventarioProducto ip WHERE ip.inventarioId = ?1 AND ip.productoId = ?2") 
+})
 public class InventarioProducto implements Serializable {
 
 	/**
@@ -30,14 +33,21 @@ public class InventarioProducto implements Serializable {
 	 */
 	public static final String BUSCAR_INVENTARIO_PRODUCTO = "ip.buscarProducto";
 
+	/**
+	 * Busca un invnetario de un producto, por invenatrio y producto 
+	 * ?1: el inventario 
+	 * ?2: el producto
+	 */
+	public static final String BUSCAR_POR_PRODUCTO_INVENTARIO = "ip.buscarPorProductoInventario";
+
 	@Id
 	@JoinColumn(name = "inventario_id")
-	@ManyToOne(cascade={})
+	@ManyToOne(cascade = {})
 	private Inventario inventarioId;
 
 	@Id
 	@JoinColumn(name = "producto_id")
-	@ManyToOne(cascade={})
+	@ManyToOne(cascade = {})
 	private Producto productoId;
 
 	@Column(name = "cantidad", length = 30)

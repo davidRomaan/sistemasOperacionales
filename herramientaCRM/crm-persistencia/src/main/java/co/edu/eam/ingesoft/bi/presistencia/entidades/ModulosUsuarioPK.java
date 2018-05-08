@@ -8,9 +8,39 @@ public class ModulosUsuarioPK implements Serializable{
 	
 	private int tipoUsiario_id;
 
+	public ModulosUsuarioPK() {
+		// TODO Auto-generated constructor stub
+	}
 	
 	
-	
+	public int getModulo_id() {
+		return modulo_id;
+	}
+
+
+
+
+	public void setModulo_id(int modulo_id) {
+		this.modulo_id = modulo_id;
+	}
+
+
+
+
+	public int getTipoUsiario_id() {
+		return tipoUsiario_id;
+	}
+
+
+
+
+	public void setTipoUsiario_id(int tipoUsiario_id) {
+		this.tipoUsiario_id = tipoUsiario_id;
+	}
+
+
+
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

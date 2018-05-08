@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -15,6 +17,7 @@ import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.DetalleVenta;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.FacturaVenta;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.InventarioProducto;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.ModulosUsuario;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Persona;
 
 @LocalBean
@@ -45,7 +48,17 @@ public class Persistencia implements Serializable {
 	 *            el objeto que se desea persistir
 	 */
 	public void crearEnTodasBD(Object objeto) {
-		emM.persist(objeto);
+		registrarMysql(objeto);
+		registrarPostgres(objeto);
+	}
+	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void registrarMysql(Object o){
+		emM.persist(o);
+	}
+	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void registrarPostgres(Object objeto){
 		emP.persist(objeto);
 	}
 	
@@ -172,6 +185,37 @@ public class Persistencia implements Serializable {
 		default:
 			throw new ExcepcionNegocio("La base de datos a la cual intenta acceder no existe");
 		}
+	}
+	
+	/**
+	 * Lista con dos parámetros de tipo objeto
+	 * @param sql Consulta a ejecutar
+	 * @param param1 parametro 1
+	 * @param param2 parametro 2
+	 * @return la lista 
+	 */
+	public List<Object> listarConDosParametrosObjeto (String sql, Object param1, Object param2){
+		
+		Query q;
+		
+		switch (this.bd) {
+		
+		case 1:
+			q = emM.createNamedQuery(sql);
+			break;
+
+		case 2:
+			q = emP.createNamedQuery(sql);
+			break;
+			
+		default:
+			throw new ExcepcionNegocio("La base de datos a la cual intenta acceder no existe");
+		}
+		
+		q.setParameter(1, param1);
+		q.setParameter(2, param2);
+		return q.getResultList();
+		
 	}
 
 	/**
@@ -358,28 +402,27 @@ public class Persistencia implements Serializable {
 
 	public void registrarInventarioProducto(InventarioProducto ip) {
 
-		String sql = "INSERT INTO INVENTARIO_PRODUCTO (inventario_id, " + "producto_id, cantidad) VALUES (?1,?2,?3)";
+		String sql = "INSERT INTO INVENTARIO_PRODUCTO (inventario_id, producto_id, cantidad) VALUES (?1,?2,?3)";
 
+		Query query;
+		
 		switch (this.bd) {
 		case 1:
-			Query q = emM.createNamedQuery(sql);
-			q.setParameter(1, ip.getInventarioId().getId());
-			q.setParameter(2, ip.getProductoId().getId());
-			q.setParameter(3, ip.getCantidad());
-			q.executeUpdate();
+			query = emM.createNativeQuery(sql);
 			break;
 
 		case 2:
-			Query query = emP.createNamedQuery(sql);
-			query.setParameter(1, ip.getInventarioId().getId());
-			query.setParameter(2, ip.getProductoId().getId());
-			query.setParameter(3, ip.getCantidad());
-			query.executeUpdate();
+			query = emP.createNativeQuery(sql);
 			break;
 
 		default:
 			throw new ExcepcionNegocio("La base de datos a la cual intenta acceder no existe");
 		}
+		
+		query.setParameter(1, ip.getInventarioId().getId());
+		query.setParameter(2, ip.getProductoId().getId());
+		query.setParameter(3, ip.getCantidad());
+		query.executeUpdate();
 
 	}
 
@@ -440,26 +483,56 @@ public class Persistencia implements Serializable {
 	public void eliminarDetalleVenta(DetalleVenta dv) {
 
 		String sql = "DELETE FROM DETALLE_VENTA WHERE factura_venta_id = ?1 AND producto_id = ?2";
+		
+		Query q;
 
 		switch (this.bd) {
 		case 1:
-			Query q = emM.createNativeQuery(sql);
-			q.setParameter(1, dv.getFacturaVenta().getId());
-			q.setParameter(2, dv.getProducto().getId());
-			q.executeUpdate();
+			q = emM.createNativeQuery(sql);
 			break;
 
 		case 2:
-			Query query = emP.createNativeQuery(sql);
-			query.setParameter(1, dv.getFacturaVenta().getId());
-			query.setParameter(2, dv.getProducto().getId());
-			query.executeUpdate();
+			q = emP.createNativeQuery(sql);
 			break;
 
 		default:
 			throw new ExcepcionNegocio("La base de datos a la cual intenta acceder no existe");
 		}
+		
+		q.setParameter(1, dv.getFacturaVenta().getId());
+		q.setParameter(2, dv.getProducto().getId());
+		q.executeUpdate();
 
+	}
+	
+	/**
+	 * Registra un módulo usuario en la base de datos
+	 * @param mu modulo usuario que se desea registrar
+	 */
+	public void registrarModuloUsuario(ModulosUsuario mu){
+		
+		String sql = "INSERT INTO modulos_usuario (modulo_id, tipousuario_id) VALUES (?1,?2)";
+		
+		Query q;
+		
+		switch (this.bd) {
+		
+		case 1:
+			q = emM.createNativeQuery(sql);
+			break;
+		
+		case 2:
+			q = emP.createNativeQuery(sql);
+			break;
+
+		default:
+			throw new ExcepcionNegocio("La base de datos a la cual intenta acceder no existe");
+		}
+		
+		q.setParameter(1, mu.getModulo_id().getId());
+		q.setParameter(2, mu.getTipoUsiario_id().getId());
+		q.executeUpdate();
+		
 	}
 
 	public int getBd() {

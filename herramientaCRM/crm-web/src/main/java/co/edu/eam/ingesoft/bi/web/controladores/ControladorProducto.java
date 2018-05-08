@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.omnifaces.util.Faces;
+import org.omnifaces.util.Messages;
 
 import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.ProductoEJB;
@@ -84,12 +85,13 @@ public class ControladorProducto implements Serializable {
 		productoBuscado = productoEJB.buscarProducto(codigo);
 
 		if (productoBuscado != null) {
-			
+
 			try {
 
 				accion = "Buscar Producto";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaProducto", accion, "producto buscado: " + productoBuscado.getNombre(), usuario.getNombre(), browserDetail);
+				auditoriaEJB.crearAuditoria("AuditoriaProducto", accion,
+						"producto buscado: " + productoBuscado.getNombre(), usuario.getNombre(), browserDetail);
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -125,33 +127,34 @@ public class ControladorProducto implements Serializable {
 					new FacesMessage(FacesMessage.SEVERITY_WARN, "Debe buscar un producto previamente", null));
 		} else {
 
-			if (validarCampos()){
-			
-			productoBuscado.setDescripcion(descripcion);
-			productoBuscado.setNombre(nombre);
-			productoBuscado.setDimension(dimension);
-			productoBuscado.setLote(productoEJB.buscarloteProducto(loteSeleccionado));
-			productoBuscado.setValorProducto(valor);
-			productoBuscado.setPeso(peso);
+			if (validarCampos()) {
 
-			productoEJB.editarProducto(productoBuscado);
-			
-			try {
+				productoBuscado.setDescripcion(descripcion);
+				productoBuscado.setNombre(nombre);
+				productoBuscado.setDimension(dimension);
+				productoBuscado.setLote(productoEJB.buscarloteProducto(loteSeleccionado));
+				productoBuscado.setValorProducto(valor);
+				productoBuscado.setPeso(peso);
 
-				accion = "Editar Producto";
-				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaProducto", accion, "producto editado: " + productoBuscado.getNombre(), usuario.getNombre(), browserDetail);
+				productoEJB.editarProducto(productoBuscado);
 
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+				try {
 
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, "Operaci�n exitosa", null));
+					accion = "Editar Producto";
+					String browserDetail = Faces.getRequest().getHeader("User-Agent");
+					auditoriaEJB.crearAuditoria("AuditoriaProducto", accion,
+							"producto editado: " + productoBuscado.getNombre(), usuario.getNombre(), browserDetail);
 
-			limpiarCampos();
-			listar();
-			
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, "Operaci�n exitosa", null));
+
+				limpiarCampos();
+				listar();
+
 			} else {
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_WARN, "Debe ingresar todos los campos", null));
@@ -202,40 +205,36 @@ public class ControladorProducto implements Serializable {
 
 			producto.setTipoProducto(tipoProducto);
 
+			InventarioProducto inventario = new InventarioProducto();
+			inventario.setCantidad(cantidad);
+			inventario.setProductoId(producto);
+
+			Inventario i = productoEJB.buscarInventarioId(inventarioSeleccionado);
+			inventario.setInventarioId(i);
+
+			if (productoEJB.validarRegistroInventarioProducto(i, producto)) {
+				Messages.addFlashGlobalError("Ya existe este producto en este inventario");
+			} else {
+				productoEJB.registrarProducto(producto);
+				productoEJB.registrarInventarioProducto(inventario);
+			}
+
 			try {
 
-				productoEJB.registrarProducto(producto);
+				accion = "Crear Producto";
+				String browserDetail = Faces.getRequest().getHeader("User-Agent");
+				auditoriaEJB.crearAuditoria("AuditoriaProducto", accion, "producto creado: " + producto.getNombre(),
+						usuario.getNombre(), browserDetail);
 
-				InventarioProducto inventario = new InventarioProducto();
-				inventario.setCantidad(cantidad);
-				inventario.setProductoId(producto);
-
-				Inventario i = productoEJB.buscarInventarioId(inventarioSeleccionado);
-				inventario.setInventarioId(i);
-
-				productoEJB.registrarInventarioProducto(inventario);
-
-				try {
-
-					accion = "Crear Producto";
-					String browserDetail = Faces.getRequest().getHeader("User-Agent");
-					auditoriaEJB.crearAuditoria("AuditoriaProducto", accion, "producto creado: " + producto.getNombre(), usuario.getNombre(), browserDetail);
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-						"El producto ha sido registrado exitosamente", null));
-				limpiarCampos();
-				listar();
-
-			} catch (ExcepcionNegocio e) {
-
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), null));
-
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "El producto ha sido registrado exitosamente", null));
+			limpiarCampos();
+			listar();
+
 		} else {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_WARN, "Debe ingresar todos los campos", null));
@@ -259,12 +258,13 @@ public class ControladorProducto implements Serializable {
 	public void eliminarProducto(Producto p) {
 		productos.remove(p);
 		productoEJB.eliminarProducto(p);
-		
+
 		try {
 
 			accion = "Eliminar Producto";
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
-			auditoriaEJB.crearAuditoria("AuditoriaProducto", accion, "producto eliminado: " + p.getNombre(), usuario.getNombre(), browserDetail);
+			auditoriaEJB.crearAuditoria("AuditoriaProducto", accion, "producto eliminado: " + p.getNombre(),
+					usuario.getNombre(), browserDetail);
 
 		} catch (Exception e) {
 			e.printStackTrace();
