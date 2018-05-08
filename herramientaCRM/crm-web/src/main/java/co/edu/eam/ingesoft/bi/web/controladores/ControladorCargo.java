@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.omnifaces.util.Faces;
@@ -31,6 +32,9 @@ public class ControladorCargo implements Serializable {
 	private Usuario usuario;
 
 	private List<Cargo> cargosEmpresa;
+	
+	@Inject
+	private ControladorSesion sesion;
 
 	@EJB
 	private CargoEJB cargoEJB;
@@ -67,7 +71,7 @@ public class ControladorCargo implements Serializable {
 
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
 
-					auditoriaEJB.crearAuditoria("AuditoriaCargo", accion, "cargo creado: "+c.getDescripcion(), "", browserDetail);
+					auditoriaEJB.crearAuditoria("AuditoriaCargo", accion, "cargo creado: "+c.getDescripcion(), sesion.getUser().getNombreUsuario(), browserDetail);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -97,7 +101,7 @@ public class ControladorCargo implements Serializable {
 
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
 
-					auditoriaEJB.crearAuditoria("AuditoriaCargo", accion, "cargo buscado: "+c.getDescripcion(), "", browserDetail);
+					auditoriaEJB.crearAuditoria("AuditoriaCargo", accion, "cargo buscado: "+c.getDescripcion(), sesion.getUser().getNombreUsuario(), browserDetail);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -130,7 +134,7 @@ public class ControladorCargo implements Serializable {
 
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
 
-					auditoriaEJB.crearAuditoria("AuditoriaCargo", accion, "cargo editado: "+c.getDescripcion(), "", browserDetail);
+					auditoriaEJB.crearAuditoria("AuditoriaCargo", accion, "cargo editado: "+c.getDescripcion(), sesion.getUser().getNombreUsuario(), browserDetail);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -154,7 +158,7 @@ public class ControladorCargo implements Serializable {
 
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
 
-			auditoriaEJB.crearAuditoria("AuditoriaCargo", accion, "cargo eliminado: "+c.getDescripcion(), "", browserDetail);
+			auditoriaEJB.crearAuditoria("AuditoriaCargo", accion, "cargo eliminado: "+c.getDescripcion(), sesion.getUser().getNombreUsuario(), browserDetail);
 
 		} catch (Exception e) {
 			e.printStackTrace();
