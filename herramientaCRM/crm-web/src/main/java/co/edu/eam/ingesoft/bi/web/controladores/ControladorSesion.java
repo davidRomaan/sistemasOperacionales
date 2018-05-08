@@ -25,26 +25,26 @@ public class ControladorSesion implements Serializable {
 	private String password;
 	private String accion;
 	private Usuario user;
-	
+
 	private static int bd = 0;
-	
+
 	@EJB
 	private ConexionEJB conexionEJB;
 
 	@EJB
 	private UsuarioEJB usuarioEJB;
-	
+
 	@EJB
 	private AuditoriaEJB auditoriaEJB;
-	
-	private void obtenerBD (){
+
+	private void obtenerBD() {
 		conexionEJB.ultimaBD();
 	}
 
 	public String login() {
-		
+
 		obtenerBD();
-		
+
 		Usuario usuarioTemporal = usuarioEJB.buscarUsuario(username);
 
 		if ((usuarioTemporal != null)) {
@@ -54,12 +54,13 @@ public class ControladorSesion implements Serializable {
 							&& usuarioTemporal.isActivo() == true)) {
 				user = usuarioTemporal;
 				Faces.setSessionAttribute("user", user);
-				
+
 				accion = "Iniciar Sesion";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaSesion", accion, "sesion creado por: Administrador", user.getNombre(), browserDetail);
+				auditoriaEJB.crearAuditoria("AuditoriaSesion", accion, "sesion creado por: Administrador",
+						user.getNombre(), browserDetail);
 				System.out.println(user.getNombre());
-				
+
 				return "/templates/inicioBases.xhtml?faces-redirect=true";
 
 			}
@@ -68,35 +69,40 @@ public class ControladorSesion implements Serializable {
 							&& usuarioTemporal.isActivo() == true)) {
 				user = usuarioTemporal;
 				Faces.setSessionAttribute("user", user);
-				
+
 				accion = "Iniciar Sesion";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaSesion", accion, "sesion creado por: CRM", user.getNombre(), browserDetail);
-				
+				auditoriaEJB.crearAuditoria("AuditoriaSesion", accion, "sesion creado por: CRM", user.getNombre(),
+						browserDetail);
+
 				return "/templates/inicioCRM.xhtml?faces-redirect=true";
 
 			}
+
 			if (usuarioTemporal.getContrasenia().equals(password)
 					&& (usuarioTemporal.getTipoUsuario().getNombre().equalsIgnoreCase("ERP")
 							&& usuarioTemporal.isActivo() == true)) {
 				user = usuarioTemporal;
 				Faces.setSessionAttribute("user", user);
-				
+
 				accion = "Iniciar Sesion";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaSesion", accion, "sesion creado por: ERP", user.getNombre(), browserDetail);
-				
+				auditoriaEJB.crearAuditoria("AuditoriaSesion", accion, "sesion creado por: ERP", user.getNombre(),
+						browserDetail);
+
 				return "/templates/inicioERP.xhtml?faces-redirect=true";
 
 			}
+
 		} else {
-			
-			accion = "Error Log-In";
+
+			accion = "Error iniciando session";
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
-			auditoriaEJB.crearAuditoria("AuditoriaSesion", accion, "error Inicion Sesion", "error Inicion Sesion", browserDetail);
-			
+			auditoriaEJB.crearAuditoria("AuditoriaSesion", accion, "intento acceder: "+username, "error Inicio Sesion",
+					browserDetail);
+
 			Messages.addFlashGlobalError("este usuario no existe");
-			
+
 		}
 		return null;
 	}
