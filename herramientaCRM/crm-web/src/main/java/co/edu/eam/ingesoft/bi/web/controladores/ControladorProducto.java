@@ -91,7 +91,7 @@ public class ControladorProducto implements Serializable {
 
 				accion = "Buscar Producto";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaProducto", accion, "producto buscado: " + productoBuscado.getNombre(), "", browserDetail);
+				auditoriaEJB.crearAuditoria("AuditoriaProducto", accion, "producto buscado: " + productoBuscado.getNombre(), sesion.getUser().getNombreUsuario(), browserDetail);
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -142,7 +142,7 @@ public class ControladorProducto implements Serializable {
 
 				accion = "Editar Producto";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaProducto", accion, "producto editado: " + productoBuscado.getNombre(), "", browserDetail);
+				auditoriaEJB.crearAuditoria("AuditoriaProducto", accion, "producto editado: " + productoBuscado.getNombre(), sesion.getUser().getNombreUsuario(), browserDetail);
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -221,7 +221,7 @@ public class ControladorProducto implements Serializable {
 
 					accion = "Crear Producto";
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
-					auditoriaEJB.crearAuditoria("AuditoriaProducto", accion, "producto creado: " + producto.getNombre(), "", browserDetail);
+					auditoriaEJB.crearAuditoria("AuditoriaProducto", accion, "producto creado: " + producto.getNombre(), sesion.getUser().getNombreUsuario(), browserDetail);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -266,7 +266,7 @@ public class ControladorProducto implements Serializable {
 
 			accion = "Eliminar Producto";
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
-			auditoriaEJB.crearAuditoria("AuditoriaProducto", accion, "producto eliminado: " + p.getNombre(), "", browserDetail);
+			auditoriaEJB.crearAuditoria("AuditoriaProducto", accion, "producto eliminado: " + p.getNombre(), sesion.getUser().getNombreUsuario(), browserDetail);
 
 		} catch (Exception e) {
 			e.printStackTrace();

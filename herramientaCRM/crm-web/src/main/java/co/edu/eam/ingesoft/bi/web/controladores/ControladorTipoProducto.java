@@ -8,6 +8,7 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.omnifaces.util.Faces;
@@ -16,7 +17,6 @@ import org.omnifaces.util.Messages;
 import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.TipoProductoEJB;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.TipoProducto;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.Usuario;
 
 @Named("controladorTipoProd")
 @SessionScoped
@@ -34,7 +34,8 @@ public class ControladorTipoProducto implements Serializable {
 	
 	private String accion;
 	
-	private Usuario usuario;
+	@Inject
+	private ControladorSesion sesion;
 
 	@EJB
 	private TipoProductoEJB tipoEJB;
@@ -44,7 +45,6 @@ public class ControladorTipoProducto implements Serializable {
 
 	@PostConstruct
 	public void postconstructor() {
-		usuario = Faces.getApplicationAttribute("user");
 		listarTipos();
 	}
 
@@ -67,12 +67,13 @@ public class ControladorTipoProducto implements Serializable {
 				tip.setDescripcion(descripcion);
 				
 				System.out.println(nombre);
+				//System.out.println(sesion.getUsername());
 				
 				try {
 
 					accion = "Registrar TipoProducto";
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
-					auditoriaEJB.crearAuditoria("AuditoriaTipoProducto", accion, "TP creado: " + nombre, "", browserDetail);
+					auditoriaEJB.crearAuditoria("AuditoriaTipoProducto", accion, "TP creado: " + nombre, sesion.getUser().getNombreUsuario(), browserDetail);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -112,7 +113,7 @@ public class ControladorTipoProducto implements Serializable {
 
 					accion = "Buscar TipoProducto";
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
-					auditoriaEJB.crearAuditoria("AuditoriaTipoProducto", accion, "TP buscado: " + tipo.getNombre(), "", browserDetail);
+					auditoriaEJB.crearAuditoria("AuditoriaTipoProducto", accion, "TP buscado: " + tipo.getNombre(), sesion.getUser().getCedula(), browserDetail);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -143,7 +144,7 @@ public class ControladorTipoProducto implements Serializable {
 
 					accion = "Editar TipoProducto";
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
-					auditoriaEJB.crearAuditoria("AuditoriaTipoProducto", accion, "TP editado: " + nombre, "", browserDetail);
+					auditoriaEJB.crearAuditoria("AuditoriaTipoProducto", accion, "TP editado: " + nombre, sesion.getUser().getCedula(), browserDetail);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -164,7 +165,7 @@ public class ControladorTipoProducto implements Serializable {
 
 			accion = "Eliminar TipoProducto";
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
-			auditoriaEJB.crearAuditoria("AuditoriaTipoProducto", accion, "TP eliminado: " + t.getNombre(), "", browserDetail);
+			auditoriaEJB.crearAuditoria("AuditoriaTipoProducto", accion, "TP eliminado: " + t.getNombre(), sesion.getUser().getCedula(), browserDetail);
 
 		} catch (Exception e) {
 			e.printStackTrace();

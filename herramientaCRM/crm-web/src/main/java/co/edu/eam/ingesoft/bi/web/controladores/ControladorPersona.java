@@ -9,6 +9,7 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.omnifaces.util.Faces;
@@ -76,6 +77,9 @@ public class ControladorPersona implements Serializable {
 	private String accion;
 	
 	private Usuario usuario;
+	
+	@Inject
+	private ControladorSesion sesion;
 
 	@EJB
 	private PersonaEJB personaEJB;
@@ -194,11 +198,11 @@ public class ControladorPersona implements Serializable {
 					
 					accion = "Crear Usuario";
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
-					auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario creado: " + nombre, "", browserDetail);
+					auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario creado: " + nombre, sesion.getUser().getNombreUsuario(), browserDetail);
 					
 					accion = "Crear Persona";
 					String browserDetail2 = Faces.getRequest().getHeader("User-Agent");
-					auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona creada: " + nombre, "", browserDetail2);
+					auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona creada: " + nombre, sesion.getUser().getNombreUsuario(), browserDetail2);
 
 				} catch (ExcepcionNegocio e) {
 					e.getMessage();

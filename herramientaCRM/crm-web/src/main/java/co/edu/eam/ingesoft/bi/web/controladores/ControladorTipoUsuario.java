@@ -9,6 +9,7 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
@@ -31,7 +32,9 @@ public class ControladorTipoUsuario implements Serializable {
 
 	private List<TipoUsuario> tiposUsuario;
 	private TipoUsuario tipoEditar;	
-	private Usuario usuario;
+
+	@Inject
+	private ControladorSesion sesion;
 
 	@EJB
 	private TipoUsuarioEJB tipoUsuarioEJB;
@@ -41,7 +44,6 @@ public class ControladorTipoUsuario implements Serializable {
 
 	@PostConstruct
 	private void cargarDatos() {
-		usuario = Faces.getApplicationAttribute("user");
 		listarTipos();
 	}
 
@@ -58,7 +60,7 @@ public class ControladorTipoUsuario implements Serializable {
 					
 					accion = "Registrar TipoUsuario";
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
-					auditoriaEJB.crearAuditoria("AuditoriaTiposUsuarios", accion, "TU creado: " + tu.getNombre(), "", browserDetail);
+					auditoriaEJB.crearAuditoria("AuditoriaTiposUsuarios", accion, "TU creado: " + tu.getNombre(), sesion.getUser().getCedula(), browserDetail);
 
 				} catch (ExcepcionNegocio e) {
 					e.getMessage();
@@ -91,7 +93,7 @@ public class ControladorTipoUsuario implements Serializable {
 		try {
 			accion = "Eliminar TipoUsuario";
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
-			auditoriaEJB.crearAuditoria("AuditoriaTiposUsuarios", accion, "TU eliminado: " + tu.getNombre(), "", browserDetail);
+			auditoriaEJB.crearAuditoria("AuditoriaTiposUsuarios", accion, "TU eliminado: " + tu.getNombre(), sesion.getUser().getCedula(), browserDetail);
 
 		} catch (ExcepcionNegocio e) {
 			e.getMessage();
@@ -115,7 +117,7 @@ public class ControladorTipoUsuario implements Serializable {
 			try {
 				accion = "Editar TipoUsuario";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaTiposUsuarios", accion, "TU editado: " + nombre, "", browserDetail);
+				auditoriaEJB.crearAuditoria("AuditoriaTiposUsuarios", accion, "TU editado: " + nombre, sesion.getUser().getCedula(), browserDetail);
 
 			} catch (ExcepcionNegocio e) {
 				e.getMessage();

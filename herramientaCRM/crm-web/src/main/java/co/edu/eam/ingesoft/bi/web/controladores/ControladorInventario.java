@@ -9,6 +9,7 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
@@ -30,7 +31,6 @@ public class ControladorInventario implements Serializable {
 	private Inventario inventarioEditar;
 	private List<Inventario> inventarios;
 	private String accion;
-	private Usuario usuario;
 	
 	@EJB
 	private ProductoEJB productoEJB;
@@ -38,9 +38,11 @@ public class ControladorInventario implements Serializable {
 	@EJB
 	private AuditoriaEJB auditoriaEJB;
 	
+	@Inject
+	private ControladorSesion sesion;
+	
 	@PostConstruct
 	private void postConstruct(){
-		usuario = Faces.getApplicationAttribute("user");
 		refrescarListaInventarios();
 	}
 	
@@ -65,7 +67,7 @@ public class ControladorInventario implements Serializable {
 			accion = "Regitro Inventario";
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
 			
-			auditoriaEJB.crearAuditoria("AuditoriaIventario", accion, "inventario creado: "+inventario.getNombre(), "", browserDetail);
+			auditoriaEJB.crearAuditoria("AuditoriaIventario", accion, "inventario creado: "+inventario.getNombre(), sesion.getUser().getCedula(), browserDetail);
 		
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -124,7 +126,7 @@ public class ControladorInventario implements Serializable {
 				accion = "Editar Inventario";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
 				
-				auditoriaEJB.crearAuditoria("AuditoriaIventario", accion, "inventario editado: "+nombre, "", browserDetail);
+				auditoriaEJB.crearAuditoria("AuditoriaIventario", accion, "inventario editado: "+nombre, sesion.getUser().getCedula(), browserDetail);
 			
 			}catch (Exception e) {
 				e.printStackTrace();
@@ -154,7 +156,7 @@ public class ControladorInventario implements Serializable {
 			accion = "Eliminar Inventario";
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
 			
-			auditoriaEJB.crearAuditoria("AuditoriaIventario", accion, "inventario eliminado: "+inventario.getNombre(), "", browserDetail);
+			auditoriaEJB.crearAuditoria("AuditoriaIventario", accion, "inventario eliminado: "+inventario.getNombre(), sesion.getUser().getCedula(), browserDetail);
 		
 		}catch (Exception e) {
 			e.printStackTrace();
