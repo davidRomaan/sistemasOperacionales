@@ -11,6 +11,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
@@ -331,6 +332,12 @@ public class ControladorActivarUsuario implements Serializable {
 			Messages.addFlashGlobalInfo("se elimino correctamente");
 			reload();
 			listarActivosInActivos();
+			
+			accion = "eliminar Usuario";
+			String browserDetail = Faces.getRequest().getHeader("User-Agent");
+			auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario eliminado: " + us.getNombre(), sesion.getUser().getNombreUsuario(), browserDetail);
+			
+			
 		}else{
 			Messages.addFlashGlobalInfo("esta persona no existe");
 		}
