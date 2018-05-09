@@ -2,8 +2,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui"
-	template="/templates/inicio.xhtml">
+	xmlns:p="http://primefaces.org/ui" template="/templates/inicio.xhtml">
 
 
 
@@ -35,6 +34,7 @@
 				<p:outputLabel id="mask" value="FechaNacimiento" />
 				<p:inputMask id="date" value="#{controladorActivar.fechaNacimiento}"
 					mask="99/99/9999" />
+
 
 				<h:outputLabel id="lblGenero" value="Genero" />
 				<h:selectOneMenu id="cbGenero"
@@ -123,15 +123,22 @@
 			</h:panelGrid>
 			<br></br>
 			<br></br>
-			<h:panelGrid id="panelBotones" columns="2">
+			<h:panelGrid id="panelBotones" columns="3">
 
 				<p:commandButton id="btnRegistrar" value="#{'Registrar Persona'}"
 					process="@this,panelDatos,panelContra" update="paneltabla"
 					action="#{controladorActivar.crearUsuario}" />
 
 				<p:commandButton id="btnBuscar" value="Buscar"
-					process="@this,panelDatos,panelContra" update="panelDatos,panelContra"
+					process="@this,panelDatos,panelContra"
+					update="panelDatos,panelContra"
 					action="#{controladorActivar.buscarUsuario}" />
+
+
+				<p:commandButton id="btnModificar" value="Modificar"
+					process="@this,panelDatos,panelContra"
+					update="panelDatos,panelContra,paneltabla"
+					action="#{controladorActivar.modificarUsuario}" />
 
 			</h:panelGrid>
 
@@ -160,7 +167,7 @@
 						<h:outputLabel value="#{us.estado}"></h:outputLabel>
 					</p:column>
 
-					<p:column headerText="Accion">
+					<p:column headerText="Accion 1">
 						<p:commandButton
 							action="#{controladorActivar.activarUsuario(us.cedula)}"
 							process="@this,paneltabla" value="Activar"
@@ -169,6 +176,13 @@
 						<p:commandButton
 							action="#{controladorActivar.desactivarUsuario(us.cedula)}"
 							process="@this,paneltabla" value="Desactivar"
+							update="@this,paneltabla" />
+					</p:column>
+
+					<p:column headerText="Accion 2">
+						<p:commandButton
+							action="#{controladorActivar.eliminarUsuario(us.cedula)}"
+							process="@this,paneltabla" value="Eliminar"
 							update="@this,paneltabla" />
 					</p:column>
 

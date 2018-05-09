@@ -186,8 +186,9 @@ public class ControladorActivarUsuario implements Serializable {
 				usu.setCedula(cedula);
 				usu.setActivo(true);
 				usu.setArea(a);
-				usu.setCargo(c);
 				usu.setTipoUsuario(tip);
+				usu.setCargo(c);
+
 
 				try {
 					usuarioEJB.registrarUsu(usu);
