@@ -31,14 +31,14 @@ public class ControladorTipoUsuario implements Serializable {
 	private String accion;
 
 	private List<TipoUsuario> tiposUsuario;
-	private TipoUsuario tipoEditar;	
+	private TipoUsuario tipoEditar;
 
 	@Inject
 	private ControladorSesion sesion;
 
 	@EJB
 	private TipoUsuarioEJB tipoUsuarioEJB;
-	
+
 	@EJB
 	private AuditoriaEJB auditoriaEJB;
 
@@ -57,7 +57,7 @@ public class ControladorTipoUsuario implements Serializable {
 				listarTipos();
 				Messages.addFlashGlobalInfo("Registro exitoso");
 				try {
-					
+
 					accion = "Registrar TipoUsuario";
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
 					auditoriaEJB.crearAuditoria("AuditoriaTiposUsuarios", accion, "TU creado: " + tu.getNombre(), sesion.getUser().getCedula(), browserDetail);
@@ -88,15 +88,17 @@ public class ControladorTipoUsuario implements Serializable {
 	 *            tipo de usuario a eliminar
 	 */
 	public void eliminarTipo(TipoUsuario tu) {
-		tipoUsuarioEJB.eliminar(tu);
-		listarTipos();
-		try {
+		try {			
+			tipoUsuarioEJB.eliminar(tu);
+			listarTipos();
 			accion = "Eliminar TipoUsuario";
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
 			auditoriaEJB.crearAuditoria("AuditoriaTiposUsuarios", accion, "TU eliminado: " + tu.getNombre(), sesion.getUser().getCedula(), browserDetail);
 
 		} catch (ExcepcionNegocio e) {
 			e.getMessage();
+		} catch (Exception ex){
+			Messages.addFlashGlobalError("No es posible eliminar este tipo de usuario porque esta siendo usado");
 		}
 	}
 
@@ -104,7 +106,7 @@ public class ControladorTipoUsuario implements Serializable {
 	 * Edita un tipo de usuario
 	 */
 	public void editarTipo() {
-		if (!validarCamposVacios()){
+		if (!validarCamposVacios()) {
 			Messages.addFlashGlobalError("Debe ingresar todos los campos");
 		} else {
 			tipoEditar.setNombre(nombre.toUpperCase());
@@ -124,45 +126,49 @@ public class ControladorTipoUsuario implements Serializable {
 			}
 		}
 	}
-	
+
 	/**
 	 * Lismpia los campos
 	 */
-	private void limpiarCampos(){
+	private void limpiarCampos() {
 		nombre = "";
 		descripcion = "";
 	}
-	
+
 	/**
 	 * Habilita la opci�n de editar tipo de usuario
-	 * @param tu tipo de usuario a editar
+	 * 
+	 * @param tu
+	 *            tipo de usuario a editar
 	 */
-	public void habilitarEdicion(TipoUsuario tu){
+	public void habilitarEdicion(TipoUsuario tu) {
 		tipoEditar = tu;
 		nombre = tipoEditar.getNombre();
 		descripcion = tipoEditar.getDescripcion();
-		try{
+		try {
 			reload();
-		}catch (IOException e){
-			
+		} catch (IOException e) {
+
 		}
 	}
-	
+
 	private void reload() throws IOException {
-	    ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-	    ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
+		ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+		ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
 	}
-	
+
 	/**
 	 * Verifica si se esta editando un tipo de usuario
+	 * 
 	 * @return true si se esta editando, de lo contrario false
 	 */
-	public boolean isEditando(){
+	public boolean isEditando() {
 		return tipoEditar != null;
 	}
 
 	/**
 	 * Validas si los campos nombre y descripcion est�n vacios
+	 * 
 	 * @return true si no lo est�n, de lo contrario false
 	 */
 	private boolean validarCamposVacios() {

@@ -47,13 +47,13 @@ public class ControladorInventario implements Serializable {
 	}
 	
 	private void refrescarListaInventarios(){
-		inventarios = productoEJB.listarInventario();
+		inventarios = productoEJB.listarInventarios();
 	}
 	
 	public boolean isEditando(){
 		return inventarioEditar != null;
 	}
-	
+		
 	public void registrar(){
 		
 		Inventario inventario = new Inventario();

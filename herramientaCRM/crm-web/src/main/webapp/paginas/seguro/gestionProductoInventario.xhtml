@@ -1,0 +1,98 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" template="/templates/inicio.xhtml">
+
+	<ui:define name="cuerpo">
+		<h:form prependId="false">
+
+			<h2>GESTION DE INVENTARIOS DE PRODUCTOS</h2>
+			<br />
+			<br />
+
+			<h:panelGrid id="panelCodigo" columns="3">
+
+				<h:outputLabel id="lblCodigoProducto"
+					value="Buscar Producto por Código " />
+				<h:inputText id="tfCodigoProducto"
+					value="#{controladorProductoInventario.codigo}" />
+
+				<p:commandButton id="btnBuscarProd" value="Buscar"
+					process="@this,panelCodigo"
+					update="@this,panelDatos,panelTablaInventarios"
+					action="#{controladorProductoInventario.buscarProductoCodigo}" />
+
+			</h:panelGrid>
+			<br />
+
+			<h:panelGrid id="panelDatos" columns="2">
+
+				<h:outputLabel for="cbInventarios" id="lbInventario"
+					value="Seleccione un inventario " />
+				<h:selectOneMenu id="cbInventarios"
+					value="#{controladorProductoInventario.inventarioSeleccionado}">
+
+					<f:selectItems value="#{controladorProductoInventario.inventarios}"
+						var="inventario" itemValue="#{inventario.id}"
+						itemLabel="#{inventario.nombre}" />
+
+				</h:selectOneMenu>
+
+				<h:outputLabel for="cbProductos" id="lbProducto"
+					value="Seleccione un producto " />
+				<h:selectOneMenu id="cbProductos"
+					value="#{controladorProductoInventario.productoSeleccionado}">
+
+					<f:selectItems value="#{controladorProductoInventario.productos}"
+						var="producto" itemValue="#{producto.id}"
+						itemLabel="#{producto.nombre}" />
+
+					<f:ajax event="change" execute="@this" render="panelTablaInventarios"
+						listener="#{controladorProductoInventario.listarInventariosProducto}" />
+
+				</h:selectOneMenu>
+
+				<h:outputLabel id="lblCantidad" value="Cantidad: " />
+				<h:inputText id="tfCantidad"
+					value="#{controladorProductoInventario.cantidad}" />
+
+			</h:panelGrid>
+			<br />
+
+			<h:panelGrid id="panelBotones" columns="2">
+				<p:commandButton value="Agregar" process="@this,panelDatos"
+					update="@this,panelDatos,panelTablaInventarios"
+					action="#{controladorProductoInventario.agregar}" />
+
+			</h:panelGrid>
+			<br />
+
+			<h:panelGrid id="panelTablaInventarios" columns="1" width="80%">
+
+				<p:dataTable id="tablaInventarios"
+					value="#{controladorProductoInventario.inventariosProducto}"
+					var="inventario" border="1">
+
+					<p:column headerText="Nombre "
+						filterBy="#{inventario.inventarioId.nombre}">
+						<h:outputLabel value="#{inventario.inventarioId.nombre}" />
+					</p:column>
+
+					<p:column headerText="Descripción ">
+						<h:outputLabel value="#{inventario.inventarioId.descripcion}" />
+					</p:column>
+
+					<p:column headerText="Cantidad">
+						<h:outputLabel value="#{inventario.cantidad}" />
+					</p:column>
+
+				</p:dataTable>
+
+			</h:panelGrid>
+
+		</h:form>
+	</ui:define>
+
+
+</ui:composition>

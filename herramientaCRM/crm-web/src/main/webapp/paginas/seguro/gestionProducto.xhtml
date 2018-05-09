@@ -2,9 +2,9 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui" template="/templates/inicioERP.xhtml">
+	xmlns:p="http://primefaces.org/ui" template="/templates/inicio.xhtml">
 
-	<ui:define name="cuerpoERP">
+	<ui:define name="cuerpo">
 		<h:form prependId="false">
 		
 		<h1>GESTIÓN DE PRODUCTOS</h1>
@@ -44,18 +44,6 @@
 
 				<h:outputLabel id="lblPrecio" value="Precio: " />
 				<h:inputText id="tfPrecio" value="#{controladorProducto.valor}" />
-				
-				<h:outputLabel id="lblCantidad" value="Cantidad: " />
-				<h:inputText id="tfCantidad" value="#{controladorProducto.cantidad}" />
-				
-				<h:outputLabel for="cbInventarios" id="lbInventario" value="Seleccione un inventario " />
-				<h:selectOneMenu id="cbInventarios"
-					value="#{controladorProducto.inventarioSeleccionado}">
-
-					<f:selectItems value="#{controladorProducto.inventarios}" var="inventario"
-						itemValue="#{inventario.id}" itemLabel="#{inventario.nombre}" />
-
-				</h:selectOneMenu>
 
 				<h:outputLabel for="cblote" id="lbLote" value="Seleccione el lote " />
 				<h:selectOneMenu id="cblote"
@@ -80,7 +68,7 @@
 			<h:panelGrid id="panelBotones" columns="3">
 
 				<p:commandButton id="btnRegistrar" value="Registrar"
-					process="@this,panelDatos,panelCodigo" update="panelDatos,panelCodigo"
+					process="@this,panelDatos,panelCodigo" update="panelDatos,panelCodigo,paneltabla"
 					action="#{controladorProducto.registrar}" />
 
 				<p:commandButton id="btnEditar" value="Editar"

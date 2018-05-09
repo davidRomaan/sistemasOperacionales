@@ -73,11 +73,31 @@ public class ProductoEJB {
 	public void registrarProducto(Producto producto) throws ExcepcionNegocio {
 		// TODO Auto-generated method stub
 		if (buscarProducto(producto.getId()) != null) {
-			throw new ExcepcionNegocio("El código del producto ya existe");
+			throw new ExcepcionNegocio("El producto ya existe");
 		} else {
 			em.setBd(ConexionEJB.getBd());
 			em.crear(producto);
 		}
+	}
+
+	/**
+	 * Verifica si ya hay un producto registrada en un inventario determinado
+	 * 
+	 * @param inventario
+	 *            el inventario
+	 * @param producto
+	 *            el producto
+	 * @return true si el producto ya se encuentra en el inventario, de lo
+	 *         contrario false
+	 */
+	public boolean validarRegistroInventarioProducto(Inventario inventario, Producto producto) {
+		em.setBd(ConexionEJB.getBd());
+		List<InventarioProducto> lista = (List<InventarioProducto>) (Object) em
+				.listarConDosParametrosObjeto(InventarioProducto.BUSCAR_POR_PRODUCTO_INVENTARIO, inventario, producto);
+		if (lista.size() == 0) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -122,7 +142,7 @@ public class ProductoEJB {
 	 */
 	public List<InventarioProducto> listarInventariosProductos() {
 		em.setBd(ConexionEJB.getBd());
-		return (List<InventarioProducto>)(Object) em.listar(InventarioProducto.LISTAR);
+		return (List<InventarioProducto>) (Object) em.listar(InventarioProducto.LISTAR);
 	}
 
 	/**
@@ -138,23 +158,21 @@ public class ProductoEJB {
 
 	public InventarioProducto buscarInventarioProducto(Producto producto) {
 		em.setBd(ConexionEJB.getBd());
-		List<InventarioProducto> lista = (List<InventarioProducto>)(Object)
-				em.listarConParametroObjeto(InventarioProducto.
-						BUSCAR_INVENTARIO_PRODUCTO, producto);
+		List<InventarioProducto> lista = (List<InventarioProducto>) (Object) em
+				.listarConParametroObjeto(InventarioProducto.BUSCAR_INVENTARIO_PRODUCTO, producto);
 		return lista.get(0);
 	}
 
 	public List<InventarioProducto> inventariosProducto(Producto prod) {
 		em.setBd(ConexionEJB.getBd());
-		List<InventarioProducto> lista = (List<InventarioProducto>)(Object)
-				em.listarConParametroObjeto(InventarioProducto.
-						BUSCAR_INVENTARIO_PRODUCTO, prod);
+		List<InventarioProducto> lista = (List<InventarioProducto>) (Object) em
+				.listarConParametroObjeto(InventarioProducto.BUSCAR_INVENTARIO_PRODUCTO, prod);
 		return lista;
 	}
 
 	public List<Inventario> listarInventarios() {
 		em.setBd(ConexionEJB.getBd());
-		return (List<Inventario>)(Object) em.listar(Inventario.LISTAR);
+		return (List<Inventario>) (Object) em.listar(Inventario.LISTAR);
 	}
 
 	/**
@@ -164,13 +182,13 @@ public class ProductoEJB {
 	 */
 	public List<Lote> lotes() {
 		em.setBd(ConexionEJB.getBd());
-		return (List<Lote>)(Object) em.listar(Lote.LISTA_LOTES);
+		return (List<Lote>) (Object) em.listar(Lote.LISTA_LOTES);
 	}
 
 	public Inventario buscarNombre(String nombre) {
 		em.setBd(ConexionEJB.getBd());
-		List<Inventario> lista = (List<Inventario>)(Object) 
-				em.listarConParametroString(Inventario.BUSCAR_NOMBRE, nombre);
+		List<Inventario> lista = (List<Inventario>) (Object) em.listarConParametroString(Inventario.BUSCAR_NOMBRE,
+				nombre);
 		if (lista.size() != 0) {
 			return lista.get(0);
 		}
@@ -201,14 +219,15 @@ public class ProductoEJB {
 		em.eliminar(inventario);
 	}
 
-	public List<Inventario> listarInventario() {
-		em.setBd(ConexionEJB.getBd());
-		return (List<Inventario>)(Object) em.listar(Inventario.LISTAR);
-	}
-
-	public void registrarInventarioProducto(InventarioProducto ip) {
-		em.setBd(ConexionEJB.getBd());
-		em.registrarInventarioProducto(ip);
+	public void registrarInventarioProducto(InventarioProducto ip) throws ExcepcionNegocio{
+		
+		if (validarRegistroInventarioProducto(ip.getInventarioId(), ip.getProductoId())){
+			em.setBd(ConexionEJB.getBd());
+			em.registrarInventarioProducto(ip);
+		} else {
+			throw new ExcepcionNegocio("Este producto ya esta asignado a este inventario");
+		}
+		
 	}
 
 	public InventarioProducto buscarInventarioProdPK(InventarioProductoPK inventario) {

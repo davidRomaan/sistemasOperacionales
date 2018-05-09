@@ -2,13 +2,12 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui"
-	template="/templates/inicioAdministrador.xhtml">
+	xmlns:p="http://primefaces.org/ui" template="/templates/inicio.xhtml">
 
 
 
 
-	<ui:define name="cuerpoAdmin">
+	<ui:define name="cuerpo">
 		<h:form prependId="false">
 
 
@@ -35,6 +34,7 @@
 				<p:outputLabel id="mask" value="FechaNacimiento" />
 				<p:inputMask id="date" value="#{controladorActivar.fechaNacimiento}"
 					mask="99/99/9999" />
+
 
 				<h:outputLabel id="lblGenero" value="Genero" />
 				<h:selectOneMenu id="cbGenero"
@@ -81,7 +81,7 @@
 					value="#{controladorActivar.nombreUsuario}" />
 
 
-				<h:outputLabel for="cbAreas" id="lbArea" value="#{'AreaEmpresa'}" />
+				<h:outputLabel for="cbArea" id="lbArea" value="#{'AreaEmpresa'}" />
 				<h:selectOneMenu id="cbAreas"
 					value="#{controladorActivar.areaSeleccionada}">
 
@@ -102,7 +102,7 @@
 
 				<h:outputLabel for="cbtipoUsuario" id="lbtipo"
 					value="#{'TipoUsuario'}" />
-				<h:selectOneMenu id="cbtipoUsuario"
+				<h:selectOneMenu id="cbtipo"
 					value="#{controladorActivar.tipoUsuarioSeleccionado}">
 
 					<f:selectItems value="#{controladorActivar.tiposUsu}" var="tipo"
@@ -114,7 +114,8 @@
 			<br></br>
 			<h:panelGrid id="panelContra" columns="3">
 				<h:outputLabel id="lblContra" value="Contrasenia" />
-				<h:inputText id="tfContra" value="#{controladorActivar.contrasenia}" />
+				<h:inputText id="tfContra" value="#{controladorActivar.contrasenia}"
+					disabled="true" />
 
 				<p:commandButton id="btngenerar" value="#{'Generar Clave'}"
 					process="@this,panelContra" update="panelContra"
@@ -132,10 +133,11 @@
 					process="@this,panelDatos,panelContra"
 					update="panelDatos,panelContra"
 					action="#{controladorActivar.buscarUsuario}" />
-					
-				<p:commandButton id="btnEditar" value="Editar"
+
+
+				<p:commandButton id="btnModificar" value="Modificar"
 					process="@this,panelDatos,panelContra"
-					update="paneltabla"
+					update="panelDatos,panelContra,paneltabla"
 					action="#{controladorActivar.modificarUsuario}" />
 
 			</h:panelGrid>
@@ -143,7 +145,7 @@
 
 			<br></br>
 			<br></br>
-			<h:panelGrid id="paneltabla" columns="5" width="90%">
+			<h:panelGrid id="paneltabla" columns="5" width="80%">
 
 				<p:dataTable id="tablatipos" emptyMessage="Ningun resultado"
 					value="#{controladorActivar.usuarios}" var="us" border="1">
@@ -176,10 +178,11 @@
 							process="@this,paneltabla" value="Desactivar"
 							update="@this,paneltabla" />
 					</p:column>
+
 					<p:column headerText="Accion 2">
 						<p:commandButton
 							action="#{controladorActivar.eliminarUsuario(us.cedula)}"
-							process="@this,paneltabla,panelDatos" value="Eliminar"
+							process="@this,paneltabla" value="Eliminar"
 							update="@this,paneltabla" />
 					</p:column>
 

@@ -1,6 +1,7 @@
 package co.edu.eam.ingesoft.bi.web.controladores;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
@@ -13,8 +14,10 @@ import org.omnifaces.util.Messages;
 
 import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.ConexionEJB;
+import co.edu.eam.ingesoft.bi.negocio.beans.ModuloEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.UsuarioEJB;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Conexion;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.Modulo;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Usuario;
 
 @Named("controladorSesion")
@@ -25,78 +28,89 @@ public class ControladorSesion implements Serializable {
 	private String password;
 	private String accion;
 	private Usuario user;
-	
-	private static int bd = 0;
-	
+
+	private List<Modulo> modulos;
+		
 	@EJB
 	private ConexionEJB conexionEJB;
 
 	@EJB
 	private UsuarioEJB usuarioEJB;
-	
+
 	@EJB
 	private AuditoriaEJB auditoriaEJB;
+	
+	@EJB
+	private ModuloEJB moduloEJB;
 	
 	private void obtenerBD (){
 		conexionEJB.ultimaBD();
 	}
 
 	public String login() {
-		
+
 		obtenerBD();
-		
+
 		Usuario usuarioTemporal = usuarioEJB.buscarUsuario(username);
 
 		if ((usuarioTemporal != null)) {
 
 			if (usuarioTemporal.getContrasenia().equals(password)
-					&& (usuarioTemporal.getTipoUsuario().getNombre().equalsIgnoreCase("Administrador")
-							&& usuarioTemporal.isActivo() == true)) {
+							&& usuarioTemporal.isActivo() == true) {
 				user = usuarioTemporal;
 				Faces.setSessionAttribute("user", user);
+
+				modulos = moduloEJB.listarModuloPorTipoUsuario(usuarioTemporal.getTipoUsuario().getId());
+								
+				if (modulos.size() == 0){
+					Messages.addFlashGlobalWarn("No tienes permisos para acceder a los modulos del sistema");
+				}
 				
 				accion = "Iniciar Sesion";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaSesion", accion, "sesion creado por: Administrador", user.getNombre(), browserDetail);
+				auditoriaEJB.crearAuditoria("AuditoriaSesion", accion, "sesion creado por: Administrador",
+						user.getNombre(), browserDetail);
 				System.out.println(user.getNombre());
-				
-				return "/templates/inicioBases.xhtml?faces-redirect=true";
+
+				return "/paginas/seguro/bienvenido.xhtml?faces-redirect=true";
 
 			}
-			if (usuarioTemporal.getContrasenia().equals(password)
-					&& (usuarioTemporal.getTipoUsuario().getNombre().equalsIgnoreCase("CRM")
-							&& usuarioTemporal.isActivo() == true)) {
-				user = usuarioTemporal;
-				Faces.setSessionAttribute("user", user);
-				
-				accion = "Iniciar Sesion";
-				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaSesion", accion, "sesion creado por: CRM", user.getNombre(), browserDetail);
-				
-				return "/templates/inicioCRM.xhtml?faces-redirect=true";
+//			if (usuarioTemporal.getContrasenia().equals(password)
+//					&& (usuarioTemporal.getTipoUsuario().getNombre().equalsIgnoreCase("CRM")
+//							&& usuarioTemporal.isActivo() == true)) {
+//				user = usuarioTemporal;
+//				Faces.setSessionAttribute("user", user);
+//				
+//				accion = "Iniciar Sesion";
+//				String browserDetail = Faces.getRequest().getHeader("User-Agent");
+//				auditoriaEJB.crearAuditoria("AuditoriaSesion", accion, "sesion creado por: CRM", user.getNombre(), browserDetail);
+//				
+//				return "/templates/inicioCRM.xhtml?faces-redirect=true";
+//
+//			}
+//			if (usuarioTemporal.getContrasenia().equals(password)
+//					&& (usuarioTemporal.getTipoUsuario().getNombre().equalsIgnoreCase("ERP")
+//							&& usuarioTemporal.isActivo() == true)) {
+//				user = usuarioTemporal;
+//				Faces.setSessionAttribute("user", user);
+//				
+//				accion = "Iniciar Sesion";
+//				String browserDetail = Faces.getRequest().getHeader("User-Agent");
+//				auditoriaEJB.crearAuditoria("AuditoriaSesion", accion, "sesion creado por: ERP", user.getNombre(), browserDetail);
+//				
+//				return "/templates/inicioERP.xhtml?faces-redirect=true";
+//
+//			}
 
-			}
-			if (usuarioTemporal.getContrasenia().equals(password)
-					&& (usuarioTemporal.getTipoUsuario().getNombre().equalsIgnoreCase("ERP")
-							&& usuarioTemporal.isActivo() == true)) {
-				user = usuarioTemporal;
-				Faces.setSessionAttribute("user", user);
-				
-				accion = "Iniciar Sesion";
-				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaSesion", accion, "sesion creado por: ERP", user.getNombre(), browserDetail);
-				
-				return "/templates/inicioERP.xhtml?faces-redirect=true";
-
-			}
 		} else {
-			
-			accion = "Error Log-In";
+
+			accion = "Error iniciando session";
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
-			auditoriaEJB.crearAuditoria("AuditoriaSesion", accion, "error Inicion Sesion", "error Inicion Sesion", browserDetail);
-			
+			auditoriaEJB.crearAuditoria("AuditoriaSesion", accion, "intento acceder: "+username, "error Inicio Sesion",
+					browserDetail);
+
 			Messages.addFlashGlobalError("este usuario no existe");
-			
+
 		}
 		return null;
 	}
@@ -108,6 +122,14 @@ public class ControladorSesion implements Serializable {
 		sesion.invalidate();
 		return "/paginas/publico/login.xhtml?faces-redirect=true";
 
+	}
+
+	public List<Modulo> getModulos() {
+		return modulos;
+	}
+
+	public void setModulos(List<Modulo> modulos) {
+		this.modulos = modulos;
 	}
 
 	public boolean isSesion() {

@@ -7,13 +7,21 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
 @IdClass(ModulosUsuarioPK.class)
 @Table(name="MODULOS_USUARIO")
+@NamedQuery(name=ModulosUsuario.LISTAR, query="SELECT mu FROM ModulosUsuario mu WHERE mu.tipoUsiario_id.id = ?1")
 public class ModulosUsuario implements Serializable{
-
+	
+	/**
+	 * Lista los módulos del usuario por el tipo de usuario
+	 * ?1: tipo de usuario
+	 */
+	public static final String LISTAR = "modulosUsuario.listar";
+	
 	@Id
 	@JoinColumn(name="modulo_id")
 	@ManyToOne
