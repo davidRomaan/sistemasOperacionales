@@ -1,0 +1,36 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" template="/templates/inicio.xhtml">
+
+	<ui:define name="cuerpo">
+		<h:form prependId="false">
+
+			<h2>GESTIONA LA CONEXIÓN A LA BASE DE DATOS</h2>
+			<br />
+			<br />
+
+			<h:panelGrid id="panelCambio">
+				<h:outputLabel id="lblBD" value="Base de datos" />
+
+				<f:selectItems value="#{controladoAcceso.lista}" var="list"
+					itemValue="#{basesdatos}" itemLabel="#{basesdatos}" />
+				<h:selectOneMenu id="cbBase" value="#{controladoAcceso.base}">
+
+					<f:selectItem itemValue="MYSQL" itemLabel="MYSQL" />
+					<f:selectItem itemValue="POSTGRES" itemLabel="POSTGRES" />
+
+				</h:selectOneMenu>
+
+				<p:commandButton id="btnCambiar" value="Cambiar"
+					process="@this,panelCambio" update="panelCambio"
+					action="#{controladoAcceso.cambiarBD}" />
+
+			</h:panelGrid>
+
+		</h:form>
+	</ui:define>
+
+
+</ui:composition>

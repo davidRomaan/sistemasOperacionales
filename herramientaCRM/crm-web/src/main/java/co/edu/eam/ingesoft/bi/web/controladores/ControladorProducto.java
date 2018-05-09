@@ -39,8 +39,6 @@ public class ControladorProducto implements Serializable {
 	private String descripcion;
 	private double peso;
 	private double dimension;
-	private int cantidad;
-	private List<Inventario> inventarios;
 	private int inventarioSeleccionado;
 	private List<InventarioProducto> inventariosProducto;
 	private double valor;
@@ -64,11 +62,10 @@ public class ControladorProducto implements Serializable {
 
 	@PostConstruct
 	private void cargarDatos() {
-		
+
 		usuario = Faces.getApplicationAttribute("user");
 		lotes = productoEJB.lotes();
 		listarTiposProducto();
-		inventarios = productoEJB.listarInventario();
 		listar();
 	}
 
@@ -92,7 +89,9 @@ public class ControladorProducto implements Serializable {
 
 				accion = "Buscar Producto";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaProducto", accion, "producto buscado: " + productoBuscado.getNombre(), sesion.getUser().getNombreUsuario(), browserDetail);
+				auditoriaEJB.crearAuditoria("AuditoriaProducto", accion,
+						"producto buscado: " + productoBuscado.getNombre(), sesion.getUser().getNombreUsuario(),
+						browserDetail);
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -105,7 +104,6 @@ public class ControladorProducto implements Serializable {
 			dimension = productoBuscado.getDimension();
 			valor = productoBuscado.getValorProducto();
 			loteSeleccionado = productoBuscado.getLote().getId();
-			inventarioSeleccionado = productoEJB.buscarInventarioProducto(productoBuscado).getInventarioId().getId();
 
 			inventariosProducto = productoEJB.inventariosProducto(productoBuscado);
 
@@ -142,8 +140,10 @@ public class ControladorProducto implements Serializable {
 				try {
 
 					accion = "Editar Producto";
-				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaProducto", accion, "producto editado: " + productoBuscado.getNombre(), sesion.getUser().getNombreUsuario(), browserDetail);
+					String browserDetail = Faces.getRequest().getHeader("User-Agent");
+					auditoriaEJB.crearAuditoria("AuditoriaProducto", accion,
+							"producto editado: " + productoBuscado.getNombre(), sesion.getUser().getNombreUsuario(),
+							browserDetail);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -205,25 +205,18 @@ public class ControladorProducto implements Serializable {
 
 			producto.setTipoProducto(tipoProducto);
 
-			InventarioProducto inventario = new InventarioProducto();
-			inventario.setCantidad(cantidad);
-			inventario.setProductoId(producto);
-
-			Inventario i = productoEJB.buscarInventarioId(inventarioSeleccionado);
-			inventario.setInventarioId(i);
-
-			if (productoEJB.validarRegistroInventarioProducto(i, producto)) {
-				Messages.addFlashGlobalError("Ya existe este producto en este inventario");
-			} else {
-				productoEJB.registrarProducto(producto);
-				productoEJB.registrarInventarioProducto(inventario);
-			}
-
 			try {
 
-					accion = "Crear Producto";
-					String browserDetail = Faces.getRequest().getHeader("User-Agent");
-					auditoriaEJB.crearAuditoria("AuditoriaProducto", accion, "producto creado: " + producto.getNombre(), sesion.getUser().getNombreUsuario(), browserDetail);
+				productoEJB.registrarProducto(producto);
+
+				accion = "Crear Producto";
+				String browserDetail = Faces.getRequest().getHeader("User-Agent");
+				auditoriaEJB.crearAuditoria("AuditoriaProducto", accion, "producto creado: " + producto.getNombre(),
+						sesion.getUser().getNombreUsuario(), browserDetail);
+
+			} catch (ExcepcionNegocio e) {
+				// TODO: handle exception
+				Messages.addFlashGlobalError(e.getMessage());
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -262,7 +255,8 @@ public class ControladorProducto implements Serializable {
 
 			accion = "Eliminar Producto";
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
-			auditoriaEJB.crearAuditoria("AuditoriaProducto", accion, "producto eliminado: " + p.getNombre(), sesion.getUser().getNombreUsuario(), browserDetail);
+			auditoriaEJB.crearAuditoria("AuditoriaProducto", accion, "producto eliminado: " + p.getNombre(),
+					sesion.getUser().getNombreUsuario(), browserDetail);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -355,22 +349,6 @@ public class ControladorProducto implements Serializable {
 
 	public void setTipoProductoSeleccionado(int tipoProductoSeleccionado) {
 		this.tipoProductoSeleccionado = tipoProductoSeleccionado;
-	}
-
-	public int getCantidad() {
-		return cantidad;
-	}
-
-	public void setCantidad(int cantidad) {
-		this.cantidad = cantidad;
-	}
-
-	public List<Inventario> getInventarios() {
-		return inventarios;
-	}
-
-	public void setInventarios(List<Inventario> inventarios) {
-		this.inventarios = inventarios;
 	}
 
 	public int getInventarioSeleccionado() {

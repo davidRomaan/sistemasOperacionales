@@ -72,8 +72,12 @@ public class ProductoEJB {
 	 */
 	public void registrarProducto(Producto producto) throws ExcepcionNegocio {
 		// TODO Auto-generated method stub
-		em.setBd(ConexionEJB.getBd());
-		em.crear(producto);
+		if (buscarProducto(producto.getId()) != null) {
+			throw new ExcepcionNegocio("El producto ya existe");
+		} else {
+			em.setBd(ConexionEJB.getBd());
+			em.crear(producto);
+		}
 	}
 
 	/**
@@ -91,9 +95,9 @@ public class ProductoEJB {
 		List<InventarioProducto> lista = (List<InventarioProducto>) (Object) em
 				.listarConDosParametrosObjeto(InventarioProducto.BUSCAR_POR_PRODUCTO_INVENTARIO, inventario, producto);
 		if (lista.size() == 0) {
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	/**
@@ -215,14 +219,15 @@ public class ProductoEJB {
 		em.eliminar(inventario);
 	}
 
-	public List<Inventario> listarInventario() {
-		em.setBd(ConexionEJB.getBd());
-		return (List<Inventario>) (Object) em.listar(Inventario.LISTAR);
-	}
-
-	public void registrarInventarioProducto(InventarioProducto ip) {
-		em.setBd(ConexionEJB.getBd());
-		em.registrarInventarioProducto(ip);
+	public void registrarInventarioProducto(InventarioProducto ip) throws ExcepcionNegocio{
+		
+		if (validarRegistroInventarioProducto(ip.getInventarioId(), ip.getProductoId())){
+			em.setBd(ConexionEJB.getBd());
+			em.registrarInventarioProducto(ip);
+		} else {
+			throw new ExcepcionNegocio("Este producto ya esta asignado a este inventario");
+		}
+		
 	}
 
 	public InventarioProducto buscarInventarioProdPK(InventarioProductoPK inventario) {

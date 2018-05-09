@@ -104,7 +104,11 @@ public class UsuarioEJB {
 	public void registrarCliente(Persona p) {
 		if (buscarCliente(p.getCedula()) != null) {
 			throw new ExcepcionNegocio("El cliente ya existe");
-		} else {
+		
+		} else if (buscarUsu(p.getCedula()) != null){
+			throw new ExcepcionNegocio("Ya existe una persona con el número de identificación ingresado");			
+		}		
+		else {
 			em.setBd(ConexionEJB.getBd());
 			em.crear(p);
 		}

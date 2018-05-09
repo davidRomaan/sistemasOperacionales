@@ -479,6 +479,37 @@ public class Persistencia implements Serializable {
 		}
 
 	}
+	
+	/**
+	 * Elimina un inventario producto
+	 * @param ip inventario producto que se desea eliminar
+	 */
+	public void eliminarInventarioProducto(InventarioProducto ip){
+		
+		String sql = "DELETE FROM INVENTARIO_PRODUCTO WHERE inventario_id = ?1 AND producto_id = ?2";
+		
+		Query q;
+		
+		switch (this.bd){
+		
+		case 1:
+			q = emM.createNativeQuery(sql);
+			break;
+		
+		case 2:
+			q = emP.createNativeQuery(sql);
+			break;
+			
+		default:
+			throw new ExcepcionNegocio("La base de datos a la cual intenta acceder no existe");
+		
+		}
+		
+		q.setParameter(1, ip.getInventarioId().getId());
+		q.setParameter(2, ip.getProductoId().getId());
+		q.executeUpdate();
+		
+	}
 
 	public void eliminarDetalleVenta(DetalleVenta dv) {
 
