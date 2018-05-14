@@ -95,8 +95,13 @@ public class ControladorProductoInventario implements Serializable {
 		
 	}
 	
-	public void eliminar(){
-		
+	/**
+	 * Elimina un invnetario de un producto
+	 * @param ip invnetario del producto que se desea eliminar
+	 */
+	public void eliminar(InventarioProducto ip){
+		inventariosProducto.remove(ip);
+		productoEJB.eliminarInventarioProducto(ip);
 	}
 
 	public List<Producto> getProductos() {

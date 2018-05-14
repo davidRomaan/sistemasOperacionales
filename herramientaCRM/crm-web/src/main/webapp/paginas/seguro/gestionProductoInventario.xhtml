@@ -67,6 +67,8 @@
 
 			</h:panelGrid>
 			<br />
+			
+			<h4>LISTA DE INVENTARIOS ASIGNADOS A UN PRODUCTO</h4>
 
 			<h:panelGrid id="panelTablaInventarios" columns="1" width="80%">
 
@@ -85,6 +87,12 @@
 
 					<p:column headerText="Cantidad">
 						<h:outputLabel value="#{inventario.cantidad}" />
+					</p:column>
+					
+					<p:column headerText="Accion">
+						<p:commandButton value="Eliminar" process="@this"
+							update="panelTablaInventarios"
+							action="#{controladorProductoInventario.eliminar(inventario)}" />
 					</p:column>
 
 				</p:dataTable>

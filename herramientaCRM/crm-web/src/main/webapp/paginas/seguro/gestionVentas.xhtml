@@ -21,7 +21,7 @@
 					value="#{controladorGestionVentas.fechaCompra}" mask="99/99/9999" />
 
 				<p:commandButton value="Buscar" process="@this,panelFecha"
-					update="panelTablaFacturas,panelTablaDetalles"
+					update="@this,panelTablaFacturas,panelTablaDetalles"
 					action="#{controladorGestionVentas.listarFacturasFecha}" />
 
 			</h:panelGrid>

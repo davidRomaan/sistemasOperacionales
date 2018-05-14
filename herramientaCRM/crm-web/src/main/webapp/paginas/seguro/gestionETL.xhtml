@@ -1,0 +1,65 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" template="/templates/inicio.xhtml">
+
+	<ui:define name="cuerpo">
+		<h:form prependId="false">
+
+			<h1>ADMINISTRACIÓN DEL DATA WAREHOUSE</h1>
+
+			<h:panelGrid id="panelDatos" columns="2">
+
+				<h:outputLabel id="lblTipoCarga" for="cbTipoCarga"
+					value="Seleccione el modo de carga" />
+
+				<h:selectOneMenu id="cbTipoCarga" value="#{controladorDWH.tipoCarga}">
+
+					<f:selectItem itemValue="Acumulacion simple"
+						itemLabel="Acumulacion simple" />
+					<f:selectItem itemValue="Rolling" itemLabel="Rolling" />
+
+					<f:ajax event="change" execute="@this" render="panelIntervalo"
+						listener="#{controladorDWH.gestionarCarga}" />
+
+				</h:selectOneMenu>
+
+			</h:panelGrid>
+			<br />
+
+			<h:panelGrid id="panelValidacion" columns="1"
+				rendered="#{!controladorDWH.rollingSeleccionado}">
+				
+				<h3>Ingrese el periodo deseado</h3>
+
+				<h:panelGrid id="panelIntervalo" columns="4">
+
+				<p:outputLabel id="mask1" value="Desde: " />
+				<p:inputMask id="date1" value="#{controladorDWH.fechaInicio}"
+					mask="99/99/9999" />
+
+				<p:outputLabel id="mask2" value=" Hasta: " />
+				<p:inputMask id="date2" value="#{controladorDWH.fechaFin}"
+					mask="99/99/9999" />
+
+			</h:panelGrid>
+			</h:panelGrid>
+			<br />
+
+			<h:panelGrid id="panelBoton" columns="3">
+
+				<p:commandButton id="btnCargar" value="Cargar Datos"
+					process="@this,panelIntervalo,panelDatos,panelValidacion,panelBoton"
+					update="panelIntervalo,panelDatos,panelValidacion,panelBoton"
+					action="#{controladorDWH.cargar}" />
+
+			</h:panelGrid>
+			<br />
+
+ 
+		</h:form>
+	</ui:define>
+
+
+</ui:composition>

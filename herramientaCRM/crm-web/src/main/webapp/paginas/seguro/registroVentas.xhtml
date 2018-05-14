@@ -8,7 +8,7 @@
 	<ui:define name="cuerpo">
 		<h:form prependId="false">
 
-			<h1>GESTIÓN DE VENTAS</h1>
+			<h1>VENTAS</h1>
 
 			<br></br>
 			<br></br>
@@ -51,8 +51,8 @@
 					<p:outputLabel for="tfcantidad" value="Cantidad a comprar " />
 					<h:inputText value="#{controladorVentas.cantidad}" id="tfcantidad" />
 
-					<p:commandButton value="Agregar" process="@this,panelTabla"
-						update="@this,panelTablaDetalles"
+					<p:commandButton value="Agregar" process="@this,panelTabla,panelVenta"
+						update="@this,panelTablaDetalles,panelVenta"
 						action="#{controladorVentas.agregarCantidad}" />
 
 
@@ -62,7 +62,7 @@
 
 			<br />
 
-			<h1>CARRITO DE COMPRAS</h1>
+			<h4>CARRITO DE COMPRAS</h4>
 
 			<br />
 
@@ -91,8 +91,8 @@
 
 					<p:column headerText="Acción">
 						<p:commandButton value="Quitar"
-							process="@this,tablaProductosSeleccionados"
-							update="tablaProductosSeleccionados"
+							process="@this,tablaProductosSeleccionados,panelVenta"
+							update="tablaProductosSeleccionados,panelVenta"
 							action="#{controladorVentas.eliminarDetalleVenta(detalle)}" />
 					</p:column>
 
@@ -182,14 +182,14 @@
 			</h:panelGrid>
 			<br />
 
-			<h:panelGrid columns="1">
+			<h:panelGrid columns="1" id="panelVenta">
 
 				<p:outputLabel value="Total Venta: $#{controladorVentas.totalVenta}"
 					style="color: green" />
 
 				<p:commandButton value="Vender"
-					process="@this,panelTabla,panelTablaDetalles,panelCedula,panelDatosCliente"
-					update="panelTabla,panelTablaDetalles,panelCedula,panelDatosCliente"
+					process="@this,panelTabla,panelTablaDetalles,panelCedula,panelDatosCliente,panelVenta"
+					update="panelTabla,panelTablaDetalles,panelCedula,panelDatosCliente,panelVenta"
 					action="#{controladorVentas.vender}" />
 
 			</h:panelGrid>

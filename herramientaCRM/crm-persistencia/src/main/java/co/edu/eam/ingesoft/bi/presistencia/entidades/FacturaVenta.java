@@ -1,6 +1,7 @@
 package co.edu.eam.ingesoft.bi.presistencia.entidades;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -21,7 +22,11 @@ import javax.persistence.TemporalType;
 @NamedQueries({
 		@NamedQuery(name = FacturaVenta.OBTENER_ULTIMA_REGISTRADA, query = "SELECT MAX(fv.id) FROM FacturaVenta fv "
 				+ "WHERE fv.clienteId.cedula = ?1"),
-		@NamedQuery(name=FacturaVenta.LISTAR_POR_FECHA, query="SELECT fv FROM FacturaVenta fv WHERE fv.fechaVenta = ?1")})
+		@NamedQuery(name=FacturaVenta.LISTAR_POR_FECHA, query="SELECT fv FROM FacturaVenta fv "
+				+ "WHERE fv.dia = ?1 AND fv.mes = ?2 AND fv.anio = ?3"),
+		@NamedQuery(name=FacturaVenta.FACTURAS_FECHA_INICIO_FIN, query="SELECT fv FROM FacturaVenta fv "
+				+ "WHERE fv.fechaVenta BETWEEN ?1 AND ?2")
+		})
 public class FacturaVenta implements Serializable {
 
 	public static final String OBTENER_ULTIMA_REGISTRADA = "facturaVenta.obtener";
@@ -31,14 +36,26 @@ public class FacturaVenta implements Serializable {
 	 * ?1 fecha
 	 */
 	public static final String LISTAR_POR_FECHA = "facturaVenta.listarPorFecha";
+	
+	public static final String FACTURAS_FECHA_INICIO_FIN = "Factura.fechaInicioFin";
 
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-
-	@Column(name = "fecha_venta")
-	private String fechaVenta;
+	
+	@Column(name="dia")
+	private int dia;
+	
+	@Column(name="mes")
+	private int mes;
+	
+	@Column(name="anio")
+	private int anio;
+	
+	@Column(name="fecha_venta")
+	@Temporal(TemporalType.DATE)
+	private Calendar fechaVenta;
 
 	@Column(name = "total")
 	private double total;
@@ -51,13 +68,15 @@ public class FacturaVenta implements Serializable {
 	@ManyToOne(cascade = {})
 	private Persona empleadoId;
 
-	public FacturaVenta(int id, String fechaVenta, double total, Persona clienteId, Persona empleadoId) {
+	public FacturaVenta(int id, int dia, int mes, int anio, double total, Persona clienteId, Persona empleadoId) {
 		super();
 		this.id = id;
-		this.fechaVenta = fechaVenta;
 		this.total = total;
 		this.clienteId = clienteId;
 		this.empleadoId = empleadoId;
+		this.dia = dia;
+		this.mes = mes;
+		this.anio = anio;
 	}
 
 	public FacturaVenta() {
@@ -72,12 +91,28 @@ public class FacturaVenta implements Serializable {
 		this.id = id;
 	}
 
-	public String getFechaVenta() {
-		return fechaVenta;
+	public int getDia() {
+		return dia;
 	}
 
-	public void setFechaVenta(String fechaVenta) {
-		this.fechaVenta = fechaVenta;
+	public void setDia(int dia) {
+		this.dia = dia;
+	}
+
+	public int getMes() {
+		return mes;
+	}
+
+	public void setMes(int mes) {
+		this.mes = mes;
+	}
+
+	public int getAnio() {
+		return anio;
+	}
+
+	public void setAnio(int anio) {
+		this.anio = anio;
 	}
 
 	public double getTotal() {
@@ -103,5 +138,15 @@ public class FacturaVenta implements Serializable {
 	public void setEmpleadoId(Persona empleadoId) {
 		this.empleadoId = empleadoId;
 	}
+
+	public Calendar getFechaVenta() {
+		return fechaVenta;
+	}
+
+	public void setFechaVenta(Calendar fechaVenta) {
+		this.fechaVenta = fechaVenta;
+	}
+	
+	
 
 }

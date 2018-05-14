@@ -2,6 +2,9 @@ package co.edu.eam.ingesoft.bi.web.controladores;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -115,9 +118,9 @@ public class ControladorGestionVentas implements Serializable {
 
 	public void eliminar(FacturaVenta fv) {
 		try {
-			String fechaVenta = fv.getFechaVenta();
+			FacturaVenta copia = fv;
 			ventasEJB.eliminarVenta(fv);
-			facturas = ventasEJB.listarFacturasPorFecha(fechaVenta);
+			facturas.remove(copia);
 		} catch (Exception e) {
 			// TODO: handle exception
 			Messages.addFlashGlobalWarn("Antes de eliminar esta factura debe eliminar todos sus detalles de venta");

@@ -229,6 +229,11 @@ public class ProductoEJB {
 		}
 		
 	}
+	
+	public void eliminarInventarioProducto(InventarioProducto ip){
+		em.setBd(ConexionEJB.getBd());
+		em.eliminarInventarioProducto(ip);
+	}
 
 	public InventarioProducto buscarInventarioProdPK(InventarioProductoPK inventario) {
 		em.setBd(ConexionEJB.getBd());

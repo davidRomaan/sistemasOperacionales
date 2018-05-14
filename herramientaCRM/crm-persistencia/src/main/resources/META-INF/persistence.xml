@@ -6,18 +6,17 @@
         http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
 
 
-	<!-- <persistence-unit name="oracle">
+	<persistence-unit name="oracle">
 		<jta-data-source>java:jboss/datasources/crmDSO</jta-data-source>
 
 		<properties>
-			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
+			<property name="hibernate.hbm2ddl.auto" value="none" />
 			<property name="hibernate.show_sql" value="true" />
 			<property name="wildfly.jpa.default-unit" value="true" />
 		</properties>
-	</persistence-unit> -->
+	</persistence-unit>
 
 	<persistence-unit name="postgres">
-
 		<jta-data-source>java:jboss/datasources/crmDS</jta-data-source>
 		<properties>
 
@@ -27,7 +26,7 @@
 
 		</properties>
 	</persistence-unit>
-
+	
 	<persistence-unit name="mysql">
 		<jta-data-source>java:jboss/datasources/crmDSM</jta-data-source>
 

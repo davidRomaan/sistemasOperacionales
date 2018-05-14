@@ -2,6 +2,7 @@ package co.edu.eam.ingesoft.bi.negocio.persistencia;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.LocalBean;
@@ -35,6 +36,12 @@ public class Persistencia implements Serializable {
 	 */
 	@PersistenceContext(unitName = "postgres")
 	private EntityManager emP;
+	
+	/**
+	 * Conexión para Oracle (3)
+	 */
+	@PersistenceContext(unitName = "oracle")
+	private EntityManager emO;
 
 	/**
 	 * Base de datos en la cual se están realizando las operaciones
@@ -52,7 +59,7 @@ public class Persistencia implements Serializable {
 		registrarPostgres(objeto);
 	}
 	
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 	public void registrarMysql(Object o){
 		emM.persist(o);
 	}
@@ -563,6 +570,37 @@ public class Persistencia implements Serializable {
 		q.setParameter(1, mu.getModulo_id().getId());
 		q.setParameter(2, mu.getTipoUsiario_id().getId());
 		q.executeUpdate();
+		
+	}
+	
+	/**
+	 * Lista las ventas realizadas en una fecha determinada
+	 * @param dia día de la venta
+	 * @param mes mes de la venta
+	 * @param anio año de la venta
+	 * @return las ventas de la fecha ingresada
+	 */
+	public List<FacturaVenta> listarFacturasPorFecha(String sql, int dia, int mes, int anio){
+		
+		Query q;
+		
+		switch (this.bd) {
+		case 1:
+			q = emM.createNamedQuery(sql);
+			break;
+			
+		case 2:
+			q = emP.createNamedQuery(sql);
+			break;
+
+		default:
+			throw new ExcepcionNegocio("La base de datos a la cual intenta acceder no existe");
+		}
+		
+		q.setParameter(1, dia);
+		q.setParameter(2, mes);
+		q.setParameter(3, anio);
+		return q.getResultList();
 		
 	}
 
