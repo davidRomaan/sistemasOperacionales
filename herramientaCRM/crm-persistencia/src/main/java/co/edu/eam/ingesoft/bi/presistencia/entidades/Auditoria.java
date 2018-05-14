@@ -15,7 +15,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="AUDITORIA")
 @NamedQueries({
-	@NamedQuery(name=Auditoria.LISTA_AUDITORIA, query="SELECT p FROM Auditoria p WHERE p.referencia = ?1")
+	@NamedQuery(name=Auditoria.LISTA_AUDITORIA, query="SELECT a FROM Auditoria a WHERE a.referencia = ?1")
 })
 public class Auditoria implements Serializable{
 	

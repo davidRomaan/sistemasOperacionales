@@ -312,6 +312,11 @@ public class ControladorActivarUsuario implements Serializable {
 				usu.setTipoUsuario(tip);
 
 				usuarioEJB.editarUsuario(usu);
+				
+				accion = "Editar Usuario";
+				String browserDetail = Faces.getRequest().getHeader("User-Agent");
+				auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario editado: " + usu.getNombre(), sesion.getUser().getNombreUsuario(), browserDetail);
+				
 				Messages.addFlashGlobalInfo("se edito correctamente");
 				reload();
 				listarActivosInActivos();
