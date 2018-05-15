@@ -33,10 +33,8 @@ public class ControladorAuditorias implements Serializable {
 	}
 
 	public void listarAusitorias() {
-		
-		System.out.println(tipoAuditorias);
+	
 		auditariasListar = auditoriaEJB.listarAuditorias(tipoAuditorias);
-		System.out.println(auditariasListar);
 
 	}
 	

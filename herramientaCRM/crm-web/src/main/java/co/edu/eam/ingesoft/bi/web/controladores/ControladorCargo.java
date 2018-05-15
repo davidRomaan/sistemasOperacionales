@@ -71,7 +71,7 @@ public class ControladorCargo implements Serializable {
 
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
 
-					auditoriaEJB.crearAuditoria("AuditoriaCargo", accion, "cargo creado: "+c.getDescripcion(), sesion.getUser().getNombreUsuario(), browserDetail);
+					auditoriaEJB.crearAuditoria("AuditoriaCargo", accion, "cargo creado: "+c.getDescripcion(), sesion.getUser().getCedula(), browserDetail);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -101,7 +101,7 @@ public class ControladorCargo implements Serializable {
 
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
 
-					auditoriaEJB.crearAuditoria("AuditoriaCargo", accion, "cargo buscado: "+c.getDescripcion(), sesion.getUser().getNombreUsuario(), browserDetail);
+					auditoriaEJB.crearAuditoria("AuditoriaCargo", accion, "cargo buscado: "+c.getDescripcion(), sesion.getUser().getCedula(), browserDetail);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -134,7 +134,7 @@ public class ControladorCargo implements Serializable {
 
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
 
-					auditoriaEJB.crearAuditoria("AuditoriaCargo", accion, "cargo editado: "+c.getDescripcion(), sesion.getUser().getNombreUsuario(), browserDetail);
+					auditoriaEJB.crearAuditoria("AuditoriaCargo", accion, "cargo editado: "+c.getDescripcion(), sesion.getUser().getCedula(), browserDetail);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -158,7 +158,7 @@ public class ControladorCargo implements Serializable {
 
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
 
-			auditoriaEJB.crearAuditoria("AuditoriaCargo", accion, "cargo eliminado: "+c.getDescripcion(), sesion.getUser().getNombreUsuario(), browserDetail);
+			auditoriaEJB.crearAuditoria("AuditoriaCargo", accion, "cargo eliminado: "+c.getDescripcion(), sesion.getUser().getCedula(), browserDetail);
 
 		} catch (Exception e) {
 			e.printStackTrace();

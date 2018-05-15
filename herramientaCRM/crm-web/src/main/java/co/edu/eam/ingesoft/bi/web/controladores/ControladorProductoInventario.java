@@ -6,10 +6,13 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.ProductoEJB;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Inventario;
@@ -30,9 +33,16 @@ public class ControladorProductoInventario implements Serializable {
 	private int codigo;
 	
 	private int cantidad;
+	private String accion;
 	
 	@EJB
 	private ProductoEJB productoEJB;
+	
+	@EJB
+	private AuditoriaEJB auditoriaEJB;
+	
+	@Inject
+	private ControladorSesion sesion;
 	
 	@PostConstruct
 	private void cargarComponentes(){
@@ -50,7 +60,7 @@ public class ControladorProductoInventario implements Serializable {
 	}
 	
 	/**
-	 * Busca un producto por su código y lo selecciona en el combo
+	 * Busca un producto por su cï¿½digo y lo selecciona en el combo
 	 */
 	public void buscarProductoCodigo(){
 		
@@ -59,11 +69,18 @@ public class ControladorProductoInventario implements Serializable {
 		if (prod != null){
 			
 			productoSeleccionado = prod.getId();
+			
+			accion = "Buscar Producto";
+			String browserDetail = Faces.getRequest().getHeader("User-Agent");
+			auditoriaEJB.crearAuditoria("AuditoriaProducto", accion,
+					"producto buscado: " + prod.getNombre(), sesion.getUser().getCedula(),
+					browserDetail);
+			
 			listarInventariosProducto();
 			
 		} else {
 			
-			Messages.addFlashGlobalError("No existe un producto con este código");
+			Messages.addFlashGlobalError("No existe un producto con este cï¿½digo");
 			
 		}
 		
@@ -85,6 +102,11 @@ public class ControladorProductoInventario implements Serializable {
 		try{
 			
 			productoEJB.registrarInventarioProducto(ip);
+			
+			accion = "Crear InventarioProducto";
+			String browserDetail2 = Faces.getRequest().getHeader("User-Agent");
+			auditoriaEJB.crearAuditoria("AuditoriaInventarioProducto", accion, "IP creado: " + ip.getProductoId(), sesion.getUser().getCedula(), browserDetail2);
+			
 			listarInventariosProducto();
 			
 		} catch (ExcepcionNegocio e){

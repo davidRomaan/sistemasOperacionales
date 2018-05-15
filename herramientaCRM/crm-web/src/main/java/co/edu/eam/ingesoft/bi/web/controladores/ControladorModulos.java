@@ -6,10 +6,13 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.ModuloEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.TipoUsuarioEJB;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
@@ -27,6 +30,8 @@ public class ControladorModulos implements Serializable {
 	
 	//Tipos de usuario
 	private int tipoUsuarioSeleccionado;
+	private String accion;
+	
 	private List<TipoUsuario> tiposUsuario;
 	
 	@EJB
@@ -34,6 +39,12 @@ public class ControladorModulos implements Serializable {
 	
 	@EJB
 	private ModuloEJB moduloEJB;
+	
+	@Inject
+	private ControladorSesion sesion;
+	
+	@EJB
+	private AuditoriaEJB auditoriaEJB;
 	
 	@PostConstruct
 	private void cargarDatos(){
@@ -52,7 +63,13 @@ public class ControladorModulos implements Serializable {
 		try {
 			moduloEJB.registrarModuloUsuario(mu);
 			
-			Messages.addFlashGlobalInfo("Se ha agregado el módulo al tipo de usuario seleccionado");
+			accion = "Registrar Modulo";
+			String browserDetail = Faces.getRequest().getHeader("User-Agent");
+			auditoriaEJB.crearAuditoria("AuditoriaModulo", accion,
+					"modulo registrado: " + m.getNombre(), sesion.getUser().getCedula(),
+					browserDetail);
+			
+			Messages.addFlashGlobalInfo("Se ha agregado el mï¿½dulo al tipo de usuario seleccionado");
 			
 		} catch (ExcepcionNegocio e){
 			Messages.addFlashGlobalError(e.getMessage());
