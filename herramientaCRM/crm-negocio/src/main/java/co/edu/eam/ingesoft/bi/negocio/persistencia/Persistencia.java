@@ -626,6 +626,20 @@ public class Persistencia implements Serializable {
 		return q.getResultList();
 
 	}
+	
+	public List<Object> listarFacturasIntervaloFecha (String fechaInicio, String fechaFin){
+		
+		String sql = "SELECT id FROM FACTURA_VENTA WHERE fecha_venta BETWEEN " + "'" + fechaInicio + 
+				"' AND " + "'" +  fechaFin +"'";
+		
+		Query q = emP.createNativeQuery(sql);
+		List<Object> lista = q.getResultList();
+		
+		System.out.println("tamanio lista: " + lista.size());
+		
+		return lista;
+		
+	}
 
 	// ------------------------------ Gestion del dataWareHouse
 	// -------------------------------
@@ -648,6 +662,7 @@ public class Persistencia implements Serializable {
 	 * @param cedulaEmpleado
 	 *            cédula del empleado que realizó la venta
 	 */
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void crearHechoVentas(int unidades, double subtotal, int idFactura, String cedulaCliente, int idMunicipio,
 			int idProducto, String cedulaEmpleado) {
 
@@ -672,6 +687,7 @@ public class Persistencia implements Serializable {
 	 * @param dimension
 	 *            dimensión del procuto que se desea registrar
 	 */
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void crearDimensionProducto(DimensionProducto dimension) {
 
 		String sql = "INSERT INTO DIMENSION_PRODUCTO (id, nombre, precio, tipo_producto) VALUES (?1, ?2, ?3, ?4)";
@@ -691,6 +707,7 @@ public class Persistencia implements Serializable {
 	 * @param dimension
 	 *            dimensión de la persona que se desea registrar
 	 */
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void crearDimensionPersona(DimensionPersona dimension) {
 
 		String sql = "INSERT INTO DIMENSION_PERSONA (cedula, nombre, apellido, genero, edad, tipoPersona) "
@@ -713,6 +730,7 @@ public class Persistencia implements Serializable {
 	 * @param dimension
 	 *            la dimension que se desea crear
 	 */
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void crearDimensionFactura(DimensionFactura dimension) {
 
 		String sql = "INSERT INTO DIMENSION_FACTURA (id, total_venta, fecha_venta) VALUES (?1,?2,?3)";
@@ -731,6 +749,7 @@ public class Persistencia implements Serializable {
 	 * @param dimension
 	 *            dimnesión del muncipio que se desea crear
 	 */
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void crearDimensionMunicipio(DimensionMunicipio dimension) {
 
 		String sql = "INSERT INTO DIMENSION_MUNICIPIO (id, nombre, departamento) VALUES (?1,?2,?3)";

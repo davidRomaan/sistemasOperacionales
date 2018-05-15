@@ -51,7 +51,9 @@ public class VentaEJB {
 
 	/**
 	 * Lista las facturas registradas en una fecha determinada
-	 * @param fecha la fecha ingresada
+	 * 
+	 * @param fecha
+	 *            la fecha ingresada
 	 * @return la lista de facturas registradas en esa fecha
 	 */
 	public List<FacturaVenta> listarFacturasPorFecha(String fecha) {
@@ -61,72 +63,87 @@ public class VentaEJB {
 		int anio = obtenerAnio(fecha);
 		return em.listarFacturasPorFecha(FacturaVenta.LISTAR_POR_FECHA, dia, mes, anio);
 	}
-	
+
 	/**
-	 * Convierte un formato de fecha date a string
-	 * @param fecha fecha que se desea convertir
+	 * Convierte un formato de fecha Calendar a string
+	 * 
+	 * @param fecha
+	 *            fecha que se desea convertir
 	 * @return la fecha en formato String
 	 */
-	public String convertirDateAString (Date fecha){		
-		return fecha.getYear()+"-"+fecha.getMonth()+1+"-"+fecha.getDate();		
+	public String convertirCalendarAString(Calendar fecha) {
+		int anio = fecha.get(Calendar.YEAR);
+		int mes = fecha.get(Calendar.MONTH);
+		int dia = fecha.get(Calendar.DAY_OF_MONTH);
+		return anio + "-" + mes + "-" + dia;
 	}
-	
+
 	/**
-	 * Busca una factura por su código	
-	 * @param codigo codigo de la factura
+	 * Busca una factura por su código
+	 * 
+	 * @param codigo
+	 *            codigo de la factura
 	 * @return la factura si la encuentra, de lo contrario null
 	 */
-	public FacturaVenta buscarFactura (int codigo){
+	public FacturaVenta buscarFactura(int codigo) {
 		em.setBd(ConexionEJB.getBd());
 		return (FacturaVenta) em.buscar(FacturaVenta.class, codigo);
 	}
-	
+
 	/**
 	 * Convierte una fecha de tipo String a Date
-	 * @param fecha fecha que se desea convertir
+	 * 
+	 * @param fecha
+	 *            fecha que se desea convertir
 	 * @return la fecha en tipo Date
 	 */
-	public Calendar convertirFechaStrintADate(String fecha){
+	public Calendar convertirFechaStrintADate(String fecha) {
 		String[] datos = fecha.split("/");
 		int dia = Integer.parseInt(datos[0]);
 		int mes = Integer.parseInt(datos[1]);
 		int anio = Integer.parseInt(datos[2]);
-				
+
 		Calendar c = new GregorianCalendar();
 		c.set(anio, mes, dia);
-		
+
 		System.out.println(c.get(Calendar.DATE) + "-" + c.get(Calendar.MONTH) + "-" + c.get(Calendar.YEAR));
-						
+
 		return c;
-		
+
 	}
-	
+
 	/**
 	 * Obtiene el día de una fecha ingresada
-	 * @param fecha fecha ingresada por el usuario
+	 * 
+	 * @param fecha
+	 *            fecha ingresada por el usuario
 	 * @return el día de la fecha ingresada
 	 */
-	public int obtenerDia(String fecha){
+	public int obtenerDia(String fecha) {
 		String datos[] = fecha.split("/");
 		return Integer.parseInt(datos[0]);
 	}
-	
+
 	/**
 	 * Obtiene el mes de una fecha ingresada
-	 * @param fecha fecha ingresada por el usuario
+	 * 
+	 * @param fecha
+	 *            fecha ingresada por el usuario
 	 * @return el mes de la fecha ingresada
 	 */
-	public int obtenerMes(String fecha){
+	public int obtenerMes(String fecha) {
 		String datos[] = fecha.split("/");
 		return Integer.parseInt(datos[1]);
 	}
-	
+
 	/**
 	 * Obtiene el anio de una fecha ingresada
-	 * @param fecha fecha ingresada por el usuario
+	 * 
+	 * @param fecha
+	 *            fecha ingresada por el usuario
 	 * @return el anio de la fecha ingresada
 	 */
-	public int obtenerAnio(String fecha){
+	public int obtenerAnio(String fecha) {
 		String datos[] = fecha.split("/");
 		return Integer.parseInt(datos[2]);
 	}

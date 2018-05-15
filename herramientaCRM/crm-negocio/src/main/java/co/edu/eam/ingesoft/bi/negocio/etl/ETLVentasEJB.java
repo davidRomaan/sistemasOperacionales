@@ -34,11 +34,27 @@ public class ETLVentasEJB {
 	@EJB
 	private Persistencia em;
 	
+	@EJB
+	private VentaEJB ventaEJB;
 
 	public List<FacturaVenta> listaVentasPeriodo(Calendar fechaInicio, Calendar fechaFin, int bd) {
 		em.setBd(bd);
-		List<FacturaVenta> listaFacturas = (List<FacturaVenta>) (Object) em
-				.listarConDosParametrosObjeto(FacturaVenta.FACTURAS_FECHA_INICIO_FIN, fechaInicio, fechaFin);
+		String fecha1 = ventaEJB.convertirCalendarAString(fechaInicio);
+		String fecha2 = ventaEJB.convertirCalendarAString(fechaFin);
+		List<Object> lista = em.listarFacturasIntervaloFecha(fecha1, fecha2);
+		
+		List<FacturaVenta> listaFacturas = new ArrayList<FacturaVenta>();
+		
+		for (int i=0; i<lista.size(); i++){
+			
+			int cod = (int)(Integer) lista.get(i);
+			
+			FacturaVenta factura = (FacturaVenta) em.buscar(FacturaVenta.class, cod);
+			
+			listaFacturas.add(factura);
+			
+		}
+		
 		return listaFacturas;
 	}
 
