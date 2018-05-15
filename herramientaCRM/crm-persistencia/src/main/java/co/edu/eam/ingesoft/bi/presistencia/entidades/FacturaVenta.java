@@ -24,12 +24,12 @@ import javax.persistence.TemporalType;
 				+ "WHERE fv.clienteId.cedula = ?1"),
 		@NamedQuery(name=FacturaVenta.LISTAR_POR_FECHA, query="SELECT fv FROM FacturaVenta fv "
 				+ "WHERE fv.dia = ?1 AND fv.mes = ?2 AND fv.anio = ?3"),
-		@NamedQuery(name=FacturaVenta.FACTURAS_FECHA_INICIO_FIN, query="SELECT fv FROM FacturaVenta fv "
-				+ "WHERE fv.fechaVenta BETWEEN ?1 AND ?2")
+		@NamedQuery(name=FacturaVenta.FACTURAS_FECHA_INICIO_FIN, query="SELECT fv FROM FacturaVenta fv WHERE fv.fechaVenta BETWEEN ?1 AND ?2")
 		})
 public class FacturaVenta implements Serializable {
 
 	public static final String OBTENER_ULTIMA_REGISTRADA = "facturaVenta.obtener";
+	
 	
 	/**
 	 * Lista las facturas por fecha

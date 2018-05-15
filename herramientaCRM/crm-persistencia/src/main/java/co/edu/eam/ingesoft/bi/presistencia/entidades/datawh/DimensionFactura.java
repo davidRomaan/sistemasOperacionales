@@ -2,18 +2,19 @@ package co.edu.eam.ingesoft.bi.presistencia.entidades.datawh;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.Calendar;
 
 public class DimensionFactura implements Serializable {
 
 	private int id;
 	private double totalVenta;
-	private Date fecha;
+	private Calendar fecha;
 	
 	public DimensionFactura() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public DimensionFactura(int id, double totalVenta, Date fecha) {
+	public DimensionFactura(int id, double totalVenta, Calendar fecha) {
 		super();
 		this.id = id;
 		this.totalVenta = totalVenta;
@@ -36,11 +37,11 @@ public class DimensionFactura implements Serializable {
 		this.totalVenta = totalVenta;
 	}
 
-	public Date getFecha() {
+	public Calendar getFecha() {
 		return fecha;
 	}
 
-	public void setFecha(Date fecha) {
+	public void setFecha(Calendar fecha) {
 		this.fecha = fecha;
 	}
 	

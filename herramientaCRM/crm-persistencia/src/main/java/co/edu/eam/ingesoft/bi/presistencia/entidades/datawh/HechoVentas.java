@@ -10,12 +10,13 @@ public class HechoVentas implements Serializable {
 	private DimensionFactura factura;
 	private DimensionMunicipio municipio;
 	private DimensionProducto producto;
+	private DimensionPersona empleado;
 	
 	public HechoVentas() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public HechoVentas(int unidades, double subtotal, DimensionPersona persona, DimensionFactura factura,
+	public HechoVentas(int unidades, double subtotal, DimensionPersona persona, DimensionPersona empleado, DimensionFactura factura,
 			DimensionMunicipio municipio, DimensionProducto producto) {
 		super();
 		this.unidades = unidades;
@@ -24,6 +25,7 @@ public class HechoVentas implements Serializable {
 		this.factura = factura;
 		this.municipio = municipio;
 		this.producto = producto;
+		this.empleado = empleado;
 	}
 
 	public int getUnidades() {
@@ -72,6 +74,14 @@ public class HechoVentas implements Serializable {
 
 	public void setProducto(DimensionProducto producto) {
 		this.producto = producto;
+	}
+
+	public DimensionPersona getEmpleado() {
+		return empleado;
+	}
+
+	public void setEmpleado(DimensionPersona empleado) {
+		this.empleado = empleado;
 	}
 	
 	

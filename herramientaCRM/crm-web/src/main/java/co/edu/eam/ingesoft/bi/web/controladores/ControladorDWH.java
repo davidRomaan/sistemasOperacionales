@@ -11,8 +11,11 @@ import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
+import org.omnifaces.util.Messages;
+
 import co.edu.eam.ingesoft.bi.negocio.beans.VentaEJB;
 import co.edu.eam.ingesoft.bi.negocio.etl.ETLVentasEJB;
+import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 
 @SessionScoped
 @Named("controladorDWH")
@@ -56,7 +59,13 @@ public class ControladorDWH implements Serializable {
 		Calendar fecha1 = ventaEJB.convertirFechaStrintADate(fechaInicio);
 		Calendar fecha2 = ventaEJB.convertirFechaStrintADate(fechaFin);
 		
-		etlVentasEJB.listaVentasPeriodo(fecha1, fecha2);
+		try{
+		etlVentasEJB.obtenerDatosHechoVentasAcumulacionSimple(fecha1, fecha2);
+		Messages.addFlashGlobalInfo("Registro exitoso");
+		} catch (ExcepcionNegocio e) {
+			// TODO: handle exception
+			Messages.addFlashGlobalError(e.getMessage());
+		}
 		
 	}
 	

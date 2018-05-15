@@ -20,6 +20,10 @@ import co.edu.eam.ingesoft.bi.presistencia.entidades.FacturaVenta;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.InventarioProducto;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.ModulosUsuario;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Persona;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionFactura;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionMunicipio;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionPersona;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionProducto;
 
 @LocalBean
 @Stateless
@@ -36,7 +40,7 @@ public class Persistencia implements Serializable {
 	 */
 	@PersistenceContext(unitName = "postgres")
 	private EntityManager emP;
-	
+
 	/**
 	 * Conexión para Oracle (3)
 	 */
@@ -58,39 +62,46 @@ public class Persistencia implements Serializable {
 		registrarMysql(objeto);
 		registrarPostgres(objeto);
 	}
-	
+
 	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-	public void registrarMysql(Object o){
+	public void registrarMysql(Object o) {
 		emM.persist(o);
 	}
-	
+
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void registrarPostgres(Object objeto){
+	public void registrarPostgres(Object objeto) {
 		emP.persist(objeto);
 	}
-	
+
 	/**
 	 * Edita un objeto en todas las bases de datos
-	 * @param objeto el objeto que se editar
+	 * 
+	 * @param objeto
+	 *            el objeto que se editar
 	 */
-	public void editarEnTodasBD(Object objeto){
+	public void editarEnTodasBD(Object objeto) {
 		emM.merge(objeto);
 		emP.merge(objeto);
 	}
-	
+
 	/**
 	 * Elimina un objeto en todas las bases de datos
-	 * @param objeto el objeto que se desea eliminar
+	 * 
+	 * @param objeto
+	 *            el objeto que se desea eliminar
 	 */
-	public void eliminarEnTodasBD(Object objeto){
+	public void eliminarEnTodasBD(Object objeto) {
 		emM.remove(emM.merge(objeto));
 		emP.remove(emP.merge(objeto));
 	}
 
 	/**
 	 * Busca un objeto en todas las beses de datos
-	 * @param c clase que se desea buscar
-	 * @param pk identificador de la clase
+	 * 
+	 * @param c
+	 *            clase que se desea buscar
+	 * @param pk
+	 *            identificador de la clase
 	 * @return el objeto si lo ecuentra, de lo contrario null
 	 */
 	public Object buscarEnTodasBD(Class c, Object pk) {
@@ -193,20 +204,24 @@ public class Persistencia implements Serializable {
 			throw new ExcepcionNegocio("La base de datos a la cual intenta acceder no existe");
 		}
 	}
-	
+
 	/**
 	 * Lista con dos parámetros de tipo objeto
-	 * @param sql Consulta a ejecutar
-	 * @param param1 parametro 1
-	 * @param param2 parametro 2
-	 * @return la lista 
+	 * 
+	 * @param sql
+	 *            Consulta a ejecutar
+	 * @param param1
+	 *            parametro 1
+	 * @param param2
+	 *            parametro 2
+	 * @return la lista
 	 */
-	public List<Object> listarConDosParametrosObjeto (String sql, Object param1, Object param2){
-		
+	public List<Object> listarConDosParametrosObjeto(String sql, Object param1, Object param2) {
+
 		Query q;
-		
+
 		switch (this.bd) {
-		
+
 		case 1:
 			q = emM.createNamedQuery(sql);
 			break;
@@ -214,15 +229,15 @@ public class Persistencia implements Serializable {
 		case 2:
 			q = emP.createNamedQuery(sql);
 			break;
-			
+
 		default:
 			throw new ExcepcionNegocio("La base de datos a la cual intenta acceder no existe");
 		}
-		
+
 		q.setParameter(1, param1);
 		q.setParameter(2, param2);
 		return q.getResultList();
-		
+
 	}
 
 	/**
@@ -412,7 +427,7 @@ public class Persistencia implements Serializable {
 		String sql = "INSERT INTO INVENTARIO_PRODUCTO (inventario_id, producto_id, cantidad) VALUES (?1,?2,?3)";
 
 		Query query;
-		
+
 		switch (this.bd) {
 		case 1:
 			query = emM.createNativeQuery(sql);
@@ -425,7 +440,7 @@ public class Persistencia implements Serializable {
 		default:
 			throw new ExcepcionNegocio("La base de datos a la cual intenta acceder no existe");
 		}
-		
+
 		query.setParameter(1, ip.getInventarioId().getId());
 		query.setParameter(2, ip.getProductoId().getId());
 		query.setParameter(3, ip.getCantidad());
@@ -486,42 +501,44 @@ public class Persistencia implements Serializable {
 		}
 
 	}
-	
+
 	/**
 	 * Elimina un inventario producto
-	 * @param ip inventario producto que se desea eliminar
+	 * 
+	 * @param ip
+	 *            inventario producto que se desea eliminar
 	 */
-	public void eliminarInventarioProducto(InventarioProducto ip){
-		
+	public void eliminarInventarioProducto(InventarioProducto ip) {
+
 		String sql = "DELETE FROM INVENTARIO_PRODUCTO WHERE inventario_id = ?1 AND producto_id = ?2";
-		
+
 		Query q;
-		
-		switch (this.bd){
-		
+
+		switch (this.bd) {
+
 		case 1:
 			q = emM.createNativeQuery(sql);
 			break;
-		
+
 		case 2:
 			q = emP.createNativeQuery(sql);
 			break;
-			
+
 		default:
 			throw new ExcepcionNegocio("La base de datos a la cual intenta acceder no existe");
-		
+
 		}
-		
+
 		q.setParameter(1, ip.getInventarioId().getId());
 		q.setParameter(2, ip.getProductoId().getId());
 		q.executeUpdate();
-		
+
 	}
 
 	public void eliminarDetalleVenta(DetalleVenta dv) {
 
 		String sql = "DELETE FROM DETALLE_VENTA WHERE factura_venta_id = ?1 AND producto_id = ?2";
-		
+
 		Query q;
 
 		switch (this.bd) {
@@ -536,29 +553,31 @@ public class Persistencia implements Serializable {
 		default:
 			throw new ExcepcionNegocio("La base de datos a la cual intenta acceder no existe");
 		}
-		
+
 		q.setParameter(1, dv.getFacturaVenta().getId());
 		q.setParameter(2, dv.getProducto().getId());
 		q.executeUpdate();
 
 	}
-	
+
 	/**
 	 * Registra un módulo usuario en la base de datos
-	 * @param mu modulo usuario que se desea registrar
+	 * 
+	 * @param mu
+	 *            modulo usuario que se desea registrar
 	 */
-	public void registrarModuloUsuario(ModulosUsuario mu){
-		
+	public void registrarModuloUsuario(ModulosUsuario mu) {
+
 		String sql = "INSERT INTO modulos_usuario (modulo_id, tipousuario_id) VALUES (?1,?2)";
-		
+
 		Query q;
-		
+
 		switch (this.bd) {
-		
+
 		case 1:
 			q = emM.createNativeQuery(sql);
 			break;
-		
+
 		case 2:
 			q = emP.createNativeQuery(sql);
 			break;
@@ -566,29 +585,33 @@ public class Persistencia implements Serializable {
 		default:
 			throw new ExcepcionNegocio("La base de datos a la cual intenta acceder no existe");
 		}
-		
+
 		q.setParameter(1, mu.getModulo_id().getId());
 		q.setParameter(2, mu.getTipoUsiario_id().getId());
 		q.executeUpdate();
-		
+
 	}
-	
+
 	/**
 	 * Lista las ventas realizadas en una fecha determinada
-	 * @param dia día de la venta
-	 * @param mes mes de la venta
-	 * @param anio año de la venta
+	 * 
+	 * @param dia
+	 *            día de la venta
+	 * @param mes
+	 *            mes de la venta
+	 * @param anio
+	 *            año de la venta
 	 * @return las ventas de la fecha ingresada
 	 */
-	public List<FacturaVenta> listarFacturasPorFecha(String sql, int dia, int mes, int anio){
-		
+	public List<FacturaVenta> listarFacturasPorFecha(String sql, int dia, int mes, int anio) {
+
 		Query q;
-		
+
 		switch (this.bd) {
 		case 1:
 			q = emM.createNamedQuery(sql);
 			break;
-			
+
 		case 2:
 			q = emP.createNamedQuery(sql);
 			break;
@@ -596,12 +619,128 @@ public class Persistencia implements Serializable {
 		default:
 			throw new ExcepcionNegocio("La base de datos a la cual intenta acceder no existe");
 		}
-		
+
 		q.setParameter(1, dia);
 		q.setParameter(2, mes);
 		q.setParameter(3, anio);
 		return q.getResultList();
-		
+
+	}
+
+	// ------------------------------ Gestion del dataWareHouse
+	// -------------------------------
+
+	/**
+	 * Crea un hecho venta en la bd oracle
+	 * 
+	 * @param unidades
+	 *            unidades vendidas
+	 * @param subtotal
+	 *            subtotal de la compra
+	 * @param idFactura
+	 *            código de la factua
+	 * @param cedulaCliente
+	 *            cédula del cliente que compró
+	 * @param idMunicipio
+	 *            código del municipio donde se realizó la venta
+	 * @param idProducto
+	 *            código del procuto que se vendió
+	 * @param cedulaEmpleado
+	 *            cédula del empleado que realizó la venta
+	 */
+	public void crearHechoVentas(int unidades, double subtotal, int idFactura, String cedulaCliente, int idMunicipio,
+			int idProducto, String cedulaEmpleado) {
+
+		String sql = "INSERT INTO HECHO_VENTAS (unidades, subtotal, factura_id, municipio_id, producto_id, "
+				+ "cedula_empleado, cedula_cliente) VALUES (?1,?2,?3,?4,?5,?6,?7)";
+
+		Query q = emO.createNativeQuery(sql);
+		q.setParameter(1, unidades);
+		q.setParameter(2, subtotal);
+		q.setParameter(3, idFactura);
+		q.setParameter(4, idMunicipio);
+		q.setParameter(5, idProducto);
+		q.setParameter(6, cedulaEmpleado);
+		q.setParameter(7, cedulaCliente);
+		q.executeUpdate();
+
+	}
+
+	/**
+	 * Crea una dimensión de producto en la bd
+	 * 
+	 * @param dimension
+	 *            dimensión del procuto que se desea registrar
+	 */
+	public void crearDimensionProducto(DimensionProducto dimension) {
+
+		String sql = "INSERT INTO DIMENSION_PRODUCTO (id, nombre, precio, tipo_producto) VALUES (?1, ?2, ?3, ?4)";
+
+		Query q = emO.createNativeQuery(sql);
+		q.setParameter(1, dimension.getId());
+		q.setParameter(2, dimension.getNombre());
+		q.setParameter(3, dimension.getPrecio());
+		q.setParameter(4, dimension.getTipoProducto());
+		q.executeUpdate();
+
+	}
+
+	/**
+	 * Crea una dimensión de persona en la bd oracle
+	 * 
+	 * @param dimension
+	 *            dimensión de la persona que se desea registrar
+	 */
+	public void crearDimensionPersona(DimensionPersona dimension) {
+
+		String sql = "INSERT INTO DIMENSION_PERSONA (cedula, nombre, apellido, genero, edad, tipoPersona) "
+				+ "VALUES (?1,?2,?3,?4,?5,?6)";
+
+		Query q = emO.createNativeQuery(sql);
+		q.setParameter(1, dimension.getCedula());
+		q.setParameter(2, dimension.getNombre());
+		q.setParameter(3, dimension.getApellido());
+		q.setParameter(4, dimension.getGenero());
+		q.setParameter(5, dimension.getEdad());
+		q.setParameter(6, dimension.getTipoPersona());
+		q.executeUpdate();
+
+	}
+
+	/**
+	 * Crea una dimension de una factura en la bd Oracle
+	 * 
+	 * @param dimension
+	 *            la dimension que se desea crear
+	 */
+	public void crearDimensionFactura(DimensionFactura dimension) {
+
+		String sql = "INSERT INTO DIMENSION_FACTURA (id, total_venta, fecha_venta) VALUES (?1,?2,?3)";
+
+		Query q = emO.createNativeQuery(sql);
+		q.setParameter(1, dimension.getId());
+		q.setParameter(2, dimension.getTotalVenta());
+		q.setParameter(3, dimension.getFecha());
+		q.executeUpdate();
+
+	}
+
+	/**
+	 * Crea una dimensión de un municipio
+	 * 
+	 * @param dimension
+	 *            dimnesión del muncipio que se desea crear
+	 */
+	public void crearDimensionMunicipio(DimensionMunicipio dimension) {
+
+		String sql = "INSERT INTO DIMENSION_MUNICIPIO (id, nombre, departamento) VALUES (?1,?2,?3)";
+
+		Query q = emO.createNativeQuery(sql);
+		q.setParameter(1, dimension.getId());
+		q.setParameter(2, dimension.getNombre());
+		q.setParameter(3, dimension.getDepartamento());
+		q.executeUpdate();
+
 	}
 
 	public int getBd() {
