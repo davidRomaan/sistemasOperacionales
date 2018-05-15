@@ -629,10 +629,28 @@ public class Persistencia implements Serializable {
 	
 	public List<Object> listarFacturasIntervaloFecha (String fechaInicio, String fechaFin){
 		
-		String sql = "SELECT id FROM FACTURA_VENTA WHERE fecha_venta BETWEEN " + "'" + fechaInicio + 
-				"' AND " + "'" +  fechaFin +"'";
+		String sql = "";		
+		Query q;
 		
-		Query q = emP.createNativeQuery(sql);
+		switch (this.bd){
+		
+		case 1:
+			sql = "SELECT id FROM bi.FACTURA_VENTA WHERE fecha_venta BETWEEN " + "'" + fechaInicio + 
+			"' AND " + "'" +  fechaFin +"'";
+			q = emM.createNativeQuery(sql);
+			break;
+			
+		case 2:
+			sql = "SELECT id FROM FACTURA_VENTA WHERE fecha_venta BETWEEN " + "'" + fechaInicio + 
+			"' AND " + "'" +  fechaFin +"'";
+			q = emP.createNativeQuery(sql);
+			break;
+			
+		default:
+			throw new ExcepcionNegocio("La base de datos a la cual intenta acceder no existe");
+		
+		}
+		
 		List<Object> lista = q.getResultList();
 		
 		System.out.println("tamanio lista: " + lista.size());

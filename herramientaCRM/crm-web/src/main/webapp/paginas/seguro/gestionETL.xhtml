@@ -14,7 +14,8 @@
 				<h:outputLabel id="lblTipoCarga" for="cbTipoCarga"
 					value="Seleccione el modo de carga" />
 
-				<h:selectOneMenu id="cbTipoCarga" value="#{controladorDWH.tipoCarga}">
+				<h:selectOneMenu id="cbTipoCarga"
+					value="#{controladorDWH.tipoCarga}">
 
 					<f:selectItem itemValue="Acumulacion simple"
 						itemLabel="Acumulacion simple" />
@@ -30,34 +31,87 @@
 
 			<h:panelGrid id="panelValidacion" columns="1"
 				rendered="#{!controladorDWH.rollingSeleccionado}">
-				
+
 				<h3>Ingrese el periodo deseado</h3>
 
 				<h:panelGrid id="panelIntervalo" columns="4">
 
-				<p:outputLabel id="mask1" value="Desde: " />
-				<p:inputMask id="date1" value="#{controladorDWH.fechaInicio}"
-					mask="99/99/9999" />
+					<p:outputLabel id="mask1" value="Desde: " />
+					<p:inputMask id="date1" value="#{controladorDWH.fechaInicio}"
+						mask="99/99/9999" />
 
-				<p:outputLabel id="mask2" value=" Hasta: " />
-				<p:inputMask id="date2" value="#{controladorDWH.fechaFin}"
-					mask="99/99/9999" />
+					<p:outputLabel id="mask2" value=" Hasta: " />
+					<p:inputMask id="date2" value="#{controladorDWH.fechaFin}"
+						mask="99/99/9999" />
 
-			</h:panelGrid>
+				</h:panelGrid>
 			</h:panelGrid>
 			<br />
 
-			<h:panelGrid id="panelBoton" columns="3">
+			<h:panelGrid id="panelBD" columns="3">
 
-				<p:commandButton id="btnCargar" value="Cargar Datos"
-					process="@this,panelIntervalo,panelDatos,panelValidacion"
+				<h:outputLabel id="lblBD" value="Seleccione la base de datos" />
+
+				<h:selectOneMenu id="cbBase" value="#{controladorDWH.base}">
+
+					<f:selectItem itemValue="MYSQL" itemLabel="MYSQL" />
+					<f:selectItem itemValue="POSTGRES" itemLabel="POSTGRES" />
+
+				</h:selectOneMenu>
+
+				<p:commandButton id="btnBD" value="Agregar Datos"
+					process="@this,panelIntervalo,panelDatos,panelValidacion,panelBD"
 					update="panelIntervalo,panelDatos,panelValidacion"
 					action="#{controladorDWH.cargar}" />
 
 			</h:panelGrid>
 			<br />
 
- 
+			<h:panelGrid id="panelBoton" columns="3" rendered="#{controladorDWH.tablaLlena}">
+
+				<p:commandButton id="btnVaciar" value="Vaciar Tabla" process="@this"
+					update="panelTabla" action="#{controladorDWH.vaciarTabla}" />
+
+			</h:panelGrid>
+			<br />
+
+			<h:panelGrid id="panelTabla">
+
+				<p:dataTable id="tablaHechos" value="#{controladorDWH.hechosVenta}"
+					var="hecho" border="1">
+
+					<p:column headerText="Producto">
+						<h:outputLabel value="#{hecho.producto.nombre}" />
+					</p:column>
+
+					<p:column headerText="Precio">
+						<h:outputLabel value="#{hecho.producto.precio}" />
+					</p:column>
+
+					<p:column headerText="Unidades Compradas">
+						<h:outputLabel value="#{hecho.unidades}" />
+					</p:column>
+
+					<p:column headerText="Subtotal">
+						<h:outputLabel value="#{hecho.subtotal}" />
+					</p:column>
+
+					<p:column headerText="Cliente">
+						<h:outputLabel value="#{hecho.persona.cedula}" />
+					</p:column>
+
+					<p:column headerText="Edad">
+						<h:outputLabel value="#{hecho.persona.edad}" />
+					</p:column>
+
+					<p:column headerText="Municipio">
+						<h:outputLabel value="#{hecho.municipio.nombre}" />
+					</p:column>
+
+				</p:dataTable>
+
+			</h:panelGrid>
+
 		</h:form>
 	</ui:define>
 
