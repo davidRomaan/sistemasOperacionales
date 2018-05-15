@@ -199,12 +199,12 @@ public class ControladorPersona implements Serializable {
 
 					accion = "Crear Usuario";
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
-					auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario creado: " + nombre, sesion.getUser().getCedula(),
+					auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario creado: " + nombre, "",
 							browserDetail);
 
 					accion = "Crear Persona";
 					String browserDetail2 = Faces.getRequest().getHeader("User-Agent");
-					auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona creada: " + nombre, sesion.getUser().getCedula(),
+					auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona creada: " + nombre, "",
 							browserDetail2);
 
 				} catch (ExcepcionNegocio e) {

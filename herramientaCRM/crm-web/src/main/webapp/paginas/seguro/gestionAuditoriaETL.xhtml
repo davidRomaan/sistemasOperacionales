@@ -1,0 +1,87 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" template="/templates/inicio.xhtml">
+
+	<ui:define name="cuerpo">
+		<h:form prependId="false">
+
+			<h2>Proceso de ETL para auditorias</h2>
+
+			<br></br>
+			<br></br>
+			<h:panelGrid id="panelDatos" columns="2">
+
+				<h:outputLabel id="lblTipoCarga" for="cbTipoCarga"
+					value="Seleccione el modo de carga" />
+
+				<h:selectOneMenu id="cbTipoCarga"
+					value="#{controladorAuditoriaETL.tipoCarga}">
+
+					<f:selectItem itemValue="Acumulacion simple"
+						itemLabel="Acumulacion simple" />
+					<f:selectItem itemValue="Rolling" itemLabel="Rolling" />
+
+					<f:ajax event="change" execute="@this" render="panelIntervalo"
+						listener="#{controladorAuditoriaETL.gestionarCarga}" />
+
+				</h:selectOneMenu>
+			</h:panelGrid>
+			<br />
+			<h:panelGrid id="panelvalDos" columns="1"
+				rendered="#{controladorAuditoriaETL.rollingSeleccionado}">
+
+				<h:selectOneMenu id="cbfecha"
+					value="#{controladorAuditoriaETL.fechaSeleccionada}">
+
+					<f:selectItem itemValue="0" itemLabel="seleccione una opcion" />
+					<f:selectItem itemValue="1" itemLabel="dia" />
+					<f:selectItem itemValue="2" itemLabel="semana" />
+					<f:selectItem itemValue="3" itemLabel="mes" />
+
+
+				</h:selectOneMenu>
+				<br />
+				<br />
+				<p:commandButton id="btnCargarDatos" value="Cargar Datos"
+					process="@this,panelvalDos" update="panelvalDos"
+					action="#{controladorAuditoriaETL.extraerDatos}" />
+			</h:panelGrid>
+			<br />
+			<br />
+
+			<h:panelGrid id="panelValidacion" columns="1"
+				rendered="#{!controladorAuditoriaETL.rollingSeleccionado}">
+
+				<h3 style="align: center">Ingrese el periodo deseado</h3>
+				<br />
+
+				<h:panelGrid id="panelIntervalo" columns="4">
+
+					<p:outputLabel id="mask1" value="Desde: " />
+					<p:inputMask id="date1" value="#{controladorDWH.fechaInicio}"
+						mask="99/99/9999" />
+
+					<p:outputLabel id="mask2" value=" Hasta: " />
+					<p:inputMask id="date2" value="#{controladorDWH.fechaFin}"
+						mask="99/99/9999" />
+				</h:panelGrid>
+				<br />
+				<br />
+				<h:panelGrid id="panelBoton" columns="1">
+
+					<p:commandButton id="btnCargar" value="Cargar Datos"
+						process="@this,panelIntervalo,panelDatos,panelValidacion"
+						update="panelIntervalo,panelDatos,panelValidacion"
+						action="#{controladorDWH.cargar}" style="align:center"/>
+
+				</h:panelGrid>
+
+			</h:panelGrid>
+
+		</h:form>
+	</ui:define>
+
+
+</ui:composition>
