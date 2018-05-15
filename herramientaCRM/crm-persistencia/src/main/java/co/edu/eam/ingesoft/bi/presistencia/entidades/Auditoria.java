@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name="AUDITORIA")
@@ -27,6 +29,7 @@ public class Auditoria implements Serializable{
 	private int id;
 	
 	@Column(name="fecha_hora")
+	@Temporal(TemporalType.DATE)
 	private Calendar fechaHora;
 	
 	@Column(name="dispositivo")
