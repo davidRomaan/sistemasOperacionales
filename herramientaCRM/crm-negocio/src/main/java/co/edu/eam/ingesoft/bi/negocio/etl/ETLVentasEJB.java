@@ -38,10 +38,15 @@ public class ETLVentasEJB {
 	private VentaEJB ventaEJB;
 
 	public List<FacturaVenta> listaVentasPeriodo(Calendar fechaInicio, Calendar fechaFin, int bd) {
+
 		em.setBd(bd);
+
 		String fecha1 = ventaEJB.convertirCalendarAString(fechaInicio);
 		String fecha2 = ventaEJB.convertirCalendarAString(fechaFin);
+
 		List<Object> lista = em.listarFacturasIntervaloFecha(fecha1, fecha2);
+
+		System.out.println("Tamaño lista: " + lista.size());
 
 		List<FacturaVenta> listaFacturas = new ArrayList<FacturaVenta>();
 
@@ -66,24 +71,58 @@ public class ETLVentasEJB {
 	 * @param fechaFin
 	 *            fecha final hasta la cual se desea cargr los datos
 	 */
-	public void obtenerDatosHechoVentasAcumulacionSimple(Calendar fechaInicio, Calendar fechaFin) {
+	public List<HechoVentas> obtenerDatosHechoVentasAcumulacionSimple(Calendar fechaInicio, Calendar fechaFin,
+			int bd, List<HechoVentas> listaHechos) {
+		
+		// Lista de facturas registradas en la bd
+		List<FacturaVenta> listaFacturasP = listaVentasPeriodo(fechaInicio, fechaFin, bd);
 
-		// Lista de facturas registradas en la bd mysql
-		//List<FacturaVenta> listaFacturas = listaVentasPeriodo(fechaInicio, fechaFin, 1);
-		// Lista de facturas registradas en la bd postgres
-		List<FacturaVenta> listaFacturasP = listaVentasPeriodo(fechaInicio, fechaFin, 2);
+		if (listaFacturasP.size() == 0) {
 
-//		if (listaFacturasP.size() == 0 && listaFacturas.size() == 0) {
-//
-//			System.out.println("No hay datos");
-//
-//		}
+			throw new ExcepcionNegocio("No hay facturas registradas en el periodo ingresado");
+
+		} else {
+			
+			em.setBd(bd);
+
+			// Se recorre la segunda lista obtenida de postgres
+			for (FacturaVenta facturaVenta : listaFacturasP) {
+
+				List<DetalleVenta> detalles = (List<DetalleVenta>) (Object) em
+						.listarConParametroObjeto(DetalleVenta.LISTAR_DETALLES_FACTURA, facturaVenta);
+
+				for (DetalleVenta detalleVenta : detalles) {
+
+					System.out.println("Detalle " + detalleVenta.getSubtotal());
+					
+					HechoVentas hecho = new HechoVentas();
+					hecho.setEmpleado(crearDimensionEmpleado(facturaVenta));
+					hecho.setFactura(crearDimensionFactura(facturaVenta));
+					hecho.setMunicipio(crearDimensionMunicipio(facturaVenta));
+					hecho.setPersona(crearDimensionCliente(facturaVenta));
+					hecho.setProducto(crearDimensionProducto(detalleVenta));
+					hecho.setSubtotal(detalleVenta.getSubtotal());
+					hecho.setUnidades(detalleVenta.getCantidad());
+					
+					listaHechos.add(hecho);
+
+					// crearDimensionesVenta(facturaVenta, detalleVenta);
+					// crearHechoVentas(facturaVenta, detalleVenta);
+
+				}
+			}
+		}
+		
+		return listaHechos;
+
+//		// Lista de facturas registradas en la bd mysql
+//		List<FacturaVenta> listaFacturas = listaVentasPeriodo(fechaInicio, fechaFin, 1);
 //
 //		if (listaFacturas.size() == 0) {
 //
 //			// throw new ExcepcionNegocio("No hay ventas registradas en el
 //			// periodo ingresado");
-//			System.out.println("No hay ventas MYSQL");
+//			System.out.println("No hay datos MYSQL");
 //
 //		} else {
 //
@@ -95,29 +134,13 @@ public class ETLVentasEJB {
 //
 //				for (DetalleVenta detalleVenta : detalles) {
 //
-//					crearDimensionesVenta(facturaVenta, detalleVenta);
-//					crearHechoVentas(facturaVenta, detalleVenta);
+//					// crearDimensionesVenta(facturaVenta, detalleVenta);
+//					// crearHechoVentas(facturaVenta, detalleVenta);
 //
 //				}
 //			}
 //
 //		}
-
-		// Se recorre la segunda lista obtenida de postgres
-		for (FacturaVenta facturaVenta : listaFacturasP) {
-
-			List<DetalleVenta> detalles = (List<DetalleVenta>) (Object) em
-					.listarConParametroObjeto(DetalleVenta.LISTAR_DETALLES_FACTURA, facturaVenta);
-
-			for (DetalleVenta detalleVenta : detalles) {
-
-				System.out.println("Detalle " + detalleVenta.getSubtotal());
-
-				crearDimensionesVenta(facturaVenta, detalleVenta);
-				crearHechoVentas(facturaVenta, detalleVenta);
-
-			}
-		}
 
 	}
 
@@ -177,14 +200,15 @@ public class ETLVentasEJB {
 	 * @param facturaVenta
 	 *            factura generada
 	 */
-	private void crearDimensionFactura(FacturaVenta facturaVenta) {
+	private DimensionFactura crearDimensionFactura(FacturaVenta facturaVenta) {
 
 		DimensionFactura dimensionFactura = new DimensionFactura();
 		dimensionFactura.setFecha(facturaVenta.getFechaVenta());
 		dimensionFactura.setId(facturaVenta.getId());
 		dimensionFactura.setTotalVenta(facturaVenta.getTotal());
 
-		em.crearDimensionFactura(dimensionFactura);
+		return dimensionFactura;
+		//em.crearDimensionFactura(dimensionFactura);
 
 	}
 
@@ -194,7 +218,7 @@ public class ETLVentasEJB {
 	 * @param facturaVenta
 	 *            factura de la venta en la que se encuetra el municipio
 	 */
-	private void crearDimensionMunicipio(FacturaVenta facturaVenta) {
+	private DimensionMunicipio crearDimensionMunicipio(FacturaVenta facturaVenta) {
 
 		DimensionMunicipio dimensionMunicipio = new DimensionMunicipio();
 		Municipio municipio = facturaVenta.getEmpleadoId().getMunicipio();
@@ -202,7 +226,8 @@ public class ETLVentasEJB {
 		dimensionMunicipio.setId(municipio.getId());
 		dimensionMunicipio.setNombre(municipio.getNombre());
 
-		em.crearDimensionMunicipio(dimensionMunicipio);
+		return dimensionMunicipio;
+		//em.crearDimensionMunicipio(dimensionMunicipio);
 
 	}
 
@@ -212,7 +237,7 @@ public class ETLVentasEJB {
 	 * @param facturaVenta
 	 *            factura en la cual esta el empleado registrado
 	 */
-	private void crearDimensionEmpleado(FacturaVenta facturaVenta) {
+	private DimensionPersona crearDimensionEmpleado(FacturaVenta facturaVenta) {
 
 		DimensionPersona dimensionEmpleado = new DimensionPersona();
 		Persona empleado = facturaVenta.getEmpleadoId();
@@ -223,7 +248,8 @@ public class ETLVentasEJB {
 		dimensionEmpleado.setGenero(String.valueOf(empleado.getGenero()));
 		dimensionEmpleado.setTipoPersona("empleado");
 
-		em.crearDimensionPersona(dimensionEmpleado);
+		return dimensionEmpleado;
+		//em.crearDimensionPersona(dimensionEmpleado);
 
 	}
 
@@ -233,7 +259,7 @@ public class ETLVentasEJB {
 	 * @param facturaVenta
 	 *            factura en la cual esta el cliente registrado
 	 */
-	private void crearDimensionCliente(FacturaVenta facturaVenta) {
+	private DimensionPersona crearDimensionCliente(FacturaVenta facturaVenta) {
 
 		DimensionPersona dimensionCliente = new DimensionPersona();
 		Persona cliente = facturaVenta.getEmpleadoId();
@@ -244,7 +270,8 @@ public class ETLVentasEJB {
 		dimensionCliente.setGenero(String.valueOf(cliente.getGenero()));
 		dimensionCliente.setTipoPersona("cliente");
 
-		em.crearDimensionPersona(dimensionCliente);
+		return dimensionCliente;
+		//em.crearDimensionPersona(dimensionCliente);
 
 	}
 
@@ -254,7 +281,7 @@ public class ETLVentasEJB {
 	 * @param detalleVenta
 	 *            detalle de venta en la que se encuentra el producto
 	 */
-	private void crearDimensionProducto(DetalleVenta detalleVenta) {
+	private DimensionProducto crearDimensionProducto(DetalleVenta detalleVenta) {
 
 		DimensionProducto dimensionProducto = new DimensionProducto();
 		Producto producto = detalleVenta.getProducto();
@@ -263,7 +290,8 @@ public class ETLVentasEJB {
 		dimensionProducto.setNombre(producto.getNombre());
 		dimensionProducto.setTipoProducto(producto.getTipoProducto().getNombre());
 
-		em.crearDimensionProducto(dimensionProducto);
+		return dimensionProducto;
+		//em.crearDimensionProducto(dimensionProducto);
 
 	}
 
