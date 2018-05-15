@@ -69,7 +69,7 @@ public class ControladorSesion implements Serializable {
 				accion = "Iniciar Sesion";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
 				auditoriaEJB.crearAuditoria("AuditoriaSesion", accion, "sesion creado por: Administrador",
-						user.getNombre(), browserDetail);
+						user.getCedula(), browserDetail);
 				System.out.println(user.getNombre());
 
 				return "/paginas/seguro/bienvenido.xhtml?faces-redirect=true";

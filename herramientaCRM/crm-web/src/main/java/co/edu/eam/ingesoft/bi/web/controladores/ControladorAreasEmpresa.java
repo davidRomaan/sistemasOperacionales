@@ -77,7 +77,7 @@ public class ControladorAreasEmpresa implements Serializable {
 
 				accion = "Registrar Area";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaArea", accion, "area creada: " + a.getNombre(), sesion.getUser().getNombreUsuario(), browserDetail);
+				auditoriaEJB.crearAuditoria("AuditoriaArea", accion, "area creada: " + a.getNombre(), sesion.getUser().getCedula(), browserDetail);
 				
 				codigo = 0;
 				nombre = "";
@@ -105,7 +105,7 @@ public class ControladorAreasEmpresa implements Serializable {
 				try {
 					accion = "Buscar Area";
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
-					auditoriaEJB.crearAuditoria("AuditoriaArea", accion, "area buscada: " + a.getNombre(), sesion.getUser().getNombreUsuario(), browserDetail);
+					auditoriaEJB.crearAuditoria("AuditoriaArea", accion, "area buscada: " + a.getNombre(), sesion.getUser().getCedula(), browserDetail);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -133,7 +133,7 @@ public class ControladorAreasEmpresa implements Serializable {
 				try {
 					accion = "Editar Area";
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
-					auditoriaEJB.crearAuditoria("AuditoriaArea", accion, "area editada: " + a.getNombre(), sesion.getUser().getNombreUsuario(), browserDetail);
+					auditoriaEJB.crearAuditoria("AuditoriaArea", accion, "area editada: " + a.getNombre(), sesion.getUser().getCedula(), browserDetail);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -153,7 +153,7 @@ public class ControladorAreasEmpresa implements Serializable {
 		try {
 			accion = "Eliminar Area";
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
-			auditoriaEJB.crearAuditoria("AuditoriaArea", accion, "area eliminada: " + a.getNombre(), sesion.getUser().getNombreUsuario(), browserDetail);
+			auditoriaEJB.crearAuditoria("AuditoriaArea", accion, "area eliminada: " + a.getNombre(), sesion.getUser().getCedula(), browserDetail);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

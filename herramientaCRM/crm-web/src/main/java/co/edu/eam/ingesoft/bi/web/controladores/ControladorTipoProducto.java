@@ -73,7 +73,7 @@ public class ControladorTipoProducto implements Serializable {
 
 					accion = "Registrar TipoProducto";
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
-					auditoriaEJB.crearAuditoria("AuditoriaTipoProducto", accion, "TP creado: " + nombre, sesion.getUser().getNombreUsuario(), browserDetail);
+					auditoriaEJB.crearAuditoria("AuditoriaTipoProducto", accion, "TP creado: " + nombre, sesion.getUser().getCedula(), browserDetail);
 
 				} catch (Exception e) {
 					e.printStackTrace();

@@ -180,7 +180,7 @@ public class ControladorVentas implements Serializable {
 			accion = "Crear DetalleVenta";
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
 			auditoriaEJB.crearAuditoria("AuditoriaDetalleVenta", accion, "DT creada: " + factura.getId(),
-					sesion.getUser().getNombreUsuario(), browserDetail);
+					sesion.getUser().getCedula(), browserDetail);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -244,6 +244,12 @@ public class ControladorVentas implements Serializable {
 		inventariosEditar.remove(inventarioProductoComprar);
 		inventarioProductoComprar.setCantidad(inventarioProductoComprar.getCantidad() + dv.getCantidad());
 		productosCompra.remove(dv);
+		
+		accion = "Eliminar DetalleVenta";
+		String browserDetail = Faces.getRequest().getHeader("User-Agent");
+		auditoriaEJB.crearAuditoria("AuditoriaDetalleVenta", accion, "DV eliminada: " + factura.getId(),
+				sesion.getUser().getCedula(), browserDetail);
+		
 		reload();
 	}
 
@@ -330,7 +336,7 @@ public class ControladorVentas implements Serializable {
 				accion = "Registar FacturaVenta";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
 				auditoriaEJB.crearAuditoria("AuditoriaFacturaVenta", accion, "FV creada: " + factura.getId(),
-						sesion.getUser().getNombreUsuario(), browserDetail);
+						sesion.getUser().getCedula(), browserDetail);
 
 				factura.setId(ventaEJB.codigoUltimaFacturaCliente(cliente.getCedula()));
 				registrarDetallesVenta();
@@ -378,7 +384,7 @@ public class ControladorVentas implements Serializable {
 				accion = "Crear Persona";
 				String browserDetail2 = Faces.getRequest().getHeader("User-Agent");
 				auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona creada: " + cliente.getNombre(),
-						sesion.getUser().getNombreUsuario(), browserDetail2);
+						sesion.getUser().getCedula(), browserDetail2);
 
 				Messages.addFlashGlobalInfo("Cliente Registrado Exitosamente");
 
@@ -421,7 +427,7 @@ public class ControladorVentas implements Serializable {
 				accion = "Buscar Persona";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
 				auditoriaEJB.crearAuditoria("AuditoriaPersona", accion, "persona buscada: " + cliente.getNombre(),
-						sesion.getUser().getNombreUsuario(), browserDetail);
+						sesion.getUser().getCedula(), browserDetail);
 
 			} catch (Exception e) {
 				e.printStackTrace();
