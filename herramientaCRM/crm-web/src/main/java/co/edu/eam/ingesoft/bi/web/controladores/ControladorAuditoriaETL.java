@@ -37,7 +37,11 @@ public class ControladorAuditoriaETL implements Serializable {
 	private List<HechoAuditoria> listaHechoAct;
 
 	private int baseDatos;
+<<<<<<< HEAD
 	
+=======
+
+>>>>>>> branch 'master' of https://github.com/davidRomaan/sistemasOperacionales.git
 	private String fechaInicio;
 	private String fechaFin;
 	private String base;

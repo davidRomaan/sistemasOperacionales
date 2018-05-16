@@ -807,9 +807,33 @@ public class Persistencia implements Serializable {
 		q.executeUpdate();
 
 	}
+	
+	/**
+	 * Crea una dimensi�n de persona en la bd oracle
+	 * 
+	 * @param dimension
+	 *            dimensi�n de la persona que se desea registrar
+	 */
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void crearDimensionUsuario(DimensionUsuario dimension) {
 
 	
 	
+		String sql = "INSERT INTO DIMENSION_PERSONA (cedula, nombre, apellido, genero, edad, tipo_usuario, cargo) "
+				+ "VALUES (?1,?2,?3,?4,?5,?6,?7)";
+
+		Query q = emO.createNativeQuery(sql);
+		q.setParameter(1, dimension.getCedula());
+		q.setParameter(2, dimension.getNombre());
+		q.setParameter(3, dimension.getApellido());
+		q.setParameter(4, dimension.getGenero());
+		q.setParameter(5, dimension.getEdad());
+		q.setParameter(6, dimension.getTipoUsuario());
+		q.setParameter(7, dimension.getCargo());
+		q.executeUpdate();
+
+	}
+
 	/**
 	 * Crea una dimension de una factura en la bd Oracle
 	 * 
