@@ -157,5 +157,42 @@ public class AuditoriaEJB {
 		}
 		return lista;
 	}
+	
+	/**
+	 * Convierte un formato de fecha Calendar a string
+	 * 
+	 * @param fecha
+	 *            fecha que se desea convertir
+	 * @return la fecha en formato String
+	 */
+	public String convertirCalendarAString(Calendar fecha) {
+		int anio = fecha.get(Calendar.YEAR);
+		int mes = fecha.get(Calendar.MONTH);
+		int dia = fecha.get(Calendar.DAY_OF_MONTH);
+		return anio + "-" + mes + "-" + dia;
+	}
+	
+	
+	/**
+	 * Convierte una fecha de tipo String a Date
+	 * 
+	 * @param fecha
+	 *            fecha que se desea convertir
+	 * @return la fecha en tipo Date
+	 */
+	public Calendar convertirFechaStrintADate(String fecha) {
+		String[] datos = fecha.split("/");
+		int dia = Integer.parseInt(datos[0]);
+		int mes = Integer.parseInt(datos[1]);
+		int anio = Integer.parseInt(datos[2]);
+
+		Calendar c = new GregorianCalendar();
+		c.set(anio, mes, dia);
+
+		System.out.println(c.get(Calendar.DATE) + "-" + c.get(Calendar.MONTH) + "-" + c.get(Calendar.YEAR));
+
+		return c;
+
+	}
 
 }

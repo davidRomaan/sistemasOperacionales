@@ -8,7 +8,7 @@ public class DimensionUsuario implements Serializable {
 	private String nombre;
 	private String apellido;
 	private String genero;
-	private short edad;
+	private int edad;
 	private String tipoUsuario;
 	private String cargo;
 	
@@ -16,7 +16,7 @@ public class DimensionUsuario implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
-	public DimensionUsuario(String cedula, String nombre, String apellido, String genero, short edad,
+	public DimensionUsuario(String cedula, String nombre, String apellido, String genero, int edad,
 			String tipoUsuario, String cargo) {
 		super();
 		this.cedula = cedula;
@@ -60,11 +60,11 @@ public class DimensionUsuario implements Serializable {
 		this.genero = genero;
 	}
 
-	public short getEdad() {
+	public int getEdad() {
 		return edad;
 	}
 
-	public void setEdad(short edad) {
+	public void setEdad(int edad) {
 		this.edad = edad;
 	}
 
