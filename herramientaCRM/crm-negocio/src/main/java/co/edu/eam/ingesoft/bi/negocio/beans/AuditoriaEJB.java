@@ -372,5 +372,8 @@ public class AuditoriaEJB {
 		return c;
 
 	}
+	
+	
+	
 
 }

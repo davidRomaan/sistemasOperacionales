@@ -116,6 +116,16 @@ public class ControladorAuditoriaETL implements Serializable {
 		reload();
 	}
 
+	
+	public void cargarDat(){
+		
+		auditoriaETL.cargarDatosOracle(listaHechoAct);
+		Messages.addFlashGlobalInfo("se cargo correctamente");
+
+	}
+	
+	
+	
 	/**
 	 * Carga los datos
 	 */
