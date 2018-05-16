@@ -134,7 +134,13 @@ public class ControladorAuditoriaETL implements Serializable {
 		Calendar fecha1 = auditoriaEJB.convertirFechaStrintADate(fechaInicio);
 		Calendar fecha2 = auditoriaEJB.convertirFechaStrintADate(fechaFin);
 
-		int bd = baseDatos;
+		int bd;
+		
+		if (base.equalsIgnoreCase("mysql")) {
+			bd = 1;
+		} else {
+			bd = 2;
+		}
 
 		if (bd == 1 && datosMysqlCargados) {
 
@@ -415,5 +421,7 @@ public class ControladorAuditoriaETL implements Serializable {
 	public void setSemanaSeleccionada(boolean semanaSeleccionada) {
 		this.semanaSeleccionada = semanaSeleccionada;
 	}
+	
+	
 
 }
