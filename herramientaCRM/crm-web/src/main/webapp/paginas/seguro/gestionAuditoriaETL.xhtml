@@ -269,27 +269,27 @@
 							<h:outputLabel value="#{hecho.usuario.cargo}" />
 						</p:column>
 
-						<p:column>
-							<p:cellEditor>
-								<f:facet name="output">
-									<h:outputText value="#{hecho.usuario.edad}" />
-								</f:facet>
-								<f:facet name="input">
-									<p:inputText value="#{hecho.usuario.edad}" />
-								</f:facet>
-							</p:cellEditor>
-						</p:column>
+						<p:column headerText="edad">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{hecho.usuario.edad}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="#{hecho.usuario.edad}" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
 
-						<p:column>
-							<p:cellEditor>
-								<f:facet name="output">
-									<h:outputText value="#{hecho.usuario.tipoUsuario}" />
-								</f:facet>
-								<f:facet name="input">
-									<p:inputText value="#{hecho.usuario.tipoUsuario}" />
-								</f:facet>
-							</p:cellEditor>
-						</p:column>
+					<p:column headerText="tipo_usuario">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{hecho.usuario.tipoUsuario}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="#{hecho.usuario.tipoUsuario}" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
 
 					</p:dataTable>
 
