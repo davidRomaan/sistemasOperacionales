@@ -776,7 +776,7 @@ public class Persistencia implements Serializable {
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void crearHechoAuditoria(String accion, String dispositivo, String navegador, Calendar fecha, DimensionUsuario usuario) {
 
-		String sql = "INSERT INTO HECHO_VENTAS (accion, dispositivo, navegador, fecha, usuario) VALUES (?1,?2,?3,?4,?5)";
+		String sql = "INSERT INTO HECHO_AUDITORIA (accion, dispositivo, navegador, fecha, cedula_usuario) VALUES (?1,?2,?3,?4,?5)";
 
 		Query q = emO.createNativeQuery(sql);
 		q.setParameter(1, accion);
@@ -842,7 +842,7 @@ public class Persistencia implements Serializable {
 
 	
 	
-		String sql = "INSERT INTO DIMENSION_PERSONA (cedula, nombre, apellido, genero, edad, tipo_usuario, cargo) "
+		String sql = "INSERT INTO DIMENSION_USUARIO (cedula, nombre, apellido, genero, edad, tipo_usuario, cargo) "
 				+ "VALUES (?1,?2,?3,?4,?5,?6,?7)";
 
 		Query q = emO.createNativeQuery(sql);
@@ -958,20 +958,21 @@ public class Persistencia implements Serializable {
 	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void eliminarDimensionPersona(String cedula) {
+	public void editarDimensionPersona(String cedula, int edad) {
 
-		String sql = "DELETE FROM DIMENSION_PERSONA WHERE cedula = ?1";
+		String sql = "UPDATE DIMENSION_PERSONA SET edad = ?1 WHERE cedula = ?2";
 
 		Query q = emO.createNativeQuery(sql);
-		q.setParameter(1, cedula);
+		q.setParameter(1, edad);
+		q.setParameter(2, cedula);
 		q.executeUpdate();
 
 	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void eliminarDimensionProducto(int id) {
+	public void editarDimensionProducto(int id, double precio) {
 
-		String sql = "DELETE FROM DIMENSION_PRODUCTO WHERE id = ?1";
+		String sql = "UPDATE DIMENSION_PRODUCTO SET precio = ?1 WHERE id = ?2";
 
 		Query q = emO.createNativeQuery(sql);
 		q.setParameter(1, id);

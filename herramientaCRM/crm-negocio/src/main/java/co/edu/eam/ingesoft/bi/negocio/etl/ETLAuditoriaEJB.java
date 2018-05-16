@@ -97,16 +97,8 @@ public class ETLAuditoriaEJB {
 				hechoAudi.setDispositivo(auditorias.getDispositivo());
 				hechoAudi.setNavegador(auditorias.getNavegador());
 				hechoAudi.setUsuario(dimUsu);
-				
-				String [] datos = auditorias.getFechaHora().split("/");
-				int anio = Integer.parseInt(datos[0]);
-				int mes = Integer.parseInt(datos[1]);
-				int dia = Integer.parseInt(datos[2]);
-				
-				Calendar fecha = new GregorianCalendar();
-				fecha.set(anio, mes, dia);
-				
-				hechoAudi.setFecha(fecha);
+
+				hechoAudi.setFecha(auditorias.getFechaHora());
 
 				listaHechos.add(hechoAudi);
 
@@ -160,28 +152,16 @@ public class ETLAuditoriaEJB {
 				}
 
 				usuExiste = em.dimensionUsuarioExiste(hechoAudi.getUsuario().getCedula());
+				
+				String cedula = hechoAudi.getUsuario().getCedula();
 
-				if (!usuExiste) {
-
-					for (String ced : listaCed) {
-						if (ced.equals(hechoAudi.getUsuario().getCedula())) {
-							em.crearHechoAuditoria(hechoAudi.getAccion(), hechoAudi.getDispositivo(),
-									hechoAudi.getNavegador(), hechoAudi.getFecha(), hechoAudi.getUsuario());
-						} else {
-							em.crearDimensionUsuario(hechoAudi.getUsuario());
-							em.crearHechoAuditoria(hechoAudi.getAccion(), hechoAudi.getDispositivo(),
-									hechoAudi.getNavegador(), hechoAudi.getFecha(), hechoAudi.getUsuario());
-
-							listaCed.add(hechoAudi.getUsuario().getCedula());
-						}
-					}
-
-				} else {
-
-					em.crearHechoAuditoria(hechoAudi.getAccion(), hechoAudi.getDispositivo(), hechoAudi.getNavegador(),
-							hechoAudi.getFecha(), hechoAudi.getUsuario());
-
+				if (!usuExiste && !listaCed.contains(cedula)) {
+					em.crearDimensionUsuario(hechoAudi.getUsuario());
+					listaCed.add(cedula);
 				}
+
+				em.crearHechoAuditoria(hechoAudi.getAccion(), hechoAudi.getDispositivo(), hechoAudi.getNavegador(),
+						hechoAudi.getFecha(), hechoAudi.getUsuario());
 
 			}
 
