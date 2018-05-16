@@ -92,6 +92,14 @@ public class ControladorAuditoriaETL implements Serializable {
 	}
 
 	public void extraerDatos() {
+		
+		int bd;
+
+		if (base.equalsIgnoreCase("mysql")) {
+			bd = 1;
+		} else {
+			bd = 2;
+		}
 		if (fechaSeleccionada.equals("0")) {
 			Messages.addFlashGlobalInfo("Selecione una opcion");
 		}
@@ -106,11 +114,31 @@ public class ControladorAuditoriaETL implements Serializable {
 		}
 		if (fechaSeleccionada.equals("2")) {
 
-			listaHechoAct = null;
-			listaHechoAct = auditoriaEJB.listarFechaSemanaAuditoria(baseDatos, fechaCampo, fechaCampo2);
+			try{
+				listaHechoAct = auditoriaETL.obtnerHechoVentasRollingMes(fechaSeleccionada, bd, listaHechoAct);
+				cargaRealizada(bd);
+				} catch (ExcepcionNegocio e) {
+					// TODO: handle exception
+					Messages.addFlashGlobalError(e.getMessage());
+					cargaNoRealizada(bd);
+				}
+				
+				reload();
 
 		}
 		if (fechaSeleccionada.equals("3")) {
+			
+			
+			try{
+				listaHechoAct = auditoriaETL.obtnerHechoVentasRollingAnio(fechaSeleccionada, bd, listaHechoAct);
+				cargaRealizada(bd);
+			}catch (ExcepcionNegocio e) {
+				// TODO: handle exception
+				Messages.addFlashGlobalError(e.getMessage());
+				cargaNoRealizada(bd);
+			}
+			
+			reload();
 
 		}
 		reload();
@@ -122,6 +150,22 @@ public class ControladorAuditoriaETL implements Serializable {
 		auditoriaETL.cargarDatosOracle(listaHechoAct);
 		Messages.addFlashGlobalInfo("se cargo correctamente");
 
+	}
+	
+	private void cargaRealizada(int bd) {
+		if (bd == 1) {
+			datosMysqlCargados = true;
+		} else {
+			datosPostgresCargados = true;
+		}
+	}
+
+	private void cargaNoRealizada(int bd) {
+		if (bd == 1) {
+			datosMysqlCargados = false;
+		} else {
+			datosPostgresCargados = false;
+		}
 	}
 	
 	
