@@ -41,7 +41,7 @@
 					<f:selectItem itemValue="3" itemLabel="mes" />
 
 					<f:ajax event="change" execute="@this" render="panelfechSelect"
-						listener="#{controladorAuditoriaETL.gestionarComboFecha}"/>
+						listener="#{controladorAuditoriaETL.gestionarComboFecha}" />
 				</h:selectOneMenu>
 
 				<p:outputLabel id="mask" value="Fecha: " />
@@ -68,107 +68,31 @@
 				<br />
 				<br />
 				<p:commandButton id="btnCargarDatos" value="Extraer Datos"
-					process="@this,panelvalDos" update="tablaa"
+					process="@this,panelvalDos" update="panelTablaaaa"
 					action="#{controladorAuditoriaETL.extraerDatos}" />
+				<br />
+				<p:commandButton id="btnCar" value="Cargar Datos" process="@this"
+					update="panelTabla" action="#{controladorAuditoriaETL.cargarDat}" />
 			</h:panelGrid>
-			
+
 
 			<br />
 			<br />
-			<h:panelGrid id="panelTablaAud"
+			<h:panelGrid id="panelTablaaaa"
 				rendered="#{controladorAuditoriaETL.rollingSeleccionado}">
 
-<<<<<<< HEAD
-				<p:dataTable id="tablaa"
+				<p:dataTable id="tablaHechosAud"
 					value="#{controladorAuditoriaETL.listaHechoAct}" var="hecho"
 					border="1" scrollable="true" scrollWidth="80%" scrollHeight="150"
 					editable="true" editMode="cell">
-=======
-				<p:dataTable id="tabla" emptyMessage="Ningun resultado"
-					value="#{controladorAuditoriaETL.listaHechoAct}" var="aud"
-					border="1" width="80%">
-
-					<p:column filterBy="#{aud.id}" headerText="codigo">
-						<h:outputText value="#{aud.id}">
-						</h:outputText>
-					</p:column>
-
-					<p:column headerText="fecha">
-						<h:outputLabel value="#{aud.fecha}"></h:outputLabel>
-					</p:column>
-
-					<p:column headerText="Dispositivo">
-						<h:outputLabel value="#{aud.dispositivo}"></h:outputLabel>
-					</p:column>
-
-					<p:column headerText="Navegador">
-						<h:outputLabel value="#{aud.navegador}"></h:outputLabel>
-					</p:column>
-
-					<p:column headerText="Accion">
-						<h:outputLabel value="#{aud.accion}"></h:outputLabel>
-					</p:column>
-
-				</p:dataTable>
-
-			</h:panelGrid>
-
-			<br />
-			<br />
-
-			<h:panelGrid id="panelValidacion" columns="1"
-				rendered="#{!controladorAuditoriaETL.rollingSeleccionado}">
-
-				<h3 style="align: center">Ingrese el periodo deseado</h3>
-				<br />
-				<h:panelGrid id="panelIntervalo" columns="4">
-
-					<p:outputLabel id="mask1" value="Desde: " />
-					<p:inputMask id="date1" value="#{controladorAuditoriaETL.fechaInicio}"
-						mask="99/99/9999" />
-
-					<p:outputLabel id="mask2" value=" Hasta: " />
-					<p:inputMask id="date2" value="#{controladorAuditoriaETL.fechaFin}"
-						mask="99/99/9999" />
-				</h:panelGrid>
-				<br />
-				
-				<h:panelGrid id="panelBD" columns="3">
-
-				<h:outputLabel id="lblBD" value="Seleccione la base de datos" />
-
-				<h:selectOneMenu id="cbBase" value="#{controladorAuditoriaETL.baseDatos}">
-
-					<f:selectItem itemValue="1" itemLabel="MYSQL" />
-					<f:selectItem itemValue="2" itemLabel="POSTGRES" />
-
-				</h:selectOneMenu>
-
-			</h:panelGrid>
-			<br />
-				
-				<h:panelGrid id="panelBoton" columns="1">
-
-					<p:commandButton id="btnCargar" value="Extraer"
-						process="@this,panelValidacion"
-						update="panelTabla"
-						action="#{controladorAuditoriaETL.extraer}" style="align:center" />
-
-				</h:panelGrid>
-				
-				<h:panelGrid id="panelTabla">
-
-				<p:dataTable id="tablaHechos" value="#{controladorAuditoriaETL.hechoAuditorias}"
-					var="hecho" border="1" scrollable="true" scrollWidth="80%"
-					scrollHeight="150" editable="true" editMode="cell">
->>>>>>> branch 'master' of https://github.com/davidRomaan/sistemasOperacionales.git
 
 					<f:facet name="header">
          				   Datos a cargar
       			    </f:facet>
 
 					<p:ajax event="cellEdit"
-						listener="#{controladorAuditoriaETL.onCellEdit}" update="tablaa" />
+						listener="#{controladorAuditoriaETL.onCellEdit}"
+						update="panelTabla" />
 
 					<p:columnGroup type="header">
 						<p:row>
@@ -215,7 +139,7 @@
 					<p:column>
 						<h:outputLabel value="#{hecho.usuario.cargo}" />
 					</p:column>
-					
+
 					<p:column headerText="edad">
 						<p:cellEditor>
 							<f:facet name="output">
@@ -240,15 +164,7 @@
 
 				</p:dataTable>
 
-				<br />
-				<br />
-				<p:commandButton id="btnCar" value="cargar datos"
-					process="@this,panelvalDos" update="tablaa"
-					action="#{controladorAuditoriaETL.extraerDatos}" />
-
 			</h:panelGrid>
-<<<<<<< HEAD
-
 			<br />
 			<br />
 
@@ -257,7 +173,6 @@
 
 				<h3 style="align: center">Ingrese el periodo deseado</h3>
 				<br />
-
 				<h:panelGrid id="panelIntervalo" columns="4">
 
 					<p:outputLabel id="mask1" value="Desde: " />
@@ -269,13 +184,27 @@
 						mask="99/99/9999" />
 				</h:panelGrid>
 				<br />
+
+				<h:panelGrid id="panelBD" columns="3">
+
+					<h:outputLabel id="lblBD" value="Seleccione la base de datos" />
+
+					<h:selectOneMenu id="cbBase"
+						value="#{controladorAuditoriaETL.baseDatos}">
+
+						<f:selectItem itemValue="1" itemLabel="MYSQL" />
+						<f:selectItem itemValue="2" itemLabel="POSTGRES" />
+
+					</h:selectOneMenu>
+
+				</h:panelGrid>
 				<br />
+
 				<h:panelGrid id="panelBoton" columns="1">
 
-					<p:commandButton id="btnCargar" value="Cargar Datos"
-						process="@this,panelIntervalo,panelDatos,panelValidacion"
-						update="panelIntervalo,panelDatos,panelValidacion"
-						action="#{controladorAuditoriaETL.cargar}" style="align:center" />
+					<p:commandButton id="btnCargar" value="Extraer"
+						process="@this,panelValidacion" update="panelTabla"
+						action="#{controladorAuditoriaETL.extraer}" style="align:center" />
 
 				</h:panelGrid>
 
@@ -325,7 +254,7 @@
 						</p:column>
 
 						<p:column>
-							<h:outputLabel value="#{hecho.fecha}" />
+							<h:outputLabel value="#{hecho.fechaHora}" />
 						</p:column>
 
 						<p:column>
@@ -365,13 +294,11 @@
 					</p:dataTable>
 
 				</h:panelGrid>
-
-=======
->>>>>>> branch 'master' of https://github.com/davidRomaan/sistemasOperacionales.git
 			</h:panelGrid>
 			<br />
-
-			<h:panelGrid id="panelBotonCarga">
+			<br />
+			<h:panelGrid id="panelBotonCarga"
+				rendered="#{!controladorAuditoriaETL.rollingSeleccionado}">
 
 				<p:commandButton id="btnCargaDatos" value="Cargar Datos"
 					process="@this" update="panelTabla"
