@@ -10,10 +10,14 @@ import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
+import co.edu.eam.ingesoft.bi.negocio.etl.ETLVentasEJB;
 import co.edu.eam.ingesoft.bi.negocio.persistencia.Persistencia;
+import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Auditoria;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Municipio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Usuario;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionUsuario;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoAuditoria;
 
 @LocalBean
 @Stateless
@@ -21,7 +25,10 @@ public class AuditoriaEJB {
 
 	@EJB
 	private Persistencia em;
-	
+
+	@EJB
+	private ETLVentasEJB etlEJB;
+
 	@EJB
 	private UsuarioEJB usuarioEJB;
 
@@ -144,18 +151,69 @@ public class AuditoriaEJB {
 
 	}
 
-	public List<Auditoria> listarPorFechaActual(Date fecha) {
+	public List<HechoAuditoria> listarFechaActualAuditoria(int bd, String fecha) {
 
-		List<Auditoria> lista = (List<Auditoria>) (Object) em
-				.listarConParametroObjeto(Auditoria.LISTA_AUDITORIA_FECHA_ACT, fecha);
+		try {
+			List<Auditoria> lista = listarPorFechaActual(fecha, bd);
+			List<HechoAuditoria> listaHecho = new ArrayList<HechoAuditoria>();
 
-		List<Usuario>listaUsuarios = new ArrayList<Usuario>();
-		
-		for(int i=0; i<lista.size(); i++){
-			
-			Usuario us = usuarioEJB.buscarUsu(lista.get(i).getUsuario());
+			if (lista.size() == 0) {
+
+				throw new ExcepcionNegocio("No hay facturas registradas en el periodo ingresado");
+
+			} else {
+				for (int i = 0; i < lista.size(); i++) {
+
+					Usuario us = usuarioEJB.buscarUsu(lista.get(i).getUsuario());
+
+					if (lista.get(i).getUsuario().equals("")) {
+						throw new ExcepcionNegocio("usuario sin cedula");
+					} else {
+						DimensionUsuario dimension = new DimensionUsuario();
+						dimension.setTipoUsuario(us.getTipoUsuario().getNombre());
+						dimension.setCedula(us.getCedula());
+						dimension.setNombre(us.getNombre());
+						dimension.setApellido(us.getApellido());
+						dimension.setGenero(String.valueOf(us.getGenero()));
+						dimension.setEdad((short) etlEJB.calcularEdad(us.getFechaNacimiento()));
+
+						HechoAuditoria hecho = new HechoAuditoria();
+						hecho.setAccion(lista.get(i).getAccion());
+						hecho.setDispositivo(lista.get(i).getDispositivo());
+						hecho.setNavegador(lista.get(i).getNavegador());
+						hecho.setFecha(lista.get(i).getFechaHora());
+						hecho.setUsuario(dimension);
+
+						listaHecho.add(hecho);
+
+					}
+				}
+				return listaHecho;
+			}
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.getMessage();
 		}
-		return lista;
+		return null;
+
+	}
+
+	public List<Auditoria> listarPorFechaActual(String fecha, int bd) throws Exception {
+		em.setBd(bd);
+
+		List<Object> lista = em.listarFechaActual(fecha);
+		List<Auditoria> listaAudit = new ArrayList<Auditoria>();
+
+		for (int i = 0; i < lista.size(); i++) {
+
+			int cod = (int) (Integer) lista.get(i);
+
+			Auditoria aud = (Auditoria) em.buscar(Auditoria.class, cod);
+			listaAudit.add(aud);
+		}
+
+		return listaAudit;
 	}
 
 }

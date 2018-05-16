@@ -626,37 +626,67 @@ public class Persistencia implements Serializable {
 		return q.getResultList();
 
 	}
-	
-	public List<Object> listarFacturasIntervaloFecha (String fechaInicio, String fechaFin){
-		
-		String sql = "";		
+
+	public List<Object> listarFacturasIntervaloFecha(String fechaInicio, String fechaFin) {
+
+		String sql = "";
 		Query q;
-		
-		switch (this.bd){
-		
+
+		switch (this.bd) {
+
 		case 1:
-			sql = "SELECT id FROM bi.FACTURA_VENTA WHERE fecha_venta BETWEEN " + "'" + fechaInicio + 
-			"' AND " + "'" +  fechaFin +"'";
+			sql = "SELECT id FROM bi.FACTURA_VENTA WHERE fecha_venta BETWEEN " + "'" + fechaInicio + "' AND " + "'"
+					+ fechaFin + "'";
 			q = emM.createNativeQuery(sql);
 			break;
-			
+
 		case 2:
-			sql = "SELECT id FROM FACTURA_VENTA WHERE fecha_venta BETWEEN " + "'" + fechaInicio + 
-			"' AND " + "'" +  fechaFin +"'";
+			sql = "SELECT id FROM FACTURA_VENTA WHERE fecha_venta BETWEEN " + "'" + fechaInicio + "' AND " + "'"
+					+ fechaFin + "'";
 			q = emP.createNativeQuery(sql);
 			break;
-			
+
 		default:
 			throw new ExcepcionNegocio("La base de datos a la cual intenta acceder no existe");
-		
+
 		}
-		
+
 		List<Object> lista = q.getResultList();
-		
+
 		System.out.println("tamanio lista: " + lista.size());
-		
+
 		return lista;
-		
+
+	}
+
+	public List<Object> listarFechaActual(String fechaAct) {
+
+		String sql = "";
+		Query q;
+
+		switch (this.bd) {
+
+		case 1:
+			sql = "SELECT id FROM bi.auditoria WHERE fecha_hora = " + "'" + fechaAct + "'";
+			q = emM.createNativeQuery(sql);
+			break;
+
+		case 2:
+			sql = "SELECT id FROM auditoria WHERE fecha_hora = " + "'" + fechaAct + "'";
+			q = emP.createNativeQuery(sql);
+			break;
+
+		default:
+			throw new ExcepcionNegocio("La base de datos a la cual intenta acceder no existe");
+
+		}
+
+		List<Object> lista = q.getResultList();
+
+		System.out.println("tamanio lista: " + lista.size());
+
+		return lista;
+
 	}
 
 	// ------------------------------ Gestion del dataWareHouse

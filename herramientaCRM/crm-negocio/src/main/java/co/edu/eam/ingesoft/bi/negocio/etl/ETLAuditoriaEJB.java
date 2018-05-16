@@ -16,11 +16,5 @@ public class ETLAuditoriaEJB {
 	private Persistencia em;
 	
 	
-	public void cargarDatosDelDia(){
-		
-		Date fecha = new Date();
-		
-		
-		
-	}
+	
 }
