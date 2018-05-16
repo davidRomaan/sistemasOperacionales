@@ -27,6 +27,7 @@ import co.edu.eam.ingesoft.bi.negocio.beans.VentaEJB;
 import co.edu.eam.ingesoft.bi.negocio.etl.ETLAuditoriaEJB;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoAuditoria;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoVentas;
 
 @SessionScoped
 @Named("controladorAuditoriaETL")
@@ -101,7 +102,7 @@ public class ControladorAuditoriaETL implements Serializable {
 	/**
 	 * Carga los datos
 	 */
-	public void cargar() {
+	public void extraer() {
 
 		Calendar fecha1 = auditoriaEJB.convertirFechaStrintADate(fechaInicio);
 		Calendar fecha2 = auditoriaEJB.convertirFechaStrintADate(fechaFin);
@@ -147,6 +148,29 @@ public class ControladorAuditoriaETL implements Serializable {
 
 	}
 	
+	/**
+	 * Carga los datos al data warehouse
+	 */
+	public void cargar() {
+
+		if (hechoAuditorias.size() == 0) {
+
+			Messages.addFlashGlobalError("No hay datos para cargar");
+
+		} else {
+
+			try {
+				auditoriaETL.cargarDatosDWH(hechoAuditorias);
+				Messages.addFlashGlobalInfo("Se han cargado los datos exitosamente");
+				vaciarTabla();
+			} catch (ExcepcionNegocio e) {
+				Messages.addFlashGlobalError(e.getMessage());
+			}
+
+		}
+
+	}
+	
 	public void onCellEdit(CellEditEvent event) {
         Object oldValue = event.getOldValue();
         Object newValue = event.getNewValue();
@@ -156,6 +180,19 @@ public class ControladorAuditoriaETL implements Serializable {
             reload();
         }
     }
+	
+	/**
+	 * Vac�a la tabla de hechos de ventas
+	 */
+	public void vaciarTabla() {
+
+		hechoAuditorias = new ArrayList<HechoAuditoria>();
+		datosMysqlCargados = false;
+		datosPostgresCargados = false;
+
+		reload();
+
+	}
 
 	public void gestionarCarga() {
 		if (tipoCarga.equalsIgnoreCase("rolling")) {

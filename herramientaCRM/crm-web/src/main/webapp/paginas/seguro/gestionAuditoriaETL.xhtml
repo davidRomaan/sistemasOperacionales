@@ -100,7 +100,6 @@
 
 				<h3 style="align: center">Ingrese el periodo deseado</h3>
 				<br />
-
 				<h:panelGrid id="panelIntervalo" columns="4">
 
 					<p:outputLabel id="mask1" value="Desde: " />
@@ -112,13 +111,12 @@
 						mask="99/99/9999" />
 				</h:panelGrid>
 				<br />
-				<br />
 				<h:panelGrid id="panelBoton" columns="1">
 
 					<p:commandButton id="btnCargar" value="Cargar Datos"
-						process="@this,panelIntervalo,panelDatos,panelValidacion"
-						update="panelIntervalo,panelDatos,panelValidacion"
-						action="#{controladorAuditoriaETL.cargar}" style="align:center" />
+						process="@this,panelValidacion"
+						update="panelTabla"
+						action="#{controladorAuditoriaETL.extraer}" style="align:center" />
 
 				</h:panelGrid>
 				
@@ -206,7 +204,6 @@
 				</p:dataTable>
 
 			</h:panelGrid>
-
 			</h:panelGrid>
 			<br />
 

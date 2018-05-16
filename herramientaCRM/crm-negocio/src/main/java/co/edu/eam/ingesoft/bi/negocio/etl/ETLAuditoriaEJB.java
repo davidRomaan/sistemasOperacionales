@@ -28,16 +28,14 @@ import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoVentas;
 @Stateless
 public class ETLAuditoriaEJB {
 
-	
 	@EJB
 	private Persistencia em;
-	
+
 	@EJB
 	private AuditoriaEJB auditoriaEJB;
-	
+
 	@EJB
 	private UsuarioEJB usuarioEJB;
-	
 
 	public List<Auditoria> listaVentasPeriodo(Calendar fechaInicio, Calendar fechaFin, int bd) {
 
@@ -62,8 +60,7 @@ public class ETLAuditoriaEJB {
 
 		return listaFacturas;
 	}
-	
-	
+
 	/**
 	 * Obtiene todos los datos asociados a un hecho venta
 	 * 
@@ -74,7 +71,7 @@ public class ETLAuditoriaEJB {
 	 */
 	public List<HechoAuditoria> obtenerDatosHechoVentasAcumulacionSimple(Calendar fechaInicio, Calendar fechaFin,
 			int bd, List<HechoAuditoria> listaHechos) {
-		
+
 		// Lista de facturas registradas en la bd
 		List<Auditoria> audi = listaVentasPeriodo(fechaInicio, fechaFin, bd);
 
@@ -83,15 +80,15 @@ public class ETLAuditoriaEJB {
 			throw new ExcepcionNegocio("No hay auditorias registradas en el periodo ingresado");
 
 		} else {
-			
+
 			em.setBd(bd);
 
 			// Se recorre la segunda lista obtenida de postgres
 			for (Auditoria auditorias : audi) {
-				
+
 				String ced = auditorias.getUsuario();
 				Usuario per = usuarioEJB.buscarUsu(ced);
-				
+
 				DimensionUsuario dimUsu = new DimensionUsuario();
 				dimUsu.setNombre(per.getNombre());
 				dimUsu.setApellido(per.getApellido());
@@ -100,26 +97,23 @@ public class ETLAuditoriaEJB {
 				dimUsu.setEdad(calcularEdad(per.getFechaNacimiento()));
 				dimUsu.setGenero(per.getGenero().name());
 				dimUsu.setTipoUsuario(per.getTipoUsuario().getNombre());
-				
+
 				HechoAuditoria hechoAudi = new HechoAuditoria();
 				hechoAudi.setAccion(auditorias.getAccion());
 				hechoAudi.setDispositivo(auditorias.getDispositivo());
 				hechoAudi.setNavegador(auditorias.getNavegador());
 				hechoAudi.setUsuario(dimUsu);
 				hechoAudi.setFecha(auditorias.getFechaHora());
-				
+
 				listaHechos.add(hechoAudi);
-				
-				
-				
+
 			}
 		}
-		
+
 		return listaHechos;
 
 	}
-	
-	
+
 	/**
 	 * Calcula la edad de una persona
 	 * 
@@ -140,5 +134,24 @@ public class ETLAuditoriaEJB {
 		return edad;
 
 	}
-	
+
+	public void cargarDatosDWH(List<HechoAuditoria> hechos) {
+		
+		if (hechos.size() == 0) {
+			
+		}else {
+			
+			for (HechoAuditoria hechoAudi: hechos) {
+				
+				em.crearDimensionUsuario(hechoAudi.getUsuario());
+				
+				em.crearHechoAuditoria(hechoAudi.getAccion(), hechoAudi.getDispositivo(), hechoAudi.getNavegador(), hechoAudi.getFecha(), hechoAudi.getUsuario());
+				
+			}
+
+		
+		}
+
+	}
+
 }

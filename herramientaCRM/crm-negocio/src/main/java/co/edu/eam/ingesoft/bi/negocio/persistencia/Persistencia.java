@@ -2,6 +2,7 @@ package co.edu.eam.ingesoft.bi.negocio.persistencia;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -760,6 +761,30 @@ public class Persistencia implements Serializable {
 		q.setParameter(5, idProducto);
 		q.setParameter(6, cedulaEmpleado);
 		q.setParameter(7, cedulaCliente);
+		q.executeUpdate();
+
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @param accion
+	 * @param dispositivo
+	 * @param navegador
+	 * @param fecha
+	 * @param usuario
+	 */
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void crearHechoAuditoria(String accion, String dispositivo, String navegador, Calendar fecha, DimensionUsuario usuario) {
+
+		String sql = "INSERT INTO HECHO_VENTAS (accion, dispositivo, navegador, fecha, usuario) VALUES (?1,?2,?3,?4,?5)";
+
+		Query q = emO.createNativeQuery(sql);
+		q.setParameter(1, accion);
+		q.setParameter(2, dispositivo);
+		q.setParameter(3, navegador);
+		q.setParameter(4, fecha);
+		q.setParameter(5, usuario.getCedula());
 		q.executeUpdate();
 
 	}
