@@ -20,7 +20,6 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
 import org.omnifaces.util.Messages;
-import org.primefaces.event.CellEditEvent;
 
 import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.VentaEJB;
@@ -35,7 +34,7 @@ public class ControladorAuditoriaETL implements Serializable {
 
 	private String tipoCarga;
 	private String fechaSeleccionada;
-
+	private String fechaCampo;
 	private List<HechoAuditoria> listaHechoAct;
 
 	private int baseDatos;
@@ -84,8 +83,9 @@ public class ControladorAuditoriaETL implements Serializable {
 		}
 		if (fechaSeleccionada.equals("1")) {
 			try {
-				String fecha = ventaEJB.convertirCalendarAString(new GregorianCalendar());
-				listaHechoAct = auditoriaEJB.listarFechaActualAuditoria(baseDatos,fecha);
+				
+				listaHechoAct = auditoriaEJB.listarFechaActualAuditoria(baseDatos,fechaCampo);
+				System.out.println(listaHechoAct.get(0).getUsuario() +"-----------------------------------------------");
 			} catch (Exception e) {
 				e.getMessage();
 			}
@@ -241,6 +241,14 @@ public class ControladorAuditoriaETL implements Serializable {
 
 	public void setBaseDatos(int baseDatos) {
 		this.baseDatos = baseDatos;
+	}
+
+	public String getFechaCampo() {
+		return fechaCampo;
+	}
+
+	public void setFechaCampo(String fechaCampo) {
+		this.fechaCampo = fechaCampo;
 	}
 
 	public String getFechaInicio() {

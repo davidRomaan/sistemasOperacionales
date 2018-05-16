@@ -162,13 +162,15 @@ public class AuditoriaEJB {
 				throw new ExcepcionNegocio("No hay facturas registradas en el periodo ingresado");
 
 			} else {
+				System.out.println("entro1");
 				for (int i = 0; i < lista.size(); i++) {
-
+					System.out.println("entro2");
 					Usuario us = usuarioEJB.buscarUsu(lista.get(i).getUsuario());
 
 					if (lista.get(i).getUsuario().equals("")) {
-						throw new ExcepcionNegocio("usuario sin cedula");
+						lista.get(i).setUsuario("sin cedula");
 					} else {
+						System.out.println("entro3");
 						DimensionUsuario dimension = new DimensionUsuario();
 						dimension.setTipoUsuario(us.getTipoUsuario().getNombre());
 						dimension.setCedula(us.getCedula());
@@ -188,6 +190,7 @@ public class AuditoriaEJB {
 
 					}
 				}
+				System.out.println("entro4");
 				return listaHecho;
 			}
 
@@ -215,7 +218,7 @@ public class AuditoriaEJB {
 
 		return listaAudit;
 	}
-	
+
 	/**
 	 * Convierte un formato de fecha Calendar a string
 	 * 
@@ -229,8 +232,7 @@ public class AuditoriaEJB {
 		int dia = fecha.get(Calendar.DAY_OF_MONTH);
 		return anio + "-" + mes + "-" + dia;
 	}
-	
-	
+
 	/**
 	 * Convierte una fecha de tipo String a Date
 	 * 

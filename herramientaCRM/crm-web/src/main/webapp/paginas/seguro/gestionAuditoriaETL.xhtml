@@ -42,6 +42,11 @@
 
 
 				</h:selectOneMenu>
+
+				<p:outputLabel id="mask" value="Fecha: " />
+				<p:inputMask id="date" value="#{controladorAuditoriaETL.fechaCampo}"
+					mask="9999-99-99" />
+					
 				<h:selectOneMenu id="bd"
 					value="#{controladorAuditoriaETL.baseDatos}">
 
