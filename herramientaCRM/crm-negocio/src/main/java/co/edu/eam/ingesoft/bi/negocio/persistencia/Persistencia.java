@@ -24,6 +24,7 @@ import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionFactura;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionMunicipio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionPersona;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionProducto;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionUsuario;
 
 @LocalBean
 @Stateless
@@ -688,8 +689,6 @@ public class Persistencia implements Serializable {
 		}
 
 		List<Object> lista = q.getResultList();
-
-		System.out.println("tamanio lista: " + lista.size());
 
 		return lista;
 

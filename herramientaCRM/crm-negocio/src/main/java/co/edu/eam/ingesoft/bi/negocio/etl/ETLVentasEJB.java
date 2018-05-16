@@ -137,6 +137,11 @@ public class ETLVentasEJB {
 			int edadEmpleado = hechoVentas.getEmpleado().getEdad();
 			int edadCliente = hechoVentas.getPersona().getEdad();
 			
+			double precioProducto = hechoVentas.getProducto().getPrecio();
+			if (precioProducto <= 0){
+				throw new ExcepcionNegocio("Debe cambiar el precio del producto de la fila " + fila);
+			}
+			
 			if (edadCliente > 130 || edadEmpleado > 130){
 				throw new ExcepcionNegocio("Debe cambiar la edad de la persona ubicada en la fila " + fila);
 			}
