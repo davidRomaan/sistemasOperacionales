@@ -115,11 +115,8 @@ public class ControladorDWH implements Serializable {
 				} else if (fechaSeleccionada == 1) {
 
 					try {
-
 						hechosVenta = etlVentasEJB.obtenerHechoVentasRollingDia(fechaRolling, bd, hechosVenta);
-						System.out.println("Permer hecho: " + hechosVenta.get(0).getSubtotal());
 						cargaRealizada(bd);
-
 					} catch (ExcepcionNegocio e) {
 						// TODO: handle exception
 						Messages.addFlashGlobalError(e.getMessage());
@@ -130,6 +127,30 @@ public class ControladorDWH implements Serializable {
 
 				} else if (fechaSeleccionada == 2) {
 
+					try{
+					hechosVenta = etlVentasEJB.obtnerHechoVentasRollingMes(fechaRolling, bd, hechosVenta);
+					cargaRealizada(bd);
+					} catch (ExcepcionNegocio e) {
+						// TODO: handle exception
+						Messages.addFlashGlobalError(e.getMessage());
+						cargaNoRealizada(bd);
+					}
+					
+					reload();
+					
+				} else {
+					
+					try{
+						hechosVenta = etlVentasEJB.obtnerHechoVentasRollingAnio(fechaRolling, bd, hechosVenta);
+						cargaRealizada(bd);
+					}catch (ExcepcionNegocio e) {
+						// TODO: handle exception
+						Messages.addFlashGlobalError(e.getMessage());
+						cargaNoRealizada(bd);
+					}
+					
+					reload();
+					
 				}
 
 			} else {

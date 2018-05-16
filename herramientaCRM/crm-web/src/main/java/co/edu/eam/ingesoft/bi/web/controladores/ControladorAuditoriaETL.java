@@ -205,7 +205,7 @@ public class ControladorAuditoriaETL implements Serializable {
 
 		HechoAuditoria hecho = hechoAuditorias.get(posicion);
 
-		if (columna.equalsIgnoreCase("tipo_producto")) {
+		if (columna.equalsIgnoreCase("tipo_usuario")) {
 
 			String cedula = hecho.getUsuario().getCedula();
 
@@ -229,7 +229,7 @@ public class ControladorAuditoriaETL implements Serializable {
 
 				if (hechoAudi.getUsuario().getCedula().equals(cedula)) {
 
-					short edad = (Short) newValue;
+					int edad = (Integer) newValue;
 
 					hechoAudi.getUsuario().setEdad(edad);
 

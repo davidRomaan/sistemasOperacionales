@@ -306,97 +306,6 @@ public class ETLVentasEJB {
 		return listaHechos;
 
 	}
-	
-	public List<Auditoria> listarPorFechaSemana(String fecha, int bd) {
-		em.setBd(bd);
-
-		String[] datos = fecha.split("-");
-		int dia = Integer.parseInt(datos[0]);
-		int mes = Integer.parseInt(datos[1]);
-		int anio = Integer.parseInt(datos[2]);
-
-		int diaDos = 0;
-		int mesDos = 0;
-
-		String nueva31 = "";
-		String nueva30 = "";
-		List<Auditoria> listaAudit = new ArrayList<Auditoria>();
-
-		if (mes == 1 || mes == 3 || mes == 5 || mes == 7 || mes == 8 || mes == 10 || mes == 12) {
-			mesDos = mes + 1;
-			if (dia == 25) {
-				diaDos = 1;
-			}
-			if (dia == 26) {
-				diaDos = 2;
-			}
-			if (dia == 27) {
-				diaDos = 3;
-			}
-			if (dia == 28) {
-				diaDos = 4;
-			}
-			if (dia == 29) {
-				diaDos = 5;
-			}
-			if (dia == 30) {
-				diaDos = 6;
-			}
-			if (dia == 31) {
-				diaDos = 7;
-			}
-			nueva31 = anio + "-" + mesDos + "-" + diaDos;
-
-			List<Object> lista = em.listarFechaSemana(fecha, nueva31);
-			for (int i = 0; i < lista.size(); i++) {
-
-				int cod = (int) (Integer) lista.get(i);
-
-				Auditoria aud = (Auditoria) em.buscar(Auditoria.class, cod);
-				listaAudit.add(aud);
-			}
-
-		}
-		if (mes == 4 || mes == 6 || mes == 9 || mes == 11) {
-			if (dia == 24) {
-				diaDos = 1;
-			}
-			if (dia == 25) {
-				diaDos = 2;
-			}
-			if (dia == 26) {
-				diaDos = 3;
-			}
-			if (dia == 27) {
-				diaDos = 4;
-			}
-			if (dia == 28) {
-				diaDos = 5;
-			}
-			if (dia == 29) {
-				diaDos = 6;
-
-			}
-			if (dia == 30) {
-				diaDos = 7;
-
-			}
-			
-			nueva30 = anio + "-" + mesDos + "-" + diaDos;
-
-			List<Object> lista = em.listarFechaSemana(fecha, nueva30);
-
-			for (int i = 0; i < lista.size(); i++) {
-
-				int cod = (int) (Integer) lista.get(i);
-
-				Auditoria aud = (Auditoria) em.buscar(Auditoria.class, cod);
-				listaAudit.add(aud);
-			}
-
-		}
-		return listaAudit;
-	}
 
 	// ------------------------ Rolling ------------------------------
 
@@ -413,7 +322,100 @@ public class ETLVentasEJB {
 			em.setBd(bd);
 
 			listaHechos = crearHechosVenta(listaFacturas, listaHechos);
-			
+
+		}
+
+		return listaHechos;
+
+	}
+
+	private List<FacturaVenta> obtenerFacturasPorMes(String fecha, int bd) {
+
+		String datos[] = fecha.split("-");
+
+		int mes = Integer.parseInt(datos[1]);
+		int anio = Integer.parseInt(datos[0]);
+
+		List<FacturaVenta> facturas = new ArrayList<FacturaVenta>();
+
+		List<Object> codigos = em.listaFacturasMes(mes, anio, bd);
+
+		for (Object object : codigos) {
+
+			int cod = (Integer) object;
+
+			em.setBd(bd);
+
+			FacturaVenta factura = (FacturaVenta) em.buscar(FacturaVenta.class, cod);
+
+			facturas.add(factura);
+
+		}
+
+		return facturas;
+
+	}
+
+	private List<FacturaVenta> obtenerFacturasPorAnio(String fecha, int bd) {
+
+		String datos[] = fecha.split("-");
+
+		int anio = Integer.parseInt(datos[0]);
+
+		List<FacturaVenta> facturas = new ArrayList<FacturaVenta>();
+
+		List<Object> codigos = em.listaFacturasAnio(anio, bd);
+
+		for (Object object : codigos) {
+
+			int cod = (Integer) object;
+
+			em.setBd(bd);
+
+			FacturaVenta factura = (FacturaVenta) em.buscar(FacturaVenta.class, cod);
+
+			facturas.add(factura);
+
+		}
+
+		return facturas;
+
+	}
+
+	public List<HechoVentas> obtnerHechoVentasRollingMes(String fecha, int bd, List<HechoVentas> listaHechos) {
+
+		List<FacturaVenta> facturas = obtenerFacturasPorMes(fecha, bd);
+
+		if (facturas.size() == 0) {
+
+			throw new ExcepcionNegocio("No hay facturas registradas en el mes ingresado");
+
+		} else {
+
+			em.setBd(bd);
+
+			listaHechos = crearHechosVenta(facturas, listaHechos);
+
+		}
+
+		return listaHechos;
+
+	}
+	
+	public List<HechoVentas> obtnerHechoVentasRollingAnio(String fecha, int bd, List<HechoVentas> listaHechos) {
+
+		List<FacturaVenta> facturas = obtenerFacturasPorAnio(fecha, bd);
+
+		if (facturas.size() == 0) {
+
+			throw new ExcepcionNegocio("No hay facturas registradas en el año ingresado");
+
+		} else {
+
+			em.setBd(bd);
+
+			listaHechos = crearHechosVenta(facturas, listaHechos);
+
 		}
 
 		return listaHechos;

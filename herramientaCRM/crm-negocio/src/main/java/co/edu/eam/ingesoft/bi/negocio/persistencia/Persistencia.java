@@ -764,6 +764,52 @@ public class Persistencia implements Serializable {
 
 	}
 
+	public List<Object> listaFacturasMes(int mes, int anio, int bd) {
+
+		Query q;
+
+		if (bd == 1) {
+
+			String sql = "select id from bi.factura_venta where MONTH(fecha_venta) = ?1 and YEAR(fecha_venta) = ?2";
+			q = emM.createNativeQuery(sql);
+
+		} else {
+
+			String sql = "select id from factura_venta where (extract(MONTH from fecha_venta) = ?1) "
+					+ "and (extract(year from fecha_venta) = ?2)";
+			q = emP.createNativeQuery(sql);
+
+		}
+
+		q.setParameter(1, mes);
+		q.setParameter(2, anio);
+
+		return q.getResultList();
+
+	}
+	
+	public List<Object> listaFacturasAnio(int anio, int bd) {
+
+		Query q;
+
+		if (bd == 1) {
+
+			String sql = "select id from bi.factura_venta where YEAR(fecha_venta) = ?1";
+			q = emM.createNativeQuery(sql);
+
+		} else {
+
+			String sql = "select id from factura_venta where extract(YEAR from fecha_venta) = ?1";
+			q = emP.createNativeQuery(sql);
+
+		}
+
+		q.setParameter(1, anio);
+
+		return q.getResultList();
+
+	}
+
 	// ------------------------------ Gestion del dataWareHouse
 	// -------------------------------
 
@@ -1005,7 +1051,7 @@ public class Persistencia implements Serializable {
 		q.executeUpdate();
 
 	}
-	
+
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void editarDimensionUsuario(String cedula, String tipo_usuario, int edad) {
 
@@ -1030,17 +1076,17 @@ public class Persistencia implements Serializable {
 		q.executeUpdate();
 
 	}
-	
+
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void editarDimensionfactura(int id, double total){
-		
+	public void editarDimensionfactura(int id, double total) {
+
 		String sql = "UPDATE DIMENSION_FACTURA SET total_venta = ?1 WHERE id = ?2";
-		
+
 		Query q = emO.createNativeQuery(sql);
 		q.setParameter(1, total);
 		q.setParameter(2, id);
 		q.executeUpdate();
-		
+
 	}
 
 	public int getBd() {
