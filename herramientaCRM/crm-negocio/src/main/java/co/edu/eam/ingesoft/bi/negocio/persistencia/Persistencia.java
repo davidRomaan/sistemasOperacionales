@@ -3,7 +3,7 @@ package co.edu.eam.ingesoft.bi.negocio.persistencia;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+
 import java.util.List;
 
 import javax.ejb.LocalBean;
@@ -14,7 +14,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import co.edu.eam.ingesoft.bi.negocio.beans.ConexionEJB;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.DetalleVenta;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.FacturaVenta;
@@ -912,6 +911,25 @@ public class Persistencia implements Serializable {
 		return false;
 
 	}
+	
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	public boolean dimensionUsuarioExiste(String cedula) {
+
+		String sql = "SELECT * FROM DIMENSION_USUARIO WHERE cedula = ?1";
+		Query q = emO.createNativeQuery(sql);
+		q.setParameter(1, cedula);
+
+		List<Object> lista = q.getResultList();
+
+		if (lista.size() != 0) {
+			return true;
+		}
+
+		return false;
+
+	}
+	
+	
 
 	/**
 	 * Verifica si existe una dimensi�n que tiene como prmaria un integer

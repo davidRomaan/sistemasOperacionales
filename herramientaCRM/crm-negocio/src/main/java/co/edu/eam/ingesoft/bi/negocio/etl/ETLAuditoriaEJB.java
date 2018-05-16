@@ -2,7 +2,6 @@ package co.edu.eam.ingesoft.bi.negocio.etl;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -11,18 +10,13 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
 import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
-import co.edu.eam.ingesoft.bi.negocio.beans.PersonaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.UsuarioEJB;
 import co.edu.eam.ingesoft.bi.negocio.persistencia.Persistencia;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Auditoria;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.DetalleVenta;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.FacturaVenta;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.Persona;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Usuario;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionUsuario;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoAuditoria;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoVentas;
 
 @LocalBean
 @Stateless
@@ -137,21 +131,36 @@ public class ETLAuditoriaEJB {
 
 	public void cargarDatosDWH(List<HechoAuditoria> hechos) {
 		
+		boolean usuExiste;
+		
 		if (hechos.size() == 0) {
 			
 		}else {
 			
-			for (HechoAuditoria hechoAudi: hechos) {
+			for (HechoAuditoria hechoAudi: hechos) {				
 				
-				String cargo = hechoAudi.getUsuario().getCargo();
-				
-				if (cargo.equals("")){
-					throw new ExcepcionNegocio("Lucho traga penees");
+				if (hechoAudi.getUsuario().getCargo().equals("")){
+					throw new ExcepcionNegocio("El campo cargo no puede quedar vacio");
+				}
+				if (hechoAudi.getUsuario().getEdad() > 130) {
+					throw new ExcepcionNegocio("La edad excede el limite existencial");
+				}
+				if (hechoAudi.getUsuario().getTipoUsuario().equals("")) {
+					throw new ExcepcionNegocio("El campo tipo usuario no puede quedar vacio");
 				}
 				
-				em.crearDimensionUsuario(hechoAudi.getUsuario());
+				usuExiste = em.dimensionUsuarioExiste(hechoAudi.getUsuario().getCedula());
 				
-				em.crearHechoAuditoria(hechoAudi.getAccion(), hechoAudi.getDispositivo(), hechoAudi.getNavegador(), hechoAudi.getFecha(), hechoAudi.getUsuario());
+				if (!usuExiste) {
+					
+					em.crearDimensionUsuario(hechoAudi.getUsuario());
+					em.crearHechoAuditoria(hechoAudi.getAccion(), hechoAudi.getDispositivo(), hechoAudi.getNavegador(), hechoAudi.getFecha(), hechoAudi.getUsuario());
+					
+				} else {
+					
+					em.crearHechoAuditoria(hechoAudi.getAccion(), hechoAudi.getDispositivo(), hechoAudi.getNavegador(), hechoAudi.getFecha(), hechoAudi.getUsuario());
+					
+				}
 				
 			}
 
