@@ -1,5 +1,6 @@
 package co.edu.eam.ingesoft.bi.negocio.beans;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -12,14 +13,17 @@ import javax.ejb.Stateless;
 import co.edu.eam.ingesoft.bi.negocio.persistencia.Persistencia;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Auditoria;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Municipio;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.Usuario;
 
 @LocalBean
 @Stateless
 public class AuditoriaEJB {
-	
-	
+
 	@EJB
 	private Persistencia em;
+	
+	@EJB
+	private UsuarioEJB usuarioEJB;
 
 	private String userAgent = "";
 	private String os = "";
@@ -78,8 +82,7 @@ public class AuditoriaEJB {
 		}
 
 	}
-	
-	
+
 	/**
 	 * 
 	 * @param persona
@@ -89,7 +92,8 @@ public class AuditoriaEJB {
 	 * @param usuario
 	 * @param usuarioAf
 	 */
-	public void crearAuditoria( String referencia, String accion, String descripcion, String usuario, String browserDeta) {
+	public void crearAuditoria(String referencia, String accion, String descripcion, String usuario,
+			String browserDeta) {
 
 		this.browserDetails = browserDeta;
 		userAgent = browserDetails;
@@ -103,17 +107,17 @@ public class AuditoriaEJB {
 		int anio = fechaActual.get(Calendar.YEAR);
 		int minutos = fechaActual.get(Calendar.SECOND);
 		int hora = fechaActual.get(Calendar.HOUR);
-		
+
 		Date horaGuadar = new Date();
 		horaGuadar.setMinutes(minutos);
 		horaGuadar.setHours(hora);
-		
+
 		Calendar fechaGuardar = new GregorianCalendar();
 		fechaGuardar.set(anio, mes, dia);
 		fechaGuardar.setTime(horaGuadar);
-		
+
 		System.out.println(fechaGuardar);
-		
+
 		Auditoria auditoria = new Auditoria();
 		auditoria.setAccion(accion);
 		auditoria.setFechaHora(fechaGuardar);
@@ -121,24 +125,37 @@ public class AuditoriaEJB {
 		auditoria.setDescripcion(descripcion);
 		auditoria.setUsuario(usuario);
 		auditoria.setDispositivo(os);
-		auditoria.setNavegador(browser);	
+		auditoria.setNavegador(browser);
 
 		em.setBd(ConexionEJB.getBd());
 		em.crear(auditoria);
 
 	}
-	
+
 	/**
 	 *
 	 * 
-	 * @param 
-	 * @return 
+	 * @param
+	 * @return
 	 */
 	public List<Auditoria> listarAuditorias(String condicion) {
 		em.setBd(ConexionEJB.getBd());
-		return (List<Auditoria>) (Object) em.listarConParametroString
-				(Auditoria.LISTA_AUDITORIA, condicion);
+		return (List<Auditoria>) (Object) em.listarConParametroString(Auditoria.LISTA_AUDITORIA, condicion);
 
+	}
+
+	public List<Auditoria> listarPorFechaActual(Date fecha) {
+
+		List<Auditoria> lista = (List<Auditoria>) (Object) em
+				.listarConParametroObjeto(Auditoria.LISTA_AUDITORIA_FECHA_ACT, fecha);
+
+		List<Usuario>listaUsuarios = new ArrayList<Usuario>();
+		
+		for(int i=0; i<lista.size(); i++){
+			
+			Usuario us = usuarioEJB.buscarUsu(lista.get(i).getUsuario());
+		}
+		return lista;
 	}
 
 }

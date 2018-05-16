@@ -30,25 +30,25 @@ import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionProducto;
 public class Persistencia implements Serializable {
 
 	/**
-	 * Conexión a MYSQL (1)
+	 * Conexiï¿½n a MYSQL (1)
 	 */
 	@PersistenceContext(unitName = "mysql")
 	private EntityManager emM;
 
 	/**
-	 * Conexión a postgress (2)
+	 * Conexiï¿½n a postgress (2)
 	 */
 	@PersistenceContext(unitName = "postgres")
 	private EntityManager emP;
 
 	/**
-	 * Conexión para Oracle (3)
+	 * Conexiï¿½n para Oracle (3)
 	 */
 	@PersistenceContext(unitName = "oracle")
 	private EntityManager emO;
 
 	/**
-	 * Base de datos en la cual se están realizando las operaciones
+	 * Base de datos en la cual se estï¿½n realizando las operaciones
 	 */
 	private int bd;
 
@@ -206,7 +206,7 @@ public class Persistencia implements Serializable {
 	}
 
 	/**
-	 * Lista con dos parámetros de tipo objeto
+	 * Lista con dos parï¿½metros de tipo objeto
 	 * 
 	 * @param sql
 	 *            Consulta a ejecutar
@@ -246,7 +246,7 @@ public class Persistencia implements Serializable {
 	 * @param sql
 	 *            consulta que se desea ejectar
 	 * @param objeto
-	 *            El objeto parámetro
+	 *            El objeto parï¿½metro
 	 * @return lista de los objetos encontrados
 	 */
 	public List<Object> listarConParametroObjeto(String sql, Object objeto) {
@@ -290,7 +290,7 @@ public class Persistencia implements Serializable {
 	}
 
 	/**
-	 * trae una lista de objetos que reciben un parámetro int
+	 * trae una lista de objetos que reciben un parï¿½metro int
 	 * 
 	 * @param sql
 	 *            consulta que se desea realizar en la bd
@@ -478,11 +478,11 @@ public class Persistencia implements Serializable {
 	}
 
 	/**
-	 * Obtiene el último código de la factura generada a un cliente
+	 * Obtiene el ï¿½ltimo cï¿½digo de la factura generada a un cliente
 	 * 
 	 * @param cedulaCliente
-	 *            cédula del clienteal cual se le generó la factura
-	 * @return el id de la última factura
+	 *            cï¿½dula del clienteal cual se le generï¿½ la factura
+	 * @return el id de la ï¿½ltima factura
 	 */
 	public int codigoUltimaFacturaCliente(String cedulaCliente) {
 		switch (this.bd) {
@@ -561,7 +561,7 @@ public class Persistencia implements Serializable {
 	}
 
 	/**
-	 * Registra un módulo usuario en la base de datos
+	 * Registra un mï¿½dulo usuario en la base de datos
 	 * 
 	 * @param mu
 	 *            modulo usuario que se desea registrar
@@ -596,11 +596,11 @@ public class Persistencia implements Serializable {
 	 * Lista las ventas realizadas en una fecha determinada
 	 * 
 	 * @param dia
-	 *            día de la venta
+	 *            dï¿½a de la venta
 	 * @param mes
 	 *            mes de la venta
 	 * @param anio
-	 *            año de la venta
+	 *            aï¿½o de la venta
 	 * @return las ventas de la fecha ingresada
 	 */
 	public List<FacturaVenta> listarFacturasPorFecha(String sql, int dia, int mes, int anio) {
@@ -658,6 +658,42 @@ public class Persistencia implements Serializable {
 		return lista;
 
 	}
+	
+	/**
+	 * 
+	 * @param fechaInicio
+	 * @param fechaFin
+	 * @return
+	 */
+	public List<Object> listarAuditoriasIntervaloFecha (String fechaInicio, String fechaFin){
+		
+		String sql = "";		
+		Query q;
+		
+		switch (this.bd){
+		
+		case 1:
+			sql = "SELECT id FROM bi.AUDITORIA WHERE fecha_hora BETWEEN " + "'" + fechaInicio + 
+			"' AND " + "'" +  fechaFin +"'";
+			q = emM.createNativeQuery(sql);
+			break;
+			
+		case 2:
+			sql = "SELECT id FROM AUDITORIA WHERE fecha_hora BETWEEN " + "'" + fechaInicio + 
+			"' AND " + "'" +  fechaFin +"'";
+			q = emP.createNativeQuery(sql);
+			break;
+			
+		default:
+			throw new ExcepcionNegocio("La base de datos a la cual intenta acceder no existe");
+		
+		}
+		
+		List<Object> lista = q.getResultList();
+		
+		return lista;
+		
+	}
 
 	// ------------------------------ Gestion del dataWareHouse
 	// -------------------------------
@@ -670,15 +706,15 @@ public class Persistencia implements Serializable {
 	 * @param subtotal
 	 *            subtotal de la compra
 	 * @param idFactura
-	 *            código de la factua
+	 *            cï¿½digo de la factua
 	 * @param cedulaCliente
-	 *            cédula del cliente que compró
+	 *            cï¿½dula del cliente que comprï¿½
 	 * @param idMunicipio
-	 *            código del municipio donde se realizó la venta
+	 *            cï¿½digo del municipio donde se realizï¿½ la venta
 	 * @param idProducto
-	 *            código del procuto que se vendió
+	 *            cï¿½digo del procuto que se vendiï¿½
 	 * @param cedulaEmpleado
-	 *            cédula del empleado que realizó la venta
+	 *            cï¿½dula del empleado que realizï¿½ la venta
 	 */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void crearHechoVentas(int unidades, double subtotal, int idFactura, String cedulaCliente, int idMunicipio,
@@ -700,10 +736,10 @@ public class Persistencia implements Serializable {
 	}
 
 	/**
-	 * Crea una dimensión de producto en la bd
+	 * Crea una dimensiï¿½n de producto en la bd
 	 * 
 	 * @param dimension
-	 *            dimensión del procuto que se desea registrar
+	 *            dimensiï¿½n del procuto que se desea registrar
 	 */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void crearDimensionProducto(DimensionProducto dimension) {
@@ -720,10 +756,10 @@ public class Persistencia implements Serializable {
 	}
 
 	/**
-	 * Crea una dimensión de persona en la bd oracle
+	 * Crea una dimensiï¿½n de persona en la bd oracle
 	 * 
 	 * @param dimension
-	 *            dimensión de la persona que se desea registrar
+	 *            dimensiï¿½n de la persona que se desea registrar
 	 */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void crearDimensionPersona(DimensionPersona dimension) {
@@ -762,10 +798,10 @@ public class Persistencia implements Serializable {
 	}
 
 	/**
-	 * Crea una dimensión de un municipio
+	 * Crea una dimensiï¿½n de un municipio
 	 * 
 	 * @param dimension
-	 *            dimnesión del muncipio que se desea crear
+	 *            dimnesiï¿½n del muncipio que se desea crear
 	 */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void crearDimensionMunicipio(DimensionMunicipio dimension) {
