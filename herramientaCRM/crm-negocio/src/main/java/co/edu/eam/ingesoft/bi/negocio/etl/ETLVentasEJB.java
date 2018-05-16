@@ -85,15 +85,13 @@ public class ETLVentasEJB {
 			
 			em.setBd(bd);
 
-			// Se recorre la segunda lista obtenida de postgres
+			// Se recorre la lista obtenida de la bd
 			for (FacturaVenta facturaVenta : listaFacturasP) {
 
 				List<DetalleVenta> detalles = (List<DetalleVenta>) (Object) em
 						.listarConParametroObjeto(DetalleVenta.LISTAR_DETALLES_FACTURA, facturaVenta);
 
 				for (DetalleVenta detalleVenta : detalles) {
-
-					System.out.println("Detalle " + detalleVenta.getSubtotal());
 					
 					HechoVentas hecho = new HechoVentas();
 					hecho.setEmpleado(crearDimensionEmpleado(facturaVenta));
@@ -106,42 +104,68 @@ public class ETLVentasEJB {
 					
 					listaHechos.add(hecho);
 
-					// crearDimensionesVenta(facturaVenta, detalleVenta);
-					// crearHechoVentas(facturaVenta, detalleVenta);
-
 				}
 			}
 		}
 		
 		return listaHechos;
-
-//		// Lista de facturas registradas en la bd mysql
-//		List<FacturaVenta> listaFacturas = listaVentasPeriodo(fechaInicio, fechaFin, 1);
-//
-//		if (listaFacturas.size() == 0) {
-//
-//			// throw new ExcepcionNegocio("No hay ventas registradas en el
-//			// periodo ingresado");
-//			System.out.println("No hay datos MYSQL");
-//
-//		} else {
-//
-//			// Se recorre la primera lista obtenida de mysql
-//			for (FacturaVenta facturaVenta : listaFacturas) {
-//
-//				List<DetalleVenta> detalles = (List<DetalleVenta>) (Object) em
-//						.listarConParametroObjeto(DetalleVenta.LISTAR_DETALLES_FACTURA, facturaVenta);
-//
-//				for (DetalleVenta detalleVenta : detalles) {
-//
-//					// crearDimensionesVenta(facturaVenta, detalleVenta);
-//					// crearHechoVentas(facturaVenta, detalleVenta);
-//
-//				}
-//			}
-//
-//		}
-
+		
+	}
+	
+	public void cargarDatosDWH(List<HechoVentas> hechos){
+		
+		int fila = 0;
+		
+		for (HechoVentas hechoVentas : hechos) {
+			
+			fila++;
+			
+			int unidades = hechoVentas.getUnidades();
+			double subtotal = hechoVentas.getSubtotal();
+			int idFactura = hechoVentas.getFactura().getId();
+			String cedulaCliente = hechoVentas.getPersona().getCedula();
+			int idMunicipio = hechoVentas.getMunicipio().getId();
+			int idProducto = hechoVentas.getProducto().getId();
+			String cedulaEmpleado = hechoVentas.getEmpleado().getCedula();
+			
+			int edadEmpleado = hechoVentas.getEmpleado().getEdad();
+			int edadCliente = hechoVentas.getPersona().getEdad();
+			
+			if (edadCliente > 130 || edadEmpleado > 130){
+				throw new ExcepcionNegocio("Debe cambiar la edad de la persona ubicada en la fila " + fila);
+			}
+			
+			if (!em.dimensionExiste(idFactura, "DIMENSION_FACTURA")){
+				em.crearDimensionFactura(hechoVentas.getFactura());
+			}
+						
+			if (!em.dimensionPersonaExiste(cedulaEmpleado)){
+				//em.eliminarDimensionPersona(cedulaEmpleado);
+				em.crearDimensionPersona(hechoVentas.getEmpleado());
+			} 			
+			//em.crearDimensionPersona(hechoVentas.getEmpleado());
+			
+			if (!em.dimensionExiste(idProducto, "DIMENSION_PRODUCTO")){
+				//em.eliminarDimensionProducto(idProducto);
+				em.crearDimensionProducto(hechoVentas.getProducto());
+			}
+			//em.crearDimensionProducto(hechoVentas.getProducto());
+			
+			if (!em.dimensionExiste(idMunicipio, "DIMENSION_MUNICIPIO")){
+				em.crearDimensionMunicipio(hechoVentas.getMunicipio());
+			}
+			
+			if (!em.dimensionPersonaExiste(cedulaCliente)){
+				//em.eliminarDimensionPersona(cedulaCliente);
+				em.crearDimensionPersona(hechoVentas.getPersona());
+			}						
+//			em.crearDimensionPersona(hechoVentas.getPersona());
+			
+			em.crearHechoVentas(unidades, subtotal, idFactura, cedulaCliente, 
+					idMunicipio, idProducto, cedulaEmpleado);
+			
+		}
+		
 	}
 
 	/**
@@ -176,25 +200,6 @@ public class ETLVentasEJB {
 	}
 
 	/**
-	 * Crea las dimensiones asocioadas al hecho venta
-	 * 
-	 * @param facturaVenta
-	 *            factura donde se encuentra la información de la venta
-	 * @param detalleVenta
-	 *            detalles de venta de la factura
-	 */
-	private void crearDimensionesVenta(FacturaVenta facturaVenta, DetalleVenta detalleVenta) {
-
-		crearDimensionCliente(facturaVenta);
-		crearDimensionEmpleado(facturaVenta);
-		crearDimensionesVenta(facturaVenta, detalleVenta);
-		crearDimensionFactura(facturaVenta);
-		crearDimensionMunicipio(facturaVenta);
-		crearDimensionProducto(detalleVenta);
-
-	}
-
-	/**
 	 * Crea una dimensión de factura que se agregará al hecho de venta
 	 * 
 	 * @param facturaVenta
@@ -208,7 +213,6 @@ public class ETLVentasEJB {
 		dimensionFactura.setTotalVenta(facturaVenta.getTotal());
 
 		return dimensionFactura;
-		//em.crearDimensionFactura(dimensionFactura);
 
 	}
 
@@ -227,12 +231,11 @@ public class ETLVentasEJB {
 		dimensionMunicipio.setNombre(municipio.getNombre());
 
 		return dimensionMunicipio;
-		//em.crearDimensionMunicipio(dimensionMunicipio);
 
 	}
 
 	/**
-	 * crea la deimension de tipo empleado
+	 * crea la dimension de tipo empleado
 	 * 
 	 * @param facturaVenta
 	 *            factura en la cual esta el empleado registrado
@@ -249,7 +252,6 @@ public class ETLVentasEJB {
 		dimensionEmpleado.setTipoPersona("empleado");
 
 		return dimensionEmpleado;
-		//em.crearDimensionPersona(dimensionEmpleado);
 
 	}
 
@@ -262,7 +264,7 @@ public class ETLVentasEJB {
 	private DimensionPersona crearDimensionCliente(FacturaVenta facturaVenta) {
 
 		DimensionPersona dimensionCliente = new DimensionPersona();
-		Persona cliente = facturaVenta.getEmpleadoId();
+		Persona cliente = facturaVenta.getClienteId();
 		dimensionCliente.setNombre(cliente.getNombre());
 		dimensionCliente.setApellido(cliente.getApellido());
 		dimensionCliente.setCedula(cliente.getCedula());
@@ -271,7 +273,6 @@ public class ETLVentasEJB {
 		dimensionCliente.setTipoPersona("cliente");
 
 		return dimensionCliente;
-		//em.crearDimensionPersona(dimensionCliente);
 
 	}
 
@@ -291,7 +292,6 @@ public class ETLVentasEJB {
 		dimensionProducto.setTipoProducto(producto.getTipoProducto().getNombre());
 
 		return dimensionProducto;
-		//em.crearDimensionProducto(dimensionProducto);
 
 	}
 
@@ -303,6 +303,10 @@ public class ETLVentasEJB {
 	 * @return la edad de la persona
 	 */
 	public int calcularEdad(String fechaNacimiento) {
+		
+		if (fechaNacimiento.equals("")){
+			return 2018;
+		}
 
 		String fecha[] = fechaNacimiento.split("/");
 		int anio = Integer.parseInt(fecha[2]);

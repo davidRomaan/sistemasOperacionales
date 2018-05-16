@@ -111,7 +111,7 @@
 					id="tfcedulaCliente" />
 
 				<p:commandButton value="Buscar" process="@this,panelCedula"
-					update="panelDatosCliente" id="btnBuscarCedula"
+					update="panelDatosCliente,panelVenta" id="btnBuscarCedula"
 					action="#{controladorVentas.buscarCliente}" />
 
 			</h:panelGrid>
@@ -175,8 +175,8 @@
 
 				<p:commandButton value="Registrar"
 					rendered="#{controladorVentas.clienteExiste}"
-					process="@this,panelCedula,panelDatosCliente"
-					update="@this,panelCedula"
+					process="@this,panelCedula,panelDatosCliente,panelVenta"
+					update="@this,panelCedula,panelVenta"
 					action="#{controladorVentas.registrarCliente}" />
 
 			</h:panelGrid>
