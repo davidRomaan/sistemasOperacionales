@@ -42,27 +42,27 @@ public class ControladorAuditoriaETL implements Serializable {
 
 	private String fechaInicio;
 	private String fechaFin;
-	
+
 	private boolean datosPostgresCargados;
 	private boolean datosMysqlCargados;
-	
+
 	private List<HechoAuditoria> hechoAuditorias;
-	
+
 	@EJB
 	private AuditoriaEJB auditoriaEJB;
-	
+
 	@EJB
 	private ETLAuditoriaEJB auditoriaETL;
-	
+
 	@EJB
 	private VentaEJB ventaEJB;
+
 	@PostConstruct
 	private void inicializarCampos() {
 		hechoAuditorias = new ArrayList<HechoAuditoria>();
 		datosPostgresCargados = false;
 		datosMysqlCargados = false;
 	}
-
 
 	// Para identificar si se seleccion� la carga como tipo rolling
 	private boolean rollingSeleccionado;
@@ -83,9 +83,10 @@ public class ControladorAuditoriaETL implements Serializable {
 		}
 		if (fechaSeleccionada.equals("1")) {
 			try {
-				
-				listaHechoAct = auditoriaEJB.listarFechaActualAuditoria(baseDatos,fechaCampo);
-				System.out.println(listaHechoAct.get(0).getUsuario() +"-----------------------------------------------");
+
+				listaHechoAct = auditoriaEJB.listarFechaActualAuditoria(baseDatos, fechaCampo);
+				System.out
+						.println(listaHechoAct.get(0).getUsuario() + "-----------------------------------------------");
 			} catch (Exception e) {
 				e.getMessage();
 			}
@@ -98,7 +99,7 @@ public class ControladorAuditoriaETL implements Serializable {
 
 		}
 	}
-	
+
 	/**
 	 * Carga los datos
 	 */
@@ -120,7 +121,8 @@ public class ControladorAuditoriaETL implements Serializable {
 		} else {
 
 			try {
-				hechoAuditorias = auditoriaETL.obtenerDatosHechoVentasAcumulacionSimple(fecha1, fecha2, bd, hechoAuditorias);
+				hechoAuditorias = auditoriaETL.obtenerDatosHechoVentasAcumulacionSimple(fecha1, fecha2, bd,
+						hechoAuditorias);
 				Messages.addFlashGlobalInfo("Datos cargados exitosamente");
 				if (bd == 1) {
 					datosMysqlCargados = true;
@@ -141,7 +143,7 @@ public class ControladorAuditoriaETL implements Serializable {
 		}
 
 	}
-	
+
 	/**
 	 * Carga los datos al data warehouse
 	 */
@@ -164,17 +166,65 @@ public class ControladorAuditoriaETL implements Serializable {
 		}
 
 	}
-	
+
+	/**
+	 * Verifica el cambio que se realiz� y realiza el cambio en todas los datos
+	 * relacionados
+	 * 
+	 * @param posicion
+	 * @param columna
+	 * @param newValue
+	 */
+	private void verificarCambio(int posicion, String columna, Object newValue) {
+
+		HechoAuditoria hecho = hechoAuditorias.get(posicion);
+
+		if (columna.equalsIgnoreCase("tipo_producto")) {
+
+			String cedula = hecho.getUsuario().getCedula();
+
+			for (HechoAuditoria hechoAudi : hechoAuditorias) {
+
+				if (hechoAudi.getUsuario().getCedula().equals(cedula)) {
+
+					String tipoUsuario = (String) newValue;
+
+					hechoAudi.getUsuario().setTipoUsuario(tipoUsuario);
+
+				}
+
+			} 
+
+		} else {
+
+			String cedula = hecho.getUsuario().getCedula();
+
+			for (HechoAuditoria hechoAudi : hechoAuditorias) {
+
+				if (hechoAudi.getUsuario().getCedula().equals(cedula)) {
+
+					short edad = (Short) newValue;
+
+					hechoAudi.getUsuario().setEdad(edad);
+
+				}
+
+			}
+
+		}
+
+	}
+
 	public void onCellEdit(CellEditEvent event) {
-        Object oldValue = event.getOldValue();
-        Object newValue = event.getNewValue();
-         
-        if(newValue != null && !newValue.equals(oldValue)) {
-            Messages.addFlashGlobalInfo("Se ha editado correctamente");
-            reload();
-        }
-    }
-	
+		Object oldValue = event.getOldValue();
+		Object newValue = event.getNewValue();
+
+		if (newValue != null && !newValue.equals(oldValue)) {
+			Messages.addFlashGlobalInfo("Se ha editado correctamente");
+			reload();
+		}
+	}
+
 	/**
 	 * Vac�a la tabla de hechos de ventas
 	 */
@@ -308,9 +358,5 @@ public class ControladorAuditoriaETL implements Serializable {
 	public void setVentaEJB(VentaEJB ventaEJB) {
 		this.ventaEJB = ventaEJB;
 	}
-	
-	
-	
-	
-	
+
 }
