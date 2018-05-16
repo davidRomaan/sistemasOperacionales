@@ -116,6 +116,16 @@ public class ControladorAuditoriaETL implements Serializable {
 		reload();
 	}
 
+	
+	public void cargarDat(){
+		
+		auditoriaETL.cargarDatosOracle(listaHechoAct);
+		Messages.addFlashGlobalInfo("se cargo correctamente");
+
+	}
+	
+	
+	
 	/**
 	 * Carga los datos
 	 */
@@ -236,6 +246,7 @@ public class ControladorAuditoriaETL implements Serializable {
 		Object newValue = event.getNewValue();
 
 		if (newValue != null && !newValue.equals(oldValue)) {
+			verificarCambio(event.getRowIndex(), event.getColumn().getHeaderText(), newValue);
 			Messages.addFlashGlobalInfo("Se ha editado correctamente");
 			reload();
 		}
