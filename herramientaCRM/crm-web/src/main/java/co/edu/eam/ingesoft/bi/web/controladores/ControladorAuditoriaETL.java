@@ -117,18 +117,12 @@ public class ControladorAuditoriaETL implements Serializable {
 	/**
 	 * Carga los datos
 	 */
-	public void cargar() {
+	public void extraer() {
 
 		Calendar fecha1 = auditoriaEJB.convertirFechaStrintADate(fechaInicio);
 		Calendar fecha2 = auditoriaEJB.convertirFechaStrintADate(fechaFin);
 
-		int bd;
-
-		if (base.equalsIgnoreCase("mysql")) {
-			bd = 1;
-		} else {
-			bd = 2;
-		}
+		int bd = baseDatos;
 
 		if (bd == 1 && datosMysqlCargados) {
 
@@ -164,6 +158,29 @@ public class ControladorAuditoriaETL implements Serializable {
 
 	}
 
+	/**
+	 * Carga los datos al data warehouse
+	 */
+	public void cargar() {
+
+		if (hechoAuditorias.size() == 0) {
+
+			Messages.addFlashGlobalError("No hay datos para cargar");
+
+		} else {
+
+			try {
+				auditoriaETL.cargarDatosDWH(hechoAuditorias);
+				Messages.addFlashGlobalInfo("Se han cargado los datos exitosamente");
+				vaciarTabla();
+			} catch (ExcepcionNegocio e) {
+				Messages.addFlashGlobalError(e.getMessage());
+			}
+
+		}
+
+	}
+	
 	public void onCellEdit(CellEditEvent event) {
 		Object oldValue = event.getOldValue();
 		Object newValue = event.getNewValue();
@@ -185,6 +202,19 @@ public class ControladorAuditoriaETL implements Serializable {
 			semanaSeleccionada = true;
 		}
 		reload();
+	}
+	
+	/**
+	 * Vac�a la tabla de hechos de ventas
+	 */
+	public void vaciarTabla() {
+
+		hechoAuditorias = new ArrayList<HechoAuditoria>();
+		datosMysqlCargados = false;
+		datosPostgresCargados = false;
+
+		reload();
+
 	}
 
 	public void gestionarCarga() {

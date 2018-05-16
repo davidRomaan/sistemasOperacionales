@@ -138,16 +138,68 @@ public class ControladorDWH implements Serializable {
         Object newValue = event.getNewValue();
          
         if(newValue != null && !newValue.equals(oldValue)) {
-        	System.out.println("Columna " + event.getColumn().getColspan());
-        	System.out.println("Fila " + event.getRowIndex());
+        	String columna = event.getColumn().getHeaderText();
+        	verificarCambio(event.getRowIndex(), columna, newValue);
             Messages.addFlashGlobalInfo("Se ha editado correctamente");
             reload();
         }
     }
 	
-//	private void calcularSubtotal(int fila){
-//		
-//	}
+	/**
+	 * Verifica el cambio que se realizó y realiza el cambio en todas los datos relacionados
+	 * @param posicion
+	 * @param columna
+	 * @param newValue
+	 */
+	private void verificarCambio(int posicion, String columna, Object newValue){
+		
+		HechoVentas hecho = hechosVenta.get(posicion);
+		
+		if (columna.equalsIgnoreCase("precio")){
+			
+			int idProducto = hecho.getProducto().getId();
+			
+			double total = 0;
+			
+			for (HechoVentas hechoVentas : hechosVenta) {
+				
+				if (hechoVentas.getProducto().getId() == idProducto){
+					
+					double precioNuevo = (Double) newValue;
+					
+					hechoVentas.getProducto().setPrecio(precioNuevo);
+					
+					double subtotal = precioNuevo * hechoVentas.getUnidades();
+					
+					hechoVentas.setSubtotal(subtotal);
+					
+					total += subtotal;
+					
+				}
+				
+			}
+			
+			hecho.getFactura().setTotalVenta(total);
+			
+		} else {
+			
+			String cedula = hecho.getPersona().getCedula();
+			
+			for (HechoVentas hechoVentas : hechosVenta) {
+				
+				if (hechoVentas.getPersona().getCedula().equals(cedula)){
+					
+					short edad = (Short) newValue;
+					
+					hechoVentas.getPersona().setEdad(edad);
+					
+				}
+				
+			}
+			
+		}
+		
+	}
 
 	/**
 	 * Carga los datos al data warehouse

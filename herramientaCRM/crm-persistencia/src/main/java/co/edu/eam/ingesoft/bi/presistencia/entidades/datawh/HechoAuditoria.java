@@ -10,7 +10,7 @@ public class HechoAuditoria implements Serializable {
 	private String navegador;
 	private Calendar fecha;
 	private DimensionUsuario usuario;
-	
+
 	public HechoAuditoria() {
 		// TODO Auto-generated constructor stub
 	}
@@ -23,6 +23,12 @@ public class HechoAuditoria implements Serializable {
 		this.navegador = navegador;
 		this.fecha = fecha;
 		this.usuario = usuario;
+	}
+
+	public String getFechaHora() {
+
+		return this.fecha.get(Calendar.YEAR) + "/" + this.fecha.get(Calendar.MONTH) + "/"
+				+ this.fecha.get(Calendar.DAY_OF_MONTH);
 	}
 
 	public String getAccion() {
@@ -64,7 +70,5 @@ public class HechoAuditoria implements Serializable {
 	public void setUsuario(DimensionUsuario usuario) {
 		this.usuario = usuario;
 	}
-	
-	
-	
+
 }

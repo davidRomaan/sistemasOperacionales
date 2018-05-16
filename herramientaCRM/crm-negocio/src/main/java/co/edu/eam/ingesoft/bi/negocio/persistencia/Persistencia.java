@@ -2,7 +2,8 @@ package co.edu.eam.ingesoft.bi.negocio.persistencia;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
+
 import java.util.List;
 
 import javax.ejb.LocalBean;
@@ -13,7 +14,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import co.edu.eam.ingesoft.bi.negocio.beans.ConexionEJB;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.DetalleVenta;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.FacturaVenta;
@@ -795,6 +795,30 @@ public class Persistencia implements Serializable {
 		q.executeUpdate();
 
 	}
+	
+	/**
+	 * 
+	 * 
+	 * @param accion
+	 * @param dispositivo
+	 * @param navegador
+	 * @param fecha
+	 * @param usuario
+	 */
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void crearHechoAuditoria(String accion, String dispositivo, String navegador, Calendar fecha, DimensionUsuario usuario) {
+
+		String sql = "INSERT INTO HECHO_AUDITORIA (accion, dispositivo, navegador, fecha, cedula_usuario) VALUES (?1,?2,?3,?4,?5)";
+
+		Query q = emO.createNativeQuery(sql);
+		q.setParameter(1, accion);
+		q.setParameter(2, dispositivo);
+		q.setParameter(3, navegador);
+		q.setParameter(4, fecha);
+		q.setParameter(5, usuario.getCedula());
+		q.executeUpdate();
+
+	}
 
 	/**
 	 * Crea una dimensi�n de producto en la bd
@@ -850,7 +874,7 @@ public class Persistencia implements Serializable {
 
 	
 	
-		String sql = "INSERT INTO DIMENSION_PERSONA (cedula, nombre, apellido, genero, edad, tipo_usuario, cargo) "
+		String sql = "INSERT INTO DIMENSION_USUARIO (cedula, nombre, apellido, genero, edad, tipo_usuario, cargo) "
 				+ "VALUES (?1,?2,?3,?4,?5,?6,?7)";
 
 		Query q = emO.createNativeQuery(sql);
@@ -919,6 +943,25 @@ public class Persistencia implements Serializable {
 		return false;
 
 	}
+	
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	public boolean dimensionUsuarioExiste(String cedula) {
+
+		String sql = "SELECT * FROM DIMENSION_USUARIO WHERE cedula = ?1";
+		Query q = emO.createNativeQuery(sql);
+		q.setParameter(1, cedula);
+
+		List<Object> lista = q.getResultList();
+
+		if (lista.size() != 0) {
+			return true;
+		}
+
+		return false;
+
+	}
+	
+	
 
 	/**
 	 * Verifica si existe una dimensi�n que tiene como prmaria un integer
@@ -947,20 +990,21 @@ public class Persistencia implements Serializable {
 	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void eliminarDimensionPersona(String cedula) {
+	public void editarDimensionPersona(String cedula, int edad) {
 
-		String sql = "DELETE FROM DIMENSION_PERSONA WHERE cedula = ?1";
+		String sql = "UPDATE DIMENSION_PERSONA SET edad = ?1 WHERE cedula = ?2";
 
 		Query q = emO.createNativeQuery(sql);
-		q.setParameter(1, cedula);
+		q.setParameter(1, edad);
+		q.setParameter(2, cedula);
 		q.executeUpdate();
 
 	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void eliminarDimensionProducto(int id) {
+	public void editarDimensionProducto(int id, double precio) {
 
-		String sql = "DELETE FROM DIMENSION_PRODUCTO WHERE id = ?1";
+		String sql = "UPDATE DIMENSION_PRODUCTO SET precio = ?1 WHERE id = ?2";
 
 		Query q = emO.createNativeQuery(sql);
 		q.setParameter(1, id);

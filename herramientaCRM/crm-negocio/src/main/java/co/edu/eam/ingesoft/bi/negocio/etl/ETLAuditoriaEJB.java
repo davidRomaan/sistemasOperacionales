@@ -2,7 +2,6 @@ package co.edu.eam.ingesoft.bi.negocio.etl;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -11,33 +10,26 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
 import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
-import co.edu.eam.ingesoft.bi.negocio.beans.PersonaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.UsuarioEJB;
 import co.edu.eam.ingesoft.bi.negocio.persistencia.Persistencia;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Auditoria;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.DetalleVenta;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.FacturaVenta;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.Persona;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Usuario;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionUsuario;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoAuditoria;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoVentas;
 
 @LocalBean
 @Stateless
 public class ETLAuditoriaEJB {
 
-	
 	@EJB
 	private Persistencia em;
-	
+
 	@EJB
 	private AuditoriaEJB auditoriaEJB;
-	
+
 	@EJB
 	private UsuarioEJB usuarioEJB;
-	
 
 	public List<Auditoria> listaVentasPeriodo(Calendar fechaInicio, Calendar fechaFin, int bd) {
 
@@ -62,8 +54,7 @@ public class ETLAuditoriaEJB {
 
 		return listaFacturas;
 	}
-	
-	
+
 	/**
 	 * Obtiene todos los datos asociados a un hecho venta
 	 * 
@@ -74,7 +65,7 @@ public class ETLAuditoriaEJB {
 	 */
 	public List<HechoAuditoria> obtenerDatosHechoVentasAcumulacionSimple(Calendar fechaInicio, Calendar fechaFin,
 			int bd, List<HechoAuditoria> listaHechos) {
-		
+
 		// Lista de facturas registradas en la bd
 		List<Auditoria> audi = listaVentasPeriodo(fechaInicio, fechaFin, bd);
 
@@ -83,15 +74,15 @@ public class ETLAuditoriaEJB {
 			throw new ExcepcionNegocio("No hay auditorias registradas en el periodo ingresado");
 
 		} else {
-			
+
 			em.setBd(bd);
 
 			// Se recorre la segunda lista obtenida de postgres
 			for (Auditoria auditorias : audi) {
-				
+
 				String ced = auditorias.getUsuario();
 				Usuario per = usuarioEJB.buscarUsu(ced);
-				
+
 				DimensionUsuario dimUsu = new DimensionUsuario();
 				dimUsu.setNombre(per.getNombre());
 				dimUsu.setApellido(per.getApellido());
@@ -100,26 +91,24 @@ public class ETLAuditoriaEJB {
 				dimUsu.setEdad(calcularEdad(per.getFechaNacimiento()));
 				dimUsu.setGenero(per.getGenero().name());
 				dimUsu.setTipoUsuario(per.getTipoUsuario().getNombre());
-				
+
 				HechoAuditoria hechoAudi = new HechoAuditoria();
 				hechoAudi.setAccion(auditorias.getAccion());
 				hechoAudi.setDispositivo(auditorias.getDispositivo());
 				hechoAudi.setNavegador(auditorias.getNavegador());
 				hechoAudi.setUsuario(dimUsu);
+
 				hechoAudi.setFecha(auditorias.getFechaHora());
-				
+
 				listaHechos.add(hechoAudi);
-				
-				
-				
+
 			}
 		}
-		
+
 		return listaHechos;
 
 	}
-	
-	
+
 	/**
 	 * Calcula la edad de una persona
 	 * 
@@ -140,5 +129,44 @@ public class ETLAuditoriaEJB {
 		return edad;
 
 	}
-	
+
+	public void cargarDatosDWH(List<HechoAuditoria> hechos) {
+
+		boolean usuExiste;
+		List<String> listaCed = new ArrayList();
+
+		if (hechos.size() == 0) {
+
+		} else {
+
+			for (HechoAuditoria hechoAudi : hechos) {
+
+				if (hechoAudi.getUsuario().getCargo().equals("")) {
+					throw new ExcepcionNegocio("El campo cargo no puede quedar vacio");
+				}
+				if (hechoAudi.getUsuario().getEdad() > 130) {
+					throw new ExcepcionNegocio("La edad excede el limite existencial");
+				}
+				if (hechoAudi.getUsuario().getTipoUsuario().equals("")) {
+					throw new ExcepcionNegocio("El campo tipo usuario no puede quedar vacio");
+				}
+
+				usuExiste = em.dimensionUsuarioExiste(hechoAudi.getUsuario().getCedula());
+				
+				String cedula = hechoAudi.getUsuario().getCedula();
+
+				if (!usuExiste && !listaCed.contains(cedula)) {
+					em.crearDimensionUsuario(hechoAudi.getUsuario());
+					listaCed.add(cedula);
+				}
+
+				em.crearHechoAuditoria(hechoAudi.getAccion(), hechoAudi.getDispositivo(), hechoAudi.getNavegador(),
+						hechoAudi.getFecha(), hechoAudi.getUsuario());
+
+			}
+
+		}
+
+	}
+
 }
