@@ -121,10 +121,8 @@
 						action="#{controladorAuditoriaETL.cargar}" style="align:center" />
 
 				</h:panelGrid>
-
-			</h:panelGrid>
-			
-			<h:panelGrid id="panelTabla">
+				
+				<h:panelGrid id="panelTabla">
 
 				<p:dataTable id="tablaHechos" value="#{controladorAuditoriaETL.hechoAuditorias}"
 					var="hecho" border="1" scrollable="true" scrollWidth="80%"
@@ -208,12 +206,14 @@
 				</p:dataTable>
 
 			</h:panelGrid>
+
+			</h:panelGrid>
 			<br />
 
 			<h:panelGrid id="panelBotonCarga">
 
 				<p:commandButton id="btnCargaDatos" value="Cargar Datos"
-					process="@this,panelIntervalo,panelDatos,panelValidacion,panelBD,panelTabla"
+					process="@this"
 					update="panelTabla" action="#{controladorAuditoriaETL.cargar}" />
 
 			</h:panelGrid>
