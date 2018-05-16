@@ -20,6 +20,7 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
 import org.omnifaces.util.Messages;
+import org.primefaces.event.CellEditEvent;
 
 import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.VentaEJB;
@@ -41,7 +42,6 @@ public class ControladorAuditoriaETL implements Serializable {
 
 	private String fechaInicio;
 	private String fechaFin;
-	private String base;
 	
 	private boolean datosPostgresCargados;
 	private boolean datosMysqlCargados;
@@ -107,13 +107,7 @@ public class ControladorAuditoriaETL implements Serializable {
 		Calendar fecha1 = auditoriaEJB.convertirFechaStrintADate(fechaInicio);
 		Calendar fecha2 = auditoriaEJB.convertirFechaStrintADate(fechaFin);
 
-		int bd;
-
-		if (base.equalsIgnoreCase("mysql")) {
-			bd = 1;
-		} else {
-			bd = 2;
-		}
+		int bd = baseDatos;
 
 		if (bd == 1 && datosMysqlCargados) {
 
@@ -265,14 +259,6 @@ public class ControladorAuditoriaETL implements Serializable {
 
 	public void setFechaFin(String fechaFin) {
 		this.fechaFin = fechaFin;
-	}
-
-	public String getBase() {
-		return base;
-	}
-
-	public void setBase(String base) {
-		this.base = base;
 	}
 
 	public boolean isDatosPostgresCargados() {

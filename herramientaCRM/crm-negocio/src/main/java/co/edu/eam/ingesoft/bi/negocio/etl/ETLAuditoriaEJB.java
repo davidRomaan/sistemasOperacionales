@@ -143,6 +143,12 @@ public class ETLAuditoriaEJB {
 			
 			for (HechoAuditoria hechoAudi: hechos) {
 				
+				String cargo = hechoAudi.getUsuario().getCargo();
+				
+				if (cargo.equals("")){
+					throw new ExcepcionNegocio("Lucho traga penees");
+				}
+				
 				em.crearDimensionUsuario(hechoAudi.getUsuario());
 				
 				em.crearHechoAuditoria(hechoAudi.getAccion(), hechoAudi.getDispositivo(), hechoAudi.getNavegador(), hechoAudi.getFecha(), hechoAudi.getUsuario());

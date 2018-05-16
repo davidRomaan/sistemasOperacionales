@@ -118,7 +118,14 @@
 					</p:column>
 
 					<p:column>
-						<h:outputLabel value="#{hecho.producto.precio}" />
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{hecho.producto.precio}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="#{hecho.producto.precio}" />
+							</f:facet>
+						</p:cellEditor>
 					</p:column>
 
 					<p:column>
