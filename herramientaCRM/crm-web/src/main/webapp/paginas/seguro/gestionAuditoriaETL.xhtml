@@ -42,12 +42,56 @@
 
 
 				</h:selectOneMenu>
+				<h:selectOneMenu id="bd"
+					value="#{controladorAuditoriaETL.baseDatos}">
+
+					<f:selectItem itemValue="0" itemLabel="seleccione una opcion" />
+					<f:selectItem itemValue="2" itemLabel="POSTGRES" />
+					<f:selectItem itemValue="1" itemLabel="MYSQL" />
+
+
+				</h:selectOneMenu>
 				<br />
 				<br />
 				<p:commandButton id="btnCargarDatos" value="Cargar Datos"
-					process="@this,panelvalDos" update="panelvalDos"
+					process="@this,panelvalDos" update="tablaa"
 					action="#{controladorAuditoriaETL.extraerDatos}" />
 			</h:panelGrid>
+
+			<br />
+			<br />
+			<h:panelGrid id="tablaa" columns="4"
+				rendered="#{controladorAuditoriaETL.rollingSeleccionado}">
+
+				<p:dataTable id="tabla" emptyMessage="Ningun resultado"
+					value="#{controladorAuditoriaETL.listaHechoAct}" var="aud"
+					border="1" width="80%">
+
+					<p:column filterBy="#{aud.id}" headerText="codigo">
+						<h:outputText value="#{aud.id}">
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="fecha">
+						<h:outputLabel value="#{aud.fecha}"></h:outputLabel>
+					</p:column>
+
+					<p:column headerText="Dispositivo">
+						<h:outputLabel value="#{aud.dispositivo}"></h:outputLabel>
+					</p:column>
+
+					<p:column headerText="Navegador">
+						<h:outputLabel value="#{aud.navegador}"></h:outputLabel>
+					</p:column>
+
+					<p:column headerText="Accion">
+						<h:outputLabel value="#{aud.accion}"></h:outputLabel>
+					</p:column>
+
+				</p:dataTable>
+
+			</h:panelGrid>
+
 			<br />
 			<br />
 
@@ -74,7 +118,7 @@
 					<p:commandButton id="btnCargar" value="Cargar Datos"
 						process="@this,panelIntervalo,panelDatos,panelValidacion"
 						update="panelIntervalo,panelDatos,panelValidacion"
-						action="#{controladorDWH.cargar}" style="align:center"/>
+						action="#{controladorDWH.cargar}" style="align:center" />
 
 				</h:panelGrid>
 

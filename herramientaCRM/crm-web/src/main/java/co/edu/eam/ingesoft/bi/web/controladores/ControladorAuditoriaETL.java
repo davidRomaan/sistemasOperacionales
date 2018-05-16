@@ -2,10 +2,15 @@ package co.edu.eam.ingesoft.bi.web.controladores;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
@@ -17,10 +22,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.omnifaces.util.Messages;
 
 import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
-import co.edu.eam.ingesoft.bi.negocio.etl.ETLAuditoriaEJB;
+import co.edu.eam.ingesoft.bi.negocio.beans.VentaEJB;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoAuditoria;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoVentas;
 
 @SessionScoped
 @Named("controladorAuditoriaETL")
@@ -28,6 +32,12 @@ public class ControladorAuditoriaETL implements Serializable {
 
 	private String tipoCarga;
 	private String fechaSeleccionada;
+
+	private List<HechoAuditoria> listaHechoAct;
+
+	private int baseDatos;
+	@EJB
+	AuditoriaEJB auditoriaEJB;
 	private String fechaInicio;
 	private String fechaFin;
 	private String base;
@@ -43,6 +53,8 @@ public class ControladorAuditoriaETL implements Serializable {
 	@EJB
 	private ETLAuditoriaEJB auditoriaETL;
 	
+	@EJB
+	private VentaEJB ventaEJB;
 	@PostConstruct
 	private void inicializarCampos() {
 		hechoAuditorias = new ArrayList<HechoAuditoria>();
@@ -69,7 +81,13 @@ public class ControladorAuditoriaETL implements Serializable {
 			Messages.addFlashGlobalInfo("Selecione una opcion");
 		}
 		if (fechaSeleccionada.equals("1")) {
-			
+			try {
+				String fecha = ventaEJB.convertirCalendarAString(new GregorianCalendar());
+				listaHechoAct = auditoriaEJB.listarFechaActualAuditoria(baseDatos,fecha);
+			} catch (Exception e) {
+				e.getMessage();
+			}
+
 		}
 		if (fechaSeleccionada.equals("2")) {
 
@@ -159,6 +177,22 @@ public class ControladorAuditoriaETL implements Serializable {
 
 	public void setFechaSeleccionada(String fechaSeleccionada) {
 		this.fechaSeleccionada = fechaSeleccionada;
+	}
+
+	public List<HechoAuditoria> getListaHechoAct() {
+		return listaHechoAct;
+	}
+
+	public void setListaHechoAct(List<HechoAuditoria> listaHechoAct) {
+		this.listaHechoAct = listaHechoAct;
+	}
+
+	public int getBaseDatos() {
+		return baseDatos;
+	}
+
+	public void setBaseDatos(int baseDatos) {
+		this.baseDatos = baseDatos;
 	}
 
 }
