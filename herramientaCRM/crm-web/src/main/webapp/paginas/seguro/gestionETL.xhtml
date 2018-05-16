@@ -62,12 +62,13 @@
 				<p:commandButton id="btnBD" value="Agregar Datos"
 					process="@this,panelIntervalo,panelDatos,panelValidacion,panelBD"
 					update="panelIntervalo,panelDatos,panelValidacion"
-					action="#{controladorDWH.cargar}" />
+					action="#{controladorDWH.extraer}" />
 
 			</h:panelGrid>
 			<br />
 
-			<h:panelGrid id="panelBoton" columns="3" rendered="#{controladorDWH.tablaLlena}">
+			<h:panelGrid id="panelBoton" columns="3"
+				rendered="#{controladorDWH.tablaLlena}">
 
 				<p:commandButton id="btnVaciar" value="Vaciar Tabla" process="@this"
 					update="panelTabla" action="#{controladorDWH.vaciarTabla}" />
@@ -78,37 +79,109 @@
 			<h:panelGrid id="panelTabla">
 
 				<p:dataTable id="tablaHechos" value="#{controladorDWH.hechosVenta}"
-					var="hecho" border="1">
+					var="hecho" border="1" scrollable="true" scrollWidth="80%"
+					scrollHeight="150" editable="true" editMode="cell">
 
-					<p:column headerText="Producto">
+					<f:facet name="header">
+         				   Datos a cargar
+      			    </f:facet>
+
+					<p:ajax event="cellEdit" listener="#{controladorDWH.onCellEdit}"
+						update="panelTabla" />
+
+					<p:columnGroup type="header">
+						<p:row>
+							<p:column colspan="5" headerText="Datos Producto" />
+							<p:column colspan="3" headerText="Datos Cliente" />
+							<p:column colspan="3" headerText="Datos Empleado" />
+							<p:column colspan="2" headerText="Region" />
+						</p:row>
+						<p:row>
+							<p:column headerText="Producto" />
+							<p:column headerText="Precio" />
+							<p:column headerText="Tipo Producto" />
+							<p:column headerText="Unidades Compradas" />
+							<p:column headerText="Subtotal" />
+							<p:column headerText="Nombre" />
+							<p:column headerText="Cedula" />
+							<p:column headerText="Edad" />
+							<p:column headerText="Nombre" />
+							<p:column headerText="Cedula" />
+							<p:column headerText="Edad" />
+							<p:column headerText="Municipio" />
+							<p:column headerText="Departamento" />
+						</p:row>
+					</p:columnGroup>
+
+					<p:column>
 						<h:outputLabel value="#{hecho.producto.nombre}" />
 					</p:column>
 
-					<p:column headerText="Precio">
+					<p:column>
 						<h:outputLabel value="#{hecho.producto.precio}" />
 					</p:column>
 
-					<p:column headerText="Unidades Compradas">
+					<p:column>
+						<h:outputLabel value="#{hecho.producto.tipoProducto}" />
+					</p:column>
+
+					<p:column>
 						<h:outputLabel value="#{hecho.unidades}" />
 					</p:column>
 
-					<p:column headerText="Subtotal">
+					<p:column>
 						<h:outputLabel value="#{hecho.subtotal}" />
 					</p:column>
 
-					<p:column headerText="Cliente">
+					<p:column>
+						<h:outputLabel value="#{hecho.persona.nombre}" />
+					</p:column>
+
+					<p:column>
 						<h:outputLabel value="#{hecho.persona.cedula}" />
 					</p:column>
 
-					<p:column headerText="Edad">
-						<h:outputLabel value="#{hecho.persona.edad}" />
+					<p:column>
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{hecho.persona.edad}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="#{hecho.persona.edad}" />
+							</f:facet>
+						</p:cellEditor>
 					</p:column>
 
-					<p:column headerText="Municipio">
+					<p:column>
+						<h:outputLabel value="#{hecho.empleado.nombre}" />
+					</p:column>
+
+					<p:column>
+						<h:outputLabel value="#{hecho.empleado.cedula}" />
+					</p:column>
+
+					<p:column>
+						<h:outputLabel value="#{hecho.empleado.edad}" />
+					</p:column>
+
+					<p:column>
 						<h:outputLabel value="#{hecho.municipio.nombre}" />
 					</p:column>
 
+					<p:column>
+						<h:outputLabel value="#{hecho.municipio.departamento}" />
+					</p:column>
+
 				</p:dataTable>
+
+			</h:panelGrid>
+			<br />
+
+			<h:panelGrid id="panelBotonCarga">
+
+				<p:commandButton id="btnCargaDatos" value="Cargar Datos"
+					process="@this,panelIntervalo,panelDatos,panelValidacion,panelBD,panelTabla"
+					update="panelTabla" action="#{controladorDWH.cargar}" />
 
 			</h:panelGrid>
 

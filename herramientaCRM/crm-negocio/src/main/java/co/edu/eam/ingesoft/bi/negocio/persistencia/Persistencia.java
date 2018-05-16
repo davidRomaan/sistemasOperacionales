@@ -626,37 +626,37 @@ public class Persistencia implements Serializable {
 		return q.getResultList();
 
 	}
-	
-	public List<Object> listarFacturasIntervaloFecha (String fechaInicio, String fechaFin){
-		
-		String sql = "";		
+
+	public List<Object> listarFacturasIntervaloFecha(String fechaInicio, String fechaFin) {
+
+		String sql = "";
 		Query q;
-		
-		switch (this.bd){
-		
+
+		switch (this.bd) {
+
 		case 1:
-			sql = "SELECT id FROM bi.FACTURA_VENTA WHERE fecha_venta BETWEEN " + "'" + fechaInicio + 
-			"' AND " + "'" +  fechaFin +"'";
+			sql = "SELECT id FROM bi.FACTURA_VENTA WHERE fecha_venta BETWEEN " + "'" + fechaInicio + "' AND " + "'"
+					+ fechaFin + "'";
 			q = emM.createNativeQuery(sql);
 			break;
-			
+
 		case 2:
-			sql = "SELECT id FROM FACTURA_VENTA WHERE fecha_venta BETWEEN " + "'" + fechaInicio + 
-			"' AND " + "'" +  fechaFin +"'";
+			sql = "SELECT id FROM FACTURA_VENTA WHERE fecha_venta BETWEEN " + "'" + fechaInicio + "' AND " + "'"
+					+ fechaFin + "'";
 			q = emP.createNativeQuery(sql);
 			break;
-			
+
 		default:
 			throw new ExcepcionNegocio("La base de datos a la cual intenta acceder no existe");
-		
+
 		}
-		
+
 		List<Object> lista = q.getResultList();
-		
+
 		System.out.println("tamanio lista: " + lista.size());
-		
+
 		return lista;
-		
+
 	}
 
 	// ------------------------------ Gestion del dataWareHouse
@@ -728,7 +728,7 @@ public class Persistencia implements Serializable {
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void crearDimensionPersona(DimensionPersona dimension) {
 
-		String sql = "INSERT INTO DIMENSION_PERSONA (cedula, nombre, apellido, genero, edad, tipoPersona) "
+		String sql = "INSERT INTO DIMENSION_PERSONA (cedula, nombre, apellido, genero, edad, tipo_persona) "
 				+ "VALUES (?1,?2,?3,?4,?5,?6)";
 
 		Query q = emO.createNativeQuery(sql);
@@ -778,6 +778,68 @@ public class Persistencia implements Serializable {
 		q.setParameter(3, dimension.getDepartamento());
 		q.executeUpdate();
 
+	}
+
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	public boolean dimensionPersonaExiste(String cedula) {
+
+		String sql = "SELECT * FROM DIMENSION_PERSONA WHERE cedula = ?1";
+		Query q = emO.createNativeQuery(sql);
+		q.setParameter(1, cedula);
+
+		List<Object> lista = q.getResultList();
+		
+		if (lista.size() != 0){
+			return true;
+		}
+
+		return false;
+
+	}
+
+	/**
+	 * Verifica si existe una dimensión que tiene como prmaria un integer
+	 * @param id identificador de la tabla
+	 * @param tabla tabla donde se desea buscar
+	 * @return true si existe, de lo contrario false
+	 */
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	public boolean dimensionExiste(int id, String tabla) {
+
+		String sql = "SELECT * FROM " + tabla + " WHERE id = ?1";
+		Query q = emO.createNativeQuery(sql);
+		q.setParameter(1, id);
+
+		List<Object> lista = q.getResultList();
+		
+		if (lista.size() != 0){
+			return true;
+		}
+
+		return false;
+
+	}
+	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void eliminarDimensionPersona (String cedula){
+		
+		String sql = "DELETE FROM DIMENSION_PERSONA WHERE cedula = ?1";
+		
+		Query q = emO.createNativeQuery(sql);
+		q.setParameter(1, cedula);
+		q.executeUpdate();
+		
+	}
+	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void eliminarDimensionProducto(int id){
+		
+		String sql = "DELETE FROM DIMENSION_PRODUCTO WHERE id = ?1";
+		
+		Query q = emO.createNativeQuery(sql);
+		q.setParameter(1, id);
+		q.executeUpdate();
+		
 	}
 
 	public int getBd() {
