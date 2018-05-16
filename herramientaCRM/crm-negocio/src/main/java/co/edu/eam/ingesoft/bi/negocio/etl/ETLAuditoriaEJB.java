@@ -130,16 +130,17 @@ public class ETLAuditoriaEJB {
 	}
 
 	public void cargarDatosDWH(List<HechoAuditoria> hechos) {
-		
+
 		boolean usuExiste;
-		
+		List<String> listaCed = new ArrayList();
+
 		if (hechos.size() == 0) {
-			
-		}else {
-			
-			for (HechoAuditoria hechoAudi: hechos) {				
-				
-				if (hechoAudi.getUsuario().getCargo().equals("")){
+
+		} else {
+
+			for (HechoAuditoria hechoAudi : hechos) {
+
+				if (hechoAudi.getUsuario().getCargo().equals("")) {
 					throw new ExcepcionNegocio("El campo cargo no puede quedar vacio");
 				}
 				if (hechoAudi.getUsuario().getEdad() > 130) {
@@ -148,23 +149,33 @@ public class ETLAuditoriaEJB {
 				if (hechoAudi.getUsuario().getTipoUsuario().equals("")) {
 					throw new ExcepcionNegocio("El campo tipo usuario no puede quedar vacio");
 				}
-				
+
 				usuExiste = em.dimensionUsuarioExiste(hechoAudi.getUsuario().getCedula());
-				
+
 				if (!usuExiste) {
-					
-					em.crearDimensionUsuario(hechoAudi.getUsuario());
-					em.crearHechoAuditoria(hechoAudi.getAccion(), hechoAudi.getDispositivo(), hechoAudi.getNavegador(), hechoAudi.getFecha(), hechoAudi.getUsuario());
-					
+
+					for (String ced : listaCed) {
+						if (ced.equals(hechoAudi.getUsuario().getCedula())) {
+							em.crearHechoAuditoria(hechoAudi.getAccion(), hechoAudi.getDispositivo(),
+									hechoAudi.getNavegador(), hechoAudi.getFecha(), hechoAudi.getUsuario());
+						} else {
+							em.crearDimensionUsuario(hechoAudi.getUsuario());
+							em.crearHechoAuditoria(hechoAudi.getAccion(), hechoAudi.getDispositivo(),
+									hechoAudi.getNavegador(), hechoAudi.getFecha(), hechoAudi.getUsuario());
+
+							listaCed.add(hechoAudi.getUsuario().getCedula());
+						}
+					}
+
 				} else {
-					
-					em.crearHechoAuditoria(hechoAudi.getAccion(), hechoAudi.getDispositivo(), hechoAudi.getNavegador(), hechoAudi.getFecha(), hechoAudi.getUsuario());
-					
+
+					em.crearHechoAuditoria(hechoAudi.getAccion(), hechoAudi.getDispositivo(), hechoAudi.getNavegador(),
+							hechoAudi.getFecha(), hechoAudi.getUsuario());
+
 				}
-				
+
 			}
 
-		
 		}
 
 	}

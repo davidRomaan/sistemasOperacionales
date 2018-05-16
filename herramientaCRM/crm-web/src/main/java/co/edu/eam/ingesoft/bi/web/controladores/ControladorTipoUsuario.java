@@ -172,7 +172,7 @@ public class ControladorTipoUsuario implements Serializable {
 	 * @return true si no lo est�n, de lo contrario false
 	 */
 	private boolean validarCamposVacios() {
-		if (nombre.isEmpty() && descripcion.isEmpty()) {
+		if (descripcion.isEmpty()) {
 			return false;
 		}
 		return true;
