@@ -12,6 +12,7 @@ import javax.ejb.Stateless;
 import co.edu.eam.ingesoft.bi.negocio.beans.VentaEJB;
 import co.edu.eam.ingesoft.bi.negocio.persistencia.Persistencia;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.Auditoria;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.DetalleVenta;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.FacturaVenta;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Municipio;
@@ -278,7 +279,7 @@ public class ETLVentasEJB {
 
 	}
 
-	private void crearHechosVenta(List<FacturaVenta> listaFacturas, List<HechoVentas> listaHechos) {
+	private List<HechoVentas> crearHechosVenta(List<FacturaVenta> listaFacturas, List<HechoVentas> listaHechos) {
 
 		// Se recorre la lista obtenida de la bd
 		for (FacturaVenta facturaVenta : listaFacturas) {
@@ -302,10 +303,102 @@ public class ETLVentasEJB {
 			}
 		}
 
+		return listaHechos;
+
+	}
+	
+	public List<Auditoria> listarPorFechaSemana(String fecha, int bd) {
+		em.setBd(bd);
+
+		String[] datos = fecha.split("-");
+		int dia = Integer.parseInt(datos[0]);
+		int mes = Integer.parseInt(datos[1]);
+		int anio = Integer.parseInt(datos[2]);
+
+		int diaDos = 0;
+		int mesDos = 0;
+
+		String nueva31 = "";
+		String nueva30 = "";
+		List<Auditoria> listaAudit = new ArrayList<Auditoria>();
+
+		if (mes == 1 || mes == 3 || mes == 5 || mes == 7 || mes == 8 || mes == 10 || mes == 12) {
+			mesDos = mes + 1;
+			if (dia == 25) {
+				diaDos = 1;
+			}
+			if (dia == 26) {
+				diaDos = 2;
+			}
+			if (dia == 27) {
+				diaDos = 3;
+			}
+			if (dia == 28) {
+				diaDos = 4;
+			}
+			if (dia == 29) {
+				diaDos = 5;
+			}
+			if (dia == 30) {
+				diaDos = 6;
+			}
+			if (dia == 31) {
+				diaDos = 7;
+			}
+			nueva31 = anio + "-" + mesDos + "-" + diaDos;
+
+			List<Object> lista = em.listarFechaSemana(fecha, nueva31);
+			for (int i = 0; i < lista.size(); i++) {
+
+				int cod = (int) (Integer) lista.get(i);
+
+				Auditoria aud = (Auditoria) em.buscar(Auditoria.class, cod);
+				listaAudit.add(aud);
+			}
+
+		}
+		if (mes == 4 || mes == 6 || mes == 9 || mes == 11) {
+			if (dia == 24) {
+				diaDos = 1;
+			}
+			if (dia == 25) {
+				diaDos = 2;
+			}
+			if (dia == 26) {
+				diaDos = 3;
+			}
+			if (dia == 27) {
+				diaDos = 4;
+			}
+			if (dia == 28) {
+				diaDos = 5;
+			}
+			if (dia == 29) {
+				diaDos = 6;
+
+			}
+			if (dia == 30) {
+				diaDos = 7;
+
+			}
+			
+			nueva30 = anio + "-" + mesDos + "-" + diaDos;
+
+			List<Object> lista = em.listarFechaSemana(fecha, nueva30);
+
+			for (int i = 0; i < lista.size(); i++) {
+
+				int cod = (int) (Integer) lista.get(i);
+
+				Auditoria aud = (Auditoria) em.buscar(Auditoria.class, cod);
+				listaAudit.add(aud);
+			}
+
+		}
+		return listaAudit;
 	}
 
-	// ------------------------------------ Rolling
-	// ----------------------------------------
+	// ------------------------ Rolling ------------------------------
 
 	public List<HechoVentas> obtenerHechoVentasRollingDia(String fecha, int bd, List<HechoVentas> listaHechos) {
 
@@ -319,17 +412,18 @@ public class ETLVentasEJB {
 
 			em.setBd(bd);
 
-			crearHechosVenta(listaFacturas, listaHechos);
+			listaHechos = crearHechosVenta(listaFacturas, listaHechos);
+			
 		}
 
 		return listaHechos;
 
 	}
-	
-	public List<HechoVentas> obtenerHechoVentasRollingSemana (String fecha, int bd, List<HechoVentas> listaHechos){
-		
+
+	public List<HechoVentas> obtenerHechoVentasRollingSemana(String fecha, int bd, List<HechoVentas> listaHechos) {
+
 		return null;
-		
+
 	}
 
 	/**

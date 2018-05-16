@@ -114,21 +114,22 @@ public class ControladorDWH implements Serializable {
 
 				} else if (fechaSeleccionada == 1) {
 
-					try{
-						
+					try {
+
 						hechosVenta = etlVentasEJB.obtenerHechoVentasRollingDia(fechaRolling, bd, hechosVenta);
-						cargaNoRealizada(bd);
-						
+						System.out.println("Permer hecho: " + hechosVenta.get(0).getSubtotal());
+						cargaRealizada(bd);
+
 					} catch (ExcepcionNegocio e) {
 						// TODO: handle exception
 						Messages.addFlashGlobalError(e.getMessage());
 						cargaNoRealizada(bd);
 					}
-					
-				} else if (fechaSeleccionada == 2){
-					
-					
-					
+
+					reload();
+
+				} else if (fechaSeleccionada == 2) {
+
 				}
 
 			} else {
@@ -151,22 +152,22 @@ public class ControladorDWH implements Serializable {
 
 	}
 
-	private void cargaRealizada(int bd){
+	private void cargaRealizada(int bd) {
 		if (bd == 1) {
 			datosMysqlCargados = true;
 		} else {
 			datosPostgresCargados = true;
 		}
 	}
-	
-	private void cargaNoRealizada(int bd){
+
+	private void cargaNoRealizada(int bd) {
 		if (bd == 1) {
 			datosMysqlCargados = false;
 		} else {
 			datosPostgresCargados = false;
 		}
 	}
-	
+
 	public void eliminar(HechoVentas hecho) {
 		hechosVenta.remove(hecho);
 	}
