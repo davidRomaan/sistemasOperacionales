@@ -114,6 +114,11 @@ public class ControladorAuditoriaETL implements Serializable {
 		reload();
 	}
 
+	
+	
+	
+	
+	
 	/**
 	 * Carga los datos
 	 */

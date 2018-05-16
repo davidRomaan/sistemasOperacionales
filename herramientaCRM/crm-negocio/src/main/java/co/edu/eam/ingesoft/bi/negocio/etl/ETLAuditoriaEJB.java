@@ -8,6 +8,7 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.persistence.Query;
 
 import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.UsuarioEJB;
@@ -129,7 +130,17 @@ public class ETLAuditoriaEJB {
 		return edad;
 
 	}
-
+	
+	public void cargarDatosOracle(List<HechoAuditoria>hechos){
+		
+		em.limpiarBDOracle("DIMENSION_USUARIO");
+		em.limpiarBDOracle("HECHO_AUDITORIA");
+		cargarDatosDWH(hechos);
+		
+	}
+	
+	
+	
 	public void cargarDatosDWH(List<HechoAuditoria> hechos) {
 
 		boolean usuExiste;

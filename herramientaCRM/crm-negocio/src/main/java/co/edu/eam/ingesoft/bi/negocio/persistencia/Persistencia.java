@@ -723,7 +723,15 @@ public class Persistencia implements Serializable {
 		return lista;
 
 	}
-	
+
+	public void limpiarBDOracle(String nombreTable) {
+
+		String sql = "DELETE FROM " + nombreTable;
+		Query q = emO.createNativeQuery(sql);
+		q.executeUpdate();
+
+	}
+
 	public List<Object> listarFechaSemana(String fechaUno, String fechaDos) {
 
 		String sql = "";
@@ -732,14 +740,14 @@ public class Persistencia implements Serializable {
 		switch (this.bd) {
 
 		case 1:
-			sql = "SELECT id FROM bi.auditoria WHERE fecha_hora BETWEEN " + "'" + fechaUno + "' AND " + "'"
-					+ fechaDos + "'";
+			sql = "SELECT id FROM bi.auditoria WHERE fecha_hora BETWEEN " + "'" + fechaUno + "' AND " + "'" + fechaDos
+					+ "'";
 			q = emM.createNativeQuery(sql);
 			break;
 
 		case 2:
-			sql = "SELECT id id FROM auditoria WHERE fecha_hora  BETWEEN " + "'" + fechaUno + "' AND " + "'"
-					+ fechaDos + "'";
+			sql = "SELECT id id FROM auditoria WHERE fecha_hora  BETWEEN " + "'" + fechaUno + "' AND " + "'" + fechaDos
+					+ "'";
 			q = emP.createNativeQuery(sql);
 			break;
 
@@ -795,7 +803,7 @@ public class Persistencia implements Serializable {
 		q.executeUpdate();
 
 	}
-	
+
 	/**
 	 * 
 	 * 
@@ -806,7 +814,8 @@ public class Persistencia implements Serializable {
 	 * @param usuario
 	 */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void crearHechoAuditoria(String accion, String dispositivo, String navegador, Calendar fecha, DimensionUsuario usuario) {
+	public void crearHechoAuditoria(String accion, String dispositivo, String navegador, Calendar fecha,
+			DimensionUsuario usuario) {
 
 		String sql = "INSERT INTO HECHO_AUDITORIA (accion, dispositivo, navegador, fecha, cedula_usuario) VALUES (?1,?2,?3,?4,?5)";
 
@@ -862,7 +871,7 @@ public class Persistencia implements Serializable {
 		q.executeUpdate();
 
 	}
-	
+
 	/**
 	 * Crea una dimensi�n de persona en la bd oracle
 	 * 
@@ -872,8 +881,6 @@ public class Persistencia implements Serializable {
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void crearDimensionUsuario(DimensionUsuario dimension) {
 
-	
-	
 		String sql = "INSERT INTO DIMENSION_USUARIO (cedula, nombre, apellido, genero, edad, tipo_usuario, cargo) "
 				+ "VALUES (?1,?2,?3,?4,?5,?6,?7)";
 
@@ -943,7 +950,7 @@ public class Persistencia implements Serializable {
 		return false;
 
 	}
-	
+
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public boolean dimensionUsuarioExiste(String cedula) {
 
@@ -960,8 +967,6 @@ public class Persistencia implements Serializable {
 		return false;
 
 	}
-	
-	
 
 	/**
 	 * Verifica si existe una dimensi�n que tiene como prmaria un integer
