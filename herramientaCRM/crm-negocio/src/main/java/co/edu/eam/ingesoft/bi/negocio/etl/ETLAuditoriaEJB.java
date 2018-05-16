@@ -130,17 +130,15 @@ public class ETLAuditoriaEJB {
 		return edad;
 
 	}
-	
-	public void cargarDatosOracle(List<HechoAuditoria>hechos){
-		
-		em.limpiarBDOracle("DIMENSION_USUARIO");
+
+	public void cargarDatosOracle(List<HechoAuditoria> hechos) {
+
 		em.limpiarBDOracle("HECHO_AUDITORIA");
+		em.limpiarBDOracle("DIMENSION_USUARIO");
 		cargarDatosDWH(hechos);
-		
+
 	}
-	
-	
-	
+
 	public void cargarDatosDWH(List<HechoAuditoria> hechos) {
 
 		boolean usuExiste;
@@ -163,7 +161,7 @@ public class ETLAuditoriaEJB {
 				}
 
 				usuExiste = em.dimensionUsuarioExiste(hechoAudi.getUsuario().getCedula());
-				
+
 				String cedula = hechoAudi.getUsuario().getCedula();
 
 				if (!usuExiste && !listaCed.contains(cedula)) {
@@ -173,8 +171,9 @@ public class ETLAuditoriaEJB {
 
 				em.crearHechoAuditoria(hechoAudi.getAccion(), hechoAudi.getDispositivo(), hechoAudi.getNavegador(),
 						hechoAudi.getFecha(), hechoAudi.getUsuario());
-				
-				em.editarDimensionUsuario(cedula, hechoAudi.getUsuario().getTipoUsuario(), hechoAudi.getUsuario().getEdad());
+
+				em.editarDimensionUsuario(cedula, hechoAudi.getUsuario().getTipoUsuario(),
+						hechoAudi.getUsuario().getEdad());
 
 			}
 
