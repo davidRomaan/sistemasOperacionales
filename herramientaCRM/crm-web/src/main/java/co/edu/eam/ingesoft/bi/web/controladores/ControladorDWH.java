@@ -15,6 +15,7 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
 import org.omnifaces.util.Messages;
+import org.primefaces.event.CellEditEvent;
 
 import co.edu.eam.ingesoft.bi.negocio.beans.VentaEJB;
 import co.edu.eam.ingesoft.bi.negocio.etl.ETLVentasEJB;
@@ -82,7 +83,7 @@ public class ControladorDWH implements Serializable {
 	/**
 	 * Carga los datos
 	 */
-	public void cargar() {
+	public void extraer() {
 
 		Calendar fecha1 = ventaEJB.convertirFechaStrintADate(fechaInicio);
 		Calendar fecha2 = ventaEJB.convertirFechaStrintADate(fechaFin);
@@ -128,17 +129,54 @@ public class ControladorDWH implements Serializable {
 
 	}
 	
+	public void eliminar(HechoVentas hecho){
+		hechosVenta.remove(hecho);
+	}
+	
+	public void onCellEdit(CellEditEvent event) {
+        Object oldValue = event.getOldValue();
+        Object newValue = event.getNewValue();
+         
+        if(newValue != null && !newValue.equals(oldValue)) {
+            Messages.addFlashGlobalInfo("Se ha editado correctamente");
+            reload();
+        }
+    }
+
+	/**
+	 * Carga los datos al data warehouse
+	 */
+	public void cargar() {
+
+		if (hechosVenta.size() == 0) {
+
+			Messages.addFlashGlobalError("No hay datos para cargar");
+
+		} else {
+
+			try {
+				etlVentasEJB.cargarDatosDWH(hechosVenta);
+				Messages.addFlashGlobalInfo("Se han cargado los datos exitosamente");
+				vaciarTabla();
+			} catch (ExcepcionNegocio e) {
+				Messages.addFlashGlobalError(e.getMessage());
+			}
+
+		}
+
+	}
+
 	/**
 	 * Vacía la tabla de hechos de ventas
 	 */
-	public void vaciarTabla(){
-		
+	public void vaciarTabla() {
+
 		hechosVenta = new ArrayList<HechoVentas>();
 		datosMysqlCargados = false;
 		datosPostgresCargados = false;
-		
+
 		reload();
-		
+
 	}
 
 	public String getTipoCarga() {
