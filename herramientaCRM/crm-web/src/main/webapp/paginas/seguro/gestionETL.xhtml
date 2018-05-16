@@ -21,13 +21,31 @@
 						itemLabel="Acumulacion simple" />
 					<f:selectItem itemValue="Rolling" itemLabel="Rolling" />
 
-					<f:ajax event="change" execute="@this" render="panelIntervalo"
+					<f:ajax event="change" execute="@this" render="panelIntervalo,panelRolling"
 						listener="#{controladorDWH.gestionarCarga}" />
 
 				</h:selectOneMenu>
 
 			</h:panelGrid>
 			<br />
+			
+			<h:panelGrid id="panelRolling" rendered="#{controladorDWH.rollingSeleccionado}">
+			
+				<h:selectOneMenu id="cbfecha"
+					value="#{controladorDWH.fechaSeleccionada}">
+
+					<f:selectItem itemValue="0" itemLabel="seleccione una opcion" />
+					<f:selectItem itemValue="1" itemLabel="dia" />
+					<f:selectItem itemValue="2" itemLabel="semana" />
+					<f:selectItem itemValue="3" itemLabel="mes" />
+
+				</h:selectOneMenu>
+				
+				<p:outputLabel id="maskRolling" value="Ingrese la fecha" />
+					<p:inputMask id="dateRolling" value="#{controladorDWH.fechaRolling}"
+						mask="9999-99-99" />
+			
+			</h:panelGrid>
 
 			<h:panelGrid id="panelValidacion" columns="1"
 				rendered="#{!controladorDWH.rollingSeleccionado}">
@@ -38,11 +56,11 @@
 
 					<p:outputLabel id="mask1" value="Desde: " />
 					<p:inputMask id="date1" value="#{controladorDWH.fechaInicio}"
-						mask="99/99/9999" />
+						mask="9999-99-99" />
 
 					<p:outputLabel id="mask2" value=" Hasta: " />
 					<p:inputMask id="date2" value="#{controladorDWH.fechaFin}"
-						mask="99/99/9999" />
+						mask="9999-99-99" />
 
 				</h:panelGrid>
 			</h:panelGrid>
@@ -60,8 +78,8 @@
 				</h:selectOneMenu>
 
 				<p:commandButton id="btnBD" value="Agregar Datos"
-					process="@this,panelIntervalo,panelDatos,panelValidacion,panelBD"
-					update="panelIntervalo,panelDatos,panelValidacion"
+					process="@this,panelIntervalo,panelDatos,panelValidacion,panelBD,panelRolling"
+					update="panelIntervalo,panelDatos,panelValidacion,panelRolling"
 					action="#{controladorDWH.extraer}" />
 
 			</h:panelGrid>

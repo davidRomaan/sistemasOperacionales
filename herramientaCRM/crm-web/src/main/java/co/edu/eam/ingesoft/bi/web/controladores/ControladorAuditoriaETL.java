@@ -27,6 +27,7 @@ import co.edu.eam.ingesoft.bi.negocio.beans.VentaEJB;
 import co.edu.eam.ingesoft.bi.negocio.etl.ETLAuditoriaEJB;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoAuditoria;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoVentas;
 
 @SessionScoped
 @Named("controladorAuditoriaETL")
@@ -51,6 +52,7 @@ public class ControladorAuditoriaETL implements Serializable {
 
 	private String fechaInicio;
 	private String fechaFin;
+
 	private String base;
 
 	private boolean datosPostgresCargados;
@@ -185,7 +187,55 @@ public class ControladorAuditoriaETL implements Serializable {
 		}
 
 	}
-	
+
+	/**
+	 * Verifica el cambio que se realiz� y realiza el cambio en todas los datos
+	 * relacionados
+	 * 
+	 * @param posicion
+	 * @param columna
+	 * @param newValue
+	 */
+	private void verificarCambio(int posicion, String columna, Object newValue) {
+
+		HechoAuditoria hecho = hechoAuditorias.get(posicion);
+
+		if (columna.equalsIgnoreCase("tipo_producto")) {
+
+			String cedula = hecho.getUsuario().getCedula();
+
+			for (HechoAuditoria hechoAudi : hechoAuditorias) {
+
+				if (hechoAudi.getUsuario().getCedula().equals(cedula)) {
+
+					String tipoUsuario = (String) newValue;
+
+					hechoAudi.getUsuario().setTipoUsuario(tipoUsuario);
+
+				}
+
+			} 
+
+		} else {
+
+			String cedula = hecho.getUsuario().getCedula();
+
+			for (HechoAuditoria hechoAudi : hechoAuditorias) {
+
+				if (hechoAudi.getUsuario().getCedula().equals(cedula)) {
+
+					short edad = (Short) newValue;
+
+					hechoAudi.getUsuario().setEdad(edad);
+
+				}
+
+			}
+
+		}
+
+	}
+
 	public void onCellEdit(CellEditEvent event) {
 		Object oldValue = event.getOldValue();
 		Object newValue = event.getNewValue();
@@ -350,6 +400,7 @@ public class ControladorAuditoriaETL implements Serializable {
 	public void setVentaEJB(VentaEJB ventaEJB) {
 		this.ventaEJB = ventaEJB;
 	}
+
 
 	public boolean isSemanaSeleccionada() {
 		return semanaSeleccionada;

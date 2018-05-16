@@ -173,6 +173,8 @@ public class ETLAuditoriaEJB {
 
 				em.crearHechoAuditoria(hechoAudi.getAccion(), hechoAudi.getDispositivo(), hechoAudi.getNavegador(),
 						hechoAudi.getFecha(), hechoAudi.getUsuario());
+				
+				em.editarDimensionUsuario(cedula, hechoAudi.getUsuario().getTipoUsuario(), hechoAudi.getUsuario().getEdad());
 
 			}
 

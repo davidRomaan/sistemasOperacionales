@@ -32,6 +32,9 @@ public class ControladorDWH implements Serializable {
 	private String base;
 	private List<HechoVentas> hechosVenta;
 
+	private int fechaSeleccionada;
+	private String fechaRolling;
+
 	private boolean datosPostgresCargados;
 	private boolean datosMysqlCargados;
 
@@ -85,9 +88,6 @@ public class ControladorDWH implements Serializable {
 	 */
 	public void extraer() {
 
-		Calendar fecha1 = ventaEJB.convertirFechaStrintADate(fechaInicio);
-		Calendar fecha2 = ventaEJB.convertirFechaStrintADate(fechaFin);
-
 		int bd;
 
 		if (base.equalsIgnoreCase("mysql")) {
@@ -106,99 +106,139 @@ public class ControladorDWH implements Serializable {
 
 		} else {
 
-			try {
-				hechosVenta = etlVentasEJB.obtenerDatosHechoVentasAcumulacionSimple(fecha1, fecha2, bd, hechosVenta);
-				Messages.addFlashGlobalInfo("Datos cargados exitosamente");
-				if (bd == 1) {
-					datosMysqlCargados = true;
-				} else {
-					datosPostgresCargados = true;
+			if (rollingSeleccionado) {
+
+				if (fechaSeleccionada == 0) {
+
+					Messages.addFlashGlobalError("Debe seleccionar una opción");
+
+				} else if (fechaSeleccionada == 1) {
+
+					try{
+						
+						hechosVenta = etlVentasEJB.obtenerHechoVentasRollingDia(fechaRolling, bd, hechosVenta);
+						cargaNoRealizada(bd);
+						
+					} catch (ExcepcionNegocio e) {
+						// TODO: handle exception
+						Messages.addFlashGlobalError(e.getMessage());
+						cargaNoRealizada(bd);
+					}
+					
+				} else if (fechaSeleccionada == 2){
+					
+					
+					
 				}
-			} catch (ExcepcionNegocio e) {
-				// TODO: handle exception
-				Messages.addFlashGlobalError(e.getMessage());
-				if (bd == 1) {
-					datosMysqlCargados = false;
-				} else {
-					datosPostgresCargados = false;
+
+			} else {
+
+				try {
+					hechosVenta = etlVentasEJB.obtenerDatosHechoVentasAcumulacionSimple(fechaInicio, fechaFin, bd,
+							hechosVenta);
+					Messages.addFlashGlobalInfo("Datos cargados exitosamente");
+					cargaRealizada(bd);
+				} catch (ExcepcionNegocio e) {
+					// TODO: handle exception
+					Messages.addFlashGlobalError(e.getMessage());
+					cargaNoRealizada(bd);
 				}
+
+				reload();
 			}
 
-			reload();
 		}
 
 	}
-	
-	public void eliminar(HechoVentas hecho){
-		hechosVenta.remove(hecho);
+
+	private void cargaRealizada(int bd){
+		if (bd == 1) {
+			datosMysqlCargados = true;
+		} else {
+			datosPostgresCargados = true;
+		}
 	}
 	
-	public void onCellEdit(CellEditEvent event) {
-        Object oldValue = event.getOldValue();
-        Object newValue = event.getNewValue();
-         
-        if(newValue != null && !newValue.equals(oldValue)) {
-        	String columna = event.getColumn().getHeaderText();
-        	verificarCambio(event.getRowIndex(), columna, newValue);
-            Messages.addFlashGlobalInfo("Se ha editado correctamente");
-            reload();
-        }
-    }
+	private void cargaNoRealizada(int bd){
+		if (bd == 1) {
+			datosMysqlCargados = false;
+		} else {
+			datosPostgresCargados = false;
+		}
+	}
 	
+	public void eliminar(HechoVentas hecho) {
+		hechosVenta.remove(hecho);
+	}
+
+	public void onCellEdit(CellEditEvent event) {
+		Object oldValue = event.getOldValue();
+		Object newValue = event.getNewValue();
+
+		if (newValue != null && !newValue.equals(oldValue)) {
+			String columna = event.getColumn().getHeaderText();
+			verificarCambio(event.getRowIndex(), columna, newValue);
+			Messages.addFlashGlobalInfo("Se ha editado correctamente");
+			reload();
+		}
+	}
+
 	/**
-	 * Verifica el cambio que se realizó y realiza el cambio en todas los datos relacionados
+	 * Verifica el cambio que se realizó y realiza el cambio en todas los datos
+	 * relacionados
+	 * 
 	 * @param posicion
 	 * @param columna
 	 * @param newValue
 	 */
-	private void verificarCambio(int posicion, String columna, Object newValue){
-		
+	private void verificarCambio(int posicion, String columna, Object newValue) {
+
 		HechoVentas hecho = hechosVenta.get(posicion);
-		
-		if (columna.equalsIgnoreCase("precio")){
-			
+
+		if (columna.equalsIgnoreCase("precio")) {
+
 			int idProducto = hecho.getProducto().getId();
-			
+
 			double total = 0;
-			
+
 			for (HechoVentas hechoVentas : hechosVenta) {
-				
-				if (hechoVentas.getProducto().getId() == idProducto){
-					
+
+				if (hechoVentas.getProducto().getId() == idProducto) {
+
 					double precioNuevo = (Double) newValue;
-					
+
 					hechoVentas.getProducto().setPrecio(precioNuevo);
-					
+
 					double subtotal = precioNuevo * hechoVentas.getUnidades();
-					
+
 					hechoVentas.setSubtotal(subtotal);
-					
+
 					total += subtotal;
-					
+
 				}
-				
+
 			}
-			
+
 			hecho.getFactura().setTotalVenta(total);
-			
+
 		} else {
-			
+
 			String cedula = hecho.getPersona().getCedula();
-			
+
 			for (HechoVentas hechoVentas : hechosVenta) {
-				
-				if (hechoVentas.getPersona().getCedula().equals(cedula)){
-					
+
+				if (hechoVentas.getPersona().getCedula().equals(cedula)) {
+
 					short edad = (Short) newValue;
-					
+
 					hechoVentas.getPersona().setEdad(edad);
-					
+
 				}
-				
+
 			}
-			
+
 		}
-		
+
 	}
 
 	/**
@@ -283,6 +323,22 @@ public class ControladorDWH implements Serializable {
 
 	public void setHechosVenta(List<HechoVentas> hechosVenta) {
 		this.hechosVenta = hechosVenta;
+	}
+
+	public int getFechaSeleccionada() {
+		return fechaSeleccionada;
+	}
+
+	public void setFechaSeleccionada(int fechaSeleccionada) {
+		this.fechaSeleccionada = fechaSeleccionada;
+	}
+
+	public String getFechaRolling() {
+		return fechaRolling;
+	}
+
+	public void setFechaRolling(String fechaRolling) {
+		this.fechaRolling = fechaRolling;
 	}
 
 }
