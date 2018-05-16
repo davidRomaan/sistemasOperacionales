@@ -38,15 +38,7 @@ public class ETLAuditoriaEJB {
 	@EJB
 	private UsuarioEJB usuarioEJB;
 	
-	
-	public void cargarDatosDelDia(){
-		
-		Date fecha = new Date();
-		
-		
-		
-	}
-	
+
 	public List<Auditoria> listaVentasPeriodo(Calendar fechaInicio, Calendar fechaFin, int bd) {
 
 		em.setBd(bd);

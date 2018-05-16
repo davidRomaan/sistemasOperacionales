@@ -627,7 +627,13 @@ public class Persistencia implements Serializable {
 
 	}
 
-	public List<Object> listarFacturasIntervaloFecha(String fechaInicio, String fechaFin) {
+	/**
+	 * 
+	 * @param fechaInicio
+	 * @param fechaFin
+	 * @return
+	 */
+	public List<Object> listarAuditoriasIntervaloFecha(String fechaInicio, String fechaFin) {
 
 		String sql = "";
 		Query q;
@@ -635,14 +641,14 @@ public class Persistencia implements Serializable {
 		switch (this.bd) {
 
 		case 1:
-			sql = "SELECT id FROM bi.FACTURA_VENTA WHERE fecha_venta BETWEEN " + "'" + fechaInicio + "' AND " + "'"
+			sql = "SELECT id FROM bi.AUDITORIA WHERE fecha_hora BETWEEN " + "'" + fechaInicio + "' AND " + "'"
 					+ fechaFin + "'";
 			q = emM.createNativeQuery(sql);
 			break;
 
 		case 2:
-			sql = "SELECT id FROM FACTURA_VENTA WHERE fecha_venta BETWEEN " + "'" + fechaInicio + "' AND " + "'"
-					+ fechaFin + "'";
+			sql = "SELECT id FROM AUDITORIA WHERE fecha_hora BETWEEN " + "'" + fechaInicio + "' AND " + "'" + fechaFin
+					+ "'";
 			q = emP.createNativeQuery(sql);
 			break;
 
@@ -652,8 +658,6 @@ public class Persistencia implements Serializable {
 		}
 
 		List<Object> lista = q.getResultList();
-
-		System.out.println("tamanio lista: " + lista.size());
 
 		return lista;
 
@@ -804,6 +808,8 @@ public class Persistencia implements Serializable {
 
 	}
 
+	
+	
 	/**
 	 * Crea una dimension de una factura en la bd Oracle
 	 * 
@@ -850,8 +856,8 @@ public class Persistencia implements Serializable {
 		q.setParameter(1, cedula);
 
 		List<Object> lista = q.getResultList();
-		
-		if (lista.size() != 0){
+
+		if (lista.size() != 0) {
 			return true;
 		}
 
@@ -861,8 +867,11 @@ public class Persistencia implements Serializable {
 
 	/**
 	 * Verifica si existe una dimensión que tiene como prmaria un integer
-	 * @param id identificador de la tabla
-	 * @param tabla tabla donde se desea buscar
+	 * 
+	 * @param id
+	 *            identificador de la tabla
+	 * @param tabla
+	 *            tabla donde se desea buscar
 	 * @return true si existe, de lo contrario false
 	 */
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
@@ -873,35 +882,35 @@ public class Persistencia implements Serializable {
 		q.setParameter(1, id);
 
 		List<Object> lista = q.getResultList();
-		
-		if (lista.size() != 0){
+
+		if (lista.size() != 0) {
 			return true;
 		}
 
 		return false;
 
 	}
-	
+
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void eliminarDimensionPersona (String cedula){
-		
+	public void eliminarDimensionPersona(String cedula) {
+
 		String sql = "DELETE FROM DIMENSION_PERSONA WHERE cedula = ?1";
-		
+
 		Query q = emO.createNativeQuery(sql);
 		q.setParameter(1, cedula);
 		q.executeUpdate();
-		
+
 	}
-	
+
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void eliminarDimensionProducto(int id){
-		
+	public void eliminarDimensionProducto(int id) {
+
 		String sql = "DELETE FROM DIMENSION_PRODUCTO WHERE id = ?1";
-		
+
 		Query q = emO.createNativeQuery(sql);
 		q.setParameter(1, id);
 		q.executeUpdate();
-		
+
 	}
 
 	public int getBd() {
