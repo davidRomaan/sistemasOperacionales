@@ -92,7 +92,7 @@
 
 					<p:ajax event="cellEdit"
 						listener="#{controladorAuditoriaETL.onCellEdit}"
-						update="panelTabla" />
+						update="panelTablaaaa" />
 
 					<p:columnGroup type="header">
 						<p:row>
@@ -190,10 +190,10 @@
 					<h:outputLabel id="lblBD" value="Seleccione la base de datos" />
 
 					<h:selectOneMenu id="cbBase"
-						value="#{controladorAuditoriaETL.baseDatos}">
+						value="#{controladorAuditoriaETL.base}">
 
-						<f:selectItem itemValue="1" itemLabel="MYSQL" />
-						<f:selectItem itemValue="2" itemLabel="POSTGRES" />
+						<f:selectItem itemValue="MYSQL" itemLabel="MYSQL" />
+					<f:selectItem itemValue="POSTGRES" itemLabel="POSTGRES" />
 
 					</h:selectOneMenu>
 
@@ -270,26 +270,26 @@
 						</p:column>
 
 						<p:column headerText="edad">
-						<p:cellEditor>
-							<f:facet name="output">
-								<h:outputText value="#{hecho.usuario.edad}" />
-							</f:facet>
-							<f:facet name="input">
-								<p:inputText value="#{hecho.usuario.edad}" />
-							</f:facet>
-						</p:cellEditor>
-					</p:column>
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{hecho.usuario.edad}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText value="#{hecho.usuario.edad}" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
 
-					<p:column headerText="tipo_usuario">
-						<p:cellEditor>
-							<f:facet name="output">
-								<h:outputText value="#{hecho.usuario.tipoUsuario}" />
-							</f:facet>
-							<f:facet name="input">
-								<p:inputText value="#{hecho.usuario.tipoUsuario}" />
-							</f:facet>
-						</p:cellEditor>
-					</p:column>
+						<p:column headerText="tipo_usuario">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{hecho.usuario.tipoUsuario}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText value="#{hecho.usuario.tipoUsuario}" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
 
 					</p:dataTable>
 
