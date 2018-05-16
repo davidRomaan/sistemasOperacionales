@@ -24,6 +24,7 @@ import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionFactura;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionMunicipio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionPersona;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionProducto;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionUsuario;
 
 @LocalBean
 @Stateless
@@ -777,6 +778,30 @@ public class Persistencia implements Serializable {
 		q.executeUpdate();
 
 	}
+	
+	/**
+	 * Crea una dimensiï¿½n de persona en la bd oracle
+	 * 
+	 * @param dimension
+	 *            dimensiï¿½n de la persona que se desea registrar
+	 */
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void crearDimensionUsuario(DimensionUsuario dimension) {
+
+		String sql = "INSERT INTO DIMENSION_PERSONA (cedula, nombre, apellido, genero, edad, tipo_usuario, cargo) "
+				+ "VALUES (?1,?2,?3,?4,?5,?6,?7)";
+
+		Query q = emO.createNativeQuery(sql);
+		q.setParameter(1, dimension.getCedula());
+		q.setParameter(2, dimension.getNombre());
+		q.setParameter(3, dimension.getApellido());
+		q.setParameter(4, dimension.getGenero());
+		q.setParameter(5, dimension.getEdad());
+		q.setParameter(6, dimension.getTipoUsuario());
+		q.setParameter(7, dimension.getCargo());
+		q.executeUpdate();
+
+	}
 
 	/**
 	 * Crea una dimension de una factura en la bd Oracle
@@ -834,7 +859,7 @@ public class Persistencia implements Serializable {
 	}
 
 	/**
-	 * Verifica si existe una dimensión que tiene como prmaria un integer
+	 * Verifica si existe una dimensiï¿½n que tiene como prmaria un integer
 	 * @param id identificador de la tabla
 	 * @param tabla tabla donde se desea buscar
 	 * @return true si existe, de lo contrario false

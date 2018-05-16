@@ -118,6 +118,8 @@ public class ETLAuditoriaEJB {
 				hechoAudi.setUsuario(dimUsu);
 				hechoAudi.setFecha(auditorias.getFechaHora());
 				
+				listaHechos.add(hechoAudi);
+				
 				
 				
 			}
