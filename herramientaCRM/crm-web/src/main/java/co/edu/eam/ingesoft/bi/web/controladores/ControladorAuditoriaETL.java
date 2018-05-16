@@ -23,6 +23,7 @@ import org.omnifaces.util.Messages;
 
 import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.VentaEJB;
+import co.edu.eam.ingesoft.bi.negocio.etl.ETLAuditoriaEJB;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoAuditoria;
 
@@ -36,8 +37,7 @@ public class ControladorAuditoriaETL implements Serializable {
 	private List<HechoAuditoria> listaHechoAct;
 
 	private int baseDatos;
-	@EJB
-	AuditoriaEJB auditoriaEJB;
+
 	private String fechaInicio;
 	private String fechaFin;
 	private String base;
