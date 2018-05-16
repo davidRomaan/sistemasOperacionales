@@ -9,7 +9,6 @@ import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
-
 import co.edu.eam.ingesoft.bi.negocio.beans.VentaEJB;
 import co.edu.eam.ingesoft.bi.negocio.persistencia.Persistencia;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
@@ -34,12 +33,9 @@ public class ETLVentasEJB {
 	@EJB
 	private VentaEJB ventaEJB;
 
-	public List<FacturaVenta> listaVentasPeriodo(Calendar fechaInicio, Calendar fechaFin, int bd) {
+	public List<FacturaVenta> listaVentasPeriodo(String fecha1, String fecha2, int bd) {
 
 		em.setBd(bd);
-
-		String fecha1 = ventaEJB.convertirCalendarAString(fechaInicio);
-		String fecha2 = ventaEJB.convertirCalendarAString(fechaFin);
 
 		List<Object> lista = em.listarFacturasIntervaloFecha(fecha1, fecha2);
 
@@ -68,9 +64,9 @@ public class ETLVentasEJB {
 	 * @param fechaFin
 	 *            fecha final hasta la cual se desea cargr los datos
 	 */
-	public List<HechoVentas> obtenerDatosHechoVentasAcumulacionSimple(Calendar fechaInicio, Calendar fechaFin,
-			int bd, List<HechoVentas> listaHechos) {
-		
+	public List<HechoVentas> obtenerDatosHechoVentasAcumulacionSimple(String fechaInicio, String fechaFin, int bd,
+			List<HechoVentas> listaHechos) {
+
 		// Lista de facturas registradas en la bd
 		List<FacturaVenta> listaFacturasP = listaVentasPeriodo(fechaInicio, fechaFin, bd);
 
@@ -79,7 +75,7 @@ public class ETLVentasEJB {
 			throw new ExcepcionNegocio("No hay facturas registradas en el periodo ingresado");
 
 		} else {
-			
+
 			em.setBd(bd);
 
 			// Se recorre la lista obtenida de la bd
@@ -89,7 +85,7 @@ public class ETLVentasEJB {
 						.listarConParametroObjeto(DetalleVenta.LISTAR_DETALLES_FACTURA, facturaVenta);
 
 				for (DetalleVenta detalleVenta : detalles) {
-					
+
 					HechoVentas hecho = new HechoVentas();
 					hecho.setEmpleado(crearDimensionEmpleado(facturaVenta));
 					hecho.setFactura(crearDimensionFactura(facturaVenta));
@@ -98,31 +94,31 @@ public class ETLVentasEJB {
 					hecho.setProducto(crearDimensionProducto(detalleVenta));
 					hecho.setSubtotal(detalleVenta.getSubtotal());
 					hecho.setUnidades(detalleVenta.getCantidad());
-					
+
 					listaHechos.add(hecho);
 
 				}
 			}
 		}
-		
+
 		return listaHechos;
-		
+
 	}
-	
-	public void cargarDatosDWH(List<HechoVentas> hechos){
-		
+
+	public void cargarDatosDWH(List<HechoVentas> hechos) {
+
 		int fila = 0;
-		
+
 		List<Integer> codigosFacturas = new ArrayList<Integer>();
 		List<String> cedulasEmpleados = new ArrayList<String>();
 		List<String> cedulasClientes = new ArrayList<String>();
 		List<Integer> codigosMunicipios = new ArrayList<Integer>();
 		List<Integer> codigosProductos = new ArrayList<Integer>();
-		
+
 		for (HechoVentas hechoVentas : hechos) {
-			
+
 			fila++;
-			
+
 			int unidades = hechoVentas.getUnidades();
 			double subtotal = hechoVentas.getSubtotal();
 			int idFactura = hechoVentas.getFactura().getId();
@@ -130,85 +126,59 @@ public class ETLVentasEJB {
 			int idMunicipio = hechoVentas.getMunicipio().getId();
 			int idProducto = hechoVentas.getProducto().getId();
 			String cedulaEmpleado = hechoVentas.getEmpleado().getCedula();
-			
+
 			int edadEmpleado = hechoVentas.getEmpleado().getEdad();
 			int edadCliente = hechoVentas.getPersona().getEdad();
-			
+
 			double precioProducto = hechoVentas.getProducto().getPrecio();
-			if (precioProducto <= 0){
+			if (precioProducto <= 0) {
 				throw new ExcepcionNegocio("Debe cambiar el precio del producto de la fila " + fila);
 			}
-			
-			if (edadCliente > 130 || edadEmpleado > 130){
+
+			if (edadCliente > 130 || edadEmpleado > 130) {
 				throw new ExcepcionNegocio("Debe cambiar la edad de la persona ubicada en la fila " + fila);
 			}
-			
-			if (!em.dimensionExiste(idFactura, "DIMENSION_FACTURA") && !codigosFacturas.contains(idFactura)){
-				em.crearDimensionFactura(hechoVentas.getFactura());
-				codigosFacturas.add(idFactura);
+
+			if (!em.dimensionExiste(idFactura, "DIMENSION_FACTURA")) {
+				if (!codigosFacturas.contains(idFactura)) {
+					em.crearDimensionFactura(hechoVentas.getFactura());
+					codigosFacturas.add(idFactura);
+				}
+			} else {
+				em.editarDimensionfactura(idFactura, hechoVentas.getFactura().getTotalVenta());
 			}
-						
-			if (!em.dimensionPersonaExiste(cedulaEmpleado) && !cedulasEmpleados.contains(cedulaEmpleado)){
-				//em.eliminarDimensionPersona(cedulaEmpleado);
+
+			if (!em.dimensionPersonaExiste(cedulaEmpleado) && !cedulasEmpleados.contains(cedulaEmpleado)) {
 				em.crearDimensionPersona(hechoVentas.getEmpleado());
 				cedulasEmpleados.add(cedulaEmpleado);
-			} 			
-			//em.crearDimensionPersona(hechoVentas.getEmpleado());
-			
-			if (!em.dimensionExiste(idProducto, "DIMENSION_PRODUCTO") && !codigosProductos.contains(idProducto)){
-				//em.eliminarDimensionProducto(idProducto);
-				em.crearDimensionProducto(hechoVentas.getProducto());
-				codigosProductos.add(idProducto);
 			}
-			//em.crearDimensionProducto(hechoVentas.getProducto());
-			
-			if (!em.dimensionExiste(idMunicipio, "DIMENSION_MUNICIPIO") && !codigosMunicipios.contains(idMunicipio)){
+
+			if (!em.dimensionExiste(idProducto, "DIMENSION_PRODUCTO")) {
+				if (!codigosProductos.contains(idProducto)) {
+					em.crearDimensionProducto(hechoVentas.getProducto());
+					codigosProductos.add(idProducto);
+				}
+			} else {
+				em.editarDimensionProducto(idProducto, precioProducto);
+			}
+
+			if (!em.dimensionExiste(idMunicipio, "DIMENSION_MUNICIPIO") && !codigosMunicipios.contains(idMunicipio)) {
 				em.crearDimensionMunicipio(hechoVentas.getMunicipio());
 				codigosMunicipios.add(idMunicipio);
 			}
-			
-			if (!em.dimensionPersonaExiste(cedulaCliente) && !cedulasClientes.contains(cedulaCliente)){
-				//em.eliminarDimensionPersona(cedulaCliente);
-				em.crearDimensionPersona(hechoVentas.getPersona());
-				cedulasClientes.add(cedulaCliente);
-			}						
-//			em.crearDimensionPersona(hechoVentas.getPersona());
-			
-			em.crearHechoVentas(unidades, subtotal, idFactura, cedulaCliente, 
-					idMunicipio, idProducto, cedulaEmpleado);
-			
+
+			if (!em.dimensionPersonaExiste(cedulaCliente)) {
+				if (!cedulasClientes.contains(cedulaCliente)) {
+					em.crearDimensionPersona(hechoVentas.getPersona());
+					cedulasClientes.add(cedulaCliente);
+				}
+			} else {
+				em.editarDimensionPersona(cedulaCliente, edadCliente);
+			}
+
+			em.crearHechoVentas(unidades, subtotal, idFactura, cedulaCliente, idMunicipio, idProducto, cedulaEmpleado);
+
 		}
-		
-	}
-
-	/**
-	 * Crea un hecho venta en la bd
-	 * 
-	 * @param facturaVenta
-	 *            factura donde se encuentra la inforamciï¿½n de la venta
-	 * @param detalleVenta
-	 *            detalle de venta de la factura
-	 */
-	private void crearHechoVentas(FacturaVenta facturaVenta, DetalleVenta detalleVenta) {
-
-		int idFactura = facturaVenta.getId();
-
-		Municipio municipio = facturaVenta.getEmpleadoId().getMunicipio();
-		int idMunicipio = municipio.getId();
-
-		Persona cliente = facturaVenta.getClienteId();
-		String cedulaCliente = cliente.getCedula();
-
-		Persona empleado = facturaVenta.getEmpleadoId();
-		String cedulaEmpleado = empleado.getCedula();
-
-		Producto producto = detalleVenta.getProducto();
-		int idProducto = producto.getId();
-
-		int unidades = detalleVenta.getCantidad();
-		double subtotal = unidades * producto.getValorProducto();
-
-		em.crearHechoVentas(unidades, subtotal, idFactura, cedulaCliente, idMunicipio, idProducto, cedulaEmpleado);
 
 	}
 
@@ -308,6 +278,60 @@ public class ETLVentasEJB {
 
 	}
 
+	private void crearHechosVenta(List<FacturaVenta> listaFacturas, List<HechoVentas> listaHechos) {
+
+		// Se recorre la lista obtenida de la bd
+		for (FacturaVenta facturaVenta : listaFacturas) {
+
+			List<DetalleVenta> detalles = (List<DetalleVenta>) (Object) em
+					.listarConParametroObjeto(DetalleVenta.LISTAR_DETALLES_FACTURA, facturaVenta);
+
+			for (DetalleVenta detalleVenta : detalles) {
+
+				HechoVentas hecho = new HechoVentas();
+				hecho.setEmpleado(crearDimensionEmpleado(facturaVenta));
+				hecho.setFactura(crearDimensionFactura(facturaVenta));
+				hecho.setMunicipio(crearDimensionMunicipio(facturaVenta));
+				hecho.setPersona(crearDimensionCliente(facturaVenta));
+				hecho.setProducto(crearDimensionProducto(detalleVenta));
+				hecho.setSubtotal(detalleVenta.getSubtotal());
+				hecho.setUnidades(detalleVenta.getCantidad());
+
+				listaHechos.add(hecho);
+
+			}
+		}
+
+	}
+
+	// ------------------------------------ Rolling
+	// ----------------------------------------
+
+	public List<HechoVentas> obtenerHechoVentasRollingDia(String fecha, int bd, List<HechoVentas> listaHechos) {
+
+		List<FacturaVenta> listaFacturas = listaVentasPeriodo(fecha, fecha, bd);
+
+		if (listaFacturas.size() == 0) {
+
+			throw new ExcepcionNegocio("No hay facturas registradas en el día ingresado");
+
+		} else {
+
+			em.setBd(bd);
+
+			crearHechosVenta(listaFacturas, listaHechos);
+		}
+
+		return listaHechos;
+
+	}
+	
+	public List<HechoVentas> obtenerHechoVentasRollingSemana (String fecha, int bd, List<HechoVentas> listaHechos){
+		
+		return null;
+		
+	}
+
 	/**
 	 * Calcula la edad de una persona
 	 * 
@@ -316,8 +340,8 @@ public class ETLVentasEJB {
 	 * @return la edad de la persona
 	 */
 	public int calcularEdad(String fechaNacimiento) {
-		
-		if (fechaNacimiento.equals("")){
+
+		if (fechaNacimiento.equals("")) {
 			return 2018;
 		}
 

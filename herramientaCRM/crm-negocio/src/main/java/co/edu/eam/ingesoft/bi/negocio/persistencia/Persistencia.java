@@ -975,9 +975,22 @@ public class Persistencia implements Serializable {
 		String sql = "UPDATE DIMENSION_PRODUCTO SET precio = ?1 WHERE id = ?2";
 
 		Query q = emO.createNativeQuery(sql);
-		q.setParameter(1, id);
+		q.setParameter(1, precio);
+		q.setParameter(2, id);
 		q.executeUpdate();
 
+	}
+	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void editarDimensionfactura(int id, double total){
+		
+		String sql = "UPDATE DIMENSION_FACTURA SET total_venta = ?1 WHERE id = ?2";
+		
+		Query q = emO.createNativeQuery(sql);
+		q.setParameter(1, total);
+		q.setParameter(2, id);
+		q.executeUpdate();
+		
 	}
 
 	public int getBd() {
