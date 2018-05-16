@@ -138,10 +138,16 @@ public class ControladorDWH implements Serializable {
         Object newValue = event.getNewValue();
          
         if(newValue != null && !newValue.equals(oldValue)) {
+        	System.out.println("Columna " + event.getColumn().getColspan());
+        	System.out.println("Fila " + event.getRowIndex());
             Messages.addFlashGlobalInfo("Se ha editado correctamente");
             reload();
         }
     }
+	
+//	private void calcularSubtotal(int fila){
+//		
+//	}
 
 	/**
 	 * Carga los datos al data warehouse

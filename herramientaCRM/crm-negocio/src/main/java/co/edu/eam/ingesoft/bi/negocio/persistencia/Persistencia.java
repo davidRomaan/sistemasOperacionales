@@ -690,8 +690,6 @@ public class Persistencia implements Serializable {
 
 		List<Object> lista = q.getResultList();
 
-		System.out.println("tamanio lista: " + lista.size());
-
 		return lista;
 
 	}
@@ -891,7 +889,7 @@ public class Persistencia implements Serializable {
 	}
 
 	/**
-	 * Verifica si existe una dimensión que tiene como prmaria un integer
+	 * Verifica si existe una dimensiï¿½n que tiene como prmaria un integer
 	 * 
 	 * @param id
 	 *            identificador de la tabla

@@ -116,6 +116,12 @@ public class ETLVentasEJB {
 		
 		int fila = 0;
 		
+		List<Integer> codigosFacturas = new ArrayList<Integer>();
+		List<String> cedulasEmpleados = new ArrayList<String>();
+		List<String> cedulasClientes = new ArrayList<String>();
+		List<Integer> codigosMunicipios = new ArrayList<Integer>();
+		List<Integer> codigosProductos = new ArrayList<Integer>();
+		
 		for (HechoVentas hechoVentas : hechos) {
 			
 			fila++;
@@ -131,33 +137,43 @@ public class ETLVentasEJB {
 			int edadEmpleado = hechoVentas.getEmpleado().getEdad();
 			int edadCliente = hechoVentas.getPersona().getEdad();
 			
+			double precioProducto = hechoVentas.getProducto().getPrecio();
+			if (precioProducto <= 0){
+				throw new ExcepcionNegocio("Debe cambiar el precio del producto de la fila " + fila);
+			}
+			
 			if (edadCliente > 130 || edadEmpleado > 130){
 				throw new ExcepcionNegocio("Debe cambiar la edad de la persona ubicada en la fila " + fila);
 			}
 			
-			if (!em.dimensionExiste(idFactura, "DIMENSION_FACTURA")){
+			if (!em.dimensionExiste(idFactura, "DIMENSION_FACTURA") && !codigosFacturas.contains(idFactura)){
 				em.crearDimensionFactura(hechoVentas.getFactura());
+				codigosFacturas.add(idFactura);
 			}
 						
-			if (!em.dimensionPersonaExiste(cedulaEmpleado)){
+			if (!em.dimensionPersonaExiste(cedulaEmpleado) && !cedulasEmpleados.contains(cedulaEmpleado)){
 				//em.eliminarDimensionPersona(cedulaEmpleado);
 				em.crearDimensionPersona(hechoVentas.getEmpleado());
+				cedulasEmpleados.add(cedulaEmpleado);
 			} 			
 			//em.crearDimensionPersona(hechoVentas.getEmpleado());
 			
-			if (!em.dimensionExiste(idProducto, "DIMENSION_PRODUCTO")){
+			if (!em.dimensionExiste(idProducto, "DIMENSION_PRODUCTO") && !codigosProductos.contains(idProducto)){
 				//em.eliminarDimensionProducto(idProducto);
 				em.crearDimensionProducto(hechoVentas.getProducto());
+				codigosProductos.add(idProducto);
 			}
 			//em.crearDimensionProducto(hechoVentas.getProducto());
 			
-			if (!em.dimensionExiste(idMunicipio, "DIMENSION_MUNICIPIO")){
+			if (!em.dimensionExiste(idMunicipio, "DIMENSION_MUNICIPIO") && !codigosMunicipios.contains(idMunicipio)){
 				em.crearDimensionMunicipio(hechoVentas.getMunicipio());
+				codigosMunicipios.add(idMunicipio);
 			}
 			
-			if (!em.dimensionPersonaExiste(cedulaCliente)){
+			if (!em.dimensionPersonaExiste(cedulaCliente) && !cedulasClientes.contains(cedulaCliente)){
 				//em.eliminarDimensionPersona(cedulaCliente);
 				em.crearDimensionPersona(hechoVentas.getPersona());
+				cedulasClientes.add(cedulaCliente);
 			}						
 //			em.crearDimensionPersona(hechoVentas.getPersona());
 			

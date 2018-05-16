@@ -101,8 +101,6 @@ public class ETLAuditoriaEJB {
 				dimUsu.setGenero(per.getGenero().name());
 				dimUsu.setTipoUsuario(per.getTipoUsuario().getNombre());
 				
-				em.crearDimensionUsuario(dimUsu);
-				
 				HechoAuditoria hechoAudi = new HechoAuditoria();
 				hechoAudi.setAccion(auditorias.getAccion());
 				hechoAudi.setDispositivo(auditorias.getDispositivo());
