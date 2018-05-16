@@ -723,6 +723,38 @@ public class Persistencia implements Serializable {
 		return lista;
 
 	}
+	
+	public List<Object> listarFechaSemana(String fechaUno, String fechaDos) {
+
+		String sql = "";
+		Query q;
+
+		switch (this.bd) {
+
+		case 1:
+			sql = "SELECT id FROM bi.auditoria WHERE fecha_hora BETWEEN " + "'" + fechaUno + "' AND " + "'"
+					+ fechaDos + "'";
+			q = emM.createNativeQuery(sql);
+			break;
+
+		case 2:
+			sql = "SELECT id id FROM auditoria WHERE fecha_hora  BETWEEN " + "'" + fechaUno + "' AND " + "'"
+					+ fechaDos + "'";
+			q = emP.createNativeQuery(sql);
+			break;
+
+		default:
+			throw new ExcepcionNegocio("La base de datos a la cual intenta acceder no existe");
+
+		}
+
+		List<Object> lista = q.getResultList();
+
+		System.out.println("tamanio lista: " + lista.size());
+
+		return lista;
+
+	}
 
 	// ------------------------------ Gestion del dataWareHouse
 	// -------------------------------
@@ -965,6 +997,19 @@ public class Persistencia implements Serializable {
 		Query q = emO.createNativeQuery(sql);
 		q.setParameter(1, edad);
 		q.setParameter(2, cedula);
+		q.executeUpdate();
+
+	}
+	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void editarDimensionUsuario(String cedula, String tipo_usuario, int edad) {
+
+		String sql = "UPDATE DIMENSION_USUARIO SET edad = ?1, tipo_usuario = ?2 WHERE cedula = ?3";
+
+		Query q = emO.createNativeQuery(sql);
+		q.setParameter(1, edad);
+		q.setParameter(2, tipo_usuario);
+		q.setParameter(3, cedula);
 		q.executeUpdate();
 
 	}

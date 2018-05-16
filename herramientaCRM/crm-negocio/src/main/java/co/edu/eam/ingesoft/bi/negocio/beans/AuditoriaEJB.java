@@ -153,56 +153,44 @@ public class AuditoriaEJB {
 
 	public List<HechoAuditoria> listarFechaActualAuditoria(int bd, String fecha) {
 
-		try {
-			List<Auditoria> lista = listarPorFechaActual(fecha, bd);
-			List<HechoAuditoria> listaHecho = new ArrayList<HechoAuditoria>();
+		List<Auditoria> lista = listarPorFechaActual(fecha, bd);
+		List<HechoAuditoria> listaHecho = new ArrayList<HechoAuditoria>();
 
-			if (lista.size() == 0) {
+		if (lista.size() == 0) {
 
-				throw new ExcepcionNegocio("No hay facturas registradas en el periodo ingresado");
+			throw new ExcepcionNegocio("No hay facturas registradas en el periodo ingresado");
 
-			} else {
-				System.out.println("entro1");
-				for (int i = 0; i < lista.size(); i++) {
-					System.out.println("entro2");
-					Usuario us = usuarioEJB.buscarUsu(lista.get(i).getUsuario());
+		} else {
+			for (int i = 0; i < lista.size(); i++) {
 
-					if (lista.get(i).getUsuario().equals("")) {
-						lista.get(i).setUsuario("sin cedula");
-					} else {
-						System.out.println("entro3");
-						DimensionUsuario dimension = new DimensionUsuario();
-						dimension.setTipoUsuario(us.getTipoUsuario().getNombre());
-						dimension.setCedula(us.getCedula());
-						dimension.setNombre(us.getNombre());
-						dimension.setApellido(us.getApellido());
-						dimension.setGenero(String.valueOf(us.getGenero()));
-						dimension.setEdad((short) etlEJB.calcularEdad(us.getFechaNacimiento()));
+				Usuario us = usuarioEJB.buscarUsu(lista.get(i).getUsuario());
 
-						HechoAuditoria hecho = new HechoAuditoria();
-						hecho.setAccion(lista.get(i).getAccion());
-						hecho.setDispositivo(lista.get(i).getDispositivo());
-						hecho.setNavegador(lista.get(i).getNavegador());
-						hecho.setFecha(lista.get(i).getFechaHora());
-						hecho.setUsuario(dimension);
+				DimensionUsuario dimension = new DimensionUsuario();
+				dimension.setTipoUsuario(us.getTipoUsuario().getNombre());
+				dimension.setCedula(us.getCedula());
+				dimension.setNombre(us.getNombre());
+				dimension.setApellido(us.getApellido());
+				dimension.setGenero(String.valueOf(us.getGenero()));
+				dimension.setEdad((short) etlEJB.calcularEdad(us.getFechaNacimiento()));
+				dimension.setCargo(us.getCargo().getDescripcion());
 
-						listaHecho.add(hecho);
+				HechoAuditoria hecho = new HechoAuditoria();
+				hecho.setAccion(lista.get(i).getAccion());
+				hecho.setDispositivo(lista.get(i).getDispositivo());
+				hecho.setNavegador(lista.get(i).getNavegador());
+				hecho.setFecha(lista.get(i).getFechaHora());
+				hecho.setUsuario(dimension);
 
-					}
-				}
-				System.out.println("entro4");
-				return listaHecho;
+				listaHecho.add(hecho);
+
 			}
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.getMessage();
 		}
-		return null;
+
+		return listaHecho;
 
 	}
 
-	public List<Auditoria> listarPorFechaActual(String fecha, int bd) throws Exception {
+	public List<Auditoria> listarPorFechaActual(String fecha, int bd) {
 		em.setBd(bd);
 
 		List<Object> lista = em.listarFechaActual(fecha);
@@ -217,6 +205,136 @@ public class AuditoriaEJB {
 		}
 
 		return listaAudit;
+	}
+
+	public List<Auditoria> listarPorFechaSemana(String fecha, String fecha2, int bd) {
+		em.setBd(bd);
+
+		String[] datos = fecha.split("-");
+		int dia = Integer.parseInt(datos[0]);
+		int mes = Integer.parseInt(datos[1]);
+
+		String[] datosFecha2 = fecha2.split("-");
+		int diaDos = Integer.parseInt(datos[0]);
+		int mesDos = Integer.parseInt(datos[1]);
+		int anioDos = Integer.parseInt(datos[2]);
+
+		String nueva31 = "";
+		String nueva30 = "";
+		List<Auditoria> listaAudit = new ArrayList<Auditoria>();
+
+		if (mes == 1 || mes == 3 || mes == 5 || mes == 7 || mes == 8 || mes == 10 || mes == 12) {
+			mesDos++;
+			if (dia == 25) {
+				diaDos = 1;
+			}
+			if (dia == 26) {
+				diaDos = 2;
+			}
+			if (dia == 27) {
+				diaDos = 3;
+			}
+			if (dia == 28) {
+				diaDos = 4;
+			}
+			if (dia == 29) {
+				diaDos = 5;
+			}
+			if (dia == 30) {
+				diaDos = 6;
+			}
+			if (dia == 31) {
+				diaDos = 7;
+			}
+			nueva31 = anioDos + "-" + mesDos + "-" + diaDos;
+
+			List<Object> lista = em.listarFechaSemana(fecha, nueva31);
+			for (int i = 0; i < lista.size(); i++) {
+
+				int cod = (int) (Integer) lista.get(i);
+
+				Auditoria aud = (Auditoria) em.buscar(Auditoria.class, cod);
+				listaAudit.add(aud);
+			}
+
+		}
+		if (mes == 4 || mes == 6 || mes == 9 || mes == 11) {
+			if (dia == 24) {
+				diaDos = 1;
+			}
+			if (dia == 25) {
+				diaDos = 2;
+			}
+			if (dia == 26) {
+				diaDos = 3;
+			}
+			if (dia == 27) {
+				diaDos = 4;
+			}
+			if (dia == 28) {
+				diaDos = 5;
+			}
+			if (dia == 29) {
+				diaDos = 6;
+
+			}
+			if (dia == 30) {
+				diaDos = 7;
+
+			}
+			nueva30 = anioDos + "-" + mesDos + "-" + diaDos;
+
+			List<Object> lista = em.listarFechaSemana(fecha, nueva30);
+
+			for (int i = 0; i < lista.size(); i++) {
+
+				int cod = (int) (Integer) lista.get(i);
+
+				Auditoria aud = (Auditoria) em.buscar(Auditoria.class, cod);
+				listaAudit.add(aud);
+			}
+
+		}
+		return listaAudit;
+	}
+
+	public List<HechoAuditoria> listarFechaSemanaAuditoria(int bd, String fecha, String fecha2) {
+
+		List<Auditoria> lista = listarPorFechaSemana(fecha, fecha2, bd);
+		List<HechoAuditoria> listaHecho = new ArrayList<HechoAuditoria>();
+
+		if (lista.size() == 0) {
+
+			throw new ExcepcionNegocio("No hay facturas registradas en el periodo ingresado");
+
+		} else {
+			for (int i = 0; i < lista.size(); i++) {
+
+				Usuario us = usuarioEJB.buscarUsu(lista.get(i).getUsuario());
+
+				DimensionUsuario dimension = new DimensionUsuario();
+				dimension.setTipoUsuario(us.getTipoUsuario().getNombre());
+				dimension.setCedula(us.getCedula());
+				dimension.setNombre(us.getNombre());
+				dimension.setApellido(us.getApellido());
+				dimension.setGenero(String.valueOf(us.getGenero()));
+				dimension.setEdad((short) etlEJB.calcularEdad(us.getFechaNacimiento()));
+				dimension.setCargo(us.getCargo().getDescripcion());
+
+				HechoAuditoria hecho = new HechoAuditoria();
+				hecho.setAccion(lista.get(i).getAccion());
+				hecho.setDispositivo(lista.get(i).getDispositivo());
+				hecho.setNavegador(lista.get(i).getNavegador());
+				hecho.setFecha(lista.get(i).getFechaHora());
+				hecho.setUsuario(dimension);
+
+				listaHecho.add(hecho);
+
+			}
+		}
+
+		return listaHecho;
+
 	}
 
 	/**
