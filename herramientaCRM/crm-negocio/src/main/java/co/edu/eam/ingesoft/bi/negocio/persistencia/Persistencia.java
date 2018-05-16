@@ -24,6 +24,7 @@ import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionFactura;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionMunicipio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionPersona;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionProducto;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionUsuario;
 
 @LocalBean
 @Stateless
@@ -890,7 +891,7 @@ public class Persistencia implements Serializable {
 	}
 
 	/**
-	 * Verifica si existe una dimensión que tiene como prmaria un integer
+	 * Verifica si existe una dimensiï¿½n que tiene como prmaria un integer
 	 * 
 	 * @param id
 	 *            identificador de la tabla

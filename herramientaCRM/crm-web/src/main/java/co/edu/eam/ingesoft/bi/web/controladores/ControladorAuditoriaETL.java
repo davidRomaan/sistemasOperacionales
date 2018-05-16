@@ -20,6 +20,7 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
 import org.omnifaces.util.Messages;
+import org.primefaces.event.CellEditEvent;
 
 import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.VentaEJB;
@@ -145,6 +146,16 @@ public class ControladorAuditoriaETL implements Serializable {
 		}
 
 	}
+	
+	public void onCellEdit(CellEditEvent event) {
+        Object oldValue = event.getOldValue();
+        Object newValue = event.getNewValue();
+         
+        if(newValue != null && !newValue.equals(oldValue)) {
+            Messages.addFlashGlobalInfo("Se ha editado correctamente");
+            reload();
+        }
+    }
 
 	public void gestionarCarga() {
 		if (tipoCarga.equalsIgnoreCase("rolling")) {
@@ -195,4 +206,80 @@ public class ControladorAuditoriaETL implements Serializable {
 		this.baseDatos = baseDatos;
 	}
 
+	public String getFechaInicio() {
+		return fechaInicio;
+	}
+
+	public void setFechaInicio(String fechaInicio) {
+		this.fechaInicio = fechaInicio;
+	}
+
+	public String getFechaFin() {
+		return fechaFin;
+	}
+
+	public void setFechaFin(String fechaFin) {
+		this.fechaFin = fechaFin;
+	}
+
+	public String getBase() {
+		return base;
+	}
+
+	public void setBase(String base) {
+		this.base = base;
+	}
+
+	public boolean isDatosPostgresCargados() {
+		return datosPostgresCargados;
+	}
+
+	public void setDatosPostgresCargados(boolean datosPostgresCargados) {
+		this.datosPostgresCargados = datosPostgresCargados;
+	}
+
+	public boolean isDatosMysqlCargados() {
+		return datosMysqlCargados;
+	}
+
+	public void setDatosMysqlCargados(boolean datosMysqlCargados) {
+		this.datosMysqlCargados = datosMysqlCargados;
+	}
+
+	public List<HechoAuditoria> getHechoAuditorias() {
+		return hechoAuditorias;
+	}
+
+	public void setHechoAuditorias(List<HechoAuditoria> hechoAuditorias) {
+		this.hechoAuditorias = hechoAuditorias;
+	}
+
+	public AuditoriaEJB getAuditoriaEJB() {
+		return auditoriaEJB;
+	}
+
+	public void setAuditoriaEJB(AuditoriaEJB auditoriaEJB) {
+		this.auditoriaEJB = auditoriaEJB;
+	}
+
+	public ETLAuditoriaEJB getAuditoriaETL() {
+		return auditoriaETL;
+	}
+
+	public void setAuditoriaETL(ETLAuditoriaEJB auditoriaETL) {
+		this.auditoriaETL = auditoriaETL;
+	}
+
+	public VentaEJB getVentaEJB() {
+		return ventaEJB;
+	}
+
+	public void setVentaEJB(VentaEJB ventaEJB) {
+		this.ventaEJB = ventaEJB;
+	}
+	
+	
+	
+	
+	
 }

@@ -104,11 +104,11 @@
 				<h:panelGrid id="panelIntervalo" columns="4">
 
 					<p:outputLabel id="mask1" value="Desde: " />
-					<p:inputMask id="date1" value="#{controladorDWH.fechaInicio}"
+					<p:inputMask id="date1" value="#{controladorAuditoriaETL.fechaInicio}"
 						mask="99/99/9999" />
 
 					<p:outputLabel id="mask2" value=" Hasta: " />
-					<p:inputMask id="date2" value="#{controladorDWH.fechaFin}"
+					<p:inputMask id="date2" value="#{controladorAuditoriaETL.fechaFin}"
 						mask="99/99/9999" />
 				</h:panelGrid>
 				<br />
@@ -118,9 +118,103 @@
 					<p:commandButton id="btnCargar" value="Cargar Datos"
 						process="@this,panelIntervalo,panelDatos,panelValidacion"
 						update="panelIntervalo,panelDatos,panelValidacion"
-						action="#{controladorDWH.cargar}" style="align:center" />
+						action="#{controladorAuditoriaETL.cargar}" style="align:center" />
 
 				</h:panelGrid>
+
+			</h:panelGrid>
+			
+			<h:panelGrid id="panelTabla">
+
+				<p:dataTable id="tablaHechos" value="#{controladorAuditoriaETL.hechoAuditorias}"
+					var="hecho" border="1" scrollable="true" scrollWidth="80%"
+					scrollHeight="150" editable="true" editMode="cell">
+
+					<f:facet name="header">
+         				   Datos a cargar
+      			    </f:facet>
+
+					<p:ajax event="cellEdit" listener="#{controladorAuditoriaETL.onCellEdit}"
+						update="panelTabla" />
+
+					<p:columnGroup type="header">
+						<p:row>
+							<p:column colspan="4" headerText="Datos Auditoria" />
+							<p:column colspan="5" headerText="Datos Cliente" />
+						</p:row>
+						<p:row>
+							<p:column headerText="Accion Realizada" />
+							<p:column headerText="Dispositivo" />
+							<p:column headerText="Navegador" />
+							<p:column headerText="Fecha" />
+							<p:column headerText="Cedula" />
+							<p:column headerText="Nombre" />
+							<p:column headerText="Cargo" />
+							<p:column headerText="Edad" />
+							<p:column headerText="Tipo de Usuario" />
+						</p:row>
+					</p:columnGroup>
+
+					<p:column>
+						<h:outputLabel value="#{hecho.accion}" />
+					</p:column>
+
+					<p:column>
+						<h:outputLabel value="#{hecho.dispositivo}" />
+					</p:column>
+
+					<p:column>
+						<h:outputLabel value="#{hecho.navegador}" />
+					</p:column>
+
+					<p:column>
+						<h:outputLabel value="#{hecho.fecha}" />
+					</p:column>
+
+					<p:column>
+						<h:outputLabel value="#{hecho.usuario.cedula}" />
+					</p:column>
+
+					<p:column>
+						<h:outputLabel value="#{hecho.usuario.nombre}" />
+					</p:column>
+
+					<p:column>
+						<h:outputLabel value="#{hecho.usuario.cargo}" />
+					</p:column>
+
+					<p:column>
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{hecho.usuario.edad}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="#{hecho.usuario.edad}" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+					
+					<p:column>
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{hecho.usuario.tipoUsuario}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="#{hecho.usuario.tipoUsuario}" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+				</p:dataTable>
+
+			</h:panelGrid>
+			<br />
+
+			<h:panelGrid id="panelBotonCarga">
+
+				<p:commandButton id="btnCargaDatos" value="Cargar Datos"
+					process="@this,panelIntervalo,panelDatos,panelValidacion,panelBD,panelTabla"
+					update="panelTabla" action="#{controladorAuditoriaETL.cargar}" />
 
 			</h:panelGrid>
 
