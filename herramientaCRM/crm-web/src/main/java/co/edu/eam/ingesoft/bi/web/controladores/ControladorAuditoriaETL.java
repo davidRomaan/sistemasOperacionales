@@ -20,6 +20,7 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
 import org.omnifaces.util.Messages;
+import org.primefaces.event.CellEditEvent;
 
 import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.VentaEJB;
@@ -34,6 +35,16 @@ public class ControladorAuditoriaETL implements Serializable {
 	private String tipoCarga;
 	private String fechaSeleccionada;
 	private String fechaCampo;
+	private String fechaCampo2;
+
+	public String getFechaCampo2() {
+		return fechaCampo2;
+	}
+
+	public void setFechaCampo2(String fechaCampo2) {
+		this.fechaCampo2 = fechaCampo2;
+	}
+
 	private List<HechoAuditoria> listaHechoAct;
 
 	private int baseDatos;
@@ -41,20 +52,21 @@ public class ControladorAuditoriaETL implements Serializable {
 	private String fechaInicio;
 	private String fechaFin;
 	private String base;
-	
+
 	private boolean datosPostgresCargados;
 	private boolean datosMysqlCargados;
-	
+
 	private List<HechoAuditoria> hechoAuditorias;
-	
+
 	@EJB
 	private AuditoriaEJB auditoriaEJB;
-	
+
 	@EJB
 	private ETLAuditoriaEJB auditoriaETL;
-	
+
 	@EJB
 	private VentaEJB ventaEJB;
+
 	@PostConstruct
 	private void inicializarCampos() {
 		hechoAuditorias = new ArrayList<HechoAuditoria>();
@@ -62,9 +74,10 @@ public class ControladorAuditoriaETL implements Serializable {
 		datosMysqlCargados = false;
 	}
 
-
 	// Para identificar si se seleccion� la carga como tipo rolling
 	private boolean rollingSeleccionado;
+
+	private boolean semanaSeleccionada;
 
 	private void reload() {
 		ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
@@ -82,9 +95,8 @@ public class ControladorAuditoriaETL implements Serializable {
 		}
 		if (fechaSeleccionada.equals("1")) {
 			try {
-				
-				listaHechoAct = auditoriaEJB.listarFechaActualAuditoria(baseDatos,fechaCampo);
-				System.out.println(listaHechoAct.get(0).getUsuario() +"-----------------------------------------------");
+
+				listaHechoAct = auditoriaEJB.listarFechaActualAuditoria(baseDatos, fechaCampo);
 			} catch (Exception e) {
 				e.getMessage();
 			}
@@ -92,12 +104,16 @@ public class ControladorAuditoriaETL implements Serializable {
 		}
 		if (fechaSeleccionada.equals("2")) {
 
+			listaHechoAct = null;
+			listaHechoAct = auditoriaEJB.listarFechaSemanaAuditoria(baseDatos, fechaCampo, fechaCampo2);
+
 		}
 		if (fechaSeleccionada.equals("3")) {
 
 		}
+		reload();
 	}
-	
+
 	/**
 	 * Carga los datos
 	 */
@@ -125,7 +141,8 @@ public class ControladorAuditoriaETL implements Serializable {
 		} else {
 
 			try {
-				hechoAuditorias = auditoriaETL.obtenerDatosHechoVentasAcumulacionSimple(fecha1, fecha2, bd, hechoAuditorias);
+				hechoAuditorias = auditoriaETL.obtenerDatosHechoVentasAcumulacionSimple(fecha1, fecha2, bd,
+						hechoAuditorias);
 				Messages.addFlashGlobalInfo("Datos cargados exitosamente");
 				if (bd == 1) {
 					datosMysqlCargados = true;
@@ -146,16 +163,29 @@ public class ControladorAuditoriaETL implements Serializable {
 		}
 
 	}
-	
+
 	public void onCellEdit(CellEditEvent event) {
-        Object oldValue = event.getOldValue();
-        Object newValue = event.getNewValue();
-         
-        if(newValue != null && !newValue.equals(oldValue)) {
-            Messages.addFlashGlobalInfo("Se ha editado correctamente");
-            reload();
-        }
-    }
+		Object oldValue = event.getOldValue();
+		Object newValue = event.getNewValue();
+
+		if (newValue != null && !newValue.equals(oldValue)) {
+			Messages.addFlashGlobalInfo("Se ha editado correctamente");
+			reload();
+		}
+	}
+
+	public void gestionarComboFecha() {
+		if (fechaSeleccionada.equals("1")) {
+			semanaSeleccionada = false;
+		}
+		if (fechaSeleccionada.equalsIgnoreCase("2")) {
+			semanaSeleccionada = true;
+		}
+		if (fechaSeleccionada.equalsIgnoreCase("3")) {
+			semanaSeleccionada = true;
+		}
+		reload();
+	}
 
 	public void gestionarCarga() {
 		if (tipoCarga.equalsIgnoreCase("rolling")) {
@@ -285,9 +315,13 @@ public class ControladorAuditoriaETL implements Serializable {
 	public void setVentaEJB(VentaEJB ventaEJB) {
 		this.ventaEJB = ventaEJB;
 	}
-	
-	
-	
-	
-	
+
+	public boolean isSemanaSeleccionada() {
+		return semanaSeleccionada;
+	}
+
+	public void setSemanaSeleccionada(boolean semanaSeleccionada) {
+		this.semanaSeleccionada = semanaSeleccionada;
+	}
+
 }
