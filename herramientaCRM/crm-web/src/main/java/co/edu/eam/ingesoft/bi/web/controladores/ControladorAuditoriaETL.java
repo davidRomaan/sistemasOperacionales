@@ -36,12 +36,24 @@ public class ControladorAuditoriaETL implements Serializable {
 	private String tipoCarga;
 	private String fechaSeleccionada;
 	private String fechaCampo;
+	private String fechaCampo2;
+
+	public String getFechaCampo2() {
+		return fechaCampo2;
+	}
+
+	public void setFechaCampo2(String fechaCampo2) {
+		this.fechaCampo2 = fechaCampo2;
+	}
+
 	private List<HechoAuditoria> listaHechoAct;
 
 	private int baseDatos;
 
 	private String fechaInicio;
 	private String fechaFin;
+
+	private String base;
 
 	private boolean datosPostgresCargados;
 	private boolean datosMysqlCargados;
@@ -67,6 +79,8 @@ public class ControladorAuditoriaETL implements Serializable {
 	// Para identificar si se seleccion� la carga como tipo rolling
 	private boolean rollingSeleccionado;
 
+	private boolean semanaSeleccionada;
+
 	private void reload() {
 		ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
 		try {
@@ -85,8 +99,6 @@ public class ControladorAuditoriaETL implements Serializable {
 			try {
 
 				listaHechoAct = auditoriaEJB.listarFechaActualAuditoria(baseDatos, fechaCampo);
-				System.out
-						.println(listaHechoAct.get(0).getUsuario() + "-----------------------------------------------");
 			} catch (Exception e) {
 				e.getMessage();
 			}
@@ -94,10 +106,14 @@ public class ControladorAuditoriaETL implements Serializable {
 		}
 		if (fechaSeleccionada.equals("2")) {
 
+			listaHechoAct = null;
+			listaHechoAct = auditoriaEJB.listarFechaSemanaAuditoria(baseDatos, fechaCampo, fechaCampo2);
+
 		}
 		if (fechaSeleccionada.equals("3")) {
 
 		}
+		reload();
 	}
 
 	/**
@@ -225,6 +241,19 @@ public class ControladorAuditoriaETL implements Serializable {
 		}
 	}
 
+	public void gestionarComboFecha() {
+		if (fechaSeleccionada.equals("1")) {
+			semanaSeleccionada = false;
+		}
+		if (fechaSeleccionada.equalsIgnoreCase("2")) {
+			semanaSeleccionada = true;
+		}
+		if (fechaSeleccionada.equalsIgnoreCase("3")) {
+			semanaSeleccionada = true;
+		}
+		reload();
+	}
+	
 	/**
 	 * Vac�a la tabla de hechos de ventas
 	 */
@@ -311,6 +340,14 @@ public class ControladorAuditoriaETL implements Serializable {
 		this.fechaFin = fechaFin;
 	}
 
+	public String getBase() {
+		return base;
+	}
+
+	public void setBase(String base) {
+		this.base = base;
+	}
+
 	public boolean isDatosPostgresCargados() {
 		return datosPostgresCargados;
 	}
@@ -357,6 +394,15 @@ public class ControladorAuditoriaETL implements Serializable {
 
 	public void setVentaEJB(VentaEJB ventaEJB) {
 		this.ventaEJB = ventaEJB;
+	}
+
+
+	public boolean isSemanaSeleccionada() {
+		return semanaSeleccionada;
+	}
+
+	public void setSemanaSeleccionada(boolean semanaSeleccionada) {
+		this.semanaSeleccionada = semanaSeleccionada;
 	}
 
 }
