@@ -97,7 +97,16 @@ public class ETLAuditoriaEJB {
 				hechoAudi.setDispositivo(auditorias.getDispositivo());
 				hechoAudi.setNavegador(auditorias.getNavegador());
 				hechoAudi.setUsuario(dimUsu);
-				hechoAudi.setFecha(auditorias.getFechaHora());
+				
+				String [] datos = auditorias.getFechaHora().split("/");
+				int anio = Integer.parseInt(datos[0]);
+				int mes = Integer.parseInt(datos[1]);
+				int dia = Integer.parseInt(datos[2]);
+				
+				Calendar fecha = new GregorianCalendar();
+				fecha.set(anio, mes, dia);
+				
+				hechoAudi.setFecha(fecha);
 
 				listaHechos.add(hechoAudi);
 

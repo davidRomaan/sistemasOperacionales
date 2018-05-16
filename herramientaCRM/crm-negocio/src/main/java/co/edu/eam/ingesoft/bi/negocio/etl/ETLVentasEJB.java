@@ -2,7 +2,6 @@ package co.edu.eam.ingesoft.bi.negocio.etl;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -10,9 +9,7 @@ import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
-import org.hibernate.jpa.event.spi.jpa.ListenerFactory;
 
-import co.edu.eam.ingesoft.bi.negocio.beans.ConexionEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.VentaEJB;
 import co.edu.eam.ingesoft.bi.negocio.persistencia.Persistencia;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
@@ -46,7 +43,7 @@ public class ETLVentasEJB {
 
 		List<Object> lista = em.listarFacturasIntervaloFecha(fecha1, fecha2);
 
-		System.out.println("Tamaño lista: " + lista.size());
+		System.out.println("Tamaï¿½o lista: " + lista.size());
 
 		List<FacturaVenta> listaFacturas = new ArrayList<FacturaVenta>();
 
@@ -188,7 +185,7 @@ public class ETLVentasEJB {
 	 * Crea un hecho venta en la bd
 	 * 
 	 * @param facturaVenta
-	 *            factura donde se encuentra la inforamción de la venta
+	 *            factura donde se encuentra la inforamciï¿½n de la venta
 	 * @param detalleVenta
 	 *            detalle de venta de la factura
 	 */
@@ -216,7 +213,7 @@ public class ETLVentasEJB {
 	}
 
 	/**
-	 * Crea una dimensión de factura que se agregará al hecho de venta
+	 * Crea una dimensiï¿½n de factura que se agregarï¿½ al hecho de venta
 	 * 
 	 * @param facturaVenta
 	 *            factura generada
@@ -233,7 +230,7 @@ public class ETLVentasEJB {
 	}
 
 	/**
-	 * Crea la dimensión del municipio que se desea asignar al hecho de ventas
+	 * Crea la dimensiï¿½n del municipio que se desea asignar al hecho de ventas
 	 * 
 	 * @param facturaVenta
 	 *            factura de la venta en la que se encuetra el municipio
@@ -293,7 +290,7 @@ public class ETLVentasEJB {
 	}
 
 	/**
-	 * Crea una dimendion del producto que se agregará al hecho venta
+	 * Crea una dimendion del producto que se agregarï¿½ al hecho venta
 	 * 
 	 * @param detalleVenta
 	 *            detalle de venta en la que se encuentra el producto
