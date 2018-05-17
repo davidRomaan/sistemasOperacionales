@@ -15,9 +15,12 @@ import co.edu.eam.ingesoft.bi.negocio.beans.UsuarioEJB;
 import co.edu.eam.ingesoft.bi.negocio.persistencia.Persistencia;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Auditoria;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.DetalleVenta;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.FacturaVenta;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Usuario;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionUsuario;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoAuditoria;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoVentas;
 
 @LocalBean
 @Stateless
@@ -178,6 +181,131 @@ public class ETLAuditoriaEJB {
 			}
 
 		}
+
+	}
+	
+	public List<HechoAuditoria> obtnerHechoVentasRollingMes(String fecha, int bd, List<HechoAuditoria> listaHechos) {
+
+		List<Auditoria> facturas = obtenerAuditoriasPorMes(fecha, bd);
+
+		if (facturas.size() == 0) {
+
+			throw new ExcepcionNegocio("No hay Auditorias registradas en el mes ingresado");
+
+		} else {
+
+			em.setBd(bd);
+
+			listaHechos = crearHechosAuditoria(facturas, listaHechos);
+
+		}
+
+		return listaHechos;
+
+	}
+	
+	public List<HechoAuditoria> obtnerHechoVentasRollingAnio(String fecha, int bd, List<HechoAuditoria> listaHechos) {
+
+		List<Auditoria> facturas = obtenerFacturasPorAnio(fecha, bd);
+
+		if (facturas.size() == 0) {
+
+			throw new ExcepcionNegocio("No hay facturas registradas en el a�o ingresado");
+
+		} else {
+
+			em.setBd(bd);
+
+			listaHechos = crearHechosAuditoria(facturas, listaHechos);
+
+		}
+
+		return listaHechos;
+
+	}
+	
+	private List<Auditoria> obtenerAuditoriasPorMes(String fecha, int bd) {
+
+		String datos[] = fecha.split("-");
+
+		int mes = Integer.parseInt(datos[1]);
+		int anio = Integer.parseInt(datos[0]);
+
+		List<Auditoria> audis = new ArrayList<Auditoria>();
+
+		List<Object> codigos = em.listaFacturasMes(mes, anio, bd);
+
+		for (Object object : codigos) {
+
+			int cod = (Integer) object;
+
+			em.setBd(bd);
+
+			Auditoria factura = (Auditoria) em.buscar(Auditoria.class, cod);
+
+			audis.add(factura);
+
+		}
+
+		return audis;
+
+	}
+	
+	private List<Auditoria> obtenerFacturasPorAnio(String fecha, int bd) {
+
+		String datos[] = fecha.split("-");
+
+		int anio = Integer.parseInt(datos[0]);
+
+		List<Auditoria> facturas = new ArrayList<Auditoria>();
+
+		List<Object> codigos = em.listaFacturasAnio(anio, bd);
+
+		for (Object object : codigos) {
+
+			int cod = (Integer) object;
+
+			em.setBd(bd);
+
+			Auditoria factura = (Auditoria) em.buscar(Auditoria.class, cod);
+
+			facturas.add(factura);
+
+		}
+
+		return facturas;
+
+	}
+	
+	private List<HechoAuditoria> crearHechosAuditoria(List<Auditoria> listaAudi, List<HechoAuditoria> listaHechos) {
+
+		// Se recorre la lista obtenida de la bd
+		for (Auditoria auditorias : listaAudi) {
+
+			String ced = auditorias.getUsuario();
+			Usuario per = usuarioEJB.buscarUsu(ced);
+
+			DimensionUsuario dimUsu = new DimensionUsuario();
+			dimUsu.setNombre(per.getNombre());
+			dimUsu.setApellido(per.getApellido());
+			dimUsu.setCargo(per.getCargo().getDescripcion());
+			dimUsu.setCedula(ced);
+			dimUsu.setEdad(calcularEdad(per.getFechaNacimiento()));
+			dimUsu.setGenero(per.getGenero().name());
+			dimUsu.setTipoUsuario(per.getTipoUsuario().getNombre());
+
+			HechoAuditoria hechoAudi = new HechoAuditoria();
+			hechoAudi.setAccion(auditorias.getAccion());
+			hechoAudi.setDispositivo(auditorias.getDispositivo());
+			hechoAudi.setNavegador(auditorias.getNavegador());
+			hechoAudi.setUsuario(dimUsu);
+
+			hechoAudi.setFecha(auditorias.getFechaHora());
+
+			listaHechos.add(hechoAudi);
+		}
+
+		return listaHechos;
 
 	}
 
