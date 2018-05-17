@@ -105,6 +105,16 @@ public class ETLVentasEJB {
 		return listaHechos;
 
 	}
+	
+	public void limpiarBDOracle(){
+		
+		em.limpiarBDOracle("HECHO_VENTAS");
+		em.limpiarBDOracle("DIMENSION_FACTURA");
+		em.limpiarBDOracle("DIMENSION_MUNICIPIO");
+		em.limpiarBDOracle("DIMENSION_PERSONA");
+		em.limpiarBDOracle("DIMENSION_PRODUCTO");
+		
+	}
 
 	public void cargarDatosDWH(List<HechoVentas> hechos) {
 

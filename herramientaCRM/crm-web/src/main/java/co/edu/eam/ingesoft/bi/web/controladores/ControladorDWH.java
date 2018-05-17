@@ -273,6 +273,12 @@ public class ControladorDWH implements Serializable {
 			Messages.addFlashGlobalError("No hay datos para cargar");
 
 		} else {
+			
+			if (rollingSeleccionado){
+				
+				etlVentasEJB.limpiarBDOracle();
+				
+			}
 
 			try {
 				etlVentasEJB.cargarDatosDWH(hechosVenta);
