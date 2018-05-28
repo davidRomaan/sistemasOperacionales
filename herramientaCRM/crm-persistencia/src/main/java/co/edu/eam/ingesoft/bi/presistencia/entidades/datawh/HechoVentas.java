@@ -1,31 +1,32 @@
 package co.edu.eam.ingesoft.bi.presistencia.entidades.datawh;
 
 import java.io.Serializable;
+import java.util.Calendar;
 
 public class HechoVentas implements Serializable {
 
 	private int unidades;
 	private double subtotal;
 	private DimensionPersona persona;
-	private DimensionFactura factura;
 	private DimensionMunicipio municipio;
 	private DimensionProducto producto;
 	private DimensionPersona empleado;
+	private Calendar fecha;
 	
 	public HechoVentas() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public HechoVentas(int unidades, double subtotal, DimensionPersona persona, DimensionPersona empleado, DimensionFactura factura,
-			DimensionMunicipio municipio, DimensionProducto producto) {
+	public HechoVentas(int unidades, double subtotal, DimensionPersona persona, DimensionPersona empleado,
+			DimensionMunicipio municipio, DimensionProducto producto, Calendar fecha) {
 		super();
 		this.unidades = unidades;
 		this.subtotal = subtotal;
 		this.persona = persona;
-		this.factura = factura;
 		this.municipio = municipio;
 		this.producto = producto;
 		this.empleado = empleado;
+		this.fecha = fecha;
 	}
 
 	public int getUnidades() {
@@ -52,14 +53,6 @@ public class HechoVentas implements Serializable {
 		this.persona = persona;
 	}
 
-	public DimensionFactura getFactura() {
-		return factura;
-	}
-
-	public void setFactura(DimensionFactura factura) {
-		this.factura = factura;
-	}
-
 	public DimensionMunicipio getMunicipio() {
 		return municipio;
 	}
@@ -82,6 +75,14 @@ public class HechoVentas implements Serializable {
 
 	public void setEmpleado(DimensionPersona empleado) {
 		this.empleado = empleado;
+	}
+
+	public Calendar getFecha() {
+		return fecha;
+	}
+
+	public void setFecha(Calendar fecha) {
+		this.fecha = fecha;
 	}
 	
 	

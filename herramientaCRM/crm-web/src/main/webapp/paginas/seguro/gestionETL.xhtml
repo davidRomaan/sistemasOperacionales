@@ -210,11 +210,15 @@
 			</h:panelGrid>
 			<br />
 
-			<h:panelGrid id="panelBotonCarga">
+			<h:panelGrid id="panelBotones" columns="2">
 
 				<p:commandButton id="btnCargaDatos" value="Cargar Datos"
 					process="@this,panelIntervalo,panelDatos,panelValidacion,panelBD,panelTabla"
 					update="panelTabla" action="#{controladorDWH.cargar}" />
+					
+					<p:commandButton id="btnTransformar" value="Transformar"
+					process="@this,panelTabla"
+					update="panelTabla" action="#{controladorDWH.transformar}" />
 
 			</h:panelGrid>
 

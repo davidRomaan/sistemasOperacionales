@@ -18,7 +18,6 @@ import co.edu.eam.ingesoft.bi.presistencia.entidades.FacturaVenta;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Municipio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Persona;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Producto;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionFactura;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionMunicipio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionPersona;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionProducto;
@@ -39,8 +38,6 @@ public class ETLVentasEJB {
 		em.setBd(bd);
 
 		List<Object> lista = em.listarFacturasIntervaloFecha(fecha1, fecha2);
-
-		System.out.println("Tamaï¿½o lista: " + lista.size());
 
 		List<FacturaVenta> listaFacturas = new ArrayList<FacturaVenta>();
 
@@ -89,12 +86,13 @@ public class ETLVentasEJB {
 
 					HechoVentas hecho = new HechoVentas();
 					hecho.setEmpleado(crearDimensionEmpleado(facturaVenta));
-					hecho.setFactura(crearDimensionFactura(facturaVenta));
 					hecho.setMunicipio(crearDimensionMunicipio(facturaVenta));
 					hecho.setPersona(crearDimensionCliente(facturaVenta));
 					hecho.setProducto(crearDimensionProducto(detalleVenta));
+
 					hecho.setSubtotal(detalleVenta.getSubtotal());
 					hecho.setUnidades(detalleVenta.getCantidad());
+					hecho.setFecha(facturaVenta.getFechaVenta());
 
 					listaHechos.add(hecho);
 
@@ -105,22 +103,30 @@ public class ETLVentasEJB {
 		return listaHechos;
 
 	}
-	
-	public void limpiarBDOracle(){
-		
+
+	/**
+	 * vacía las tablas relacionados con las ventas en la base de datos de
+	 * oracle
+	 */
+	public void limpiarBDOracle() {
+
 		em.limpiarBDOracle("HECHO_VENTAS");
-		em.limpiarBDOracle("DIMENSION_FACTURA");
 		em.limpiarBDOracle("DIMENSION_MUNICIPIO");
 		em.limpiarBDOracle("DIMENSION_PERSONA");
 		em.limpiarBDOracle("DIMENSION_PRODUCTO");
-		
+
 	}
 
+	/**
+	 * Carga los datos transformados en la base de datos de oralce
+	 * 
+	 * @param hechos
+	 *            lista que se desea cargar en la bd
+	 */
 	public void cargarDatosDWH(List<HechoVentas> hechos) {
 
 		int fila = 0;
 
-		List<Integer> codigosFacturas = new ArrayList<Integer>();
 		List<String> cedulasEmpleados = new ArrayList<String>();
 		List<String> cedulasClientes = new ArrayList<String>();
 		List<Integer> codigosMunicipios = new ArrayList<Integer>();
@@ -132,11 +138,11 @@ public class ETLVentasEJB {
 
 			int unidades = hechoVentas.getUnidades();
 			double subtotal = hechoVentas.getSubtotal();
-			int idFactura = hechoVentas.getFactura().getId();
 			String cedulaCliente = hechoVentas.getPersona().getCedula();
 			int idMunicipio = hechoVentas.getMunicipio().getId();
 			int idProducto = hechoVentas.getProducto().getId();
 			String cedulaEmpleado = hechoVentas.getEmpleado().getCedula();
+			Calendar fecha = hechoVentas.getFecha();
 
 			int edadEmpleado = hechoVentas.getEmpleado().getEdad();
 			int edadCliente = hechoVentas.getPersona().getEdad();
@@ -146,17 +152,8 @@ public class ETLVentasEJB {
 				throw new ExcepcionNegocio("Debe cambiar el precio del producto de la fila " + fila);
 			}
 
-			if (edadCliente > 130 || edadEmpleado > 130) {
+			if (edadCliente > 130 || edadCliente < 10) {
 				throw new ExcepcionNegocio("Debe cambiar la edad de la persona ubicada en la fila " + fila);
-			}
-
-			if (!em.dimensionExiste(idFactura, "DIMENSION_FACTURA")) {
-				if (!codigosFacturas.contains(idFactura)) {
-					em.crearDimensionFactura(hechoVentas.getFactura());
-					codigosFacturas.add(idFactura);
-				}
-			} else {
-				em.editarDimensionfactura(idFactura, hechoVentas.getFactura().getTotalVenta());
 			}
 
 			if (!em.dimensionPersonaExiste(cedulaEmpleado) && !cedulasEmpleados.contains(cedulaEmpleado)) {
@@ -187,26 +184,9 @@ public class ETLVentasEJB {
 				em.editarDimensionPersona(cedulaCliente, edadCliente);
 			}
 
-			em.crearHechoVentas(unidades, subtotal, idFactura, cedulaCliente, idMunicipio, idProducto, cedulaEmpleado);
+			em.crearHechoVentas(unidades, subtotal, cedulaCliente, idMunicipio, idProducto, cedulaEmpleado, fecha);
 
 		}
-
-	}
-
-	/**
-	 * Crea una dimensiï¿½n de factura que se agregarï¿½ al hecho de venta
-	 * 
-	 * @param facturaVenta
-	 *            factura generada
-	 */
-	private DimensionFactura crearDimensionFactura(FacturaVenta facturaVenta) {
-
-		DimensionFactura dimensionFactura = new DimensionFactura();
-		dimensionFactura.setFecha(facturaVenta.getFechaVenta());
-		dimensionFactura.setId(facturaVenta.getId());
-		dimensionFactura.setTotalVenta(facturaVenta.getTotal());
-
-		return dimensionFactura;
 
 	}
 
@@ -301,13 +281,13 @@ public class ETLVentasEJB {
 
 				HechoVentas hecho = new HechoVentas();
 				hecho.setEmpleado(crearDimensionEmpleado(facturaVenta));
-				hecho.setFactura(crearDimensionFactura(facturaVenta));
 				hecho.setMunicipio(crearDimensionMunicipio(facturaVenta));
 				hecho.setPersona(crearDimensionCliente(facturaVenta));
 				hecho.setProducto(crearDimensionProducto(detalleVenta));
+				
 				hecho.setSubtotal(detalleVenta.getSubtotal());
 				hecho.setUnidades(detalleVenta.getCantidad());
-
+				hecho.setFecha(facturaVenta.getFechaVenta());
 				listaHechos.add(hecho);
 
 			}
@@ -411,7 +391,7 @@ public class ETLVentasEJB {
 		return listaHechos;
 
 	}
-	
+
 	public List<HechoVentas> obtnerHechoVentasRollingAnio(String fecha, int bd, List<HechoVentas> listaHechos) {
 
 		List<FacturaVenta> facturas = obtenerFacturasPorAnio(fecha, bd);
@@ -460,6 +440,114 @@ public class ETLVentasEJB {
 		int edad = anioActual - anio;
 
 		return edad;
+
+	}
+
+	// ------------------------- Transformación --------------------
+
+	/**
+	 * Transforma los datos que se desea cargar en la bd de oracle
+	 * 
+	 * @param hechos
+	 *            lista de hecho de ventas que se desea tranformar
+	 * @return la lista de hecho de ventas transformada
+	 */
+	public List<HechoVentas> transformarDatos(List<HechoVentas> hechos) {
+
+		for (HechoVentas hecho : hechos) {
+
+			DimensionProducto producto = hecho.getProducto();
+
+			if (producto.getPrecio() <= 0) {
+
+				double promedio = calcularPromedioProductos(hechos);
+				producto.setPrecio(promedio);
+
+				hecho.setSubtotal(promedio * hecho.getUnidades());
+
+			}
+
+			DimensionPersona cliente = hecho.getPersona();
+
+			if (cliente.getEdad() < 10 || cliente.getEdad() > 130) {
+
+				cliente.setEdad((short) calcularPromedioEdades(hechos));
+
+			}
+
+		}
+
+		return hechos;
+
+	}
+
+	/**
+	 * Calcula el promedio de la edades de las personas de la lista
+	 * 
+	 * @param hechos
+	 *            lista de hechos de venta en la cual se encuetra la información
+	 *            de las personas
+	 * @return el promedio de las edades de las personas
+	 */
+	public int calcularPromedioEdades(List<HechoVentas> hechos) {
+
+		int sumaEdades = 0;
+		int cantidad = 0;
+
+		for (HechoVentas hechoVentas : hechos) {
+
+			short edad = hechoVentas.getPersona().getEdad();
+
+			if (edad > 10 && edad <= 130) {
+
+				cantidad++;
+				sumaEdades += edad;
+
+			}
+
+		}
+
+		if (cantidad == 0) {
+			return sumaEdades;
+		}
+
+		return sumaEdades / cantidad;
+
+	}
+
+	/**
+	 * Calcula el promedio de los precios de los productos de la lista
+	 * 
+	 * @param hechos
+	 *            lista de hechos de ventas en la cual están registrados los
+	 *            productos
+	 * @return el promedio
+	 */
+	public double calcularPromedioProductos(List<HechoVentas> hechos) {
+
+		double precios = 0;
+		int cantidad = 0;
+
+		for (HechoVentas hecho : hechos) {
+
+			double precio = hecho.getProducto().getPrecio();
+
+			if (precio > 0) {
+
+				precios += precio;
+				cantidad++;
+
+			}
+
+		}
+
+		if (cantidad == 0) {
+			return precios;
+		}
+
+		double promedio = precios / cantidad;
+
+		return promedio;
 
 	}
 

@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class DimensionPersona implements Serializable {
 
+	private int id;
 	private String cedula;
 	private String nombre;
 	private String apellido;
@@ -72,6 +73,14 @@ public class DimensionPersona implements Serializable {
 
 	public void setTipoPersona(String tipoPersona) {
 		this.tipoPersona = tipoPersona;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 	

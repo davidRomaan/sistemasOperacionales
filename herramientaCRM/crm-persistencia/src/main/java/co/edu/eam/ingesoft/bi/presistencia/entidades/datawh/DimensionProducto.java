@@ -6,6 +6,7 @@ public class DimensionProducto implements Serializable {
 
 	private int id;
 	private String nombre;
+	private int codigo;
 	private double precio;
 	private String tipoProducto;
 	
@@ -13,12 +14,13 @@ public class DimensionProducto implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
-	public DimensionProducto(int id, String nombre, double precio, String tipoProducto) {
+	public DimensionProducto(int id, String nombre, int codigo, double precio, String tipoProducto) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
 		this.precio = precio;
 		this.tipoProducto = tipoProducto;
+		this.codigo = codigo;
 	}
 
 	public int getId() {
@@ -51,6 +53,14 @@ public class DimensionProducto implements Serializable {
 
 	public void setTipoProducto(String tipoProducto) {
 		this.tipoProducto = tipoProducto;
+	}
+
+	public int getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(int codigo) {
+		this.codigo = codigo;
 	}
 	
 	

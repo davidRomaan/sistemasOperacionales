@@ -241,8 +241,6 @@ public class ControladorDWH implements Serializable {
 
 			}
 
-			hecho.getFactura().setTotalVenta(total);
-
 		} else {
 
 			String cedula = hecho.getPersona().getCedula();
@@ -261,6 +259,25 @@ public class ControladorDWH implements Serializable {
 
 		}
 
+	}
+	
+	/**
+	 * Transforma la lista de hechos 
+	 */
+	public void transformar(){
+		
+		if (hechosVenta.size() == 0){
+			
+			Messages.addFlashGlobalError("La tabla esta vacía");
+			
+		} else {
+			
+			hechosVenta = etlVentasEJB.transformarDatos(hechosVenta);
+			
+			Messages.addFlashGlobalInfo("Datos transformados existosamente");
+			
+		}
+		
 	}
 
 	/**
