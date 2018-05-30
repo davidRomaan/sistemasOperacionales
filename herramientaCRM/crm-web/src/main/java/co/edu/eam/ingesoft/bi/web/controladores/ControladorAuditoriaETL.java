@@ -16,6 +16,7 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
@@ -70,6 +71,9 @@ public class ControladorAuditoriaETL implements Serializable {
 
 	@EJB
 	private VentaEJB ventaEJB;
+	
+	@Inject
+	private ControladorSesion sesion;
 
 	@PostConstruct
 	private void inicializarCampos() {
@@ -118,7 +122,7 @@ public class ControladorAuditoriaETL implements Serializable {
 
 			try{
 				listaHechoAct = auditoriaETL.obtnerHechoVentasRollingMes(fechaSeleccionada, bd, listaHechoAct);
-				cargaRealizada(bd);
+				cargaRealizada(bd);				
 				} catch (ExcepcionNegocio e) {
 					// TODO: handle exception
 					Messages.addFlashGlobalError(e.getMessage());
@@ -201,6 +205,12 @@ public class ControladorAuditoriaETL implements Serializable {
 			try {
 				hechoAuditorias = auditoriaETL.obtenerDatosHechoVentasAcumulacionSimple(fecha1, fecha2, bd,
 						hechoAuditorias);
+				
+				accion = "Extraer";
+				String browserDetail = Faces.getRequest().getHeader("User-Agent");
+				auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Extraer Datos", sesion.getUser().getCedula(),
+						browserDetail);
+				
 				Messages.addFlashGlobalInfo("Datos cargados exitosamente");
 				if (bd == 1) {
 					datosMysqlCargados = true;
@@ -239,7 +249,7 @@ public class ControladorAuditoriaETL implements Serializable {
 				
 				accion = "Cargar";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario creado: " + nombre, cedula,
+				auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Cargar Datos", sesion.getUser().getCedula(),
 						browserDetail);
 				
 				vaciarTabla();

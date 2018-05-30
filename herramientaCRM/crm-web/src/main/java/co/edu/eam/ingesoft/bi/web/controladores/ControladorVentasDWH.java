@@ -6,13 +6,16 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.omnifaces.util.Faces;
 
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
 import co.edu.eam.ingesoft.bi.negocio.dwh.HechoVentasEJB;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoVentas;
 
@@ -24,10 +27,22 @@ public class ControladorVentasDWH implements Serializable {
 
 	@EJB
 	private HechoVentasEJB hechoVentaEJB;
+	
+	@EJB
+	private AuditoriaEJB auditoriaEJB;
+	
+	@Inject
+	private ControladorSesion sesion;
+	
+	private String accion;
 
 	@PostConstruct
 	private void cargarDatos() {
 		hechosVenta = hechoVentaEJB.obtenerListaHechos();
+		
+		accion = "Cargar Datos";
+		String browserDetail = Faces.getRequest().getHeader("User-Agent");
+		auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Cargar tabla con datos", sesion.getUser().getCedula(), browserDetail);
 	}
 
 	public void postProcessor(Object document) {
@@ -35,6 +50,10 @@ public class ControladorVentasDWH implements Serializable {
 		HSSFWorkbook wb = (HSSFWorkbook) document;
 		HSSFSheet sheet = wb.getSheetAt(0);
 		HSSFRow header;
+		
+		accion = "Crear Documento";
+		String browserDetail = Faces.getRequest().getHeader("User-Agent");
+		auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Crear documento EXCEL", sesion.getUser().getCedula(), browserDetail);
 
 		int index = 0;
 
