@@ -1086,6 +1086,8 @@ public class Persistencia implements Serializable {
 		return false;
 
 	}
+	
+
 
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public DimensionUsuario buscarDimens(String cedula) {

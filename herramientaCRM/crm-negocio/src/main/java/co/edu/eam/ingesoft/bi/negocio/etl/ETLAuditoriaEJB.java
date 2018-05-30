@@ -182,6 +182,7 @@ public class ETLAuditoriaEJB {
 
 					em.editarDimensionUsuario(cedula, hechoAudi.getUsuario().getTipoUsuario(),
 							hechoAudi.getUsuario().getEdad());
+					
 
 				} else {
 					
