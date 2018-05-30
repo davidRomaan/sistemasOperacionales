@@ -11,6 +11,7 @@ import javax.ejb.Stateless;
 import javax.persistence.Query;
 
 import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
+import co.edu.eam.ingesoft.bi.negocio.beans.ConexionEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.UsuarioEJB;
 import co.edu.eam.ingesoft.bi.negocio.persistencia.Persistencia;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
@@ -80,6 +81,7 @@ public class ETLAuditoriaEJB {
 		} else {
 
 			em.setBd(bd);
+			ConexionEJB.setBd(bd);
 
 			// Se recorre la segunda lista obtenida de postgres
 			for (Auditoria auditorias : audi) {
@@ -136,9 +138,56 @@ public class ETLAuditoriaEJB {
 
 	public void cargarDatosOracle(List<HechoAuditoria> hechos) {
 
+		limpiarTablasOracle();
+		cargarDatosRollingAud(hechos);
+
+	}
+
+	public void limpiarTablasOracle() {
 		em.limpiarBDOracle("HECHO_AUDITORIA");
 		em.limpiarBDOracle("DIMENSION_USUARIO");
-		cargarDatosDWH(hechos);
+	}
+
+	public void cargarDatosRollingAud(List<HechoAuditoria> lista) {
+
+		boolean usuExiste;
+		DimensionUsuario dim;
+		List<String> listaCed = new ArrayList();
+
+		if (lista.size() == 0) {
+
+		} else {
+
+			for (HechoAuditoria hechoAudi : lista) {
+
+				if (hechoAudi.getUsuario().getCargo().equals("")) {
+					throw new ExcepcionNegocio("El campo cargo no puede quedar vacio");
+				}
+				if (hechoAudi.getUsuario().getEdad() > 130) {
+					throw new ExcepcionNegocio("La edad excede el limite existencial");
+				}
+				if (hechoAudi.getUsuario().getTipoUsuario().equals("")) {
+					throw new ExcepcionNegocio("El campo tipo usuario no puede quedar vacio");
+				}
+
+				usuExiste = em.dimensionUsuarioExiste(hechoAudi.getUsuario().getCedula());
+				dim = em.dimensionUsuarioBusc(hechoAudi.getUsuario().getCedula());
+
+				String cedula = hechoAudi.getUsuario().getCedula();
+
+				if (!usuExiste && !listaCed.contains(cedula)) {
+					em.crearDimensionUsuario(hechoAudi.getUsuario());
+					listaCed.add(cedula);
+				}
+				em.crearHechoAuditoria(hechoAudi.getAccion(), hechoAudi.getDispositivo(), hechoAudi.getNavegador(),
+						hechoAudi.getFecha(), dim);
+
+				em.editarDimensionUsuario(cedula, hechoAudi.getUsuario().getTipoUsuario(),
+						hechoAudi.getUsuario().getEdad());
+
+			}
+
+		}
 
 	}
 
@@ -171,7 +220,6 @@ public class ETLAuditoriaEJB {
 					em.crearDimensionUsuario(hechoAudi.getUsuario());
 					listaCed.add(cedula);
 				}
-
 				em.crearHechoAuditoria(hechoAudi.getAccion(), hechoAudi.getDispositivo(), hechoAudi.getNavegador(),
 						hechoAudi.getFecha(), hechoAudi.getUsuario());
 
@@ -183,8 +231,8 @@ public class ETLAuditoriaEJB {
 		}
 
 	}
-	
-	public List<HechoAuditoria> obtnerHechoVentasRollingMes(String fecha, int bd, List<HechoAuditoria> listaHechos) {
+
+	public List<HechoAuditoria> obtnerHechoAuditoriaRollingMes(String fecha, int bd, List<HechoAuditoria> listaHechos) {
 
 		List<Auditoria> facturas = obtenerAuditoriasPorMes(fecha, bd);
 
@@ -203,14 +251,15 @@ public class ETLAuditoriaEJB {
 		return listaHechos;
 
 	}
-	
-	public List<HechoAuditoria> obtnerHechoVentasRollingAnio(String fecha, int bd, List<HechoAuditoria> listaHechos) {
+
+	public List<HechoAuditoria> obtnerHechoAuditoriasRollingAnio(String fecha, int bd,
+			List<HechoAuditoria> listaHechos) {
 
 		List<Auditoria> facturas = obtenerFacturasPorAnio(fecha, bd);
 
 		if (facturas.size() == 0) {
 
-			throw new ExcepcionNegocio("No hay facturas registradas en el a�o ingresado");
+			throw new ExcepcionNegocio("No hay auditorias registradas en el anio ingresado");
 
 		} else {
 
@@ -223,7 +272,7 @@ public class ETLAuditoriaEJB {
 		return listaHechos;
 
 	}
-	
+
 	private List<Auditoria> obtenerAuditoriasPorMes(String fecha, int bd) {
 
 		String datos[] = fecha.split("-");
@@ -233,7 +282,7 @@ public class ETLAuditoriaEJB {
 
 		List<Auditoria> audis = new ArrayList<Auditoria>();
 
-		List<Object> codigos = em.listaFacturasMes(mes, anio, bd);
+		List<Object> codigos = em.listaMesAuditoria(mes, anio, bd);
 
 		for (Object object : codigos) {
 
@@ -250,7 +299,7 @@ public class ETLAuditoriaEJB {
 		return audis;
 
 	}
-	
+
 	private List<Auditoria> obtenerFacturasPorAnio(String fecha, int bd) {
 
 		String datos[] = fecha.split("-");
@@ -259,7 +308,7 @@ public class ETLAuditoriaEJB {
 
 		List<Auditoria> facturas = new ArrayList<Auditoria>();
 
-		List<Object> codigos = em.listaFacturasAnio(anio, bd);
+		List<Object> codigos = em.listaAuditoriasAnio(anio, bd);
 
 		for (Object object : codigos) {
 
@@ -276,7 +325,7 @@ public class ETLAuditoriaEJB {
 		return facturas;
 
 	}
-	
+
 	private List<HechoAuditoria> crearHechosAuditoria(List<Auditoria> listaAudi, List<HechoAuditoria> listaHechos) {
 
 		// Se recorre la lista obtenida de la bd

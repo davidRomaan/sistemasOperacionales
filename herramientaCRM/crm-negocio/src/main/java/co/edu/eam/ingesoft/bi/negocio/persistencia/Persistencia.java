@@ -634,6 +634,7 @@ public class Persistencia implements Serializable {
 	 * @param fechaFin
 	 * @return
 	 */
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public List<Object> listarAuditoriasIntervaloFecha(String fechaInicio, String fechaFin) {
 
 		String sql = "";
@@ -783,6 +784,52 @@ public class Persistencia implements Serializable {
 
 		q.setParameter(1, mes);
 		q.setParameter(2, anio);
+
+		return q.getResultList();
+
+	}
+	
+	public List<Object> listaMesAuditoria(int mes, int anio, int bd) {
+
+		Query q;
+
+		if (bd == 1) {
+
+			String sql = "select id from bi.auditoria where MONTH(fecha_hora) = ?1 and YEAR(fecha_hora) = ?2";
+			q = emM.createNativeQuery(sql);
+
+		} else {
+
+			String sql = "select id from auditoria where (extract(MONTH from fecha_hora) = ?1) "
+					+ "and (extract(year from fecha_hora) = ?2)";
+			q = emP.createNativeQuery(sql);
+
+		}
+
+		q.setParameter(1, mes);
+		q.setParameter(2, anio);
+
+		return q.getResultList();
+
+	}
+	
+	public List<Object> listaAuditoriasAnio(int anio, int bd) {
+
+		Query q;
+
+		if (bd == 1) {
+
+			String sql = "select id from bi.auditoria where YEAR(fecha_hora) = ?1";
+			q = emM.createNativeQuery(sql);
+
+		} else {
+
+			String sql = "select id from auditoria where extract(YEAR from fecha_hora) = ?1";
+			q = emP.createNativeQuery(sql);
+
+		}
+
+		q.setParameter(1, anio);
 
 		return q.getResultList();
 
@@ -1014,6 +1061,22 @@ public class Persistencia implements Serializable {
 
 	}
 
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	public DimensionUsuario dimensionUsuarioBusc(String cedula) {
+
+		String sql = "SELECT * FROM DIMENSION_USUARIO WHERE cedula = ?1";
+		Query q = emO.createNativeQuery(sql);
+		q.setParameter(1, cedula);
+
+		List<Object> lista = q.getResultList();
+
+		if (lista.size() != 0) {
+			return null;
+		}
+
+		return (DimensionUsuario) lista;
+
+	}
 	/**
 	 * Verifica si existe una dimensi�n que tiene como prmaria un integer
 	 * 

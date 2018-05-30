@@ -27,7 +27,7 @@ public class HechoAuditoria implements Serializable {
 
 	public String getFechaHora() {
 
-		return this.fecha.get(Calendar.YEAR) + "/" + this.fecha.get(Calendar.MONTH) + "/"
+		return this.fecha.get(Calendar.YEAR) + "/" + this.fecha.get(Calendar.MONTH) + 1 +"/"
 				+ this.fecha.get(Calendar.DAY_OF_MONTH);
 	}
 

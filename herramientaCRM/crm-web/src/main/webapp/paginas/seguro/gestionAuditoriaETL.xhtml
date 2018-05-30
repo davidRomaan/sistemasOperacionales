@@ -51,9 +51,6 @@
 				<h:panelGrid id="panelfechSelect" columns="1"
 					rendered="#{controladorAuditoriaETL.semanaSeleccionada}">
 
-					<p:outputLabel id="mask3" value="Fecha final: " />
-					<p:inputMask id="dateeee"
-						value="#{controladorAuditoriaETL.fechaCampo2}" mask="9999-99-99" />
 				</h:panelGrid>
 
 				<h:selectOneMenu id="bd"
@@ -67,19 +64,70 @@
 				</h:selectOneMenu>
 				<br />
 				<br />
-				<p:commandButton id="btnCargarDatos" value="Extraer Datos"
-					process="@this,panelvalDos" update="panelTablaaaa"
-					action="#{controladorAuditoriaETL.extraerDatos}" />
+				<h:panelGrid id="panelContra" columns="3">
+
+					<p:commandButton id="btnCargarDatos" value="Extraer Datos"
+						process="@this,panelvalDos" update="panelTablaaaa"
+						action="#{controladorAuditoriaETL.extraerDatos}" />
+					<p:commandButton id="btnCar" value="Cargar Datos" process="@this,panelTablaaaa"
+						update="panelTablaaaa"
+						action="#{controladorAuditoriaETL.cargarDat}" />
+					<p:commandButton id="btnlimppiar" value="limpiar Tabla"
+						process="@this" update="panelTablaaaa"
+						action="#{controladorAuditoriaETL.vaciarTabla}" />
+
+
+				</h:panelGrid>
 				<br />
-				<p:commandButton id="btnCar" value="Cargar Datos" process="@this"
-					update="panelTabla" action="#{controladorAuditoriaETL.cargarDat}" />
 			</h:panelGrid>
 
+			<br />
+			<br />
 
+			<h:panelGrid id="panelValidacion" columns="1"
+				rendered="#{!controladorAuditoriaETL.rollingSeleccionado}">
+
+				<h3 style="align: center">Ingrese el periodo deseado</h3>
+				<br />
+				<h:panelGrid id="panelIntervalo" columns="4">
+
+					<p:outputLabel id="mask1" value="Desde: " />
+					<p:inputMask id="date1"
+						value="#{controladorAuditoriaETL.fechaInicio}" mask="99/99/9999" />
+
+					<p:outputLabel id="mask2" value=" Hasta: " />
+					<p:inputMask id="date2" value="#{controladorAuditoriaETL.fechaFin}"
+						mask="99/99/9999" />
+				</h:panelGrid>
+				<br />
+
+				<h:panelGrid id="panelBD" columns="3">
+
+					<h:outputLabel id="lblBD" value="Seleccione la base de datos" />
+
+					<h:selectOneMenu id="cbBase"
+						value="#{controladorAuditoriaETL.base}">
+
+						<f:selectItem itemValue="MYSQL" itemLabel="MYSQL" />
+						<f:selectItem itemValue="POSTGRES" itemLabel="POSTGRES" />
+
+					</h:selectOneMenu>
+
+				</h:panelGrid>
+				<br />
+
+				<h:panelGrid id="panelBoton" columns="1" style="align:center">
+
+					<p:commandButton id="btnCargar" value="Extraer"
+						process="@this,panelValidacion" update="panelTablaaaa"
+						action="#{controladorAuditoriaETL.extraer}" />
+
+				</h:panelGrid>
+
+			</h:panelGrid>
 			<br />
 			<br />
-			<h:panelGrid id="panelTablaaaa"
-				rendered="#{controladorAuditoriaETL.rollingSeleccionado}">
+			<h:panelGrid id="panelTablaaaa">
 
 				<p:dataTable id="tablaHechosAud"
 					value="#{controladorAuditoriaETL.listaHechoAct}" var="hecho"
@@ -165,146 +213,15 @@
 				</p:dataTable>
 
 			</h:panelGrid>
-			<br />
-			<br />
+			<h:panelGrid id="panelBot" columns="1" style="align:center"
+			rendered="#{!controladorAuditoriaETL.rollingSeleccionado}">
 
-			<h:panelGrid id="panelValidacion" columns="1"
-				rendered="#{!controladorAuditoriaETL.rollingSeleccionado}">
-
-				<h3 style="align: center">Ingrese el periodo deseado</h3>
-				<br />
-				<h:panelGrid id="panelIntervalo" columns="4">
-
-					<p:outputLabel id="mask1" value="Desde: " />
-					<p:inputMask id="date1"
-						value="#{controladorAuditoriaETL.fechaInicio}" mask="99/99/9999" />
-
-					<p:outputLabel id="mask2" value=" Hasta: " />
-					<p:inputMask id="date2" value="#{controladorAuditoriaETL.fechaFin}"
-						mask="99/99/9999" />
-				</h:panelGrid>
-				<br />
-
-				<h:panelGrid id="panelBD" columns="3">
-
-					<h:outputLabel id="lblBD" value="Seleccione la base de datos" />
-
-					<h:selectOneMenu id="cbBase"
-						value="#{controladorAuditoriaETL.base}">
-
-						<f:selectItem itemValue="MYSQL" itemLabel="MYSQL" />
-					<f:selectItem itemValue="POSTGRES" itemLabel="POSTGRES" />
-
-					</h:selectOneMenu>
-
-				</h:panelGrid>
-				<br />
-
-				<h:panelGrid id="panelBoton" columns="1">
-
-					<p:commandButton id="btnCargar" value="Extraer"
-						process="@this,panelValidacion" update="panelTabla"
-						action="#{controladorAuditoriaETL.extraer}" style="align:center" />
-
-				</h:panelGrid>
-
-				<h:panelGrid id="panelTabla">
-
-					<p:dataTable id="tablaHechos"
-						value="#{controladorAuditoriaETL.hechoAuditorias}" var="hecho"
-						border="1" scrollable="true" scrollWidth="80%" scrollHeight="150"
-						editable="true" editMode="cell">
-
-						<f:facet name="header">
-         				   Datos a cargar
-      			    </f:facet>
-
-						<p:ajax event="cellEdit"
-							listener="#{controladorAuditoriaETL.onCellEdit}"
-							update="panelTabla" />
-
-						<p:columnGroup type="header">
-							<p:row>
-								<p:column colspan="4" headerText="Datos Auditoria" />
-								<p:column colspan="5" headerText="Datos Cliente" />
-							</p:row>
-							<p:row>
-								<p:column headerText="Accion Realizada" />
-								<p:column headerText="Dispositivo" />
-								<p:column headerText="Navegador" />
-								<p:column headerText="Fecha" />
-								<p:column headerText="Cedula" />
-								<p:column headerText="Nombre" />
-								<p:column headerText="Cargo" />
-								<p:column headerText="Edad" />
-								<p:column headerText="Tipo de Usuario" />
-							</p:row>
-						</p:columnGroup>
-
-						<p:column>
-							<h:outputLabel value="#{hecho.accion}" />
-						</p:column>
-
-						<p:column>
-							<h:outputLabel value="#{hecho.dispositivo}" />
-						</p:column>
-
-						<p:column>
-							<h:outputLabel value="#{hecho.navegador}" />
-						</p:column>
-
-						<p:column>
-							<h:outputLabel value="#{hecho.fechaHora}" />
-						</p:column>
-
-						<p:column>
-							<h:outputLabel value="#{hecho.usuario.cedula}" />
-						</p:column>
-
-						<p:column>
-							<h:outputLabel value="#{hecho.usuario.nombre}" />
-						</p:column>
-
-						<p:column>
-							<h:outputLabel value="#{hecho.usuario.cargo}" />
-						</p:column> 
-
-						<p:column headerText="edad">
-							<p:cellEditor>
-								<f:facet name="output">
-									<h:outputText value="#{hecho.usuario.edad}" />
-								</f:facet>
-								<f:facet name="input">
-									<p:inputText value="#{hecho.usuario.edad}" />
-								</f:facet>
-							</p:cellEditor>
-						</p:column>
-
-						<p:column headerText="tipo_usuario">
-							<p:cellEditor>
-								<f:facet name="output">
-									<h:outputText value="#{hecho.usuario.tipoUsuario}" />
-								</f:facet>
-								<f:facet name="input">
-									<p:inputText value="#{hecho.usuario.tipoUsuario}" />
-								</f:facet>
-							</p:cellEditor>
-						</p:column>
-
-					</p:dataTable>
-
-				</h:panelGrid>
-			</h:panelGrid>
-			<br />
-			<br />
-			<h:panelGrid id="panelBotonCarga"
-				rendered="#{!controladorAuditoriaETL.rollingSeleccionado}">
-
-				<p:commandButton id="btnCargaDatos" value="Cargar Datos"
-					process="@this" update="panelTabla"
+				<p:commandButton id="btnCa" value="Cargar Datos"
+					process="@this,panelValidacion" update="panelTablaaaa"
 					action="#{controladorAuditoriaETL.cargar}" />
 
 			</h:panelGrid>
+
 
 		</h:form>
 	</ui:define>
