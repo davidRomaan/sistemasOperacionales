@@ -2,14 +2,35 @@ package co.edu.eam.ingesoft.bi.presistencia.entidades.datawh;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="DIMENSION_USUARIO")
 public class DimensionUsuario implements Serializable {
 
+	@Id
+	@Column(name="CEDULA")
 	private String cedula;
+	
+	@Column(name="NOMBRE")
 	private String nombre;
+	
+	@Column(name="APELLIDO")
 	private String apellido;
+	
+	@Column(name="GENERO")
 	private String genero;
+	
+	@Column(name="EDAD")
 	private int edad;
+	
+	@Column(name="TIPO_USUARIO")
 	private String tipoUsuario;
+	
+	@Column(name="CARGO")
 	private String cargo;
 	
 	public DimensionUsuario() {

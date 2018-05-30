@@ -1,0 +1,137 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" template="/templates/inicio.xhtml">
+
+	<ui:define name="cuerpo">
+		<h:form prependId="false">
+
+			<h1>ADMINISTRACIÓN DEL DATA WAREHOUSE</h1>
+
+
+			<p:dataTable id="tablaHechos" var="hecho" border="1"
+				scrollable="true" scrollWidth="80%" scrollHeight="150"
+				value="#{controladorVentasDWH.hechosVenta}"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+				paginator="true" rows="10" style="margin-top: 25px;">
+
+				<f:facet name="{Exporters}">
+					<div style="float: right">
+						<h:commandLink>
+							<p:graphicImage
+								value="#{FacesContext.getCurrentInstance().getExternalContext()}/img/excel.png"
+								width="24" />
+							<p:dataExporter type="xls" target="tablaHechos" fileName="ventas"
+								postProcessor="#{controladorVentasDWH.postProcessor}" />
+						</h:commandLink>
+
+						<h:commandLink>
+							<p:graphicImage
+								value="#{FacesContext.getCurrentInstance().getExternalContext()}/img/csv.png"
+								width="24" />
+							<p:dataExporter type="csv" target="tablaHechos" fileName="ventas"
+								postProcessor="#{controladorVentasDWH.postProcessor}" />
+						</h:commandLink>
+					</div>
+				</f:facet>
+
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column colspan="6" headerText="Datos Producto" />
+						<p:column colspan="3" headerText="Datos Cliente" />
+						<p:column colspan="3" headerText="Datos Empleado" />
+						<p:column colspan="4" headerText="Datos Venta" />
+					</p:row>
+					<p:row>
+						<p:column headerText="Codigo Producto" />
+						<p:column headerText="Producto" />
+						<p:column headerText="Precio" />
+						<p:column headerText="Tipo Producto" />
+						<p:column headerText="Unidades Compradas" />
+						<p:column headerText="Subtotal" />
+						<p:column headerText="Nombre" />
+						<p:column headerText="Cedula" />
+						<p:column headerText="Edad" />
+						<p:column headerText="Nombre" />
+						<p:column headerText="Cedula" />
+						<p:column headerText="Edad" />
+						<p:column headerText="Codigo municipio" />
+						<p:column headerText="Municipio" />
+						<p:column headerText="Departamento" />
+						<p:column headerText="Fecha" />
+					</p:row>
+				</p:columnGroup>
+
+				<p:column headerText="Codigo Producto">
+					<h:outputLabel value="#{hecho.producto.id}" />
+				</p:column>
+
+				<p:column headerText="Producto">
+					<h:outputLabel value="#{hecho.producto.nombre}" />
+				</p:column>
+
+				<p:column headerText="Precio">
+					<h:outputLabel value="#{hecho.producto.precio}" />
+				</p:column>
+
+				<p:column headerText="Tipo Producto">
+					<h:outputLabel value="#{hecho.producto.tipoProducto}" />
+				</p:column>
+
+				<p:column headerText="Unidades compradas">
+					<h:outputLabel value="#{hecho.unidades}" />
+				</p:column>
+
+				<p:column headerText="Subtotal">
+					<h:outputLabel value="#{hecho.subtotal}" />
+				</p:column>
+
+				<p:column headerText="Nombre Cliente">
+					<h:outputLabel value="#{hecho.persona.nombre}" />
+				</p:column>
+
+				<p:column headerText="Cedula cliente">
+					<h:outputLabel value="#{hecho.persona.cedula}" />
+				</p:column>
+
+				<p:column headerText="Edad Cliente">
+					<h:outputLabel value="#{hecho.persona.edad}" />
+				</p:column>
+
+				<p:column headerText="Nombre Empleado">
+					<h:outputLabel value="#{hecho.empleado.nombre}" />
+				</p:column>
+
+				<p:column headerText="Cedula empleado">
+					<h:outputLabel value="#{hecho.empleado.cedula}" />
+				</p:column>
+
+				<p:column headerText="Edad empleado">
+					<h:outputLabel value="#{hecho.empleado.edad}" />
+				</p:column>
+
+				<p:column headerText="Codigo Municipio">
+					<h:outputLabel value="#{hecho.municipio.id}" />
+				</p:column>
+
+				<p:column headerText="Municipio">
+					<h:outputLabel value="#{hecho.municipio.nombre}" />
+				</p:column>
+
+				<p:column headerText="Departamento">
+					<h:outputLabel value="#{hecho.municipio.departamento}" />
+				</p:column>
+
+				<p:column headerText="Fecha">
+					<h:outputLabel value="#{hecho.fechaVenta}" />
+				</p:column>
+
+			</p:dataTable>
+
+
+		</h:form>
+	</ui:define>
+
+
+</ui:composition>

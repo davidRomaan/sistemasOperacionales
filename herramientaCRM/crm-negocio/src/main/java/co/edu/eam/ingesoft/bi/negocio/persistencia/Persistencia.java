@@ -1,6 +1,8 @@
 package co.edu.eam.ingesoft.bi.negocio.persistencia;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -20,11 +22,11 @@ import co.edu.eam.ingesoft.bi.presistencia.entidades.FacturaVenta;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.InventarioProducto;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.ModulosUsuario;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Persona;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionFactura;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionMunicipio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionPersona;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionProducto;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionUsuario;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoVentas;
 
 @LocalBean
 @Stateless
@@ -787,7 +789,7 @@ public class Persistencia implements Serializable {
 		return q.getResultList();
 
 	}
-	
+
 	public List<Object> listaFacturasAnio(int anio, int bd) {
 
 		Query q;
@@ -820,8 +822,6 @@ public class Persistencia implements Serializable {
 	 *            unidades vendidas
 	 * @param subtotal
 	 *            subtotal de la compra
-	 * @param idFactura
-	 *            cï¿½digo de la factua
 	 * @param cedulaCliente
 	 *            cï¿½dula del cliente que comprï¿½
 	 * @param idMunicipio
@@ -832,23 +832,24 @@ public class Persistencia implements Serializable {
 	 *            cï¿½dula del empleado que realizï¿½ la venta
 	 */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void crearHechoVentas(int unidades, double subtotal, int idFactura, String cedulaCliente, int idMunicipio,
-			int idProducto, String cedulaEmpleado) {
+	public void crearHechoVentas(int unidades, double subtotal, String cedulaCliente, int idMunicipio,
+			int idProducto, String cedulaEmpleado, Calendar fecha) {
 
-		String sql = "INSERT INTO HECHO_VENTAS (unidades, subtotal, factura_id, municipio_id, producto_id, "
-				+ "cedula_empleado, cedula_cliente) VALUES (?1,?2,?3,?4,?5,?6,?7)";
+		String sql = "INSERT INTO HECHO_VENTAS (unidades, subtotal, municipio_id, producto_id, "
+				+ "cedula_empleado, cedula_cliente, fecha_venta) VALUES (?1,?2,?3,?4,?5,?6,?7)";
 
 		Query q = emO.createNativeQuery(sql);
 		q.setParameter(1, unidades);
 		q.setParameter(2, subtotal);
-		q.setParameter(3, idFactura);
-		q.setParameter(4, idMunicipio);
-		q.setParameter(5, idProducto);
-		q.setParameter(6, cedulaEmpleado);
-		q.setParameter(7, cedulaCliente);
+		q.setParameter(3, idMunicipio);
+		q.setParameter(4, idProducto);
+		q.setParameter(5, cedulaEmpleado);
+		q.setParameter(6, cedulaCliente);
+		q.setParameter(7, fecha);
 		q.executeUpdate();
 
 	}
+
 
 	/**
 	 * 
@@ -884,7 +885,7 @@ public class Persistencia implements Serializable {
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void crearDimensionProducto(DimensionProducto dimension) {
 
-		String sql = "INSERT INTO DIMENSION_PRODUCTO (id, nombre, precio, tipo_producto) VALUES (?1, ?2, ?3, ?4)";
+		String sql = "INSERT INTO DIMENSION_PRODUCTO (id, nombre, precio, tipo_producto) VALUES (?1,?2,?3,?4)";
 
 		Query q = emO.createNativeQuery(sql);
 		q.setParameter(1, dimension.getId());
@@ -943,25 +944,6 @@ public class Persistencia implements Serializable {
 	}
 
 	/**
-	 * Crea una dimension de una factura en la bd Oracle
-	 * 
-	 * @param dimension
-	 *            la dimension que se desea crear
-	 */
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void crearDimensionFactura(DimensionFactura dimension) {
-
-		String sql = "INSERT INTO DIMENSION_FACTURA (id, total_venta, fecha_venta) VALUES (?1,?2,?3)";
-
-		Query q = emO.createNativeQuery(sql);
-		q.setParameter(1, dimension.getId());
-		q.setParameter(2, dimension.getTotalVenta());
-		q.setParameter(3, dimension.getFecha());
-		q.executeUpdate();
-
-	}
-
-	/**
 	 * Crea una dimensiï¿½n de un municipio
 	 * 
 	 * @param dimension
@@ -977,6 +959,49 @@ public class Persistencia implements Serializable {
 		q.setParameter(2, dimension.getNombre());
 		q.setParameter(3, dimension.getDepartamento());
 		q.executeUpdate();
+
+	}
+	
+	/**
+	 * Obtiene el número actual en la secuencia de una tabla
+	 * @param nombreSecuencia nombre de la secuencia de la cual se desea obtener su código
+	 * @return el código actual de la secuencia
+	 */
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	public int secuenciaActual (String nombreSecuencia){
+		
+		//String sql = " select " + nombreSecuencia + ".nextval from dual";
+		String sql = " select max(id) from " + nombreSecuencia;
+		
+		Query q = emO.createNativeQuery(sql);	
+		List<Object> lista = q.getResultList();
+		
+		//Integer grandChildCount = ((BigInteger) (Object) lista.get(0)).intValue();
+		
+		BigDecimal codigoB = (BigDecimal) lista.get(0);
+		int codigo = codigoB.intValue();
+		
+		System.out.println("Codigo Actual de " + nombreSecuencia + ": " + codigo);
+		
+		return codigo;
+		
+	}
+	
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	public boolean dimensionMunicipioExiste(String nombre) {
+
+		String sql = "SELECT * FROM DIMENSION_MUNICIPIO WHERE nombre = ?1";
+
+		Query q = emO.createNativeQuery(sql);
+		q.setParameter(1, nombre);
+
+		List<Object> lista = q.getResultList();
+
+		if (lista.size() == 0) {
+			return false;
+		}
+
+		return true;
 
 	}
 
@@ -1039,6 +1064,31 @@ public class Persistencia implements Serializable {
 		return false;
 
 	}
+	
+	/**
+	 * Verifica si existe una dimensión de un producto
+	 * 
+	 * @param id
+	 *            código del producto
+
+	 * @return true si existe, de lo contrario false
+	 */
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	public boolean dimensionProductoExiste(int id) {
+
+		String sql = "SELECT * FROM DIMENSION_PRODUCTO WHERE codigo = ?1";
+		Query q = emO.createNativeQuery(sql);
+		q.setParameter(1, id);
+
+		List<Object> lista = q.getResultList();
+
+		if (lista.size() != 0) {
+			return true;
+		}
+
+		return false;
+
+	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void editarDimensionPersona(String cedula, int edad) {
@@ -1087,6 +1137,21 @@ public class Persistencia implements Serializable {
 		q.setParameter(2, id);
 		q.executeUpdate();
 
+	}
+	
+	// ---------------- datos dwh ---------------------------
+	
+	/**
+	 * Lista los hechos de venta registrados en la bd
+	 * @return la lista de hechos registrados
+	 */
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	public List<HechoVentas> listarHechosVenta(){
+		
+		Query q = emO.createNamedQuery(HechoVentas.LISTAR);
+		List<HechoVentas> lista = q.getResultList();
+		return lista;
+		
 	}
 
 	public int getBd() {
