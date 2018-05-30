@@ -26,12 +26,11 @@
 								postProcessor="#{controladorVentasDWH.postProcessor}" />
 						</h:commandLink>
 
-						<h:commandLink>
+						<h:commandLink action="#{controladorVentasDWH.creandoCSV}">
 							<p:graphicImage
 								value="#{FacesContext.getCurrentInstance().getExternalContext()}/img/csv.png"
 								width="24" />
-							<p:dataExporter type="csv" target="tablaHechos" fileName="ventas"
-								postProcessor="#{controladorVentasDWH.postProcessor}" />
+							<p:dataExporter type="csv" target="tablaHechos" fileName="ventas" />
 						</h:commandLink>
 					</div>
 				</f:facet>
@@ -128,6 +127,8 @@
 				</p:column>
 
 			</p:dataTable>
+
+
 
 
 		</h:form>

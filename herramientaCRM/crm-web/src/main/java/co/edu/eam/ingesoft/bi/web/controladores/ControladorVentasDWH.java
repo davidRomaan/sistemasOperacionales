@@ -45,6 +45,10 @@ public class ControladorVentasDWH implements Serializable {
 		auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Cargar tabla con datos", sesion.getUser().getCedula(), browserDetail);
 	}
 
+	public void creandoCSV(){
+		System.out.println("Entra pre");
+	}
+	
 	public void postProcessor(Object document) {
 
 		HSSFWorkbook wb = (HSSFWorkbook) document;
