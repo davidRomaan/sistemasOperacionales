@@ -116,16 +116,12 @@ public class ControladorAuditoriaETL implements Serializable {
 			}
 			if (fechaSeleccionada.equals("2")) {
 
-<<<<<<< HEAD
+
 				try {
 					//listaHechoAct = new ArrayList<HechoAuditoria>();
 					listaHechoAct = auditoriaETL.obtnerHechoAuditoriaRollingMes(fechaCampo, baseDatos, listaHechoAct);
 					cargaRealizada(baseDatos);
-=======
-			try{
-				listaHechoAct = auditoriaETL.obtnerHechoVentasRollingMes(fechaSeleccionada, bd, listaHechoAct);
-				cargaRealizada(bd);				
->>>>>>> branch 'master' of https://github.com/davidRomaan/sistemasOperacionales.git
+
 				} catch (ExcepcionNegocio e) {
 					// TODO: handle exception
 					Messages.addFlashGlobalError(e.getMessage());
@@ -204,20 +200,11 @@ public class ControladorAuditoriaETL implements Serializable {
 		} else {
 
 			try {
-<<<<<<< HEAD
+
 				//listaHechoAct = new ArrayList<HechoAuditoria>();
 				listaHechoAct = auditoriaETL.obtenerDatosHechoVentasAcumulacionSimple(fecha1, fecha2, bd,
 						listaHechoAct);
-=======
-				hechoAuditorias = auditoriaETL.obtenerDatosHechoVentasAcumulacionSimple(fecha1, fecha2, bd,
-						hechoAuditorias);
-				
-				accion = "Extraer";
-				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Extraer Datos", sesion.getUser().getCedula(),
-						browserDetail);
-				
->>>>>>> branch 'master' of https://github.com/davidRomaan/sistemasOperacionales.git
+
 				Messages.addFlashGlobalInfo("Datos cargados exitosamente");
 				if (bd == 1) {
 					datosMysqlCargados = true;
@@ -253,15 +240,6 @@ public class ControladorAuditoriaETL implements Serializable {
 			try {
 				auditoriaETL.cargarDatosDWH(listaHechoAct);
 				Messages.addFlashGlobalInfo("Se han cargado los datos exitosamente");
-<<<<<<< HEAD
-=======
-				
-				accion = "Cargar";
-				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Cargar Datos", sesion.getUser().getCedula(),
-						browserDetail);
-				
->>>>>>> branch 'master' of https://github.com/davidRomaan/sistemasOperacionales.git
 				vaciarTabla();
 			} catch (ExcepcionNegocio e) {
 				Messages.addFlashGlobalError(e.getMessage());
