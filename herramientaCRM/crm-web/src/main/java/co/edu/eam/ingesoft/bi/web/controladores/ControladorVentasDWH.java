@@ -46,6 +46,11 @@ public class ControladorVentasDWH implements Serializable {
 	}
 
 	public void creandoCSV(){
+		
+		accion = "Crear Documento";
+		String browserDetail = Faces.getRequest().getHeader("User-Agent");
+		auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Crear documento CVS", sesion.getUser().getCedula(), browserDetail);
+		
 		System.out.println("Entra pre");
 	}
 	
