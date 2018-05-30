@@ -11,12 +11,15 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
+import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 import org.primefaces.event.CellEditEvent;
 
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.VentaEJB;
 import co.edu.eam.ingesoft.bi.negocio.etl.ETLVentasEJB;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
@@ -34,11 +37,17 @@ public class ControladorVentaETL implements Serializable {
 
 	private int fechaSeleccionada;
 	private String fechaRolling;
+	
+	private String accion;
+	
+	
+	@EJB
+	private AuditoriaEJB auditoriaEJB;
 
 	private boolean datosPostgresCargados;
 	private boolean datosMysqlCargados;
 
-	// Para identificar si se seleccionó la carga como tipo rolling
+	// Para identificar si se seleccionï¿½ la carga como tipo rolling
 	private boolean rollingSeleccionado;
 
 	// EJB
@@ -47,6 +56,9 @@ public class ControladorVentaETL implements Serializable {
 
 	@EJB
 	private VentaEJB ventaEJB;
+	
+	@Inject
+	private ControladorSesion sesion;
 
 	@PostConstruct
 	private void inicializarCampos() {
@@ -110,12 +122,18 @@ public class ControladorVentaETL implements Serializable {
 
 				if (fechaSeleccionada == 0) {
 
-					Messages.addFlashGlobalError("Debe seleccionar una opción");
+					Messages.addFlashGlobalError("Debe seleccionar una opciï¿½n");
 
 				} else if (fechaSeleccionada == 1) {
 
 					try {
 						hechosVenta = etlVentasEJB.obtenerHechoVentasRollingDia(fechaRolling, bd, hechosVenta);
+						
+						accion = "Extraer";
+						String browserDetail = Faces.getRequest().getHeader("User-Agent");
+						auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Extraer Datos dia", sesion.getUser().getCedula(),
+								browserDetail);
+						
 						cargaRealizada(bd);
 					} catch (ExcepcionNegocio e) {
 						// TODO: handle exception
@@ -130,6 +148,12 @@ public class ControladorVentaETL implements Serializable {
 					try{
 					hechosVenta = etlVentasEJB.obtnerHechoVentasRollingMes(fechaRolling, bd, hechosVenta);
 					cargaRealizada(bd);
+					
+					accion = "Extraer";
+					String browserDetail = Faces.getRequest().getHeader("User-Agent");
+					auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Extraer Datos Mes", sesion.getUser().getCedula(),
+							browserDetail);
+					
 					} catch (ExcepcionNegocio e) {
 						// TODO: handle exception
 						Messages.addFlashGlobalError(e.getMessage());
@@ -143,6 +167,12 @@ public class ControladorVentaETL implements Serializable {
 					try{
 						hechosVenta = etlVentasEJB.obtnerHechoVentasRollingAnio(fechaRolling, bd, hechosVenta);
 						cargaRealizada(bd);
+						
+						accion = "Extraer";
+						String browserDetail = Faces.getRequest().getHeader("User-Agent");
+						auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Extraer Datos aÃ±o", sesion.getUser().getCedula(),
+								browserDetail);
+						
 					}catch (ExcepcionNegocio e) {
 						// TODO: handle exception
 						Messages.addFlashGlobalError(e.getMessage());
@@ -160,6 +190,12 @@ public class ControladorVentaETL implements Serializable {
 							hechosVenta);
 					Messages.addFlashGlobalInfo("Datos cargados exitosamente");
 					cargaRealizada(bd);
+					
+					accion = "Extraer";
+					String browserDetail = Faces.getRequest().getHeader("User-Agent");
+					auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Extraer Datos Acumalacion simple", sesion.getUser().getCedula(),
+							browserDetail);
+					
 				} catch (ExcepcionNegocio e) {
 					// TODO: handle exception
 					Messages.addFlashGlobalError(e.getMessage());
@@ -206,7 +242,7 @@ public class ControladorVentaETL implements Serializable {
 	}
 
 	/**
-	 * Verifica el cambio que se realizó y realiza el cambio en todas los datos
+	 * Verifica el cambio que se realizï¿½ y realiza el cambio en todas los datos
 	 * relacionados
 	 * 
 	 * @param posicion
@@ -268,7 +304,7 @@ public class ControladorVentaETL implements Serializable {
 		
 		if (hechosVenta.size() == 0){
 			
-			Messages.addFlashGlobalError("La tabla esta vacía");
+			Messages.addFlashGlobalError("La tabla esta vacï¿½a");
 			
 		} else {
 			
@@ -310,7 +346,7 @@ public class ControladorVentaETL implements Serializable {
 	}
 
 	/**
-	 * Vacía la tabla de hechos de ventas
+	 * Vacï¿½a la tabla de hechos de ventas
 	 */
 	public void vaciarTabla() {
 
