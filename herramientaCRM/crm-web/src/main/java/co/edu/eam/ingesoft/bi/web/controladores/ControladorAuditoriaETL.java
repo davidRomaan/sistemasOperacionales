@@ -16,6 +16,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
+import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 import org.primefaces.event.CellEditEvent;
 
@@ -48,6 +49,7 @@ public class ControladorAuditoriaETL implements Serializable {
 
 	private String fechaInicio;
 	private String fechaFin;
+	private String accion;
 
 	private String base;
 
@@ -108,6 +110,11 @@ public class ControladorAuditoriaETL implements Serializable {
 					//listaHechoAct = new ArrayList<HechoAuditoria>();
 					listaHechoAct = auditoriaEJB.listarFechaActualAuditoria(baseDatos, fechaCampo);
 					cargaRealizada(baseDatos);
+					
+					accion = "Extraer Datos Rolling";
+					String browserDetail = Faces.getRequest().getHeader("User-Agent");
+					auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Extraer Datos dia", sesion.getUser().getCedula(), browserDetail);
+					
 				} catch (Exception e) {
 					Messages.addFlashGlobalError(e.getMessage());
 					cargaNoRealizada(baseDatos);
@@ -121,6 +128,10 @@ public class ControladorAuditoriaETL implements Serializable {
 					//listaHechoAct = new ArrayList<HechoAuditoria>();
 					listaHechoAct = auditoriaETL.obtnerHechoAuditoriaRollingMes(fechaCampo, baseDatos, listaHechoAct);
 					cargaRealizada(baseDatos);
+					
+					accion = "Extraer Datos Rolling";
+					String browserDetail = Faces.getRequest().getHeader("User-Agent");
+					auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Extraer Datos mes", sesion.getUser().getCedula(), browserDetail);
 
 				} catch (ExcepcionNegocio e) {
 					// TODO: handle exception
@@ -137,6 +148,11 @@ public class ControladorAuditoriaETL implements Serializable {
 					listaHechoAct = new ArrayList<HechoAuditoria>();
 					listaHechoAct = auditoriaETL.obtnerHechoAuditoriasRollingAnio(fechaCampo, baseDatos, listaHechoAct);
 					cargaRealizada(baseDatos);
+					
+					accion = "Extraer Datos Rolling";
+					String browserDetail = Faces.getRequest().getHeader("User-Agent");
+					auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Extraer Datos año", sesion.getUser().getCedula(), browserDetail);
+					
 				} catch (ExcepcionNegocio e) {
 					// TODO: handle exception
 					Messages.addFlashGlobalError(e.getMessage());
@@ -204,6 +220,10 @@ public class ControladorAuditoriaETL implements Serializable {
 				//listaHechoAct = new ArrayList<HechoAuditoria>();
 				listaHechoAct = auditoriaETL.obtenerDatosHechoVentasAcumulacionSimple(fecha1, fecha2, bd,
 						listaHechoAct);
+				
+				accion = "Extraer Datos AC";
+				String browserDetail = Faces.getRequest().getHeader("User-Agent");
+				auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Extraer Datos", sesion.getUser().getCedula(), browserDetail);
 
 				Messages.addFlashGlobalInfo("Datos cargados exitosamente");
 				if (bd == 1) {
@@ -239,6 +259,11 @@ public class ControladorAuditoriaETL implements Serializable {
 
 			try {
 				auditoriaETL.cargarDatosDWH(listaHechoAct);
+				
+				accion = "Cargar Datos";
+				String browserDetail = Faces.getRequest().getHeader("User-Agent");
+				auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Cargar Datos", sesion.getUser().getCedula(), browserDetail);
+				
 				Messages.addFlashGlobalInfo("Se han cargado los datos exitosamente");
 				vaciarTabla();
 			} catch (ExcepcionNegocio e) {
