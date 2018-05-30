@@ -22,14 +22,16 @@
 							<p:graphicImage
 								value="#{FacesContext.getCurrentInstance().getExternalContext()}/img/excel.png"
 								width="24" />
-							<p:dataExporter type="xls" target="tablaHechos" fileName="ventas" />
+							<p:dataExporter type="xls" target="tablaHechos" fileName="ventas"
+								postProcessor="#{controladorVentasDWH.postProcessor}" />
 						</h:commandLink>
 
 						<h:commandLink>
 							<p:graphicImage
 								value="#{FacesContext.getCurrentInstance().getExternalContext()}/img/csv.png"
 								width="24" />
-							<p:dataExporter type="csv" target="tablaHechos" fileName="ventas" />
+							<p:dataExporter type="csv" target="tablaHechos" fileName="ventas"
+								postProcessor="#{controladorVentasDWH.postProcessor}" />
 						</h:commandLink>
 					</div>
 				</f:facet>
