@@ -151,7 +151,6 @@ public class ETLAuditoriaEJB {
 	public void cargarDatosRollingAud(List<HechoAuditoria> lista) {
 
 		boolean usuExiste;
-		DimensionUsuario dim;
 		List<String> listaCed = new ArrayList();
 
 		if (lista.size() == 0) {
@@ -171,19 +170,25 @@ public class ETLAuditoriaEJB {
 				}
 
 				usuExiste = em.dimensionUsuarioExiste(hechoAudi.getUsuario().getCedula());
-				dim = em.dimensionUsuarioBusc(hechoAudi.getUsuario().getCedula());
 
 				String cedula = hechoAudi.getUsuario().getCedula();
 
 				if (!usuExiste && !listaCed.contains(cedula)) {
 					em.crearDimensionUsuario(hechoAudi.getUsuario());
 					listaCed.add(cedula);
-				}
-				em.crearHechoAuditoria(hechoAudi.getAccion(), hechoAudi.getDispositivo(), hechoAudi.getNavegador(),
-						hechoAudi.getFecha(), dim);
 
-				em.editarDimensionUsuario(cedula, hechoAudi.getUsuario().getTipoUsuario(),
-						hechoAudi.getUsuario().getEdad());
+					em.crearHechoAuditoria(hechoAudi.getAccion(), hechoAudi.getDispositivo(), hechoAudi.getNavegador(),
+							hechoAudi.getFecha(), hechoAudi.getUsuario());
+
+					em.editarDimensionUsuario(cedula, hechoAudi.getUsuario().getTipoUsuario(),
+							hechoAudi.getUsuario().getEdad());
+
+				} else {
+					
+					em.crearHechoAuditoria(hechoAudi.getAccion(), hechoAudi.getDispositivo(), hechoAudi.getNavegador(),
+							hechoAudi.getFecha(), hechoAudi.getUsuario());
+
+				}
 
 			}
 

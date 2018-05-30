@@ -923,7 +923,7 @@ public class Persistencia implements Serializable {
 		q.executeUpdate();
 
 	}
-
+		
 	/**
 	 * Crea una dimensi�n de producto en la bd
 	 * 
@@ -1088,7 +1088,7 @@ public class Persistencia implements Serializable {
 	}
 
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-	public DimensionUsuario dimensionUsuarioBusc(String cedula) {
+	public DimensionUsuario buscarDimens(String cedula) {
 
 		String sql = "SELECT * FROM DIMENSION_USUARIO WHERE cedula = ?1";
 		Query q = emO.createNativeQuery(sql);

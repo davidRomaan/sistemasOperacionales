@@ -23,15 +23,14 @@
 								value="#{FacesContext.getCurrentInstance().getExternalContext()}/img/excel.png"
 								width="24" />
 							<p:dataExporter type="xls" target="tablaHechos" fileName="ventas"
-								postProcessor="#{controladorAudDWH.postProcessor}" />
+								postProcessor="#{controladorVentasDWH.postProcessor}" />
 						</h:commandLink>
 
 						<h:commandLink>
 							<p:graphicImage
 								value="#{FacesContext.getCurrentInstance().getExternalContext()}/img/csv.png"
 								width="24" />
-							<p:dataExporter type="csv" target="tablaHechos" fileName="ventas"
-								postProcessor="#{controladorAudDWH.postProcessor}" />
+							<p:dataExporter type="csv" target="tablaHechos" fileName="ventas" />
 						</h:commandLink>
 					</div>
 				</f:facet>
@@ -54,38 +53,38 @@
 					</p:row>
 				</p:columnGroup>
 
-				<p:column>
+				<p:column headerText="accion realizada">
 					<h:outputLabel value="#{hecho.accion}" />
 				</p:column>
 
-				<p:column>
+				<p:column headerText="dispositivo">
 					<h:outputLabel value="#{hecho.dispositivo}" />
 				</p:column>
 
-				<p:column>
+				<p:column headerText="navegador">
 					<h:outputLabel value="#{hecho.navegador}" />
 				</p:column>
 
-				<p:column>
+				<p:column headerText="fecha">
 					<h:outputLabel value="#{hecho.fechaHora}" />
 				</p:column>
 
-				<p:column>
+				<p:column headerText="cedula persona">
 					<h:outputLabel value="#{hecho.usuario.cedula}" />
 				</p:column>
 
-				<p:column>
+				<p:column headerText="nombre">
 					<h:outputLabel value="#{hecho.usuario.nombre}" />
 				</p:column>
 
-				<p:column>
+				<p:column headerText="cargo">
 					<h:outputLabel value="#{hecho.usuario.cargo}" />
 				</p:column>
-				<p:column>
+				<p:column headerText="edad">
 					<h:outputLabel value="#{hecho.usuario.edad}" />
 				</p:column>
 
-				<p:column>
+				<p:column headerText="tipo usuario">
 					<h:outputLabel value="#{hecho.usuario.tipoUsuario}" />
 				</p:column>
 

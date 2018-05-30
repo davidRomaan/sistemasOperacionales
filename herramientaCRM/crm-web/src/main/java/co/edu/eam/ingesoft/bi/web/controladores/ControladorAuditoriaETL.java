@@ -2,17 +2,13 @@ package co.edu.eam.ingesoft.bi.web.controladores;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.ejb.EJB;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -27,7 +23,6 @@ import co.edu.eam.ingesoft.bi.negocio.beans.VentaEJB;
 import co.edu.eam.ingesoft.bi.negocio.etl.ETLAuditoriaEJB;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoAuditoria;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoVentas;
 
 @SessionScoped
 @Named("controladorAuditoriaETL")

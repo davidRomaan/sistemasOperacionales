@@ -11,6 +11,7 @@ import javax.persistence.Table;
 @Table(name="DIMENSION_USUARIO")
 public class DimensionUsuario implements Serializable {
 
+	
 	@Id
 	@Column(name="CEDULA")
 	private String cedula;
