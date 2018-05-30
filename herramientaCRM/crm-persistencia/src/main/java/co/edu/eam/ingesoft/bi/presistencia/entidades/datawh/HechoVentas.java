@@ -3,14 +3,56 @@ package co.edu.eam.ingesoft.bi.presistencia.entidades.datawh;
 import java.io.Serializable;
 import java.util.Calendar;
 
-public class HechoVentas implements Serializable {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.ManyToAny;
+
+@Entity
+@Table(name="HECHO_VENTAS")
+@NamedQuery(name=HechoVentas.LISTAR, query="SELECT hv FROM HechoVentas hv")
+public class HechoVentas implements Serializable {
+	
+	/**
+	 * Lista los hechos de ventas registrados en la bd
+	 */
+	public static final String LISTAR = "HechoVentas.listar";
+
+	@Id
+	@Column(name="ID")
+	private int id;
+	
+	@Column(name="UNIDADES")
 	private int unidades;
+	
+	@Column(name="SUBTOTAL")
 	private double subtotal;
+	
+	@JoinColumn(name="CEDULA_CLIENTE")
+	@ManyToOne
 	private DimensionPersona persona;
+	
+	@JoinColumn(name="MUNICIPIO_ID")
+	@ManyToOne
 	private DimensionMunicipio municipio;
+	
+	@JoinColumn(name="PRODUCTO_ID")
+	@ManyToOne
 	private DimensionProducto producto;
+	
+	@JoinColumn(name="CEDULA_EMPLEADO")
+	@ManyToOne
 	private DimensionPersona empleado;
+	
+	@Column(name="FECHA_VENTA")
+	@Temporal(TemporalType.DATE)
 	private Calendar fecha;
 	
 	public HechoVentas() {
@@ -80,10 +122,25 @@ public class HechoVentas implements Serializable {
 	public Calendar getFecha() {
 		return fecha;
 	}
+	
+	public String getFechaVenta() {
+		int mes = this.fecha.get(Calendar.MONTH) + 1;
+		return this.fecha.get(Calendar.YEAR) + "/" + mes + "/"
+				+ this.fecha.get(Calendar.DAY_OF_MONTH);
+	}
 
 	public void setFecha(Calendar fecha) {
 		this.fecha = fecha;
 	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+	
 	
 	
 }

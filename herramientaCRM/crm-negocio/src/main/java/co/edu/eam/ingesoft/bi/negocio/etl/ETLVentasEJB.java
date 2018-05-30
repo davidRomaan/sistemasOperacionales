@@ -263,7 +263,10 @@ public class ETLVentasEJB {
 		dimensionProducto.setPrecio(producto.getValorProducto());
 		dimensionProducto.setId(producto.getId());
 		dimensionProducto.setNombre(producto.getNombre());
-		dimensionProducto.setTipoProducto(producto.getTipoProducto().getNombre());
+		
+		String tipoProducto = producto.getTipoProducto().getNombre();
+		
+		dimensionProducto.setTipoProducto(tipoProducto.toUpperCase());
 
 		return dimensionProducto;
 

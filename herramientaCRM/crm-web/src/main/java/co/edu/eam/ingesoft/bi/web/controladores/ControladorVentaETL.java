@@ -23,8 +23,8 @@ import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoVentas;
 
 @SessionScoped
-@Named("controladorDWH")
-public class ControladorDWH implements Serializable {
+@Named("controladorVentaETL")
+public class ControladorVentaETL implements Serializable {
 
 	private String tipoCarga;
 	private String fechaInicio;

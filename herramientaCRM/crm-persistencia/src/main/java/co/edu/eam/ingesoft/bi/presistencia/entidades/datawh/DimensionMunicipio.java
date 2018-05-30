@@ -2,10 +2,23 @@ package co.edu.eam.ingesoft.bi.presistencia.entidades.datawh;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="DIMENSION_MUNICIPIO")
 public class DimensionMunicipio implements Serializable{
 
+	@Id
+	@Column(name="ID")
 	private int id;
+	
+	@Column(name="NOMBRE")
 	private String nombre;
+	
+	@Column(name="DEPARTAMENTO")
 	private String departamento;
 	
 	public DimensionMunicipio() {

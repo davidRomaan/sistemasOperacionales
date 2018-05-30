@@ -2,14 +2,32 @@ package co.edu.eam.ingesoft.bi.presistencia.entidades.datawh;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="DIMENSION_PERSONA")
 public class DimensionPersona implements Serializable {
 
-	private int id;
+	@Id
+	@Column(name="CEDULA")
 	private String cedula;
+	
+	@Column(name="NOMBRE")
 	private String nombre;
+	
+	@Column(name="APELLIDO")
 	private String apellido;
+	
+	@Column(name="GENERO")
 	private String genero;
+	
+	@Column(name="EDAD")
 	private short edad;
+	
+	@Column(name="TIPO_PERSONA")
 	private String tipoPersona;
 	
 	public DimensionPersona() {
@@ -73,14 +91,6 @@ public class DimensionPersona implements Serializable {
 
 	public void setTipoPersona(String tipoPersona) {
 		this.tipoPersona = tipoPersona;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 	
 	

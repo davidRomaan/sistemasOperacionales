@@ -7,7 +7,7 @@
 	<ui:define name="cuerpo">
 		<h:form prependId="false">
 
-			<h1>ADMINISTRACIÓN DEL DATA WAREHOUSE</h1>
+			<h1>ETL VENTAS</h1>
 
 			<h:panelGrid id="panelDatos" columns="2">
 
@@ -15,24 +15,24 @@
 					value="Seleccione el modo de carga" />
 
 				<h:selectOneMenu id="cbTipoCarga"
-					value="#{controladorDWH.tipoCarga}">
+					value="#{controladorVentaETL.tipoCarga}">
 
 					<f:selectItem itemValue="Acumulacion simple"
 						itemLabel="Acumulacion simple" />
 					<f:selectItem itemValue="Rolling" itemLabel="Rolling" />
 
 					<f:ajax event="change" execute="@this" render="panelIntervalo,panelRolling"
-						listener="#{controladorDWH.gestionarCarga}" />
+						listener="#{controladorVentaETL.gestionarCarga}" />
 
 				</h:selectOneMenu>
 
 			</h:panelGrid>
 			<br />
 			
-			<h:panelGrid id="panelRolling" rendered="#{controladorDWH.rollingSeleccionado}">
+			<h:panelGrid id="panelRolling" rendered="#{controladorVentaETL.rollingSeleccionado}">
 			
 				<h:selectOneMenu id="cbfecha"
-					value="#{controladorDWH.fechaSeleccionada}">
+					value="#{controladorVentaETL.fechaSeleccionada}">
 
 					<f:selectItem itemValue="0" itemLabel="seleccione una opcion" />
 					<f:selectItem itemValue="1" itemLabel="dia" />
@@ -42,24 +42,24 @@
 				</h:selectOneMenu>
 				
 				<p:outputLabel id="maskRolling" value="Ingrese la fecha" />
-					<p:inputMask id="dateRolling" value="#{controladorDWH.fechaRolling}"
+					<p:inputMask id="dateRolling" value="#{controladorVentaETL.fechaRolling}"
 						mask="9999-99-99" />
 			
 			</h:panelGrid>
 
 			<h:panelGrid id="panelValidacion" columns="1"
-				rendered="#{!controladorDWH.rollingSeleccionado}">
+				rendered="#{!controladorVentaETL.rollingSeleccionado}">
 
 				<h3>Ingrese el periodo deseado</h3>
 
 				<h:panelGrid id="panelIntervalo" columns="4">
 
 					<p:outputLabel id="mask1" value="Desde: " />
-					<p:inputMask id="date1" value="#{controladorDWH.fechaInicio}"
+					<p:inputMask id="date1" value="#{controladorVentaETL.fechaInicio}"
 						mask="9999-99-99" />
 
 					<p:outputLabel id="mask2" value=" Hasta: " />
-					<p:inputMask id="date2" value="#{controladorDWH.fechaFin}"
+					<p:inputMask id="date2" value="#{controladorVentaETL.fechaFin}"
 						mask="9999-99-99" />
 
 				</h:panelGrid>
@@ -70,7 +70,7 @@
 
 				<h:outputLabel id="lblBD" value="Seleccione la base de datos" />
 
-				<h:selectOneMenu id="cbBase" value="#{controladorDWH.base}">
+				<h:selectOneMenu id="cbBase" value="#{controladorVentaETL.base}">
 
 					<f:selectItem itemValue="MYSQL" itemLabel="MYSQL" />
 					<f:selectItem itemValue="POSTGRES" itemLabel="POSTGRES" />
@@ -80,23 +80,23 @@
 				<p:commandButton id="btnBD" value="Agregar Datos"
 					process="@this,panelIntervalo,panelDatos,panelValidacion,panelBD,panelRolling"
 					update="panelIntervalo,panelDatos,panelValidacion,panelRolling,panelTabla"
-					action="#{controladorDWH.extraer}" />
+					action="#{controladorVentaETL.extraer}" />
 
 			</h:panelGrid>
 			<br />
 
 			<h:panelGrid id="panelBoton" columns="3"
-				rendered="#{controladorDWH.tablaLlena}">
+				rendered="#{controladorVentaETL.tablaLlena}">
 
 				<p:commandButton id="btnVaciar" value="Vaciar Tabla" process="@this"
-					update="panelTabla" action="#{controladorDWH.vaciarTabla}" />
+					update="panelTabla" action="#{controladorVentaETL.vaciarTabla}" />
 
 			</h:panelGrid>
 			<br />
 
 			<h:panelGrid id="panelTabla">
 
-				<p:dataTable id="tablaHechos" value="#{controladorDWH.hechosVenta}"
+				<p:dataTable id="tablaHechos" value="#{controladorVentaETL.hechosVenta}"
 					var="hecho" border="1" scrollable="true" scrollWidth="80%"
 					scrollHeight="150" editable="true" editMode="cell">
 
@@ -104,7 +104,7 @@
          				   Datos a cargar
       			    </f:facet>
 
-					<p:ajax event="cellEdit" listener="#{controladorDWH.onCellEdit}"
+					<p:ajax event="cellEdit" listener="#{controladorVentaETL.onCellEdit}"
 						update="panelTabla" />
 
 					<p:columnGroup type="header">
@@ -112,7 +112,7 @@
 							<p:column colspan="5" headerText="Datos Producto" />
 							<p:column colspan="3" headerText="Datos Cliente" />
 							<p:column colspan="3" headerText="Datos Empleado" />
-							<p:column colspan="2" headerText="Region" />
+							<p:column colspan="3" headerText="Datos Venta" />
 							<p:column headerText="Accion"/>
 						</p:row>
 						<p:row>
@@ -129,6 +129,7 @@
 							<p:column headerText="Edad" />
 							<p:column headerText="Municipio" />
 							<p:column headerText="Departamento" />
+							<p:column headerText="Fecha"/>
 							<p:column headerText="Seleccione"/>
 						</p:row>
 					</p:columnGroup>
@@ -200,9 +201,13 @@
 					</p:column>
 					
 					<p:column>
+						<h:outputLabel value="#{hecho.fechaVenta}" />
+					</p:column>
+					
+					<p:column>
 						<p:commandButton value="Eliminar" process="@this"
 							update="panelTabla"
-							action="#{controladorDWH.eliminar(hecho)}" />
+							action="#{controladorVentaETL.eliminar(hecho)}" />
 					</p:column>
 
 				</p:dataTable>
@@ -214,11 +219,11 @@
 
 				<p:commandButton id="btnCargaDatos" value="Cargar Datos"
 					process="@this,panelIntervalo,panelDatos,panelValidacion,panelBD,panelTabla"
-					update="panelTabla" action="#{controladorDWH.cargar}" />
+					update="panelTabla" action="#{controladorVentaETL.cargar}" />
 					
 					<p:commandButton id="btnTransformar" value="Transformar"
 					process="@this,panelTabla"
-					update="panelTabla" action="#{controladorDWH.transformar}" />
+					update="panelTabla" action="#{controladorVentaETL.transformar}" />
 
 			</h:panelGrid>
 
