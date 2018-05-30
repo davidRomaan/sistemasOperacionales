@@ -30,11 +30,19 @@ public class ControladorVentasDWH implements Serializable {
 		hechosVenta = hechoVentaEJB.obtenerListaHechos();
 	}
 
+	public void creandoCSV(){
+		System.out.println("Entra pre");
+	}
+	
 	public void postProcessor(Object document) {
+		
+		System.out.println("entra");
 
 		HSSFWorkbook wb = (HSSFWorkbook) document;
 		HSSFSheet sheet = wb.getSheetAt(0);
 		HSSFRow header;
+		
+		System.out.println("nombre: " + sheet.getSheetName());
 
 		int index = 0;
 
