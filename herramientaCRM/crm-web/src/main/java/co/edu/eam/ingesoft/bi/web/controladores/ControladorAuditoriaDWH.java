@@ -6,13 +6,16 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.omnifaces.util.Faces;
 
+import co.edu.eam.ingesoft.bi.negocio.beans.AuditoriaEJB;
 import co.edu.eam.ingesoft.bi.negocio.dwh.HechoAuditoriasEJB;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoAuditoria;
 
@@ -24,10 +27,31 @@ public class ControladorAuditoriaDWH implements Serializable {
 
 	@EJB
 	private HechoAuditoriasEJB hechosAudEJB;
+	
+	@EJB
+	private AuditoriaEJB auditoriaEJB;
+	
+	@Inject
+	private ControladorSesion sesion;
+	
+	private String accion;
 
 	@PostConstruct
 	private void cargarDatos() {
 		hechosAuditorias = hechosAudEJB.obtenerListaHechos();
+		
+		accion = "Cargar Datos";
+		String browserDetail = Faces.getRequest().getHeader("User-Agent");
+		auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Cargar tabla con datos", sesion.getUser().getCedula(), browserDetail);
+	}
+	
+	public void creandoCSV(){
+		
+		accion = "Crear Documento Auditoria";
+		String browserDetail = Faces.getRequest().getHeader("User-Agent");
+		auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Crear documento CVS", sesion.getUser().getCedula(), browserDetail);
+		
+		System.out.println("Entra pre");
 	}
 
 	public void postProcessor(Object document) {
@@ -35,6 +59,10 @@ public class ControladorAuditoriaDWH implements Serializable {
 		HSSFWorkbook wb = (HSSFWorkbook) document;
 		HSSFSheet sheet = wb.getSheetAt(0);
 		HSSFRow header;
+		
+		accion = "Crear Documento Auditoria";
+		String browserDetail = Faces.getRequest().getHeader("User-Agent");
+		auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Crear documento EXCEL", sesion.getUser().getCedula(), browserDetail);
 
 		int index = 0;
 

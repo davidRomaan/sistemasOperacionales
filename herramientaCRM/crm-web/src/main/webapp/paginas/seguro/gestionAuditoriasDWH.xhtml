@@ -26,7 +26,7 @@
 								postProcessor="#{controladorVentasDWH.postProcessor}" />
 						</h:commandLink>
 
-						<h:commandLink>
+						<h:commandLink action="#{controladorAuditoriaDWH.creandoCSV}">
 							<p:graphicImage
 								value="#{FacesContext.getCurrentInstance().getExternalContext()}/img/csv.png"
 								width="24" />
