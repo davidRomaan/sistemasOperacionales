@@ -2,11 +2,26 @@ package co.edu.eam.ingesoft.bi.presistencia.entidades.datawh;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="DIMENSION_PRODUCTO")
 public class DimensionProducto implements Serializable {
 
+	@Id
+	@Column(name="ID")
 	private int id;
+	
+	@Column(name="NOMBRE")
 	private String nombre;
+	
+	@Column(name="PRECIO")
 	private double precio;
+	
+	@Column(name="TIPO_PRODUCTO")
 	private String tipoProducto;
 	
 	public DimensionProducto() {
@@ -52,7 +67,6 @@ public class DimensionProducto implements Serializable {
 	public void setTipoProducto(String tipoProducto) {
 		this.tipoProducto = tipoProducto;
 	}
-	
 	
 	
 }

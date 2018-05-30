@@ -1,31 +1,74 @@
 package co.edu.eam.ingesoft.bi.presistencia.entidades.datawh;
 
 import java.io.Serializable;
+import java.util.Calendar;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.ManyToAny;
+
+@Entity
+@Table(name="HECHO_VENTAS")
+@NamedQuery(name=HechoVentas.LISTAR, query="SELECT hv FROM HechoVentas hv")
 public class HechoVentas implements Serializable {
+	
+	/**
+	 * Lista los hechos de ventas registrados en la bd
+	 */
+	public static final String LISTAR = "HechoVentas.listar";
 
+	@Id
+	@Column(name="ID")
+	private int id;
+	
+	@Column(name="UNIDADES")
 	private int unidades;
+	
+	@Column(name="SUBTOTAL")
 	private double subtotal;
+	
+	@JoinColumn(name="CEDULA_CLIENTE")
+	@ManyToOne
 	private DimensionPersona persona;
-	private DimensionFactura factura;
+	
+	@JoinColumn(name="MUNICIPIO_ID")
+	@ManyToOne
 	private DimensionMunicipio municipio;
+	
+	@JoinColumn(name="PRODUCTO_ID")
+	@ManyToOne
 	private DimensionProducto producto;
+	
+	@JoinColumn(name="CEDULA_EMPLEADO")
+	@ManyToOne
 	private DimensionPersona empleado;
+	
+	@Column(name="FECHA_VENTA")
+	@Temporal(TemporalType.DATE)
+	private Calendar fecha;
 	
 	public HechoVentas() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public HechoVentas(int unidades, double subtotal, DimensionPersona persona, DimensionPersona empleado, DimensionFactura factura,
-			DimensionMunicipio municipio, DimensionProducto producto) {
+	public HechoVentas(int unidades, double subtotal, DimensionPersona persona, DimensionPersona empleado,
+			DimensionMunicipio municipio, DimensionProducto producto, Calendar fecha) {
 		super();
 		this.unidades = unidades;
 		this.subtotal = subtotal;
 		this.persona = persona;
-		this.factura = factura;
 		this.municipio = municipio;
 		this.producto = producto;
 		this.empleado = empleado;
+		this.fecha = fecha;
 	}
 
 	public int getUnidades() {
@@ -52,14 +95,6 @@ public class HechoVentas implements Serializable {
 		this.persona = persona;
 	}
 
-	public DimensionFactura getFactura() {
-		return factura;
-	}
-
-	public void setFactura(DimensionFactura factura) {
-		this.factura = factura;
-	}
-
 	public DimensionMunicipio getMunicipio() {
 		return municipio;
 	}
@@ -83,6 +118,29 @@ public class HechoVentas implements Serializable {
 	public void setEmpleado(DimensionPersona empleado) {
 		this.empleado = empleado;
 	}
+
+	public Calendar getFecha() {
+		return fecha;
+	}
+	
+	public String getFechaVenta() {
+		int mes = this.fecha.get(Calendar.MONTH) + 1;
+		return this.fecha.get(Calendar.YEAR) + "/" + mes + "/"
+				+ this.fecha.get(Calendar.DAY_OF_MONTH);
+	}
+
+	public void setFecha(Calendar fecha) {
+		this.fecha = fecha;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+	
 	
 	
 }

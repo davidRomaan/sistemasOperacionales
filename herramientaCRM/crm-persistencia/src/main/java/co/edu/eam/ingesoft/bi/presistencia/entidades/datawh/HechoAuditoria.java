@@ -3,12 +3,40 @@ package co.edu.eam.ingesoft.bi.presistencia.entidades.datawh;
 import java.io.Serializable;
 import java.util.Calendar;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.ManyToAny;
+
+@Entity
+@Table(name="HECHO_AUDITORIA")
 public class HechoAuditoria implements Serializable {
 
+	@Id
+	@Column(name="ID")
+	private int id;
+	
+	@Column(name="ACCION")
 	private String accion;
+	
+	@Column(name="DISPOSITIVO")
 	private String dispositivo;
+	
+	@Column(name="NAVEGADOR")
 	private String navegador;
+	
+	@Column(name="FECHA")
+	@Temporal(TemporalType.DATE)
 	private Calendar fecha;
+	
+	@JoinColumn(name="CEDULA_USUARIO")
+	@ManyToOne
 	private DimensionUsuario usuario;
 
 	public HechoAuditoria() {
@@ -70,5 +98,15 @@ public class HechoAuditoria implements Serializable {
 	public void setUsuario(DimensionUsuario usuario) {
 		this.usuario = usuario;
 	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	
 
 }
