@@ -19,6 +19,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
+import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 import org.primefaces.event.CellEditEvent;
 
@@ -37,6 +38,7 @@ public class ControladorAuditoriaETL implements Serializable {
 	private String fechaSeleccionada;
 	private String fechaCampo;
 	private String fechaCampo2;
+	private String accion;
 
 	public String getFechaCampo2() {
 		return fechaCampo2;
@@ -130,7 +132,7 @@ public class ControladorAuditoriaETL implements Serializable {
 			
 			
 			try{
-				listaHechoAct = auditoriaETL.obtnerHechoVentasRollingAnio(fechaSeleccionada, bd, listaHechoAct);
+				//listaHechoAct = auditoriaETL.obtnerHechoVentasRollingAnio(fechaSeleccionada, bd, listaHechoAct);
 				cargaRealizada(bd);
 			}catch (ExcepcionNegocio e) {
 				// TODO: handle exception
@@ -234,6 +236,12 @@ public class ControladorAuditoriaETL implements Serializable {
 			try {
 				auditoriaETL.cargarDatosDWH(hechoAuditorias);
 				Messages.addFlashGlobalInfo("Se han cargado los datos exitosamente");
+				
+				accion = "Cargar";
+				String browserDetail = Faces.getRequest().getHeader("User-Agent");
+				auditoriaEJB.crearAuditoria("AuditoriaUsuarios", accion, "usuario creado: " + nombre, cedula,
+						browserDetail);
+				
 				vaciarTabla();
 			} catch (ExcepcionNegocio e) {
 				Messages.addFlashGlobalError(e.getMessage());
