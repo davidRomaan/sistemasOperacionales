@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -16,8 +17,15 @@ import org.hibernate.annotations.ManyToAny;
 
 @Entity
 @Table(name="HECHO_AUDITORIA")
+@NamedQuery(name=HechoVentas.LISTAR, query="SELECT ha FROM HechoAuditoria ha")
 public class HechoAuditoria implements Serializable {
 
+	
+	/**
+	 * Lista los hechos de auditoria registrados en la bd
+	 */
+	public static final String LISTAR = "HechoAuditoria.listar";
+	
 	@Id
 	@Column(name="ID")
 	private int id;

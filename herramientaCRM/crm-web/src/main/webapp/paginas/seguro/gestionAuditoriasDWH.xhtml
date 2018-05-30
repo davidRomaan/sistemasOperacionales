@@ -1,0 +1,99 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" template="/templates/inicio.xhtml">
+
+	<ui:define name="cuerpo">
+		<h:form prependId="false">
+
+			<h1>ADMINISTRACIÓN DEL DATA WAREHOUSE</h1>
+
+
+			<p:dataTable id="tablaHechos" var="hecho" border="1"
+				scrollable="true" scrollWidth="80%" scrollHeight="150"
+				value="#{controladorAudDWH.hechosAuditorias}"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+				paginator="true" rows="10" style="margin-top: 25px;">
+
+				<f:facet name="{Exporters}">
+					<div style="float: right">
+						<h:commandLink>
+							<p:graphicImage
+								value="#{FacesContext.getCurrentInstance().getExternalContext()}/img/excel.png"
+								width="24" />
+							<p:dataExporter type="xls" target="tablaHechos" fileName="ventas"
+								postProcessor="#{controladorAudDWH.postProcessor}" />
+						</h:commandLink>
+
+						<h:commandLink>
+							<p:graphicImage
+								value="#{FacesContext.getCurrentInstance().getExternalContext()}/img/csv.png"
+								width="24" />
+							<p:dataExporter type="csv" target="tablaHechos" fileName="ventas"
+								postProcessor="#{controladorAudDWH.postProcessor}" />
+						</h:commandLink>
+					</div>
+				</f:facet>
+
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column colspan="4" headerText="Datos Auditoria" />
+						<p:column colspan="5" headerText="Datos Cliente" />
+					</p:row>
+					<p:row>
+						<p:column headerText="Accion Realizada" />
+						<p:column headerText="Dispositivo" />
+						<p:column headerText="Navegador" />
+						<p:column headerText="Fecha" />
+						<p:column headerText="Cedula" />
+						<p:column headerText="Nombre" />
+						<p:column headerText="Cargo" />
+						<p:column headerText="Edad" />
+						<p:column headerText="Tipo de Usuario" />
+					</p:row>
+				</p:columnGroup>
+
+				<p:column>
+					<h:outputLabel value="#{hecho.accion}" />
+				</p:column>
+
+				<p:column>
+					<h:outputLabel value="#{hecho.dispositivo}" />
+				</p:column>
+
+				<p:column>
+					<h:outputLabel value="#{hecho.navegador}" />
+				</p:column>
+
+				<p:column>
+					<h:outputLabel value="#{hecho.fechaHora}" />
+				</p:column>
+
+				<p:column>
+					<h:outputLabel value="#{hecho.usuario.cedula}" />
+				</p:column>
+
+				<p:column>
+					<h:outputLabel value="#{hecho.usuario.nombre}" />
+				</p:column>
+
+				<p:column>
+					<h:outputLabel value="#{hecho.usuario.cargo}" />
+				</p:column>
+				<p:column>
+					<h:outputLabel value="#{hecho.usuario.edad}" />
+				</p:column>
+
+				<p:column>
+					<h:outputLabel value="#{hecho.usuario.tipoUsuario}" />
+				</p:column>
+
+			</p:dataTable>
+
+
+		</h:form>
+	</ui:define>
+
+
+</ui:composition>

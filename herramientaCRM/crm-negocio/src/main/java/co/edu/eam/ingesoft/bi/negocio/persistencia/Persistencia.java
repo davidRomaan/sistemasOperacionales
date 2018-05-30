@@ -26,6 +26,7 @@ import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionMunicipio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionPersona;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionProducto;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionUsuario;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoAuditoria;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoVentas;
 
 @LocalBean
@@ -1213,6 +1214,20 @@ public class Persistencia implements Serializable {
 		
 		Query q = emO.createNamedQuery(HechoVentas.LISTAR);
 		List<HechoVentas> lista = q.getResultList();
+		return lista;
+		
+	}
+	
+
+	/**
+	 * Lista los hechos de Audirorias registrados en la bd
+	 * @return la lista de hechos registrados
+	 */
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	public List<HechoAuditoria> listarHechosAuditorias(){
+		
+		Query q = emO.createNamedQuery(HechoAuditoria.LISTAR);
+		List<HechoAuditoria> lista = q.getResultList();
 		return lista;
 		
 	}
