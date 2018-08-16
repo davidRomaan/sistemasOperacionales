@@ -9,6 +9,7 @@ import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
+import co.edu.eam.ingesoft.bi.negocio.beans.ConexionEJB;
 import co.edu.eam.ingesoft.bi.negocio.beans.VentaEJB;
 import co.edu.eam.ingesoft.bi.negocio.persistencia.Persistencia;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
@@ -21,6 +22,7 @@ import co.edu.eam.ingesoft.bi.presistencia.entidades.Producto;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionMunicipio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionPersona;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionProducto;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.Foto;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoVentas;
 
 @LocalBean
@@ -32,6 +34,11 @@ public class ETLVentasEJB {
 
 	@EJB
 	private VentaEJB ventaEJB;
+	
+	public void registrarFoto(Foto f){
+		em.setBd(ConexionEJB.getBd());
+		em.crear(f);
+	}
 
 	public List<FacturaVenta> listaVentasPeriodo(String fecha1, String fecha2, int bd) {
 

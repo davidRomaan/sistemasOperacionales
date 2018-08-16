@@ -126,9 +126,15 @@
 					<h:outputLabel value="#{hecho.fechaVenta}" />
 				</p:column>
 
-			</p:dataTable>
+			</p:dataTable> <br/>
 
-
+			<p:fileUpload
+				fileUploadListener="#{controladorVentasDWH.subirImagen}"
+				mode="advanced" dragDropSupport="false" update="messages"
+				sizeLimit="500000" fileLimit="1"
+				allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+				
+			<p:growl id="messages" showDetail="true" />
 
 
 		</h:form>
