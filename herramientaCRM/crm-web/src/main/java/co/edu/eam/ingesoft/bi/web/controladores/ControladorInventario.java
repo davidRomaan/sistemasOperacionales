@@ -66,7 +66,6 @@ public class ControladorInventario implements Serializable {
 		try {
 			accion = "Regitro Inventario";
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
-			
 			auditoriaEJB.crearAuditoria("AuditoriaIventario", accion, "inventario creado: "+inventario.getNombre(), sesion.getUser().getCedula(), browserDetail);
 		
 		}catch (Exception e) {
@@ -156,7 +155,7 @@ public class ControladorInventario implements Serializable {
 			accion = "Eliminar Inventario";
 			String browserDetail = Faces.getRequest().getHeader("User-Agent");
 			
-			auditoriaEJB.crearAuditoria("AuditoriaIventario", accion, "inventario eliminado: "+inventario.getNombre(), sesion.getUser().getCedula(), browserDetail);
+			auditoriaEJB.crearAuditoria("AuditoriaInventario", accion, "inventario eliminado: "+inventario.getNombre(), sesion.getUser().getCedula(), browserDetail);
 		
 		}catch (Exception e) {
 			e.printStackTrace();

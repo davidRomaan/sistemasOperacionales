@@ -123,8 +123,6 @@ public class AuditoriaEJB {
 		fechaGuardar.set(anio, mes, dia);
 		fechaGuardar.setTime(horaGuadar);
 
-		System.out.println(fechaGuardar);
-
 		Auditoria auditoria = new Auditoria();
 		auditoria.setAccion(accion);
 		auditoria.setFechaHora(fechaGuardar);
