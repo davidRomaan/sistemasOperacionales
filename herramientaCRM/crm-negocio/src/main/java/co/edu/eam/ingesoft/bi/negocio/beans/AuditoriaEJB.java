@@ -158,9 +158,11 @@ public class AuditoriaEJB {
 
 		if (lista.size() == 0) {
 
-			throw new ExcepcionNegocio("No hay facturas registradas en el periodo ingresado");
+			throw new ExcepcionNegocio("No hay auditorias registradas en el periodo ingresado");
 
 		} else {
+			em.setBd(bd);
+			ConexionEJB.setBd(bd);
 			for (int i = 0; i < lista.size(); i++) {
 
 				Usuario us = usuarioEJB.buscarUsu(lista.get(i).getUsuario());

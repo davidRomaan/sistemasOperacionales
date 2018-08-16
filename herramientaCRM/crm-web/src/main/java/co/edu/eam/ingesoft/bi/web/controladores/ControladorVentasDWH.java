@@ -92,7 +92,7 @@ public class ControladorVentasDWH implements Serializable {
 
 	public void creandoCSV() {
 
-		accion = "Crear Documento";
+		accion = "Crear Documento Venta";
 		String browserDetail = Faces.getRequest().getHeader("User-Agent");
 		auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Crear documento CVS", sesion.getUser().getCedula(),
 				browserDetail);
@@ -106,7 +106,7 @@ public class ControladorVentasDWH implements Serializable {
 		HSSFSheet sheet = wb.getSheetAt(0);
 		HSSFRow header;
 
-		accion = "Crear Documento";
+		accion = "Crear Documento Venta";
 		String browserDetail = Faces.getRequest().getHeader("User-Agent");
 		auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Crear documento EXCEL", sesion.getUser().getCedula(),
 				browserDetail);

@@ -2,17 +2,13 @@ package co.edu.eam.ingesoft.bi.web.controladores;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.ejb.EJB;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -29,7 +25,6 @@ import co.edu.eam.ingesoft.bi.negocio.beans.VentaEJB;
 import co.edu.eam.ingesoft.bi.negocio.etl.ETLAuditoriaEJB;
 import co.edu.eam.ingesoft.bi.negocios.exception.ExcepcionNegocio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoAuditoria;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoVentas;
 
 @SessionScoped
 @Named("controladorAuditoriaETL")
@@ -39,7 +34,6 @@ public class ControladorAuditoriaETL implements Serializable {
 	private String fechaSeleccionada;
 	private String fechaCampo;
 	private String fechaCampo2;
-	private String accion;
 
 	public String getFechaCampo2() {
 		return fechaCampo2;
@@ -55,13 +49,12 @@ public class ControladorAuditoriaETL implements Serializable {
 
 	private String fechaInicio;
 	private String fechaFin;
+	private String accion;
 
 	private String base;
 
 	private boolean datosPostgresCargados;
 	private boolean datosMysqlCargados;
-
-	private List<HechoAuditoria> hechoAuditorias;
 
 	@EJB
 	private AuditoriaEJB auditoriaEJB;
@@ -77,7 +70,7 @@ public class ControladorAuditoriaETL implements Serializable {
 
 	@PostConstruct
 	private void inicializarCampos() {
-		hechoAuditorias = new ArrayList<HechoAuditoria>();
+		listaHechoAct = new ArrayList<HechoAuditoria>();
 		datosPostgresCargados = false;
 		datosMysqlCargados = false;
 	}
@@ -98,66 +91,88 @@ public class ControladorAuditoriaETL implements Serializable {
 	}
 
 	public void extraerDatos() {
-		
-		int bd;
 
-		if (base.equalsIgnoreCase("mysql")) {
-			bd = 1;
+		if (baseDatos == 1 && datosMysqlCargados) {
+
+			Messages.addFlashGlobalError("Ya se cargaron los datos de la base de datos de POSTGRES ");
+
+		} else if (baseDatos == 2 && datosPostgresCargados) {
+
+			Messages.addFlashGlobalError("Ya se cargaron los datos de la base de datos de MYSQL");
+
 		} else {
-			bd = 2;
-		}
-		if (fechaSeleccionada.equals("0")) {
-			Messages.addFlashGlobalInfo("Selecione una opcion");
-		}
-		if (fechaSeleccionada.equals("1")) {
-			try {
 
-				listaHechoAct = auditoriaEJB.listarFechaActualAuditoria(baseDatos, fechaCampo);
-			} catch (Exception e) {
-				e.getMessage();
+			if (fechaSeleccionada.equals("0")) {
+				Messages.addFlashGlobalInfo("Selecione una opcion");
 			}
+			if (fechaSeleccionada.equals("1")) {
+				try {
+					//listaHechoAct = new ArrayList<HechoAuditoria>();
+					listaHechoAct = auditoriaEJB.listarFechaActualAuditoria(baseDatos, fechaCampo);
+					cargaRealizada(baseDatos);
+					
+					accion = "Extraer Datos Rolling";
+					String browserDetail = Faces.getRequest().getHeader("User-Agent");
+					auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Extraer Datos dia", sesion.getUser().getCedula(), browserDetail);
+					
+				} catch (Exception e) {
+					Messages.addFlashGlobalError(e.getMessage());
+					cargaNoRealizada(baseDatos);
+				}
 
-		}
-		if (fechaSeleccionada.equals("2")) {
+			}
+			if (fechaSeleccionada.equals("2")) {
 
-			try{
-				listaHechoAct = auditoriaETL.obtnerHechoVentasRollingMes(fechaSeleccionada, bd, listaHechoAct);
-				cargaRealizada(bd);				
+
+				try {
+					//listaHechoAct = new ArrayList<HechoAuditoria>();
+					listaHechoAct = auditoriaETL.obtnerHechoAuditoriaRollingMes(fechaCampo, baseDatos, listaHechoAct);
+					cargaRealizada(baseDatos);
+					
+					accion = "Extraer Datos Rolling";
+					String browserDetail = Faces.getRequest().getHeader("User-Agent");
+					auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Extraer Datos mes", sesion.getUser().getCedula(), browserDetail);
+
 				} catch (ExcepcionNegocio e) {
 					// TODO: handle exception
 					Messages.addFlashGlobalError(e.getMessage());
-					cargaNoRealizada(bd);
+					cargaNoRealizada(baseDatos);
 				}
-				
+
 				reload();
 
-		}
-		if (fechaSeleccionada.equals("3")) {
-			
-			
-			try{
-				//listaHechoAct = auditoriaETL.obtnerHechoVentasRollingAnio(fechaSeleccionada, bd, listaHechoAct);
-				cargaRealizada(bd);
-			}catch (ExcepcionNegocio e) {
-				// TODO: handle exception
-				Messages.addFlashGlobalError(e.getMessage());
-				cargaNoRealizada(bd);
 			}
-			
-			reload();
+			if (fechaSeleccionada.equals("3")) {
 
+				try {
+					listaHechoAct = new ArrayList<HechoAuditoria>();
+					listaHechoAct = auditoriaETL.obtnerHechoAuditoriasRollingAnio(fechaCampo, baseDatos, listaHechoAct);
+					cargaRealizada(baseDatos);
+					
+					accion = "Extraer Datos Rolling";
+					String browserDetail = Faces.getRequest().getHeader("User-Agent");
+					auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Extraer Datos año", sesion.getUser().getCedula(), browserDetail);
+					
+				} catch (ExcepcionNegocio e) {
+					// TODO: handle exception
+					Messages.addFlashGlobalError(e.getMessage());
+					cargaNoRealizada(baseDatos);
+				}
+
+				reload();
+
+			}
 		}
 		reload();
 	}
 
-	
-	public void cargarDat(){
-		
+	public void cargarDat() {
+
 		auditoriaETL.cargarDatosOracle(listaHechoAct);
 		Messages.addFlashGlobalInfo("se cargo correctamente");
 
 	}
-	
+
 	private void cargaRealizada(int bd) {
 		if (bd == 1) {
 			datosMysqlCargados = true;
@@ -173,9 +188,7 @@ public class ControladorAuditoriaETL implements Serializable {
 			datosPostgresCargados = false;
 		}
 	}
-	
-	
-	
+
 	/**
 	 * Carga los datos
 	 */
@@ -185,7 +198,7 @@ public class ControladorAuditoriaETL implements Serializable {
 		Calendar fecha2 = auditoriaEJB.convertirFechaStrintADate(fechaFin);
 
 		int bd;
-		
+
 		if (base.equalsIgnoreCase("mysql")) {
 			bd = 1;
 		} else {
@@ -203,14 +216,15 @@ public class ControladorAuditoriaETL implements Serializable {
 		} else {
 
 			try {
-				hechoAuditorias = auditoriaETL.obtenerDatosHechoVentasAcumulacionSimple(fecha1, fecha2, bd,
-						hechoAuditorias);
+
+				//listaHechoAct = new ArrayList<HechoAuditoria>();
+				listaHechoAct = auditoriaETL.obtenerDatosHechoVentasAcumulacionSimple(fecha1, fecha2, bd,
+						listaHechoAct);
 				
-				accion = "Extraer";
+				accion = "Extraer Datos AC";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Extraer Datos", sesion.getUser().getCedula(),
-						browserDetail);
-				
+				auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Extraer Datos", sesion.getUser().getCedula(), browserDetail);
+
 				Messages.addFlashGlobalInfo("Datos cargados exitosamente");
 				if (bd == 1) {
 					datosMysqlCargados = true;
@@ -237,21 +251,20 @@ public class ControladorAuditoriaETL implements Serializable {
 	 */
 	public void cargar() {
 
-		if (hechoAuditorias.size() == 0) {
+		if (listaHechoAct.size() == 0) {
 
 			Messages.addFlashGlobalError("No hay datos para cargar");
 
 		} else {
 
 			try {
-				auditoriaETL.cargarDatosDWH(hechoAuditorias);
-				Messages.addFlashGlobalInfo("Se han cargado los datos exitosamente");
+				auditoriaETL.cargarDatosDWH(listaHechoAct);
 				
-				accion = "Cargar";
+				accion = "Cargar Datos";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Cargar Datos", sesion.getUser().getCedula(),
-						browserDetail);
+				auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Cargar Datos", sesion.getUser().getCedula(), browserDetail);
 				
+				Messages.addFlashGlobalInfo("Se han cargado los datos exitosamente");
 				vaciarTabla();
 			} catch (ExcepcionNegocio e) {
 				Messages.addFlashGlobalError(e.getMessage());
@@ -262,8 +275,8 @@ public class ControladorAuditoriaETL implements Serializable {
 	}
 
 	/**
-	 * Verifica el cambio que se realiz� y realiza el cambio en todas los datos
-	 * relacionados
+	 * Verifica el cambio que se realiz� y realiza el cambio en todas los
+	 * datos relacionados
 	 * 
 	 * @param posicion
 	 * @param columna
@@ -271,13 +284,13 @@ public class ControladorAuditoriaETL implements Serializable {
 	 */
 	private void verificarCambio(int posicion, String columna, Object newValue) {
 
-		HechoAuditoria hecho = hechoAuditorias.get(posicion);
+		HechoAuditoria hecho = listaHechoAct.get(posicion);
 
 		if (columna.equalsIgnoreCase("tipo_usuario")) {
 
 			String cedula = hecho.getUsuario().getCedula();
 
-			for (HechoAuditoria hechoAudi : hechoAuditorias) {
+			for (HechoAuditoria hechoAudi : listaHechoAct) {
 
 				if (hechoAudi.getUsuario().getCedula().equals(cedula)) {
 
@@ -287,13 +300,13 @@ public class ControladorAuditoriaETL implements Serializable {
 
 				}
 
-			} 
+			}
 
 		} else {
 
 			String cedula = hecho.getUsuario().getCedula();
 
-			for (HechoAuditoria hechoAudi : hechoAuditorias) {
+			for (HechoAuditoria hechoAudi : listaHechoAct) {
 
 				if (hechoAudi.getUsuario().getCedula().equals(cedula)) {
 
@@ -332,13 +345,13 @@ public class ControladorAuditoriaETL implements Serializable {
 		}
 		reload();
 	}
-	
+
 	/**
 	 * Vac�a la tabla de hechos de ventas
 	 */
 	public void vaciarTabla() {
 
-		hechoAuditorias = new ArrayList<HechoAuditoria>();
+		listaHechoAct = new ArrayList<HechoAuditoria>();
 		datosMysqlCargados = false;
 		datosPostgresCargados = false;
 
@@ -349,6 +362,7 @@ public class ControladorAuditoriaETL implements Serializable {
 	public void gestionarCarga() {
 		if (tipoCarga.equalsIgnoreCase("rolling")) {
 			rollingSeleccionado = true;
+			vaciarTabla();
 		} else {
 			rollingSeleccionado = false;
 		}
@@ -443,14 +457,6 @@ public class ControladorAuditoriaETL implements Serializable {
 		this.datosMysqlCargados = datosMysqlCargados;
 	}
 
-	public List<HechoAuditoria> getHechoAuditorias() {
-		return hechoAuditorias;
-	}
-
-	public void setHechoAuditorias(List<HechoAuditoria> hechoAuditorias) {
-		this.hechoAuditorias = hechoAuditorias;
-	}
-
 	public AuditoriaEJB getAuditoriaEJB() {
 		return auditoriaEJB;
 	}
@@ -475,7 +481,6 @@ public class ControladorAuditoriaETL implements Serializable {
 		this.ventaEJB = ventaEJB;
 	}
 
-
 	public boolean isSemanaSeleccionada() {
 		return semanaSeleccionada;
 	}
@@ -483,7 +488,5 @@ public class ControladorAuditoriaETL implements Serializable {
 	public void setSemanaSeleccionada(boolean semanaSeleccionada) {
 		this.semanaSeleccionada = semanaSeleccionada;
 	}
-	
-	
 
 }

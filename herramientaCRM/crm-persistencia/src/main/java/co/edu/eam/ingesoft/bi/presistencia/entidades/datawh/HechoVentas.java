@@ -16,45 +16,45 @@ import javax.persistence.TemporalType;
 import org.hibernate.annotations.ManyToAny;
 
 @Entity
-@Table(name="HECHO_VENTAS")
-@NamedQuery(name=HechoVentas.LISTAR, query="SELECT hv FROM HechoVentas hv")
+@Table(name = "HECHO_VENTAS")
+@NamedQuery(name = HechoVentas.LISTAR, query = "SELECT hv FROM HechoVentas hv")
 public class HechoVentas implements Serializable {
-	
+
 	/**
 	 * Lista los hechos de ventas registrados en la bd
 	 */
 	public static final String LISTAR = "HechoVentas.listar";
 
 	@Id
-	@Column(name="ID")
+	@Column(name = "ID")
 	private int id;
-	
-	@Column(name="UNIDADES")
+
+	@Column(name = "UNIDADES")
 	private int unidades;
-	
-	@Column(name="SUBTOTAL")
+
+	@Column(name = "SUBTOTAL")
 	private double subtotal;
-	
-	@JoinColumn(name="CEDULA_CLIENTE")
+
+	@JoinColumn(name = "CEDULA_CLIENTE")
 	@ManyToOne
 	private DimensionPersona persona;
-	
-	@JoinColumn(name="MUNICIPIO_ID")
+
+	@JoinColumn(name = "MUNICIPIO_ID")
 	@ManyToOne
 	private DimensionMunicipio municipio;
-	
-	@JoinColumn(name="PRODUCTO_ID")
+
+	@JoinColumn(name = "PRODUCTO_ID")
 	@ManyToOne
 	private DimensionProducto producto;
-	
-	@JoinColumn(name="CEDULA_EMPLEADO")
+
+	@JoinColumn(name = "CEDULA_EMPLEADO")
 	@ManyToOne
 	private DimensionPersona empleado;
-	
+
 	@Column(name="FECHA_VENTA")
 	@Temporal(TemporalType.DATE)
 	private Calendar fecha;
-	
+
 	public HechoVentas() {
 		// TODO Auto-generated constructor stub
 	}
@@ -122,11 +122,10 @@ public class HechoVentas implements Serializable {
 	public Calendar getFecha() {
 		return fecha;
 	}
-	
+
 	public String getFechaVenta() {
 		int mes = this.fecha.get(Calendar.MONTH) + 1;
-		return this.fecha.get(Calendar.YEAR) + "/" + mes + "/"
-				+ this.fecha.get(Calendar.DAY_OF_MONTH);
+		return this.fecha.get(Calendar.YEAR) + "/" + mes + "/" + this.fecha.get(Calendar.DAY_OF_MONTH);
 	}
 
 	public void setFecha(Calendar fecha) {
@@ -140,7 +139,5 @@ public class HechoVentas implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
-	
-	
+
 }

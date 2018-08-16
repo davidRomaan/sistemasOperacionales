@@ -26,6 +26,7 @@ import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionMunicipio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionPersona;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionProducto;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionUsuario;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoAuditoria;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoVentas;
 
 @LocalBean
@@ -636,6 +637,7 @@ public class Persistencia implements Serializable {
 	 * @param fechaFin
 	 * @return
 	 */
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public List<Object> listarAuditoriasIntervaloFecha(String fechaInicio, String fechaFin) {
 
 		String sql = "";
@@ -789,6 +791,52 @@ public class Persistencia implements Serializable {
 		return q.getResultList();
 
 	}
+	
+	public List<Object> listaMesAuditoria(int mes, int anio, int bd) {
+
+		Query q;
+
+		if (bd == 1) {
+
+			String sql = "select id from bi.auditoria where MONTH(fecha_hora) = ?1 and YEAR(fecha_hora) = ?2";
+			q = emM.createNativeQuery(sql);
+
+		} else {
+
+			String sql = "select id from auditoria where (extract(MONTH from fecha_hora) = ?1) "
+					+ "and (extract(year from fecha_hora) = ?2)";
+			q = emP.createNativeQuery(sql);
+
+		}
+
+		q.setParameter(1, mes);
+		q.setParameter(2, anio);
+
+		return q.getResultList();
+
+	}
+	
+	public List<Object> listaAuditoriasAnio(int anio, int bd) {
+
+		Query q;
+
+		if (bd == 1) {
+
+			String sql = "select id from bi.auditoria where YEAR(fecha_hora) = ?1";
+			q = emM.createNativeQuery(sql);
+
+		} else {
+
+			String sql = "select id from auditoria where extract(YEAR from fecha_hora) = ?1";
+			q = emP.createNativeQuery(sql);
+
+		}
+
+		q.setParameter(1, anio);
+
+		return q.getResultList();
+
+	}
 
 	public List<Object> listaFacturasAnio(int anio, int bd) {
 
@@ -875,7 +923,7 @@ public class Persistencia implements Serializable {
 		q.executeUpdate();
 
 	}
-
+		
 	/**
 	 * Crea una dimensi�n de producto en la bd
 	 * 
@@ -1038,7 +1086,25 @@ public class Persistencia implements Serializable {
 		return false;
 
 	}
+	
 
+
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	public DimensionUsuario buscarDimens(String cedula) {
+
+		String sql = "SELECT * FROM DIMENSION_USUARIO WHERE cedula = ?1";
+		Query q = emO.createNativeQuery(sql);
+		q.setParameter(1, cedula);
+
+		List<Object> lista = q.getResultList();
+
+		if (lista.size() != 0) {
+			return null;
+		}
+
+		return (DimensionUsuario) lista;
+
+	}
 	/**
 	 * Verifica si existe una dimensi�n que tiene como prmaria un integer
 	 * 
@@ -1150,6 +1216,20 @@ public class Persistencia implements Serializable {
 		
 		Query q = emO.createNamedQuery(HechoVentas.LISTAR);
 		List<HechoVentas> lista = q.getResultList();
+		return lista;
+		
+	}
+	
+
+	/**
+	 * Lista los hechos de Audirorias registrados en la bd
+	 * @return la lista de hechos registrados
+	 */
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	public List<HechoAuditoria> listarHechosAuditorias(){
+		
+		Query q = emO.createNamedQuery(HechoAuditoria.LISTAR);
+		List<HechoAuditoria> lista = q.getResultList();
 		return lista;
 		
 	}
