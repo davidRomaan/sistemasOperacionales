@@ -4,16 +4,167 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui" template="/templates/inicio.xhtml">
 	
-	<ui:define name="cuerpo">
+<ui:define name="cuerpo">
 		<h:form prependId="false">
-		
-		<p:commandButton value="obtenerDatos" process="@this"
-					update="@this"
-					action="#{controladorWikiETL.obtenerDatosWiki}" />
-		
+
+			<h1>ETL WIKI</h1>
+
+			<h:panelGrid id="panelDatos" columns="2">
+
+				<h:outputLabel id="lblTipoCarga" for="cbTipoCarga"
+					value="Seleccione el modo de carga" />
+
+				<h:selectOneMenu id="cbTipoCarga"
+					value="#{controladorWikiETL.tipoCarga}">
+
+					<f:selectItem itemValue="Acumulacion simple"
+						itemLabel="Acumulacion simple" />
+					<f:selectItem itemValue="Rolling" itemLabel="Rolling" />
+
+					<f:ajax event="change" execute="@this" render="panelIntervalo,panelRolling"
+						listener="#{controladorWikiETL.gestionarCarga}" />
+
+				</h:selectOneMenu>
+
+			</h:panelGrid>
+			<br />
+			
+			<h:panelGrid id="panelRolling" rendered="#{controladorWikiETL.rollingSeleccionado}">
+			
+			</h:panelGrid>
+
+			<h:panelGrid id="panelValidacion" columns="1"
+				rendered="#{!controladorWikiETL.rollingSeleccionado}">
+
+				<h3>Ingrese el periodo deseado</h3>
+
+				<h:panelGrid id="panelIntervalo" columns="4">
+
+					<p:outputLabel id="mask1" value="Desde: " />
+					<p:inputMask id="date1" value="#{controladorWikiETL.fechaInicio}"
+						mask="9999-99-99" />
+
+					<p:outputLabel id="mask2" value=" Hasta: " />
+					<p:inputMask id="date2" value="#{controladorWikiETL.fechaFin}"
+						mask="9999-99-99" />
+
+				</h:panelGrid>
+			</h:panelGrid>
+			<br />
+
+			<h:panelGrid id="panelBD" columns="3">
+
+				<h:outputLabel id="lblBD" value="Seleccione la base de datos" />
+
+				<h:selectOneMenu id="cbBase" value="#{controladorWikiETL.base}">
+
+					<f:selectItem itemValue="MYSQL" itemLabel="MYSQL" />
+					<f:selectItem itemValue="POSTGRES" itemLabel="POSTGRES" />
+
+				</h:selectOneMenu>
+
+				<p:commandButton id="btnBD" value="Agregar Datos"
+					process="@this,panelIntervalo,panelDatos,panelValidacion,panelBD,panelRolling"
+					update="panelIntervalo,panelDatos,panelValidacion,panelRolling,panelTabla"
+					action="#{controladorWikiETL.extraer}" />
+
+			</h:panelGrid>
+			<br />
+
+			<h:panelGrid id="panelBoton" columns="3"
+				rendered="#{controladorWikiETL.tablaLlena}">
+
+				<p:commandButton id="btnVaciar" value="Vaciar Tabla" process="@this"
+					update="panelTabla" action="#{controladorWikiETL.vaciarTabla}" />
+
+			</h:panelGrid>
+			<br />
+
+			<h:panelGrid id="panelTabla">
+
+				<p:dataTable id="tablaHechos" value="#{controladorWikiETL.recentChanges}"
+					var="rChanges" border="1" scrollable="true" scrollWidth="80%"
+					scrollHeight="150" editable="true" editMode="cell">
+
+					<f:facet name="header">
+         				   Datos a cargar
+      			    </f:facet>
+
+					<p:columnGroup type="header">
+						<p:row>
+							<p:column colspan="3" headerText="Datos Publicacion" />
+							<p:column colspan="4" headerText="Datos de Edicion" />
+							<p:column colspan="2" headerText="Datos Editor" />
+							<p:column headerText="Accion"/>
+						</p:row>
+						<p:row>
+							<p:column headerText="Id" />
+							<p:column headerText="Hora" />
+							<p:column headerText="Titulo" />
+							<p:column headerText="Comentario" />
+							<p:column headerText="Longitud antigua" />
+							<p:column headerText="Nueva longitud" />
+							<p:column headerText="Texto" />
+							<p:column headerText="Id Usuario"/>
+							<p:column headerText="Nombre del usuario" />
+						</p:row>
+					</p:columnGroup>
+
+					<p:column>
+						<h:outputLabel value="#{rChanges.rcId}" />
+					</p:column>
+
+					<p:column>
+						<h:outputLabel value="#{rChanges.rcTimestamp}" />
+					</p:column>
+
+					<p:column>
+						<h:outputLabel value="#{rChanges.rcTitle}" />
+					</p:column>
+
+					<p:column>
+						<h:outputLabel value="#{rChanges.rcComment}" />
+					</p:column>
+
+					<p:column>
+						<h:outputLabel value="#{rChanges.rcOldLen}" />
+					</p:column>
+
+					<p:column>
+						<h:outputLabel value="#{rChanges.rcNewLen}" />
+					</p:column>
+
+					<p:column>
+						<h:outputLabel value="#{rChanges.page.text}" />
+					</p:column>
+
+					<p:column>
+						<h:outputLabel value="#{rChanges.user.userId}" />
+					</p:column>
+					
+					<p:column>
+						<h:outputLabel value="#{rChanges.user.userName}" />
+					</p:column>
+					<p:column>
+						<p:commandButton value="Eliminar" process="@this"
+							update="panelTabla"
+							action="#{controladorWikiETL.eliminar(rChanges)}" />
+					</p:column>
+
+				</p:dataTable>
+
+			</h:panelGrid>
+			<br />
+
+			<h:panelGrid id="panelBotones" columns="2">
+
+				<p:commandButton id="btnCargaDatos" value="Cargar Datos"
+					process="@this,panelIntervalo,panelDatos,panelValidacion,panelBD,panelTabla"
+					update="panelTabla" action="#{controladorWikiETL.cargar}" />
+
+			</h:panelGrid>
 
 		</h:form>
 	</ui:define>
-	
 
 </ui:composition>

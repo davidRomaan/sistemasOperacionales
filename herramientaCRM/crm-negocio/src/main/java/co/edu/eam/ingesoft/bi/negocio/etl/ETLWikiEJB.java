@@ -8,6 +8,9 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
 import co.edu.eam.ingesoft.bi.negocio.persistencia.Persistencia;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionPersona;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionProducto;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoVentas;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.Page;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.RecentChanges;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.User;
@@ -18,6 +21,8 @@ public class ETLWikiEJB {
 
 	@EJB
 	private Persistencia em;
+
+	
 
 	// ----------------- extracción de datos ----------------------------
 
@@ -52,7 +57,7 @@ public class ETLWikiEJB {
 	 */
 	private List<RecentChanges> crearDimensiones(List<Object[]> lista) {
 
-		// Lista en la que se guardarán todos los datos obtenidos
+		// Lista en la que se guardarï¿½n todos los datos obtenidos
 		List<RecentChanges> listaCambios = new ArrayList<RecentChanges>();
 
 		for (Object[] objects : lista) {
@@ -92,7 +97,7 @@ public class ETLWikiEJB {
 	}
 
 	/**
-	 * Obtiene los datos de las páginas en la que se realizó cambios recientes
+	 * Obtiene los datos de las pï¿½ginas en la que se realizï¿½ cambios recientes
 	 * 
 	 * @param listaCambios
 	 *            lista de cambios recientes realizados
@@ -105,8 +110,8 @@ public class ETLWikiEJB {
 
 			Page pagina = new Page();
 
-			// Si el id de la página es diferente de -1 quiere decir que la
-			// página existe, de lo contrario fue eliminada
+			// Si el id de la pï¿½gina es diferente de -1 quiere decir que la
+			// pï¿½gina existe, de lo contrario fue eliminada
 			if (idPagina != -1) {
 
 				pagina.setText(em.obtenerTextoPagina(idPagina));
@@ -114,7 +119,7 @@ public class ETLWikiEJB {
 
 			} else {
 
-				pagina.setText("La página fue eliminada");
+				pagina.setText("La pï¿½gina fue eliminada");
 				pagina.setPageId(-1);
 
 			}
@@ -126,7 +131,7 @@ public class ETLWikiEJB {
 	}
 
 	/**
-	 * Obtiene los datos del usario que realizó algún cambio
+	 * Obtiene los datos del usario que realizï¿½ algï¿½n cambio
 	 * 
 	 * @param listaCambios
 	 *            lista de cambios realizados
@@ -199,5 +204,19 @@ public class ETLWikiEJB {
 		}
 
 	}
+	/**
+	 * vacï¿½a las tablas relacionados con las ventas en la base de datos de
+	 * oracle
+	 */
+	public void limpiarBDOracle() {
+
+		em.limpiarBDOracle("RECENT_CHANGES");
+		em.limpiarBDOracle("PAGE");
+		em.limpiarBDOracle("USER");
+
+	}
+	
+	
+	
 
 }
