@@ -52,6 +52,12 @@ public class Persistencia implements Serializable {
 	private EntityManager emO;
 
 	/**
+	 * Conexión para Mysql My_wiki (4)
+	 */
+	@PersistenceContext(unitName = "mysqlWiki")
+	private EntityManager emMW;
+
+	/**
 	 * Base de datos en la cual se estï¿½n realizando las operaciones
 	 */
 	private int bd;
@@ -791,7 +797,7 @@ public class Persistencia implements Serializable {
 		return q.getResultList();
 
 	}
-	
+
 	public List<Object> listaMesAuditoria(int mes, int anio, int bd) {
 
 		Query q;
@@ -815,7 +821,7 @@ public class Persistencia implements Serializable {
 		return q.getResultList();
 
 	}
-	
+
 	public List<Object> listaAuditoriasAnio(int anio, int bd) {
 
 		Query q;
@@ -880,8 +886,8 @@ public class Persistencia implements Serializable {
 	 *            cï¿½dula del empleado que realizï¿½ la venta
 	 */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void crearHechoVentas(int unidades, double subtotal, String cedulaCliente, int idMunicipio,
-			int idProducto, String cedulaEmpleado, Calendar fecha) {
+	public void crearHechoVentas(int unidades, double subtotal, String cedulaCliente, int idMunicipio, int idProducto,
+			String cedulaEmpleado, Calendar fecha) {
 
 		String sql = "INSERT INTO HECHO_VENTAS (unidades, subtotal, municipio_id, producto_id, "
 				+ "cedula_empleado, cedula_cliente, fecha_venta) VALUES (?1,?2,?3,?4,?5,?6,?7)";
@@ -897,7 +903,6 @@ public class Persistencia implements Serializable {
 		q.executeUpdate();
 
 	}
-
 
 	/**
 	 * 
@@ -923,7 +928,7 @@ public class Persistencia implements Serializable {
 		q.executeUpdate();
 
 	}
-		
+
 	/**
 	 * Crea una dimensiï¿½n de producto en la bd
 	 * 
@@ -1010,31 +1015,41 @@ public class Persistencia implements Serializable {
 
 	}
 	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void crearDimensionPage (Page page){
+		
+		String sql = "INSERT INTO PAGE ()"
+		
+	}
+
 	/**
 	 * Obtiene el número actual en la secuencia de una tabla
-	 * @param nombreSecuencia nombre de la secuencia de la cual se desea obtener su código
+	 * 
+	 * @param nombreSecuencia
+	 *            nombre de la secuencia de la cual se desea obtener su código
 	 * @return el código actual de la secuencia
 	 */
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-	public int secuenciaActual (String nombreSecuencia){
-		
-		//String sql = " select " + nombreSecuencia + ".nextval from dual";
+	public int secuenciaActual(String nombreSecuencia) {
+
+		// String sql = " select " + nombreSecuencia + ".nextval from dual";
 		String sql = " select max(id) from " + nombreSecuencia;
-		
-		Query q = emO.createNativeQuery(sql);	
+
+		Query q = emO.createNativeQuery(sql);
 		List<Object> lista = q.getResultList();
-		
-		//Integer grandChildCount = ((BigInteger) (Object) lista.get(0)).intValue();
-		
+
+		// Integer grandChildCount = ((BigInteger) (Object)
+		// lista.get(0)).intValue();
+
 		BigDecimal codigoB = (BigDecimal) lista.get(0);
 		int codigo = codigoB.intValue();
-		
+
 		System.out.println("Codigo Actual de " + nombreSecuencia + ": " + codigo);
-		
+
 		return codigo;
-		
+
 	}
-	
+
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public boolean dimensionMunicipioExiste(String nombre) {
 
@@ -1086,8 +1101,6 @@ public class Persistencia implements Serializable {
 		return false;
 
 	}
-	
-
 
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public DimensionUsuario buscarDimens(String cedula) {
@@ -1105,6 +1118,7 @@ public class Persistencia implements Serializable {
 		return (DimensionUsuario) lista;
 
 	}
+
 	/**
 	 * Verifica si existe una dimensiï¿½n que tiene como prmaria un integer
 	 * 
@@ -1130,13 +1144,13 @@ public class Persistencia implements Serializable {
 		return false;
 
 	}
-	
+
 	/**
 	 * Verifica si existe una dimensión de un producto
 	 * 
 	 * @param id
 	 *            código del producto
-
+	 * 
 	 * @return true si existe, de lo contrario false
 	 */
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
@@ -1204,35 +1218,131 @@ public class Persistencia implements Serializable {
 		q.executeUpdate();
 
 	}
-	
+
 	// ---------------- datos dwh ---------------------------
-	
+
 	/**
 	 * Lista los hechos de venta registrados en la bd
+	 * 
 	 * @return la lista de hechos registrados
 	 */
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-	public List<HechoVentas> listarHechosVenta(){
-		
+	public List<HechoVentas> listarHechosVenta() {
+
 		Query q = emO.createNamedQuery(HechoVentas.LISTAR);
 		List<HechoVentas> lista = q.getResultList();
 		return lista;
-		
+
 	}
-	
 
 	/**
 	 * Lista los hechos de Audirorias registrados en la bd
+	 * 
 	 * @return la lista de hechos registrados
 	 */
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-	public List<HechoAuditoria> listarHechosAuditorias(){
-		
+	public List<HechoAuditoria> listarHechosAuditorias() {
+
 		Query q = emO.createNamedQuery(HechoAuditoria.LISTAR);
 		List<HechoAuditoria> lista = q.getResultList();
 		return lista;
+
+	}
+
+	// ------------------------------ Administracion wiki
+	// ----------------------------------
+
+	/**
+	 * Obtiene los cambios recientes de la wiki por acumulación simple
+	 * 
+	 * @return la lista de cambios
+	 */
+	public List<Object[]> obtenerCambiosRecientesAcumulacionSimple(String fecha1, String fecha2) {
+		String sql = "SELECT rc_id, (select date_format(cast(rc_timestamp as char),"
+				+ " '%d/%m/%Y')) as fecha, cast(rc_title as CHAR) as rc_title,"
+				+ " cast(rc_comment as char) as rc_comment, IFNULL(rc_old_len, 0) as rc_old_len,"
+				+ " IFNULL(rc_new_len, 0) as rc_new_len, rc_new, rc_user FROM RECENTCHANGES"
+				+ " WHERE (select date_format(cast(rc_timestamp as char), '%Y-%m-%d'))"
+				+ " BETWEEN ?1 AND ?2";
+		Query q = emMW.createNativeQuery(sql);
+		q.setParameter(1, fecha1);
+		q.setParameter(2, fecha2);
+		List<Object[]> lista = q.getResultList();
+		return lista;
+
+	}
+	
+	/**
+	 * Obtiene todos los cambios de la wiki
+	 * 
+	 * @return la lista de cambios
+	 */
+	public List<Object[]> obtenerCambiosRecientesRolling() {
+		String sql = "SELECT rc_id, (select date_format(cast(rc_timestamp as char),"
+				+ " '%d/%m/%Y')) as fecha, cast(rc_title as CHAR) as rc_title,"
+				+ " cast(rc_comment as char) as rc_comment, IFNULL(rc_old_len, 0) as rc_old_len,"
+				+ " IFNULL(rc_new_len, 0) as rc_new_len, rc_new, rc_user FROM RECENTCHANGES";
+		Query q = emMW.createNativeQuery(sql);
+		List<Object[]> lista = q.getResultList();
+		return lista;
+
+	}
+
+	/**
+	 * Obtiene el id de una página, buscandola por su titulo
+	 * 
+	 * @param title
+	 *            titulo de la página
+	 * @return el id de la página
+	 */
+	public int obtenerIdPage(String title) {
+
+		String sql = "SELECT page_id FROM PAGE WHERE cast(page_title as char) = '" + title + "'";
+		Query q = emMW.createNativeQuery(sql);
+		List<Object> resultado = q.getResultList();
+		if (resultado.size() != 0) {
+			return ((Integer) resultado.get(0));
+		}
+		
+		return -1;
+
+	}
+	
+	/**
+	 * Obtiene el texto de la página, buscandolo por el id de la página
+	 * @param idPage el id de la página
+	 * @return el texto de la página
+	 */
+	public String obtenerTextoPagina (int idPage){
+		
+		String sql = "SELECT si_text FROM SEARCHINDEX WHERE si_page = ?1";
+		Query q = emMW.createNativeQuery(sql);
+		q.setParameter(1, idPage);
+		
+		List<Object> lista = q.getResultList();
+		return (String) lista.get(0);
 		
 	}
+	
+	/**
+	 * Obtiene los datos de un usuario, buscandolo por su id
+	 * @param id id del usuario
+	 * @return los datos del usuario
+	 */
+	public List<Object[]> obtenerDatosUsuario (int id){
+		
+		String sql = "SELECT cast(user_name as char) as user_name,"
+				+ " cast(user_real_name as char) as real_name from user where user_id = ?1";
+		Query q = emMW.createNativeQuery(sql);
+		q.setParameter(1, id);
+		List<Object[]> lista = q.getResultList();
+		return lista;
+		
+	}
+	
+	
+
+	// ---------------------------------- Get y Set	// ----------------------------------------
 
 	public int getBd() {
 		return bd;
