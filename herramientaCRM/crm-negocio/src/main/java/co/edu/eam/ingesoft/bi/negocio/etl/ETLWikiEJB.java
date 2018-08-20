@@ -29,11 +29,11 @@ public class ETLWikiEJB {
 	/**
 	 * Obtiene los datos almacenados en la bd my_wiki
 	 */
-	public void obtenerDatosWikiAcumulacionSimple(String fecha1, String fecha2) {
+	public List<RecentChanges> obtenerDatosWikiAcumulacionSimple(String fecha1, String fecha2) {
 
 		// Lista con los datos obtenidos de la bd
 		List<Object[]> lista = em.obtenerCambiosRecientesAcumulacionSimple(fecha1, fecha2);
-		crearDimensiones(lista);
+		return crearDimensiones(lista);
 
 	}
 
@@ -152,6 +152,10 @@ public class ETLWikiEJB {
 
 				String userName = (String) datos[0];
 				String realName = (String) datos[1];
+				
+				if (realName.equals("")){
+					realName = "Sin nombre";
+				}
 
 				usuario.setUserName(userName);
 				usuario.setUserRealName(realName);
@@ -210,9 +214,9 @@ public class ETLWikiEJB {
 	 */
 	public void limpiarBDOracle() {
 
-		em.limpiarBDOracle("RECENT_CHANGES");
-		em.limpiarBDOracle("PAGE");
-		em.limpiarBDOracle("USER");
+		em.limpiarBDOracle("\"BI\".\"RECENT_CHANGES\"");
+		em.limpiarBDOracle("\"BI\".\"PAGE\"");
+		em.limpiarBDOracle("\"BI\".\"USER\"");
 
 	}
 	

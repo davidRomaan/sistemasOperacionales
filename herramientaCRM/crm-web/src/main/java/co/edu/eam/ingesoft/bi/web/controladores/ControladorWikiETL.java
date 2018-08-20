@@ -31,13 +31,10 @@ public class ControladorWikiETL implements Serializable {
 	private String tipoCarga;
 	private String fechaInicio;
 	private String fechaFin;
-	private String base;
 	private String accion;
 	
 	// Para identificar si se seleccion� la carga como tipo rolling
 	private boolean rollingSeleccionado;
-	private boolean datosPostgresCargados;
-	private boolean datosMysqlCargados;
 	
 	@Inject
 	private ControladorSesion sesion;
@@ -53,8 +50,6 @@ public class ControladorWikiETL implements Serializable {
 	@PostConstruct
 	private void inicializarCampos() {
 		recentChanges = new ArrayList<RecentChanges>();
-		datosPostgresCargados = false;
-		datosMysqlCargados = false;
 	}
 	
 	public void obtenerDatosWiki(){
@@ -88,8 +83,6 @@ public class ControladorWikiETL implements Serializable {
 	public void vaciarTabla() {
 
 		recentChanges = new ArrayList<RecentChanges>();
-		datosMysqlCargados = false;
-		datosPostgresCargados = false;
 
 		reload();
 
@@ -100,31 +93,13 @@ public class ControladorWikiETL implements Serializable {
 	 */
 	public void extraer() {
 
-		int bd;
-
-		if (base.equalsIgnoreCase("mysql")) {
-			bd = 1;
-		} else {
-			bd = 2;
-		}
-
-		if (bd == 1 && datosMysqlCargados) {
-
-			Messages.addFlashGlobalError("Ya se cargaron los datos de la base de datos de MYSQL");
-
-		} else if (bd == 2 && datosPostgresCargados) {
-
-			Messages.addFlashGlobalError("Ya se cargaron los datos de la base de datos de POSTGRES");
-
-		} else {
-
 			if (rollingSeleccionado) {
 
-				wikiEJB.obtenerDatosWikiRolling();
+				recentChanges = wikiEJB.obtenerDatosWikiRolling();
 				
 				accion = "Extraer";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Extraer Datos dia", sesion.getUser().getCedula(),
+				auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Extraer Datos Rolling", sesion.getUser().getCedula(),
 						browserDetail);
 				
 
@@ -132,9 +107,8 @@ public class ControladorWikiETL implements Serializable {
 
 				try {
 					
-					wikiEJB.obtenerDatosWikiAcumulacionSimple(fechaInicio, fechaFin);
+					recentChanges = wikiEJB.obtenerDatosWikiAcumulacionSimple(fechaInicio, fechaFin);
 					Messages.addFlashGlobalInfo("Datos cargados exitosamente");
-					cargaRealizada(bd);
 					
 					accion = "Extraer";
 					String browserDetail = Faces.getRequest().getHeader("User-Agent");
@@ -144,13 +118,10 @@ public class ControladorWikiETL implements Serializable {
 				} catch (ExcepcionNegocio e) {
 					// TODO: handle exception
 					Messages.addFlashGlobalError(e.getMessage());
-					cargaNoRealizada(bd);
 				}
 
 				reload();
 			}
-
-		}
 
 	}
 	
@@ -193,22 +164,6 @@ public class ControladorWikiETL implements Serializable {
 		}
 	}
 	
-	private void cargaRealizada(int bd) {
-		if (bd == 1) {
-			datosMysqlCargados = true;
-		} else {
-			datosPostgresCargados = true;
-		}
-	}
-
-	private void cargaNoRealizada(int bd) {
-		if (bd == 1) {
-			datosMysqlCargados = false;
-		} else {
-			datosPostgresCargados = false;
-		}
-	}
-	
 	public void eliminar(HechoVentas hecho) {
 		recentChanges.remove(hecho);
 	}
@@ -237,16 +192,6 @@ public class ControladorWikiETL implements Serializable {
 		return fechaFin;
 	}
 
-	public String getBase() {
-		return base;
-	}
-
-
-	public void setBase(String base) {
-		this.base = base;
-	}
-
-
 	public void setFechaFin(String fechaFin) {
 		this.fechaFin = fechaFin;
 	}
@@ -267,22 +212,6 @@ public class ControladorWikiETL implements Serializable {
 
 	public void setAccion(String accion) {
 		this.accion = accion;
-	}
-
-	public boolean isDatosPostgresCargados() {
-		return datosPostgresCargados;
-	}
-
-	public void setDatosPostgresCargados(boolean datosPostgresCargados) {
-		this.datosPostgresCargados = datosPostgresCargados;
-	}
-
-	public boolean isDatosMysqlCargados() {
-		return datosMysqlCargados;
-	}
-
-	public void setDatosMysqlCargados(boolean datosMysqlCargados) {
-		this.datosMysqlCargados = datosMysqlCargados;
 	}
 
 	public ControladorSesion getSesion() {
