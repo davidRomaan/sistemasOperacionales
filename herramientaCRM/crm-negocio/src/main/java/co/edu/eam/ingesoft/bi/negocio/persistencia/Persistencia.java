@@ -28,6 +28,9 @@ import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionProducto;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionUsuario;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoAuditoria;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoVentas;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.Page;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.RecentChanges;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.User;
 
 @LocalBean
 @Stateless
@@ -1015,10 +1018,58 @@ public class Persistencia implements Serializable {
 
 	}
 	
+	/**
+	 * Crea la dimensión de la página en el dwh
+	 * @param page página que se desea crear
+	 */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void crearDimensionPage (Page page){
 		
-		String sql = "INSERT INTO PAGE ()"
+		String sql = "INSERT INTO \"BI\".\"PAGE\" (page_id, text) VALUES (?1, ?2)";
+		Query q = emO.createNativeQuery(sql);
+		q.setParameter(1, page.getPageId());
+		q.setParameter(2, page.getText());
+		q.executeUpdate();
+		
+	}
+	
+	/**
+	 * Crea la dimensión del usuario de la wiki en el dwh
+	 * @param user usuario que se desea crear
+	 */
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void crearDimensionUser (User user){
+		
+		String sql = "INSERT INTO \"BI\".\"USER\" (user_id, user_name, user_real_name) VALUES (?1, ?2, ?3)";
+		Query q = emO.createNativeQuery(sql);
+		q.setParameter(1, user.getUserId());
+		q.setParameter(2, user.getUserName());
+		q.setParameter(3, user.getUserRealName());
+		q.executeUpdate();
+		
+	}
+	
+	/**
+	 * Crea el hecho recent change en el dwh
+	 * @param hecho hecho que se desea crear
+	 */
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void crearHechoRecentChanges (RecentChanges hecho){
+		
+		String sql = "INSERT INTO \"BI\".\"RECENT_CHANGES\" "
+				+ "(rc_id, rc_timestamp, rc_title, rc_comment, rc_old_len, "
+				+ "rc_new_len, rc_new, user_id, page_id) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)";
+		Query q = emO.createNativeQuery(sql);
+		q.setParameter(1, hecho.getRcId());
+		q.setParameter(2, hecho.getRcTimestamp());
+		q.setParameter(3, hecho.getRcTitle());
+		q.setParameter(4, hecho.getRcComment());
+		q.setParameter(5, hecho.getRcOldLen());
+		q.setParameter(6, hecho.getRcNewLen());
+		q.setParameter(7, hecho.isRcNew());
+		q.setParameter(8, hecho.getUser().getUserId());
+		q.setParameter(9, hecho.getPage().getPageId());
+		q.executeUpdate();
 		
 	}
 
@@ -1129,9 +1180,9 @@ public class Persistencia implements Serializable {
 	 * @return true si existe, de lo contrario false
 	 */
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-	public boolean dimensionExiste(int id, String tabla) {
+	public boolean dimensionExiste(int id, String nameId, String tabla) {
 
-		String sql = "SELECT * FROM " + tabla + " WHERE id = ?1";
+		String sql = "SELECT * FROM " + tabla + " WHERE " +  nameId  + " = ?1";
 		Query q = emO.createNativeQuery(sql);
 		q.setParameter(1, id);
 

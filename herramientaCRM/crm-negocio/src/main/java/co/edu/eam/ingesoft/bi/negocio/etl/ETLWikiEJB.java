@@ -18,8 +18,8 @@ public class ETLWikiEJB {
 
 	@EJB
 	private Persistencia em;
-	
-	//----------------- extracción de datos ----------------------------
+
+	// ----------------- extracción de datos ----------------------------
 
 	/**
 	 * Obtiene los datos almacenados en la bd my_wiki
@@ -31,20 +31,23 @@ public class ETLWikiEJB {
 		crearDimensiones(lista);
 
 	}
-	
+
 	/**
-	 * Obtiene todos los cambios realizados 
+	 * Obtiene todos los cambios realizados
 	 */
-	public void obtenerDatosWikiRolling(){
-		
+	public List<RecentChanges> obtenerDatosWikiRolling() {
+
 		List<Object[]> lista = em.obtenerCambiosRecientesRolling();
-		crearDimensiones(lista);
-		
+		return crearDimensiones(lista);
+
 	}
 
 	/**
-	 * Se crean las dimensiones y la tabla de hecho con los datos obtenidos de la bd
-	 * @param lista lista de cambios obtenida de la bd
+	 * Se crean las dimensiones y la tabla de hecho con los datos obtenidos de
+	 * la bd
+	 * 
+	 * @param lista
+	 *            lista de cambios obtenida de la bd
 	 * @return la lista de cambios
 	 */
 	private List<RecentChanges> crearDimensiones(List<Object[]> lista) {
@@ -55,9 +58,9 @@ public class ETLWikiEJB {
 		for (Object[] objects : lista) {
 
 			int rcId = Integer.parseInt(String.valueOf(objects[0]));
-			String rcTimestamp = ((String)objects[1]);
-			String rcTitle = ((String)objects[2]);
-			String rcComment = ((String)objects[3]);
+			String rcTimestamp = ((String) objects[1]);
+			String rcTitle = ((String) objects[2]);
+			String rcComment = ((String) objects[3]);
 			int rcOldLen = Integer.parseInt(String.valueOf(objects[4]));
 			int rcNewLen = Integer.parseInt(String.valueOf(objects[5]));
 			boolean rcNew = (1 == Integer.parseInt(String.valueOf(objects[6])));
@@ -158,31 +161,43 @@ public class ETLWikiEJB {
 		}
 
 	}
-	
-	
-	//---------------------- carga de datos ----------------------------
-	
-	
+
+	// ---------------------- carga de datos ----------------------------
+
 	/**
 	 * Carga los datos en el dwh
-	 * @param hecho lista de hechos con sus dimensiones a cargar
+	 * 
+	 * @param hecho
+	 *            lista de hechos con sus dimensiones a cargar
 	 */
-	public void cargarDatosDWH (List<RecentChanges> hecho){
-		
+	public void cargarDatosDWH(List<RecentChanges> hecho) {
+
 		List<Integer> listaIdPaginas = new ArrayList<Integer>();
 		List<Integer> listaIdUsuarios = new ArrayList<Integer>();
-		
+
 		for (RecentChanges recentChanges : hecho) {
-			
+
 			int idPage = recentChanges.getPage().getPageId();
-			
-			if (!em.dimensionExiste(idPage, "PAGE") && !listaIdPaginas.contains(idPage)){
+			int userId = recentChanges.getUser().getUserId();
+
+			if (!em.dimensionExiste(recentChanges.getRcId(), "rc_id", "RECENT_CHANGES")) {
+
+				if (!em.dimensionExiste(idPage, "page_id", "\"BI\".\"PAGE\"") && !listaIdPaginas.contains(idPage)) {
+					em.crearDimensionPage(recentChanges.getPage());
+					listaIdPaginas.add(idPage);
+				}
+
+				if (!em.dimensionExiste(userId, "user_id", "\"BI\".\"USER\"") && !listaIdUsuarios.contains(userId)) {
+					em.crearDimensionUser(recentChanges.getUser());
+					listaIdUsuarios.add(userId);
+				}
 				
+				em.crearHechoRecentChanges(recentChanges);
+
 			}
-			
+
 		}
-		
+
 	}
-	
 
 }

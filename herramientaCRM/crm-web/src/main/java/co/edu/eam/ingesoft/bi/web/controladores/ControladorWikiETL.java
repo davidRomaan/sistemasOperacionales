@@ -17,7 +17,7 @@ public class ControladorWikiETL implements Serializable {
 	
 	public void obtenerDatosWiki(){
 		wikiEJB.obtenerDatosWikiAcumulacionSimple("2018-07-15", "2018-09-01");
-		wikiEJB.obtenerDatosWikiRolling();
+		wikiEJB.cargarDatosDWH(wikiEJB.obtenerDatosWikiRolling());
 	}
 
 }
