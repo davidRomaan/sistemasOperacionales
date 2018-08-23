@@ -9,24 +9,11 @@
 
 			<h1>ETL WIKI</h1>
 
-			<h:panelGrid id="panelDatos" columns="2">
+			 <h:panelGrid id="panelDatos" columns="2">
 
-				<h:outputLabel id="lblTipoCarga" for="cbTipoCarga"
-					value="Seleccione el modo de carga" />
+				
 
-				<h:selectOneMenu id="cbTipoCarga"
-					value="#{controladorWikiETL.tipoCarga}">
-
-					<f:selectItem itemValue="Acumulacion simple"
-						itemLabel="Acumulacion simple" />
-					<f:selectItem itemValue="Rolling" itemLabel="Rolling" />
-
-					<f:ajax event="change" execute="@this" render="panelIntervalo,panelRolling"
-						listener="#{controladorWikiETL.gestionarCarga}" />
-
-				</h:selectOneMenu>
-
-			</h:panelGrid>
+			</h:panelGrid> 
 			<br />
 			
 			<h:panelGrid id="panelRolling" rendered="#{controladorWikiETL.rollingSeleccionado}">

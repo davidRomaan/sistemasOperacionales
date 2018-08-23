@@ -58,14 +58,14 @@ public class ControladorWikiETL implements Serializable {
 	}
 	
 	
-	public void gestionarCarga() {
-		if (tipoCarga.equalsIgnoreCase("rolling")) {
-			rollingSeleccionado = true;
-		} else {
-			rollingSeleccionado = false;
-		}
-		reload();
-	}
+//	public void gestionarCarga() {
+//		if (tipoCarga.equalsIgnoreCase("rolling")) {
+//			rollingSeleccionado = true;
+//		} else {
+//			rollingSeleccionado = false;
+//		}
+//		reload();
+//	}
 	
 	/**
 	 * Verifica si la tabla de hechos de venta esta llena
@@ -93,7 +93,7 @@ public class ControladorWikiETL implements Serializable {
 	 */
 	public void extraer() {
 
-			if (rollingSeleccionado) {
+			//if (rollingSeleccionado) {
 
 				recentChanges = wikiEJB.obtenerDatosWikiRolling();
 				
@@ -103,7 +103,7 @@ public class ControladorWikiETL implements Serializable {
 						browserDetail);
 				
 
-			} else {
+			/**} else {
 
 				try {
 					
@@ -121,7 +121,7 @@ public class ControladorWikiETL implements Serializable {
 				}
 
 				reload();
-			}
+			}**/
 
 	}
 	
@@ -136,11 +136,11 @@ public class ControladorWikiETL implements Serializable {
 
 		} else {
 			
-			if (rollingSeleccionado){
+			//if (rollingSeleccionado){
 				
 				wikiEJB.limpiarBDOracle();
 				
-			}
+			//}
 
 			try {
 				wikiEJB.cargarDatosDWH(recentChanges);
@@ -198,7 +198,7 @@ public class ControladorWikiETL implements Serializable {
 
 
 	public boolean isRollingSeleccionado() {
-		return rollingSeleccionado;
+		return true;
 	}
 
 
