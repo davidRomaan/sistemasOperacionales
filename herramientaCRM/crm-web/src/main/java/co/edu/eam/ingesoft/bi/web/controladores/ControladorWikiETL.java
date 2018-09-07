@@ -127,6 +127,7 @@ public class ControladorWikiETL implements Serializable {
 				auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Extraer Datos dia", sesion.getUser().getCedula(),
 						browserDetail);
 				
+				
 
 			} else {
 
