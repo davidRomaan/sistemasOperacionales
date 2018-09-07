@@ -9,24 +9,11 @@
 
 			<h1>ETL WIKI</h1>
 
-			<h:panelGrid id="panelDatos" columns="2">
+			 <h:panelGrid id="panelDatos" columns="2">
 
-				<h:outputLabel id="lblTipoCarga" for="cbTipoCarga"
-					value="Seleccione el modo de carga" />
+				
 
-				<h:selectOneMenu id="cbTipoCarga"
-					value="#{controladorWikiETL.tipoCarga}">
-
-					<f:selectItem itemValue="Acumulacion simple"
-						itemLabel="Acumulacion simple" />
-					<f:selectItem itemValue="Rolling" itemLabel="Rolling" />
-
-					<f:ajax event="change" execute="@this" render="panelIntervalo,panelRolling"
-						listener="#{controladorWikiETL.gestionarCarga}" />
-
-				</h:selectOneMenu>
-
-			</h:panelGrid>
+			</h:panelGrid> 
 			<br />
 			
 			<h:panelGrid id="panelRolling" rendered="#{controladorWikiETL.rollingSeleccionado}">
@@ -52,16 +39,7 @@
 			</h:panelGrid>
 			<br />
 
-			<h:panelGrid id="panelBD" columns="3">
-
-				<h:outputLabel id="lblBD" value="Seleccione la base de datos" />
-
-				<h:selectOneMenu id="cbBase" value="#{controladorWikiETL.base}">
-
-					<f:selectItem itemValue="MYSQL" itemLabel="MYSQL" />
-					<f:selectItem itemValue="POSTGRES" itemLabel="POSTGRES" />
-
-				</h:selectOneMenu>
+			<h:panelGrid id="panelBD" columns="1">
 
 				<p:commandButton id="btnBD" value="Agregar Datos"
 					process="@this,panelIntervalo,panelDatos,panelValidacion,panelBD,panelRolling"
@@ -99,12 +77,12 @@
 						</p:row>
 						<p:row>
 							<p:column headerText="Id" />
-							<p:column headerText="Hora" />
-							<p:column headerText="Titulo" />
+							<p:column headerText="Fecha" />
+							<p:column headerText="Titulo Página" />
 							<p:column headerText="Comentario" />
 							<p:column headerText="Longitud antigua" />
 							<p:column headerText="Nueva longitud" />
-							<p:column headerText="Texto" />
+							<p:column headerText="Texto Página" />
 							<p:column headerText="Id Usuario"/>
 							<p:column headerText="Nombre del usuario" />
 						</p:row>

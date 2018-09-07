@@ -21,33 +21,38 @@ public class ETLWikiEJB {
 
 	@EJB
 	private Persistencia em;
+
 	
-	//----------------- extracciï¿½n de datos ----------------------------
+
+	// ----------------- extracción de datos ----------------------------
 
 	/**
 	 * Obtiene los datos almacenados en la bd my_wiki
 	 */
-	public void obtenerDatosWikiAcumulacionSimple(String fecha1, String fecha2) {
+	public List<RecentChanges> obtenerDatosWikiAcumulacionSimple(String fecha1, String fecha2) {
 
 		// Lista con los datos obtenidos de la bd
 		List<Object[]> lista = em.obtenerCambiosRecientesAcumulacionSimple(fecha1, fecha2);
-		crearDimensiones(lista);
+		return crearDimensiones(lista);
 
 	}
-	
+
 	/**
-	 * Obtiene todos los cambios realizados 
+	 * Obtiene todos los cambios realizados
 	 */
-	public void obtenerDatosWikiRolling(){
-		
+	public List<RecentChanges> obtenerDatosWikiRolling() {
+
 		List<Object[]> lista = em.obtenerCambiosRecientesRolling();
-		crearDimensiones(lista);
-		
+		return crearDimensiones(lista);
+
 	}
 
 	/**
-	 * Se crean las dimensiones y la tabla de hecho con los datos obtenidos de la bd
-	 * @param lista lista de cambios obtenida de la bd
+	 * Se crean las dimensiones y la tabla de hecho con los datos obtenidos de
+	 * la bd
+	 * 
+	 * @param lista
+	 *            lista de cambios obtenida de la bd
 	 * @return la lista de cambios
 	 */
 	private List<RecentChanges> crearDimensiones(List<Object[]> lista) {
@@ -58,13 +63,17 @@ public class ETLWikiEJB {
 		for (Object[] objects : lista) {
 
 			int rcId = Integer.parseInt(String.valueOf(objects[0]));
-			String rcTimestamp = ((String)objects[1]);
-			String rcTitle = ((String)objects[2]);
-			String rcComment = ((String)objects[3]);
+			String rcTimestamp = ((String) objects[1]);
+			String rcTitle = ((String) objects[2]);
+			String rcComment = ((String) objects[3]);
 			int rcOldLen = Integer.parseInt(String.valueOf(objects[4]));
 			int rcNewLen = Integer.parseInt(String.valueOf(objects[5]));
 			boolean rcNew = (1 == Integer.parseInt(String.valueOf(objects[6])));
 			int userId = Integer.parseInt(String.valueOf(objects[7]));
+			
+			if (rcComment.equals("")){
+				rcComment = "Sin Resumen";
+			}
 
 			RecentChanges recentChanges = new RecentChanges();
 			recentChanges.setRcId(rcId);
@@ -114,7 +123,7 @@ public class ETLWikiEJB {
 
 			} else {
 
-				pagina.setText("La pï¿½gina fue eliminada");
+				pagina.setText("La pagina fue eliminada");
 				pagina.setPageId(-1);
 
 			}
@@ -147,6 +156,10 @@ public class ETLWikiEJB {
 
 				String userName = (String) datos[0];
 				String realName = (String) datos[1];
+				
+				if (realName.equals("")){
+					realName = "Sin nombre";
+				}
 
 				usuario.setUserName(userName);
 				usuario.setUserRealName(realName);
@@ -161,45 +174,109 @@ public class ETLWikiEJB {
 		}
 
 	}
-	
-	
-	//---------------------- carga de datos ----------------------------
-	
-	
+
+	// ---------------------- carga de datos ----------------------------
+
 	/**
 	 * Carga los datos en el dwh
-	 * @param hecho lista de hechos con sus dimensiones a cargar
+	 * 
+	 * @param hecho
+	 *            lista de hechos con sus dimensiones a cargar
 	 */
-	public void cargarDatosDWH (List<RecentChanges> hecho){
-		
+	public void cargarDatosDWH(List<RecentChanges> hecho) {
+
 		List<Integer> listaIdPaginas = new ArrayList<Integer>();
 		List<Integer> listaIdUsuarios = new ArrayList<Integer>();
-		
+
 		for (RecentChanges recentChanges : hecho) {
-			
+
 			int idPage = recentChanges.getPage().getPageId();
-			
-			if (!em.dimensionExiste(idPage, "PAGE") && !listaIdPaginas.contains(idPage)){
+			int userId = recentChanges.getUser().getUserId();
+
+			if (!em.dimensionExiste(recentChanges.getRcId(), "rc_id", "RECENT_CHANGES")) {
+
+				if (!em.dimensionExiste(idPage, "page_id", "\"BI\".\"PAGE\"") && !listaIdPaginas.contains(idPage)) {
+					em.crearDimensionPage(recentChanges.getPage());
+					listaIdPaginas.add(idPage);
+				}
+
+				if (!em.dimensionExiste(userId, "user_id", "\"BI\".\"USER\"") && !listaIdUsuarios.contains(userId)) {
+					em.crearDimensionUser(recentChanges.getUser());
+					listaIdUsuarios.add(userId);
+				}
 				
+				em.crearHechoRecentChanges(recentChanges);
+
 			}
-			
+
 		}
 		
+
 	}
-	
 	/**
 	 * vacï¿½a las tablas relacionados con las ventas en la base de datos de
 	 * oracle
 	 */
 	public void limpiarBDOracle() {
 
-		em.limpiarBDOracle("RECENT_CHANGES");
-		em.limpiarBDOracle("PAGE");
-		em.limpiarBDOracle("USER");
+		em.limpiarBDOracle("\"BI\".\"RECENT_CHANGES\"");
+		em.limpiarBDOracle("\"BI\".\"PAGE\"");
+		em.limpiarBDOracle("\"BI\".\"USER\"");
 
 	}
 	
 	
+	//----------------------------------- Obtener Datos DWH -------------------------
+	
+	public List<RecentChanges> obtenerDatosDWHWiki(){
+		
+		List<Object[]> lista = em.obtenerDatosDWHWiki();
+		
+		List<RecentChanges> listaObtenida = new ArrayList<RecentChanges>();
+		
+		for (Object[] objects : lista) {
+			
+			int rcId = Integer.parseInt(String.valueOf(objects[0]));
+			String rcTimestamp = String.valueOf(objects[1]);
+			String rcTitle = String.valueOf(objects[2]);
+			String rcComment = String.valueOf(objects[3]);
+			int rcOldLen = Integer.parseInt(String.valueOf(objects[4]));
+			int rcNewLen = Integer.parseInt(String.valueOf(objects[5]));
+			boolean rcNew = (1 == Integer.parseInt(String.valueOf(objects[6])));
+			int userId = Integer.parseInt(String.valueOf(objects[7]));
+			int pageId = Integer.parseInt(String.valueOf(objects[8]));
+			String userName = String.valueOf(objects[9]);
+			String userRealName = String.valueOf(objects[10]);
+			String text = String.valueOf(objects[11]);
+			
+			RecentChanges recentChanges = new RecentChanges();
+			recentChanges.setRcId(rcId);
+			recentChanges.setRcComment(rcComment);
+			recentChanges.setRcNew(rcNew);
+			recentChanges.setRcNewLen(rcNewLen);
+			recentChanges.setRcOldLen(rcOldLen);
+			recentChanges.setRcTimestamp(rcTimestamp);
+			recentChanges.setRcTitle(rcTitle);
+			
+			User user = new User();
+			user.setUserId(userId);
+			user.setUserName(userName);
+			user.setUserRealName(userRealName);
+			
+			Page page = new Page();
+			page.setPageId(pageId);
+			page.setText(text);
+			
+			recentChanges.setUser(user);
+			recentChanges.setPage(page);
+			
+			listaObtenida.add(recentChanges);
+			
+		}
+		
+		return listaObtenida;
+		
+	}
 	
 
 }

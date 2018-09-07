@@ -1,0 +1,120 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" template="/templates/inicio.xhtml">
+
+	<ui:define name="cuerpo">
+		<h:form prependId="false">
+
+
+			<h1>ADMINISTRACIÓN DEL DATA WAREHOUSE</h1>
+
+
+			<p:dataTable id="tablaHechos" var="hecho" border="1"
+				scrollable="true" scrollWidth="80%" scrollHeight="150"
+				value="#{controladorWikiDWH.lista}"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+				paginator="true" rows="10" style="margin-top: 25px;">
+
+				<f:facet name="{Exporters}">
+					<div style="float: right">
+						<h:commandLink>
+							<p:graphicImage
+								value="#{FacesContext.getCurrentInstance().getExternalContext()}/img/excel.png"
+								width="24" />
+							<p:dataExporter type="xls" target="tablaHechos"
+								fileName="datos wiki"
+								postProcessor="#{controladorWikiDWH.postProcessor}" />
+						</h:commandLink>
+
+						<h:commandLink action="#{controladorWikiDWH.creandoCSV}" >
+							<p:graphicImage
+								value="#{FacesContext.getCurrentInstance().getExternalContext()}/img/csv.png"
+								width="24" />
+							<p:dataExporter type="csv" target="tablaHechos"
+								fileName="datos wiki" />
+						</h:commandLink>
+					</div>
+				</f:facet>
+
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column colspan="7" headerText="Datos Cambio" />
+						<p:column colspan="3" headerText="Datos usuario" />
+						<p:column colspan="1" headerText="Datos Pagina" />
+
+					</p:row>
+					<p:row>
+						<p:column headerText="Codigo" />
+						<p:column headerText="fecha" />
+						<p:column headerText="titulo" />
+						<p:column headerText="resumen" />
+						<p:column headerText="longitud anterior" />
+						<p:column headerText="longitud nueva" />
+						<p:column headerText="nueva pagina" />
+						<p:column headerText="id usuario" />
+						<p:column headerText="nombre usuario" />
+						<p:column headerText="nombre completo" />
+						<p:column headerText="id pagina" />
+						<!-- <p:column headerText="texto" />  -->
+					</p:row>
+				</p:columnGroup>
+
+				<p:column headerText="Codigo">
+					<h:outputLabel value="#{hecho.rcId}" />
+				</p:column>
+
+				<p:column headerText="fecha">
+					<h:outputLabel value="#{hecho.rcTimestamp}" />
+				</p:column>
+
+				<p:column headerText="titulo">
+					<h:outputLabel value="#{hecho. rcTitle}" />
+				</p:column>
+
+				<p:column headerText="resumen">
+					<h:outputLabel value="#{hecho.rcComment}" />
+				</p:column>
+
+				<p:column headerText="longitud anterior">
+					<h:outputLabel value="#{hecho.rcOldLen}" />
+				</p:column>
+
+				<p:column headerText="longitud nueva">
+					<h:outputLabel value="#{hecho.rcNewLen}" />
+				</p:column>
+
+				<p:column headerText="nueva pagina">
+					<h:outputLabel value="#{hecho.rcNew}" />
+				</p:column>
+
+				<p:column headerText="id usuario">
+					<h:outputLabel value="#{hecho.user.userId}" />
+				</p:column>
+
+				<p:column headerText="nombre usuario">
+					<h:outputLabel value="#{hecho.user.userName}" />
+				</p:column>
+
+				<p:column headerText="nombre completo">
+					<h:outputLabel value="#{hecho.user.userRealName}" />
+				</p:column>
+				
+				<p:column headerText="id pagina">
+					<h:outputLabel value="#{hecho.page.pageId}" />
+				</p:column>
+				
+				<!-- <p:column headerText="texto">
+					<h:outputLabel value="#{hecho.page.text}" />
+				</p:column> -->
+
+			</p:dataTable>
+			<br />
+
+			<p:growl id="messages" showDetail="true" />
+
+
+		</h:form>
+	</ui:define>
+</ui:composition>

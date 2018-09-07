@@ -168,7 +168,7 @@ public class ETLVentasEJB {
 				cedulasEmpleados.add(cedulaEmpleado);
 			}
 
-			if (!em.dimensionExiste(idProducto, "DIMENSION_PRODUCTO")) {
+			if (!em.dimensionExiste(idProducto, "id", "DIMENSION_PRODUCTO")) {
 				if (!codigosProductos.contains(idProducto)) {
 					em.crearDimensionProducto(hechoVentas.getProducto());
 					codigosProductos.add(idProducto);
@@ -177,7 +177,7 @@ public class ETLVentasEJB {
 				em.editarDimensionProducto(idProducto, precioProducto);
 			}
 
-			if (!em.dimensionExiste(idMunicipio, "DIMENSION_MUNICIPIO") && !codigosMunicipios.contains(idMunicipio)) {
+			if (!em.dimensionExiste(idMunicipio,"id", "DIMENSION_MUNICIPIO") && !codigosMunicipios.contains(idMunicipio)) {
 				em.crearDimensionMunicipio(hechoVentas.getMunicipio());
 				codigosMunicipios.add(idMunicipio);
 			}
