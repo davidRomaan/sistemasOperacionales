@@ -5,6 +5,8 @@ import java.util.Calendar;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -27,6 +29,7 @@ public class HechoAuditoria implements Serializable {
 
 	@Id
 	@Column(name = "ID")
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 
 	@Column(name = "ACCION")
@@ -42,7 +45,7 @@ public class HechoAuditoria implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Calendar fecha;
 
-	@JoinColumn(name = "CEDULA_USUARIO")
+	@JoinColumn(name = "ID_USUARIO")
 	@ManyToOne
 	private DimensionUsuario usuario;
 

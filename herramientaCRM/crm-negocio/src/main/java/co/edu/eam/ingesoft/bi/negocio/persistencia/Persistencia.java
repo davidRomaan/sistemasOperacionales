@@ -28,7 +28,6 @@ import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionProducto;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionUsuario;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoAuditoria;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoVentas;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.Page;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.RecentChanges;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.User;
 
@@ -49,13 +48,13 @@ public class Persistencia implements Serializable {
 	private EntityManager emP;
 
 	/**
-	 * Conexiï¿½n para Oracle (3)
+	 * Conexiï¿½n para mySqlDataWareHouse (3)
 	 */
-	@PersistenceContext(unitName = "oracle")
-	private EntityManager emO;
+	@PersistenceContext(unitName = "mysqldwh")
+	private EntityManager emMDWH;
 
 	/**
-	 * Conexión para Mysql My_wiki (4)
+	 * Conexiï¿½n para Mysql My_wiki (4)
 	 */
 	@PersistenceContext(unitName = "mysqlWiki")
 	private EntityManager emMW;
@@ -740,7 +739,7 @@ public class Persistencia implements Serializable {
 	public void limpiarBDOracle(String nombreTable) {
 
 		String sql = "DELETE FROM " + nombreTable;
-		Query q = emO.createNativeQuery(sql);
+		Query q = emMDWH.createNativeQuery(sql);
 		q.executeUpdate();
 
 	}
@@ -895,7 +894,7 @@ public class Persistencia implements Serializable {
 		String sql = "INSERT INTO HECHO_VENTAS (unidades, subtotal, municipio_id, producto_id, "
 				+ "cedula_empleado, cedula_cliente, fecha_venta) VALUES (?1,?2,?3,?4,?5,?6,?7)";
 
-		Query q = emO.createNativeQuery(sql);
+		Query q = emMDWH.createNativeQuery(sql);
 		q.setParameter(1, unidades);
 		q.setParameter(2, subtotal);
 		q.setParameter(3, idMunicipio);
@@ -922,7 +921,7 @@ public class Persistencia implements Serializable {
 
 		String sql = "INSERT INTO HECHO_AUDITORIA (accion, dispositivo, navegador, fecha, cedula_usuario) VALUES (?1,?2,?3,?4,?5)";
 
-		Query q = emO.createNativeQuery(sql);
+		Query q = emMDWH.createNativeQuery(sql);
 		q.setParameter(1, accion);
 		q.setParameter(2, dispositivo);
 		q.setParameter(3, navegador);
@@ -943,7 +942,7 @@ public class Persistencia implements Serializable {
 
 		String sql = "INSERT INTO DIMENSION_PRODUCTO (id, nombre, precio, tipo_producto) VALUES (?1,?2,?3,?4)";
 
-		Query q = emO.createNativeQuery(sql);
+		Query q = emMDWH.createNativeQuery(sql);
 		q.setParameter(1, dimension.getId());
 		q.setParameter(2, dimension.getNombre());
 		q.setParameter(3, dimension.getPrecio());
@@ -964,7 +963,7 @@ public class Persistencia implements Serializable {
 		String sql = "INSERT INTO DIMENSION_PERSONA (cedula, nombre, apellido, genero, edad, tipo_persona) "
 				+ "VALUES (?1,?2,?3,?4,?5,?6)";
 
-		Query q = emO.createNativeQuery(sql);
+		Query q = emMDWH.createNativeQuery(sql);
 		q.setParameter(1, dimension.getCedula());
 		q.setParameter(2, dimension.getNombre());
 		q.setParameter(3, dimension.getApellido());
@@ -987,7 +986,7 @@ public class Persistencia implements Serializable {
 		String sql = "INSERT INTO DIMENSION_USUARIO (cedula, nombre, apellido, genero, edad, tipo_usuario, cargo) "
 				+ "VALUES (?1,?2,?3,?4,?5,?6,?7)";
 
-		Query q = emO.createNativeQuery(sql);
+		Query q = emMDWH.createNativeQuery(sql);
 		q.setParameter(1, dimension.getCedula());
 		q.setParameter(2, dimension.getNombre());
 		q.setParameter(3, dimension.getApellido());
@@ -1010,7 +1009,7 @@ public class Persistencia implements Serializable {
 
 		String sql = "INSERT INTO DIMENSION_MUNICIPIO (id, nombre, departamento) VALUES (?1,?2,?3)";
 
-		Query q = emO.createNativeQuery(sql);
+		Query q = emMDWH.createNativeQuery(sql);
 		q.setParameter(1, dimension.getId());
 		q.setParameter(2, dimension.getNombre());
 		q.setParameter(3, dimension.getDepartamento());
@@ -1019,29 +1018,14 @@ public class Persistencia implements Serializable {
 	}
 	
 	/**
-	 * Crea la dimensión de la página en el dwh
-	 * @param page página que se desea crear
-	 */
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void crearDimensionPage (Page page){
-		
-		String sql = "INSERT INTO \"BI\".\"PAGE\" (page_id, text) VALUES (?1, ?2)";
-		Query q = emO.createNativeQuery(sql);
-		q.setParameter(1, page.getPageId());
-		q.setParameter(2, page.getText());
-		q.executeUpdate();
-		
-	}
-	
-	/**
-	 * Crea la dimensión del usuario de la wiki en el dwh
+	 * Crea la dimensiï¿½n del usuario de la wiki en el dwh
 	 * @param user usuario que se desea crear
 	 */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void crearDimensionUser (User user){
 		
 		String sql = "INSERT INTO \"BI\".\"USER\" (user_id, user_name, user_real_name) VALUES (?1, ?2, ?3)";
-		Query q = emO.createNativeQuery(sql);
+		Query q = emMDWH.createNativeQuery(sql);
 		q.setParameter(1, user.getUserId());
 		q.setParameter(2, user.getUserName());
 		q.setParameter(3, user.getUserRealName());
@@ -1059,7 +1043,7 @@ public class Persistencia implements Serializable {
 		String sql = "INSERT INTO \"BI\".\"RECENT_CHANGES\" "
 				+ "(rc_id, rc_timestamp, rc_title, rc_comment, rc_old_len, "
 				+ "rc_new_len, rc_new, user_id, page_id) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)";
-		Query q = emO.createNativeQuery(sql);
+		Query q = emMDWH.createNativeQuery(sql);
 		q.setParameter(1, hecho.getRcId());
 		q.setParameter(2, hecho.getRcTimestamp());
 		q.setParameter(3, hecho.getRcTitle());
@@ -1068,17 +1052,17 @@ public class Persistencia implements Serializable {
 		q.setParameter(6, hecho.getRcNewLen());
 		q.setParameter(7, hecho.isRcNew());
 		q.setParameter(8, hecho.getUser().getUserId());
-		q.setParameter(9, hecho.getPage().getPageId());
+		q.setParameter(9, hecho.getPageId());
 		q.executeUpdate();
 		
 	}
 
 	/**
-	 * Obtiene el número actual en la secuencia de una tabla
+	 * Obtiene el nï¿½mero actual en la secuencia de una tabla
 	 * 
 	 * @param nombreSecuencia
-	 *            nombre de la secuencia de la cual se desea obtener su código
-	 * @return el código actual de la secuencia
+	 *            nombre de la secuencia de la cual se desea obtener su cï¿½digo
+	 * @return el cï¿½digo actual de la secuencia
 	 */
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public int secuenciaActual(String nombreSecuencia) {
@@ -1086,7 +1070,7 @@ public class Persistencia implements Serializable {
 		// String sql = " select " + nombreSecuencia + ".nextval from dual";
 		String sql = " select max(id) from " + nombreSecuencia;
 
-		Query q = emO.createNativeQuery(sql);
+		Query q = emMDWH.createNativeQuery(sql);
 		List<Object> lista = q.getResultList();
 
 		// Integer grandChildCount = ((BigInteger) (Object)
@@ -1106,7 +1090,7 @@ public class Persistencia implements Serializable {
 
 		String sql = "SELECT * FROM DIMENSION_MUNICIPIO WHERE nombre = ?1";
 
-		Query q = emO.createNativeQuery(sql);
+		Query q = emMDWH.createNativeQuery(sql);
 		q.setParameter(1, nombre);
 
 		List<Object> lista = q.getResultList();
@@ -1123,7 +1107,7 @@ public class Persistencia implements Serializable {
 	public boolean dimensionPersonaExiste(String cedula) {
 
 		String sql = "SELECT * FROM DIMENSION_PERSONA WHERE cedula = ?1";
-		Query q = emO.createNativeQuery(sql);
+		Query q = emMDWH.createNativeQuery(sql);
 		q.setParameter(1, cedula);
 
 		List<Object> lista = q.getResultList();
@@ -1140,7 +1124,7 @@ public class Persistencia implements Serializable {
 	public boolean dimensionUsuarioExiste(String cedula) {
 
 		String sql = "SELECT * FROM DIMENSION_USUARIO WHERE cedula = ?1";
-		Query q = emO.createNativeQuery(sql);
+		Query q = emMDWH.createNativeQuery(sql);
 		q.setParameter(1, cedula);
 
 		List<Object> lista = q.getResultList();
@@ -1157,7 +1141,7 @@ public class Persistencia implements Serializable {
 	public DimensionUsuario buscarDimens(String cedula) {
 
 		String sql = "SELECT * FROM DIMENSION_USUARIO WHERE cedula = ?1";
-		Query q = emO.createNativeQuery(sql);
+		Query q = emMDWH.createNativeQuery(sql);
 		q.setParameter(1, cedula);
 
 		List<Object> lista = q.getResultList();
@@ -1183,7 +1167,7 @@ public class Persistencia implements Serializable {
 	public boolean dimensionExiste(int id, String nameId, String tabla) {
 
 		String sql = "SELECT * FROM " + tabla + " WHERE " +  nameId  + " = ?1";
-		Query q = emO.createNativeQuery(sql);
+		Query q = emMDWH.createNativeQuery(sql);
 		q.setParameter(1, id);
 
 		List<Object> lista = q.getResultList();
@@ -1197,10 +1181,10 @@ public class Persistencia implements Serializable {
 	}
 
 	/**
-	 * Verifica si existe una dimensión de un producto
+	 * Verifica si existe una dimensiï¿½n de un producto
 	 * 
 	 * @param id
-	 *            código del producto
+	 *            cï¿½digo del producto
 	 * 
 	 * @return true si existe, de lo contrario false
 	 */
@@ -1208,7 +1192,7 @@ public class Persistencia implements Serializable {
 	public boolean dimensionProductoExiste(int id) {
 
 		String sql = "SELECT * FROM DIMENSION_PRODUCTO WHERE codigo = ?1";
-		Query q = emO.createNativeQuery(sql);
+		Query q = emMDWH.createNativeQuery(sql);
 		q.setParameter(1, id);
 
 		List<Object> lista = q.getResultList();
@@ -1226,7 +1210,7 @@ public class Persistencia implements Serializable {
 
 		String sql = "UPDATE DIMENSION_PERSONA SET edad = ?1 WHERE cedula = ?2";
 
-		Query q = emO.createNativeQuery(sql);
+		Query q = emMDWH.createNativeQuery(sql);
 		q.setParameter(1, edad);
 		q.setParameter(2, cedula);
 		q.executeUpdate();
@@ -1238,7 +1222,7 @@ public class Persistencia implements Serializable {
 
 		String sql = "UPDATE DIMENSION_USUARIO SET edad = ?1, tipo_usuario = ?2 WHERE cedula = ?3";
 
-		Query q = emO.createNativeQuery(sql);
+		Query q = emMDWH.createNativeQuery(sql);
 		q.setParameter(1, edad);
 		q.setParameter(2, tipo_usuario);
 		q.setParameter(3, cedula);
@@ -1251,7 +1235,7 @@ public class Persistencia implements Serializable {
 
 		String sql = "UPDATE DIMENSION_PRODUCTO SET precio = ?1 WHERE id = ?2";
 
-		Query q = emO.createNativeQuery(sql);
+		Query q = emMDWH.createNativeQuery(sql);
 		q.setParameter(1, precio);
 		q.setParameter(2, id);
 		q.executeUpdate();
@@ -1263,7 +1247,7 @@ public class Persistencia implements Serializable {
 
 		String sql = "UPDATE DIMENSION_FACTURA SET total_venta = ?1 WHERE id = ?2";
 
-		Query q = emO.createNativeQuery(sql);
+		Query q = emMDWH.createNativeQuery(sql);
 		q.setParameter(1, total);
 		q.setParameter(2, id);
 		q.executeUpdate();
@@ -1277,7 +1261,7 @@ public class Persistencia implements Serializable {
 				+ " rc.rc_new, u.USER_ID, p.page_id, u.USER_NAME, u.user_real_name, p.text "
 				+ "FROM \"BI\".\"RECENT_CHANGES\" rc JOIN \"BI\".\"USER\" u "
 				+ "ON u.USER_ID = rc.user_id JOIN \"BI\".\"PAGE\" p ON p.PAGE_ID = rc.PAGE_ID";
-		Query q = emO.createNativeQuery(sql);
+		Query q = emMDWH.createNativeQuery(sql);
 		List<Object[]> lista = q.getResultList();
 		return lista;
 		
@@ -1293,7 +1277,7 @@ public class Persistencia implements Serializable {
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public List<HechoVentas> listarHechosVenta() {
 
-		Query q = emO.createNamedQuery(HechoVentas.LISTAR);
+		Query q = emMDWH.createNamedQuery(HechoVentas.LISTAR);
 		List<HechoVentas> lista = q.getResultList();
 		return lista;
 
@@ -1307,7 +1291,7 @@ public class Persistencia implements Serializable {
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public List<HechoAuditoria> listarHechosAuditorias() {
 
-		Query q = emO.createNamedQuery(HechoAuditoria.LISTAR);
+		Query q = emMDWH.createNamedQuery(HechoAuditoria.LISTAR);
 		List<HechoAuditoria> lista = q.getResultList();
 		return lista;
 
@@ -1317,7 +1301,7 @@ public class Persistencia implements Serializable {
 	// ----------------------------------
 
 	/**
-	 * Obtiene los cambios recientes de la wiki por acumulación simple
+	 * Obtiene los cambios recientes de la wiki por acumulaciï¿½n simple
 	 * 
 	 * @return la lista de cambios
 	 */
@@ -1353,11 +1337,11 @@ public class Persistencia implements Serializable {
 	}
 
 	/**
-	 * Obtiene el id de una página, buscandola por su titulo
+	 * Obtiene el id de una pï¿½gina, buscandola por su titulo
 	 * 
 	 * @param title
-	 *            titulo de la página
-	 * @return el id de la página
+	 *            titulo de la pï¿½gina
+	 * @return el id de la pï¿½gina
 	 */
 	public int obtenerIdPage(String title) {
 
@@ -1373,9 +1357,9 @@ public class Persistencia implements Serializable {
 	}
 	
 	/**
-	 * Obtiene el texto de la página, buscandolo por el id de la página
-	 * @param idPage el id de la página
-	 * @return el texto de la página
+	 * Obtiene el texto de la pï¿½gina, buscandolo por el id de la pï¿½gina
+	 * @param idPage el id de la pï¿½gina
+	 * @return el texto de la pï¿½gina
 	 */
 	public String obtenerTextoPagina (int idPage){
 		

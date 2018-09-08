@@ -3,10 +3,31 @@ package co.edu.eam.ingesoft.bi.presistencia.entidades.datawh;
 import java.io.Serializable;
 import java.util.Date;
 
-public class User implements Serializable {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
+@Entity
+@Table(name="DIMENSION_USER")
+@NamedQuery(
+		name = User.BUSCAR_USER, query="SELECT u FROM User u WHERE u.userName = ?1")
+public class User implements Serializable {
+	
+	public static final String BUSCAR_USER = "buscar.user";
+
+	@Id
+	@Column(name="user_id")
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int userId;
+	
+	@Column(name="user_name")
 	private String userName;
+	
+	@Column(name="user_real_name")
 	private String userRealName;
 	
 	public User() {
