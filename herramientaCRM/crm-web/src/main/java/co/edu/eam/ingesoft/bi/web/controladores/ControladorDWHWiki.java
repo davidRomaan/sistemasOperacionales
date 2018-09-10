@@ -47,7 +47,7 @@ public class ControladorDWHWiki implements Serializable {
 
 		accion = "Crear Documento Auditoria";
 		String browserDetail = Faces.getRequest().getHeader("User-Agent");
-		auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Crear documento CVS WIKI", sesion.getUser().getCedula(),
+		auditoriaEJB.crearAuditoria("AuditoriaDWHWiki", accion, "Crear documento CVS WIKI", sesion.getUser().getCedula(),
 				browserDetail);
 
 	}
@@ -60,7 +60,7 @@ public class ControladorDWHWiki implements Serializable {
 
 		accion = "Crear Documento Auditoria";
 		String browserDetail = Faces.getRequest().getHeader("User-Agent");
-		auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Crear documento EXCEL WIKI", sesion.getUser().getCedula(),
+		auditoriaEJB.crearAuditoria("AuditoriaDWHWiki", accion, "Crear documento EXCEL WIKI", sesion.getUser().getCedula(),
 				browserDetail);
 
 		int index = 0;

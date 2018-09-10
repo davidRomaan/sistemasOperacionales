@@ -84,7 +84,9 @@ public class Auditoria implements Serializable{
 
 	public String getFecha() {
 		
-		return this.fechaHora.get(Calendar.YEAR) + "/" + this.fechaHora.get(Calendar.MONTH) + "/" + this.fechaHora.get(Calendar.DAY_OF_MONTH);
+		int mes = this.fechaHora.get(Calendar.MONTH) + 1;
+		
+		return this.fechaHora.get(Calendar.YEAR) + "/" + mes + "/" + this.fechaHora.get(Calendar.DAY_OF_MONTH);
 	}
 	
 	public Calendar getFechaHora(){

@@ -97,9 +97,9 @@ public class ControladorWikiETL implements Serializable {
 
 				recentChanges = wikiEJB.obtenerDatosWikiRolling();
 				
-				accion = "Extraer";
+				accion = "Extraer Datos";
 				String browserDetail = Faces.getRequest().getHeader("User-Agent");
-				auditoriaEJB.crearAuditoria("AuditoriaDW", accion, "Extraer Datos Rolling", sesion.getUser().getCedula(),
+				auditoriaEJB.crearAuditoria("AuditoriaDWHWiki", accion, "Extraer Datos Rolling Wiki", sesion.getUser().getCedula(),
 						browserDetail);
 				
 
@@ -143,6 +143,12 @@ public class ControladorWikiETL implements Serializable {
 			//}
 
 			try {
+				
+				accion = "Cargar Datos";
+				String browserDetail = Faces.getRequest().getHeader("User-Agent");
+				auditoriaEJB.crearAuditoria("AuditoriaDWHWiki", accion, "Cargar Datos Rolling Wiki", sesion.getUser().getCedula(),
+						browserDetail);
+				
 				wikiEJB.cargarDatosDWH(recentChanges);
 				Messages.addFlashGlobalInfo("Se han cargado los datos exitosamente");
 				vaciarTabla();
