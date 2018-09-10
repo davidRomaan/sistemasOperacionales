@@ -102,6 +102,7 @@ public class ControladorWikiETL implements Serializable {
 				auditoriaEJB.crearAuditoria("AuditoriaDWHWiki", accion, "Extraer Datos Rolling Wiki", sesion.getUser().getCedula(),
 						browserDetail);
 				
+				
 
 			/**} else {
 

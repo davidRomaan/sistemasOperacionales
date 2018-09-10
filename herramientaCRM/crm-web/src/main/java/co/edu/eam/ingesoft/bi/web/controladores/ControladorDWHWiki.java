@@ -89,7 +89,7 @@ public class ControladorDWHWiki implements Serializable {
 				}
 				
 				if (i == 10){
-					cell.setCellValue(lista.get(index).getPage().getPageId());
+					cell.setCellValue(lista.get(index).getPageId());
 				}
 
 			}

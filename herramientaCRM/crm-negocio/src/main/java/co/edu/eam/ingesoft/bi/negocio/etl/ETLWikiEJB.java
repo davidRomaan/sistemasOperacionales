@@ -11,7 +11,6 @@ import co.edu.eam.ingesoft.bi.negocio.persistencia.Persistencia;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionPersona;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionProducto;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.HechoVentas;
-import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.Page;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.RecentChanges;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.User;
 
@@ -24,7 +23,7 @@ public class ETLWikiEJB {
 
 	
 
-	// ----------------- extracción de datos ----------------------------
+	// ----------------- extracciï¿½n de datos ----------------------------
 
 	/**
 	 * Obtiene los datos almacenados en la bd my_wiki
@@ -81,7 +80,7 @@ public class ETLWikiEJB {
 			recentChanges.setRcNew(rcNew);
 			recentChanges.setRcNewLen(rcNewLen);
 			recentChanges.setRcOldLen(rcOldLen);
-			recentChanges.setRcTimestamp(rcTimestamp);
+			//recentChanges.setRcTimestamp(rcTimestamp);
 			recentChanges.setRcTitle(rcTitle);
 
 			User user = new User();
@@ -93,44 +92,10 @@ public class ETLWikiEJB {
 
 		}
 
-		obtenerDatosPage(listaCambios);
+		//obtenerDatosPage(listaCambios);
 		obtenerDatosUsuario(listaCambios);
 
 		return listaCambios;
-
-	}
-
-	/**
-	 * Obtiene los datos de las pï¿½ginas en la que se realizï¿½ cambios recientes
-	 * 
-	 * @param listaCambios
-	 *            lista de cambios recientes realizados
-	 */
-	public void obtenerDatosPage(List<RecentChanges> listaCambios) {
-
-		for (RecentChanges recentChanges : listaCambios) {
-
-			int idPagina = em.obtenerIdPage(recentChanges.getRcTitle());
-
-			Page pagina = new Page();
-
-			// Si el id de la pï¿½gina es diferente de -1 quiere decir que la
-			// pï¿½gina existe, de lo contrario fue eliminada
-			if (idPagina != -1) {
-
-				pagina.setText(em.obtenerTextoPagina(idPagina));
-				pagina.setPageId(idPagina);
-
-			} else {
-
-				pagina.setText("La pagina fue eliminada");
-				pagina.setPageId(-1);
-
-			}
-
-			recentChanges.setPage(pagina);
-
-		}
 
 	}
 
@@ -190,13 +155,13 @@ public class ETLWikiEJB {
 
 		for (RecentChanges recentChanges : hecho) {
 
-			int idPage = recentChanges.getPage().getPageId();
+			int idPage = recentChanges.getPageId();
 			int userId = recentChanges.getUser().getUserId();
 
 			if (!em.dimensionExiste(recentChanges.getRcId(), "rc_id", "RECENT_CHANGES")) {
 
 				if (!em.dimensionExiste(idPage, "page_id", "\"BI\".\"PAGE\"") && !listaIdPaginas.contains(idPage)) {
-					em.crearDimensionPage(recentChanges.getPage());
+					//em.crearDimensionPage(recentChanges.getPage());
 					listaIdPaginas.add(idPage);
 				}
 
@@ -255,7 +220,7 @@ public class ETLWikiEJB {
 			recentChanges.setRcNew(rcNew);
 			recentChanges.setRcNewLen(rcNewLen);
 			recentChanges.setRcOldLen(rcOldLen);
-			recentChanges.setRcTimestamp(rcTimestamp);
+			//recentChanges.setRcTimestamp(rcTimestamp);
 			recentChanges.setRcTitle(rcTitle);
 			
 			User user = new User();
@@ -263,12 +228,8 @@ public class ETLWikiEJB {
 			user.setUserName(userName);
 			user.setUserRealName(userRealName);
 			
-			Page page = new Page();
-			page.setPageId(pageId);
-			page.setText(text);
-			
 			recentChanges.setUser(user);
-			recentChanges.setPage(page);
+			//recentChanges.setPage(page);
 			
 			listaObtenida.add(recentChanges);
 			

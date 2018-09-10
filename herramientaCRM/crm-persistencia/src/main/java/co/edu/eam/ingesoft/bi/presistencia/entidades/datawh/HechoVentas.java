@@ -5,6 +5,8 @@ import java.util.Calendar;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -27,6 +29,7 @@ public class HechoVentas implements Serializable {
 
 	@Id
 	@Column(name = "ID")
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 
 	@Column(name = "UNIDADES")
@@ -35,7 +38,7 @@ public class HechoVentas implements Serializable {
 	@Column(name = "SUBTOTAL")
 	private double subtotal;
 
-	@JoinColumn(name = "CEDULA_CLIENTE")
+	@JoinColumn(name = "ID_CLIENTE")
 	@ManyToOne
 	private DimensionPersona persona;
 
@@ -47,7 +50,7 @@ public class HechoVentas implements Serializable {
 	@ManyToOne
 	private DimensionProducto producto;
 
-	@JoinColumn(name = "CEDULA_EMPLEADO")
+	@JoinColumn(name = "ID_EMPLEADO")
 	@ManyToOne
 	private DimensionPersona empleado;
 
