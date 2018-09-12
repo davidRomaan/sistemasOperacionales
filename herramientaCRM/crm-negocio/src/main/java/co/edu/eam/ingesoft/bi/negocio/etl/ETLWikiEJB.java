@@ -249,48 +249,50 @@ public class ETLWikiEJB {
 	// -------------------------
 
 	public List<RecentChanges> obtenerDatosDWHWiki() {
+		
+		return em.obtenerDatosDWHWiki();
 
-		List<Object[]> lista = em.obtenerDatosDWHWiki();
-
-		List<RecentChanges> listaObtenida = new ArrayList<RecentChanges>();
-
-		for (Object[] objects : lista) {
-
-			int rcId = Integer.parseInt(String.valueOf(objects[0]));
-			String rcTimestamp = String.valueOf(objects[1]);
-			String rcTitle = String.valueOf(objects[2]);
-			String rcComment = String.valueOf(objects[3]);
-			int rcOldLen = Integer.parseInt(String.valueOf(objects[4]));
-			int rcNewLen = Integer.parseInt(String.valueOf(objects[5]));
-			boolean rcNew = (1 == Integer.parseInt(String.valueOf(objects[6])));
-			int userId = Integer.parseInt(String.valueOf(objects[7]));
-			int pageId = Integer.parseInt(String.valueOf(objects[8]));
-			String userName = String.valueOf(objects[9]);
-			String userRealName = String.valueOf(objects[10]);
-			String text = String.valueOf(objects[11]);
-
-			RecentChanges recentChanges = new RecentChanges();
-			recentChanges.setRcId(rcId);
-			recentChanges.setRcComment(rcComment);
-			recentChanges.setRcNew(rcNew);
-			recentChanges.setRcNewLen(rcNewLen);
-			recentChanges.setRcOldLen(rcOldLen);
-			// recentChanges.setRcTimestamp(rcTimestamp);
-			recentChanges.setRcTitle(rcTitle);
-
-			User user = new User();
-			user.setUserId(userId);
-			user.setUserName(userName);
-			user.setUserRealName(userRealName);
-
-			recentChanges.setUser(user);
-			// recentChanges.setPage(page);
-
-			listaObtenida.add(recentChanges);
-
-		}
-
-		return listaObtenida;
+//		List<Object[]> lista = em.obtenerDatosDWHWiki();
+//
+//		List<RecentChanges> listaObtenida = new ArrayList<RecentChanges>();
+//
+//		for (Object[] objects : lista) {
+//
+//			int rcId = Integer.parseInt(String.valueOf(objects[0]));
+//			String rcTimestamp = String.valueOf(objects[1]);
+//			String rcTitle = String.valueOf(objects[2]);
+//			String rcComment = String.valueOf(objects[3]);
+//			int rcOldLen = Integer.parseInt(String.valueOf(objects[4]));
+//			int rcNewLen = Integer.parseInt(String.valueOf(objects[5]));
+//			boolean rcNew = (1 == Integer.parseInt(String.valueOf(objects[6])));
+//			int userId = Integer.parseInt(String.valueOf(objects[7]));
+//			int pageId = Integer.parseInt(String.valueOf(objects[8]));
+//			String userName = String.valueOf(objects[9]);
+//			String userRealName = String.valueOf(objects[10]);
+//			String text = String.valueOf(objects[11]);
+//
+//			RecentChanges recentChanges = new RecentChanges();
+//			recentChanges.setRcId(rcId);
+//			recentChanges.setRcComment(rcComment);
+//			recentChanges.setRcNew(rcNew);
+//			recentChanges.setRcNewLen(rcNewLen);
+//			recentChanges.setRcOldLen(rcOldLen);
+//			// recentChanges.setRcTimestamp(rcTimestamp);
+//			recentChanges.setRcTitle(rcTitle);
+//
+//			User user = new User();
+//			user.setUserId(userId);
+//			user.setUserName(userName);
+//			user.setUserRealName(userRealName);
+//
+//			recentChanges.setUser(user);
+//			// recentChanges.setPage(page);
+//
+//			listaObtenida.add(recentChanges);
+//
+//		}
+//
+//		return listaObtenida;
 
 	}
 

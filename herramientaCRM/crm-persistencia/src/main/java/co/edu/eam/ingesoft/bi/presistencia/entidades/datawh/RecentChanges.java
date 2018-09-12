@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -19,7 +20,11 @@ import org.hibernate.annotations.ManyToAny;
 
 @Entity
 @Table(name="HECHO_RECENT_CHANGES")
+@NamedQuery(name = RecentChanges.LISTAR, query = "SELECT rc FROM RecentChanges rc")
 public class RecentChanges implements Serializable{
+	
+	
+	public static final String LISTAR = "Recent.listar";
 
 	@Id
 	@Column(name="rc_id")

@@ -1236,15 +1236,21 @@ public class Persistencia implements Serializable {
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-	public List<Object[]> obtenerDatosDWHWiki (){
+	public List<RecentChanges> obtenerDatosDWHWiki (){
 		
-		String sql = "SELECT rc.rc_id, rc.rc_timestamp, rc.rc_title, rc.rc_comment, rc.rc_old_len, rc.RC_NEW_LEN,"
-				+ " rc.rc_new, u.USER_ID, p.page_id, u.USER_NAME, u.user_real_name, p.text "
-				+ "FROM \"BI\".\"RECENT_CHANGES\" rc JOIN \"BI\".\"USER\" u "
-				+ "ON u.USER_ID = rc.user_id JOIN \"BI\".\"PAGE\" p ON p.PAGE_ID = rc.PAGE_ID";
-		Query q = emMDWH.createNativeQuery(sql);
-		List<Object[]> lista = q.getResultList();
+		Query q = emMDWH.createNamedQuery(RecentChanges.LISTAR);
+		
+		List<RecentChanges> lista = q.getResultList();
+		
 		return lista;
+		
+//		String sql = "SELECT rc.rc_id, rc.rc_timestamp, rc.rc_title, rc.rc_comment, rc.rc_old_len, rc.RC_NEW_LEN,"
+//				+ " rc.rc_new, u.USER_ID, p.page_id, u.USER_NAME, u.user_real_name, p.text "
+//				+ "FROM \"BI\".\"RECENT_CHANGES\" rc JOIN \"BI\".\"USER\" u "
+//				+ "ON u.USER_ID = rc.user_id JOIN \"BI\".\"PAGE\" p ON p.PAGE_ID = rc.PAGE_ID";
+//		Query q = emMDWH.createNativeQuery(sql);
+//		List<Object[]> lista = q.getResultList();
+//		return lista;
 		
 	}
 
