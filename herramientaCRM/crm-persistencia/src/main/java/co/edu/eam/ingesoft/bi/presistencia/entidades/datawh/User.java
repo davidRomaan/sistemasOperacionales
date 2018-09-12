@@ -17,7 +17,7 @@ import javax.persistence.Table;
 		name = User.BUSCAR_USER, query="SELECT u FROM User u WHERE u.userName = ?1")
 public class User implements Serializable {
 	
-	public static final String BUSCAR_USER = "buscar.user";
+	public static final String BUSCAR_USER = "User.buscar";
 
 	@Id
 	@Column(name="user_id")

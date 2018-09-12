@@ -3,14 +3,19 @@ package co.edu.eam.ingesoft.bi.presistencia.entidades.datawh;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.ManyToAny;
 
 @Entity
 @Table(name="HECHO_RECENT_CHANGES")
@@ -43,7 +48,8 @@ public class RecentChanges implements Serializable{
 	@Column(name="rc_pageid")
 	private int pageId;
 	
-	@Column(name="id_user")
+	@JoinColumn(name="id_user")
+	@ManyToOne(cascade = {CascadeType.MERGE})
 	private User user;
 	
 	public RecentChanges() {

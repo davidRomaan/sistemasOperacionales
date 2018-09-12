@@ -76,19 +76,19 @@ public class ControladorDWHWiki implements Serializable {
 					cell.setCellValue(lista.get(index).getRcId());
 				}
 				
-				if (i == 4){
+				if (i == 5){
 					cell.setCellValue(lista.get(index).getRcOldLen());
 				}
 				
-				if (i == 5){
+				if (i == 4){
 					cell.setCellValue(lista.get(index).getRcNewLen());
 				}
 				
-				if (i == 7){
+				if (i == 8){
 					cell.setCellValue(lista.get(index).getUser().getUserId());
 				}
 				
-				if (i == 10){
+				if (i == 1){
 					cell.setCellValue(lista.get(index).getPageId());
 				}
 

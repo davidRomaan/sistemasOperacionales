@@ -71,7 +71,7 @@
 					<p:columnGroup type="header">
 						<p:row>
 							<p:column colspan="3" headerText="Datos Publicacion" />
-							<p:column colspan="4" headerText="Datos de Edicion" />
+							<p:column colspan="3" headerText="Datos de Edicion" />
 							<p:column colspan="2" headerText="Datos Editor" />
 							<p:column headerText="Accion"/>
 						</p:row>
@@ -82,7 +82,6 @@
 							<p:column headerText="Comentario" />
 							<p:column headerText="Longitud antigua" />
 							<p:column headerText="Nueva longitud" />
-							<p:column headerText="Texto Página" />
 							<p:column headerText="Id Usuario"/>
 							<p:column headerText="Nombre del usuario" />
 						</p:row>
@@ -110,10 +109,6 @@
 
 					<p:column>
 						<h:outputLabel value="#{rChanges.rcNewLen}" />
-					</p:column>
-
-					<p:column>
-						<h:outputLabel value="#{rChanges.page.text}" />
 					</p:column>
 
 					<p:column>

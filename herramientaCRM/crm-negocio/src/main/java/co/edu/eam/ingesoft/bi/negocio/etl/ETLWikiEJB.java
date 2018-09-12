@@ -1,6 +1,7 @@
 package co.edu.eam.ingesoft.bi.negocio.etl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -20,8 +21,6 @@ public class ETLWikiEJB {
 
 	@EJB
 	private Persistencia em;
-
-	
 
 	// ----------------- extracci�n de datos ----------------------------
 
@@ -63,14 +62,26 @@ public class ETLWikiEJB {
 
 			int rcId = Integer.parseInt(String.valueOf(objects[0]));
 			String rcTimestamp = ((String) objects[1]);
+
+			String datosFecha[] = rcTimestamp.split("/");
+
+			int dia = Integer.parseInt(datosFecha[0]);
+			int mes = Integer.parseInt(datosFecha[1]);
+			int anio = Integer.parseInt(datosFecha[2]);
+
+			Date fecha = new Date();
+			fecha.setDate(dia);
+			fecha.setMonth(mes);
+			fecha.setYear(anio);
+
 			String rcTitle = ((String) objects[2]);
 			String rcComment = ((String) objects[3]);
 			int rcOldLen = Integer.parseInt(String.valueOf(objects[4]));
 			int rcNewLen = Integer.parseInt(String.valueOf(objects[5]));
 			boolean rcNew = (1 == Integer.parseInt(String.valueOf(objects[6])));
 			int userId = Integer.parseInt(String.valueOf(objects[7]));
-			
-			if (rcComment.equals("")){
+
+			if (rcComment.equals("")) {
 				rcComment = "Sin Resumen";
 			}
 
@@ -80,7 +91,7 @@ public class ETLWikiEJB {
 			recentChanges.setRcNew(rcNew);
 			recentChanges.setRcNewLen(rcNewLen);
 			recentChanges.setRcOldLen(rcOldLen);
-			//recentChanges.setRcTimestamp(rcTimestamp);
+			recentChanges.setRcTimestamp(fecha);
 			recentChanges.setRcTitle(rcTitle);
 
 			User user = new User();
@@ -92,11 +103,25 @@ public class ETLWikiEJB {
 
 		}
 
-		//obtenerDatosPage(listaCambios);
+		obtenerDatosPage(listaCambios);
 		obtenerDatosUsuario(listaCambios);
 
 		return listaCambios;
 
+	}
+	
+	private void obtenerDatosPage(List<RecentChanges> listaCambios){
+		
+		for (RecentChanges recentChanges : listaCambios) {
+			
+			String tituloPagina = recentChanges.getRcTitle();
+			
+			int idPagina = em.obtenerIdPage(tituloPagina);
+			
+			recentChanges.setPageId(idPagina);
+			
+		}
+		
 	}
 
 	/**
@@ -121,8 +146,8 @@ public class ETLWikiEJB {
 
 				String userName = (String) datos[0];
 				String realName = (String) datos[1];
-				
-				if (realName.equals("")){
+
+				if (realName.equals("")) {
 					realName = "Sin nombre";
 				}
 
@@ -150,57 +175,87 @@ public class ETLWikiEJB {
 	 */
 	public void cargarDatosDWH(List<RecentChanges> hecho) {
 
-		List<Integer> listaIdPaginas = new ArrayList<Integer>();
-		List<Integer> listaIdUsuarios = new ArrayList<Integer>();
-
+		List<String> listaUsers = new ArrayList<String>();
+		List<User> usuariosRegistrados = new ArrayList<User>();
+		
+		User userRegistro = null;
+				
 		for (RecentChanges recentChanges : hecho) {
 
-			int idPage = recentChanges.getPageId();
-			int userId = recentChanges.getUser().getUserId();
+			User user = recentChanges.getUser();
+			
+			System.out.println("user reg " + user.getUserName());
+			
+			//userBuscado = (User) em.dimensionExiste(User.BUSCAR_USER, user.getUserName());
+			
+			boolean userRegistrado = false;
 
-//			if (!em.dimensionExiste(recentChanges.getRcId(), "rc_id", "RECENT_CHANGES")) {
-//
-//				if (!em.dimensionExiste(idPage, "page_id", "\"BI\".\"PAGE\"") && !listaIdPaginas.contains(idPage)) {
-//					//em.crearDimensionPage(recentChanges.getPage());
-//					listaIdPaginas.add(idPage);
-//				}
-//
-//				if (!em.dimensionExiste(userId, "user_id", "\"BI\".\"USER\"") && !listaIdUsuarios.contains(userId)) {
-//					em.crearDimensionUser(recentChanges.getUser());
-//					listaIdUsuarios.add(userId);
-//				}
-//				
-//				em.crearHechoRecentChanges(recentChanges);
-//
-//			}
+			if (!listaUsers.contains(user.getUserName())) {
+				
+				userRegistrado = true;
+				
+				userRegistro = new User();
+								
+				user.setUserId(userRegistro.getUserId());
+				
+				userRegistro = user;
+				
+				em.crearDimension(userRegistro);
+				
+				listaUsers.add(userRegistro.getUserName());
+				usuariosRegistrados.add(userRegistro);
+				
+			}
+			
+			if (!userRegistrado){
+				
+				for (User userReg : usuariosRegistrados) {
+					
+					if (userReg.getUserName().equals(user.getUserName())){
+						
+						recentChanges.setUser(userReg);
+						break;
+						
+					}
+					
+				}
+				
+			} else {
+				
+				recentChanges.setUser(userRegistro);
+				
+			}
+
+			System.out.println("user registrar " + recentChanges.getUser().getUserId());
+			
+			em.crearHechoRecentChanges(recentChanges);
 
 		}
-		
 
 	}
+
 	/**
 	 * vac�a las tablas relacionados con las ventas en la base de datos de
 	 * oracle
 	 */
 	public void limpiarBDOracle() {
 
-		em.limpiarDWH("\"BI\".\"RECENT_CHANGES\"");
-		em.limpiarDWH("\"BI\".\"PAGE\"");
-		em.limpiarDWH("\"BI\".\"USER\"");
+		em.eliminarDatosDWHRecentChanges();
+		em.eliminarDatosDWHUser();
 
 	}
-	
-	
-	//----------------------------------- Obtener Datos DWH -------------------------
-	
-	public List<RecentChanges> obtenerDatosDWHWiki(){
-		
+
+	// ----------------------------------- Obtener Datos DWH
+	// -------------------------
+
+	public List<RecentChanges> obtenerDatosDWHWiki() {
+
 		List<Object[]> lista = em.obtenerDatosDWHWiki();
-		
+
 		List<RecentChanges> listaObtenida = new ArrayList<RecentChanges>();
-		
+
 		for (Object[] objects : lista) {
-			
+
 			int rcId = Integer.parseInt(String.valueOf(objects[0]));
 			String rcTimestamp = String.valueOf(objects[1]);
 			String rcTitle = String.valueOf(objects[2]);
@@ -213,31 +268,30 @@ public class ETLWikiEJB {
 			String userName = String.valueOf(objects[9]);
 			String userRealName = String.valueOf(objects[10]);
 			String text = String.valueOf(objects[11]);
-			
+
 			RecentChanges recentChanges = new RecentChanges();
 			recentChanges.setRcId(rcId);
 			recentChanges.setRcComment(rcComment);
 			recentChanges.setRcNew(rcNew);
 			recentChanges.setRcNewLen(rcNewLen);
 			recentChanges.setRcOldLen(rcOldLen);
-			//recentChanges.setRcTimestamp(rcTimestamp);
+			// recentChanges.setRcTimestamp(rcTimestamp);
 			recentChanges.setRcTitle(rcTitle);
-			
+
 			User user = new User();
 			user.setUserId(userId);
 			user.setUserName(userName);
 			user.setUserRealName(userRealName);
-			
+
 			recentChanges.setUser(user);
-			//recentChanges.setPage(page);
-			
+			// recentChanges.setPage(page);
+
 			listaObtenida.add(recentChanges);
-			
+
 		}
-		
+
 		return listaObtenida;
-		
+
 	}
-	
 
 }

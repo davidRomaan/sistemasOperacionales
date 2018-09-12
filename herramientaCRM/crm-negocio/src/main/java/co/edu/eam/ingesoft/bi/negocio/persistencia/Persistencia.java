@@ -743,6 +743,22 @@ public class Persistencia implements Serializable {
 		q.executeUpdate();
 
 	}
+	
+	public void eliminarDatosDWHRecentChanges(){
+		
+		String sql = "DELETE FROM dwh.hecho_recent_changes where rc_id > -1";
+		Query q = emMDWH.createNativeQuery(sql);
+		q.executeUpdate();
+		
+	}
+	
+	public void eliminarDatosDWHUser(){
+		
+		String sql = "DELETE FROM dwh.dimension_user where user_id > -1";
+		Query q = emMDWH.createNativeQuery(sql);
+		q.executeUpdate();
+		
+	}
 
 	public List<Object> listarFechaSemana(String fechaUno, String fechaDos) {
 
@@ -1016,20 +1032,7 @@ public class Persistencia implements Serializable {
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void crearHechoRecentChanges (RecentChanges hecho){
 		
-		String sql = "INSERT INTO \"BI\".\"RECENT_CHANGES\" "
-				+ "(rc_id, rc_timestamp, rc_title, rc_comment, rc_old_len, "
-				+ "rc_new_len, rc_new, user_id, page_id) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)";
-		Query q = emMDWH.createNativeQuery(sql);
-		q.setParameter(1, hecho.getRcId());
-		q.setParameter(2, hecho.getRcTimestamp());
-		q.setParameter(3, hecho.getRcTitle());
-		q.setParameter(4, hecho.getRcComment());
-		q.setParameter(5, hecho.getRcOldLen());
-		q.setParameter(6, hecho.getRcNewLen());
-		q.setParameter(7, hecho.isRcNew());
-		q.setParameter(8, hecho.getUser().getUserId());
-		q.setParameter(9, hecho.getPageId());
-		q.executeUpdate();
+		emMDWH.merge(hecho);
 		
 	}
 
@@ -1148,7 +1151,7 @@ public class Persistencia implements Serializable {
 
 		List<Object> lista = q.getResultList();
 
-		if (lista.size() != 0) {
+		if (lista.size() != 0) {			
 			return lista.get(0);
 		}
 
@@ -1307,7 +1310,7 @@ public class Persistencia implements Serializable {
 		String sql = "SELECT rc_id, (select date_format(cast(rc_timestamp as char),"
 				+ " '%d/%m/%Y')) as fecha, cast(rc_title as CHAR) as rc_title,"
 				+ " cast(rc_comment as char) as rc_comment, IFNULL(rc_old_len, 0) as rc_old_len,"
-				+ " IFNULL(rc_new_len, 0) as rc_new_len, rc_new, rc_user FROM RECENTCHANGES";
+				+ " IFNULL(rc_new_len, 0) as rc_new_len, rc_new, rc_user FROM my_wiki.RECENTCHANGES";
 		Query q = emMW.createNativeQuery(sql);
 		List<Object[]> lista = q.getResultList();
 		return lista;
