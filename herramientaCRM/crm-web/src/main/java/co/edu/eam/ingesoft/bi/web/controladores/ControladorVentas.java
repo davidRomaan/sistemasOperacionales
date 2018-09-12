@@ -362,6 +362,8 @@ public class ControladorVentas implements Serializable {
 	 * Registra un cliente
 	 */
 	public void registrarCliente() {
+		
+		double venta = totalVenta;
 
 		if (validarCampos()) {
 
@@ -406,6 +408,8 @@ public class ControladorVentas implements Serializable {
 			Messages.addFlashGlobalError("Debe ingresar todos los campos");
 
 		}
+		
+		totalVenta = venta;
 
 	}
 
@@ -417,6 +421,8 @@ public class ControladorVentas implements Serializable {
 		cliente = usuarioEJB.buscarCliente(cedula);
 
 		mostrarDatosCliente = true;
+		
+		double venta = totalVenta;
 
 		reload();
 
@@ -453,6 +459,8 @@ public class ControladorVentas implements Serializable {
 					+ " este debe ser registrado para continuar con la venta");
 
 		}
+		
+		totalVenta = venta;
 
 	}
 
