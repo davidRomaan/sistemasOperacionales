@@ -34,8 +34,8 @@ public class ETLVentasEJB {
 
 	@EJB
 	private VentaEJB ventaEJB;
-	
-	public void registrarFoto(Foto f){
+
+	public void registrarFoto(Foto f) {
 		em.setBd(ConexionEJB.getBd());
 		em.crear(f);
 	}
@@ -115,12 +115,12 @@ public class ETLVentasEJB {
 	 * vacía las tablas relacionados con las ventas en la base de datos de
 	 * oracle
 	 */
-	public void limpiarBDOracle() {
+	public void limpiarDWH() {
 
-		em.limpiarBDOracle("HECHO_VENTAS");
-		em.limpiarBDOracle("DIMENSION_MUNICIPIO");
-		em.limpiarBDOracle("DIMENSION_PERSONA");
-		em.limpiarBDOracle("DIMENSION_PRODUCTO");
+		em.limpiarDWH("HECHO_VENTAS");
+		em.limpiarDWH("DIMENSION_MUNICIPIO");
+		em.limpiarDWH("DIMENSION_PERSONA");
+		em.limpiarDWH("DIMENSION_PRODUCTO");
 
 	}
 
@@ -136,20 +136,28 @@ public class ETLVentasEJB {
 
 		List<String> cedulasEmpleados = new ArrayList<String>();
 		List<String> cedulasClientes = new ArrayList<String>();
-		List<Integer> codigosMunicipios = new ArrayList<Integer>();
-		List<Integer> codigosProductos = new ArrayList<Integer>();
+		List<String> nombresMunicipios = new ArrayList<String>();
+		List<String> nombreProductos = new ArrayList<String>();
+
+		List<DimensionPersona> empleadosRegistrados = new ArrayList<DimensionPersona>();
+		List<DimensionProducto> productosRegistrados = new ArrayList<DimensionProducto>();
+		List<DimensionMunicipio> municipiosRegistrados = new ArrayList<DimensionMunicipio>();
+		List<DimensionPersona> clientesRegistrados = new ArrayList<DimensionPersona>();
+
+		DimensionPersona empleadoBuscado = null;
+		DimensionProducto productoBuscado = null;
+		DimensionMunicipio municipioBuscado = null;
+		DimensionPersona clienteBuscado = null;
 
 		for (HechoVentas hechoVentas : hechos) {
 
 			fila++;
 
-			int unidades = hechoVentas.getUnidades();
-			double subtotal = hechoVentas.getSubtotal();
+			DimensionProducto productoHecho = hechoVentas.getProducto();
+			DimensionMunicipio municipioHecho = hechoVentas.getMunicipio();
+
 			String cedulaCliente = hechoVentas.getPersona().getCedula();
-			int idMunicipio = hechoVentas.getMunicipio().getId();
-			int idProducto = hechoVentas.getProducto().getId();
 			String cedulaEmpleado = hechoVentas.getEmpleado().getCedula();
-			Calendar fecha = hechoVentas.getFecha();
 
 			int edadEmpleado = hechoVentas.getEmpleado().getEdad();
 			int edadCliente = hechoVentas.getPersona().getEdad();
@@ -160,38 +168,172 @@ public class ETLVentasEJB {
 			}
 
 			if (edadCliente > 130 || edadCliente < 10) {
-				throw new ExcepcionNegocio("Debe cambiar la edad de la persona ubicada en la fila " + fila);
+				edadEmpleado = 35;
+			}
+			
+			if (edadEmpleado > 130 || edadEmpleado < 10) {
+				edadEmpleado = 35;
 			}
 
-			if (!em.dimensionPersonaExiste(cedulaEmpleado) && !cedulasEmpleados.contains(cedulaEmpleado)) {
-				em.crearDimensionPersona(hechoVentas.getEmpleado());
+			empleadoBuscado = em.dimensionPersonaExiste(cedulaEmpleado);
+
+			boolean empleadoRegistrado = false;
+
+			if (empleadoBuscado == null && !cedulasEmpleados.contains(cedulaEmpleado)) {
+
+				empleadoBuscado = new DimensionPersona();
+
+				hechoVentas.getEmpleado().setId(empleadoBuscado.getId());
+
+				empleadoBuscado = hechoVentas.getEmpleado();
+
+				em.crearDimension(empleadoBuscado);
+
+				empleadosRegistrados.add(empleadoBuscado);
 				cedulasEmpleados.add(cedulaEmpleado);
 			}
-
-			if (!em.dimensionExiste(idProducto, "id", "DIMENSION_PRODUCTO")) {
-				if (!codigosProductos.contains(idProducto)) {
-					em.crearDimensionProducto(hechoVentas.getProducto());
-					codigosProductos.add(idProducto);
+			
+			if (!empleadoRegistrado && empleadoBuscado == null){
+				
+				for (DimensionPersona dimensionPersona : empleadosRegistrados) {
+					
+					if (dimensionPersona.getCedula().equals(cedulaEmpleado)){
+						
+						hechoVentas.setEmpleado(dimensionPersona);
+						break;
+						
+					}
+					
 				}
+				
 			} else {
-				em.editarDimensionProducto(idProducto, precioProducto);
+				
+				hechoVentas.setEmpleado(empleadoBuscado);
+				
 			}
 
-			if (!em.dimensionExiste(idMunicipio,"id", "DIMENSION_MUNICIPIO") && !codigosMunicipios.contains(idMunicipio)) {
-				em.crearDimensionMunicipio(hechoVentas.getMunicipio());
-				codigosMunicipios.add(idMunicipio);
-			}
+			productoBuscado = (DimensionProducto) em.dimensionExiste(DimensionProducto.BUSCAR_NOMBRE,
+					productoHecho.getNombre());
 
-			if (!em.dimensionPersonaExiste(cedulaCliente)) {
-				if (!cedulasClientes.contains(cedulaCliente)) {
-					em.crearDimensionPersona(hechoVentas.getPersona());
-					cedulasClientes.add(cedulaCliente);
+			boolean productoRegistrado = false;
+
+			if (productoBuscado == null && !nombreProductos.contains(productoHecho.getNombre())) {
+
+				productoRegistrado = true;
+
+				productoBuscado = new DimensionProducto();
+
+				productoHecho.setId(productoBuscado.getId());
+
+				productoBuscado = productoHecho;
+
+				em.crearDimension(productoBuscado);
+
+				nombreProductos.add(productoBuscado.getNombre());
+				productosRegistrados.add(productoBuscado);
+
+			}
+			
+			if (!productoRegistrado && productoBuscado == null){
+				
+				for (DimensionProducto dimensionProducto : productosRegistrados) {
+					
+					if (dimensionProducto.getNombre().equals(productoHecho.getNombre())){
+						
+						hechoVentas.setProducto(dimensionProducto);
+						break;
+						
+					}
+					
 				}
+				
 			} else {
-				em.editarDimensionPersona(cedulaCliente, edadCliente);
+				
+				hechoVentas.setProducto(productoBuscado);
+				
 			}
 
-			em.crearHechoVentas(unidades, subtotal, cedulaCliente, idMunicipio, idProducto, cedulaEmpleado, fecha);
+			municipioBuscado = (DimensionMunicipio) em.dimensionExiste(DimensionMunicipio.BUSCAR_NOMBRE,
+					municipioHecho.getNombre());
+
+			boolean municipioRegistrado = false;
+
+			if (municipioBuscado == null && !nombresMunicipios.contains(municipioHecho.getNombre())) {
+
+				municipioRegistrado = true;
+
+				municipioBuscado = new DimensionMunicipio();
+
+				municipioHecho.setId(municipioBuscado.getId());
+
+				municipioBuscado = municipioHecho;
+
+				em.crearDimension(municipioBuscado);
+
+				nombresMunicipios.add(municipioBuscado.getNombre());
+				municipiosRegistrados.add(municipioBuscado);
+
+			}
+			
+			if (!municipioRegistrado && municipioBuscado == null){
+				
+				for (DimensionMunicipio dimensionMunicipio : municipiosRegistrados) {
+					
+					if (dimensionMunicipio.getNombre().equals(municipioHecho.getNombre())){
+						
+						hechoVentas.setMunicipio(dimensionMunicipio);
+						break;
+						
+					}
+					
+				}
+				
+			} else {
+				
+				hechoVentas.setMunicipio(municipioBuscado);
+				
+			}
+
+			clienteBuscado = em.dimensionPersonaExiste(cedulaCliente);
+			
+			boolean clienteRegistrado = false;
+
+			if (clienteBuscado == null && !cedulasClientes.contains(cedulaCliente)) {
+				
+				clienteRegistrado = true;
+				
+				clienteBuscado = new DimensionPersona();
+				
+				hechoVentas.getPersona().setId(clienteBuscado.getId());
+				
+				clienteBuscado = hechoVentas.getPersona();
+				
+				em.crearDimension(clienteBuscado);
+				
+				cedulasClientes.add(cedulaCliente);
+				clientesRegistrados.add(clienteBuscado);
+			}
+			
+			if (!clienteRegistrado && clienteBuscado == null){
+				
+				for (DimensionPersona dimensionPersona : clientesRegistrados) {
+					
+					if (dimensionPersona.getCedula().equals(cedulaCliente)){
+						
+						hechoVentas.setPersona(dimensionPersona);
+						break;
+						
+					}
+					
+				}
+				
+			} else {
+				
+				hechoVentas.setPersona(clienteBuscado);
+				
+			}
+
+			em.crearHechoVentas(hechoVentas);
 
 		}
 
@@ -270,9 +412,9 @@ public class ETLVentasEJB {
 		dimensionProducto.setPrecio(producto.getValorProducto());
 		dimensionProducto.setId(producto.getId());
 		dimensionProducto.setNombre(producto.getNombre());
-		
+
 		String tipoProducto = producto.getTipoProducto().getNombre();
-		
+
 		dimensionProducto.setTipoProducto(tipoProducto.toUpperCase());
 
 		return dimensionProducto;
@@ -294,7 +436,7 @@ public class ETLVentasEJB {
 				hecho.setMunicipio(crearDimensionMunicipio(facturaVenta));
 				hecho.setPersona(crearDimensionCliente(facturaVenta));
 				hecho.setProducto(crearDimensionProducto(detalleVenta));
-				
+
 				hecho.setSubtotal(detalleVenta.getSubtotal());
 				hecho.setUnidades(detalleVenta.getCantidad());
 				hecho.setFecha(facturaVenta.getFechaVenta());
@@ -438,7 +580,7 @@ public class ETLVentasEJB {
 	public int calcularEdad(String fechaNacimiento) {
 
 		if (fechaNacimiento.equals("")) {
-			return 2018;
+			return 35;
 		}
 
 		String fecha[] = fechaNacimiento.split("/");

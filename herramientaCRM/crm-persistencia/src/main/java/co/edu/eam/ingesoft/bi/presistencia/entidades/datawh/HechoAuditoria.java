@@ -3,6 +3,7 @@ package co.edu.eam.ingesoft.bi.presistencia.entidades.datawh;
 import java.io.Serializable;
 import java.util.Calendar;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -46,7 +47,7 @@ public class HechoAuditoria implements Serializable {
 	private Calendar fecha;
 
 	@JoinColumn(name = "ID_USUARIO")
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.MERGE})
 	private DimensionUsuario usuario;
 
 	public HechoAuditoria() {

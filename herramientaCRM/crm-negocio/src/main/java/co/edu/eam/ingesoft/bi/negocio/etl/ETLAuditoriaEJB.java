@@ -2,6 +2,7 @@ package co.edu.eam.ingesoft.bi.negocio.etl;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -94,7 +95,7 @@ public class ETLAuditoriaEJB {
 				dimUsu.setApellido(per.getApellido());
 				dimUsu.setCargo(per.getCargo().getDescripcion());
 				dimUsu.setCedula(ced);
-				dimUsu.setEdad(calcularEdad(per.getFechaNacimiento()));
+				dimUsu.setEdad(calcularEdad("27/09/1995"));
 				dimUsu.setGenero(per.getGenero().name());
 				dimUsu.setTipoUsuario(per.getTipoUsuario().getNombre());
 
@@ -136,21 +137,21 @@ public class ETLAuditoriaEJB {
 
 	}
 
-	public void cargarDatosOracle(List<HechoAuditoria> hechos) {
+//	public void cargarDatosOracle(List<HechoAuditoria> hechos) {
+//
+//		limpiarTablasDWH();
+//		cargarDatosDWH(hechos);
+//
+//	}
 
-		limpiarTablasOracle();
-		cargarDatosRollingAud(hechos);
-
-	}
-
-	public void limpiarTablasOracle() {
-		em.limpiarBDOracle("HECHO_AUDITORIA");
-		em.limpiarBDOracle("DIMENSION_USUARIO");
+	public void limpiarTablasDWH() {
+		em.limpiarDWH("HECHO_AUDITORIA");
+		em.limpiarDWH("DIMENSION_USUARIO");
 	}
 
 	public void cargarDatosRollingAud(List<HechoAuditoria> lista) {
 
-		boolean usuExiste;
+		DimensionUsuario usuario;
 		List<String> listaCed = new ArrayList();
 
 		if (lista.size() == 0) {
@@ -169,27 +170,33 @@ public class ETLAuditoriaEJB {
 					throw new ExcepcionNegocio("El campo tipo usuario no puede quedar vacio");
 				}
 
-				usuExiste = em.dimensionUsuarioExiste(hechoAudi.getUsuario().getCedula());
+				// usuario =
+				// em.dimensionUsuarioExiste(hechoAudi.getUsuario().getCedula());
 
-				String cedula = hechoAudi.getUsuario().getCedula();
+				// String cedula = hechoAudi.getUsuario().getCedula();
 
-				if (!usuExiste && !listaCed.contains(cedula)) {
-					em.crearDimensionUsuario(hechoAudi.getUsuario());
-					listaCed.add(cedula);
+				// if (usuario != null && !listaCed.contains(cedula)) {
 
-					em.crearHechoAuditoria(hechoAudi.getAccion(), hechoAudi.getDispositivo(), hechoAudi.getNavegador(),
-							hechoAudi.getFecha(), hechoAudi.getUsuario());
+				usuario = new DimensionUsuario();
 
-					em.editarDimensionUsuario(cedula, hechoAudi.getUsuario().getTipoUsuario(),
-							hechoAudi.getUsuario().getEdad());
-					
+				DimensionUsuario usuarioAuditoria = hechoAudi.getUsuario();
 
-				} else {
-					
-					em.crearHechoAuditoria(hechoAudi.getAccion(), hechoAudi.getDispositivo(), hechoAudi.getNavegador(),
-							hechoAudi.getFecha(), hechoAudi.getUsuario());
+				usuario.setApellido(usuarioAuditoria.getApellido());
+				usuario.setCargo(usuarioAuditoria.getCargo());
+				usuario.setCedula(usuarioAuditoria.getCedula());
+				usuario.setEdad(usuarioAuditoria.getEdad());
+				usuario.setGenero(usuarioAuditoria.getGenero());
+				usuario.setNombre(usuarioAuditoria.getNombre());
+				usuario.setTipoUsuario(usuarioAuditoria.getTipoUsuario());
 
-				}
+				em.crearDimensionUsuario(usuario);
+				// listaCed.add(cedula);
+
+				hechoAudi.setUsuario(usuario);
+
+				// }
+
+				em.crearHechoAuditoria(hechoAudi);
 
 			}
 
@@ -199,40 +206,75 @@ public class ETLAuditoriaEJB {
 
 	public void cargarDatosDWH(List<HechoAuditoria> hechos) {
 
-		boolean usuExiste;
-		List<String> listaCed = new ArrayList();
+		DimensionUsuario usuario = null;
+		List<DimensionUsuario> listaUsuariosReg = new ArrayList();
+		List<String> cedulasReg = new ArrayList<String>();
 
-		if (hechos.size() == 0) {
+		for (HechoAuditoria hechoAudi : hechos) {
 
-		} else {
+			if (hechoAudi.getUsuario().getCargo().equals("")) {
+				throw new ExcepcionNegocio("El campo cargo no puede quedar vacio");
+			}
+			if (hechoAudi.getUsuario().getEdad() > 130) {
+				throw new ExcepcionNegocio("La edad excede el limite existencial");
+			}
+			if (hechoAudi.getUsuario().getTipoUsuario().equals("")) {
+				throw new ExcepcionNegocio("El campo tipo usuario no puede quedar vacio");
+			}
 
-			for (HechoAuditoria hechoAudi : hechos) {
+			usuario = em.dimensionUsuarioExiste(hechoAudi.getUsuario().getCedula());
 
-				if (hechoAudi.getUsuario().getCargo().equals("")) {
-					throw new ExcepcionNegocio("El campo cargo no puede quedar vacio");
-				}
-				if (hechoAudi.getUsuario().getEdad() > 130) {
-					throw new ExcepcionNegocio("La edad excede el limite existencial");
-				}
-				if (hechoAudi.getUsuario().getTipoUsuario().equals("")) {
-					throw new ExcepcionNegocio("El campo tipo usuario no puede quedar vacio");
-				}
+			boolean usuarioRegistrado = false;
 
-				usuExiste = em.dimensionUsuarioExiste(hechoAudi.getUsuario().getCedula());
+			if (usuario == null && !cedulasReg.contains(hechoAudi.getUsuario().getCedula())) {
 
-				String cedula = hechoAudi.getUsuario().getCedula();
+				usuarioRegistrado = true;
 
-				if (!usuExiste && !listaCed.contains(cedula)) {
-					em.crearDimensionUsuario(hechoAudi.getUsuario());
-					listaCed.add(cedula);
-				}
-				em.crearHechoAuditoria(hechoAudi.getAccion(), hechoAudi.getDispositivo(), hechoAudi.getNavegador(),
-						hechoAudi.getFecha(), hechoAudi.getUsuario());
+				usuario = new DimensionUsuario();
 
-				em.editarDimensionUsuario(cedula, hechoAudi.getUsuario().getTipoUsuario(),
-						hechoAudi.getUsuario().getEdad());
+				DimensionUsuario usuarioAuditoria = hechoAudi.getUsuario();
+
+				usuarioAuditoria.setId(usuario.getId());
+				
+				usuario = usuarioAuditoria;
+				
+//				usuario.setApellido(usuarioAuditoria.getApellido());
+//				usuario.setCargo(usuarioAuditoria.getCargo());
+//				usuario.setCedula(usuarioAuditoria.getCedula());
+//				usuario.setEdad(calcularEdad("27/09/1995"));
+//				usuario.setGenero(usuarioAuditoria.getGenero());
+//				usuario.setNombre(usuarioAuditoria.getNombre());
+//				usuario.setTipoUsuario(usuarioAuditoria.getTipoUsuario());
+
+				em.crearDimensionUsuario(usuario);
+
+				listaUsuariosReg.add(usuario);
+				cedulasReg.add(usuario.getCedula());
 
 			}
+
+			if (!usuarioRegistrado && usuario == null) {
+
+				for (DimensionUsuario dimensionUsuario : listaUsuariosReg) {
+
+					if (dimensionUsuario.getCedula().equals(hechoAudi.getUsuario().getCedula())) {
+						
+						hechoAudi.setUsuario(dimensionUsuario);
+						break;
+
+					}
+
+				}
+
+			} else {
+
+				hechoAudi.setUsuario(usuario);
+
+			}
+
+			em.crearHechoAuditoria(hechoAudi);
+
+			// em.editarDimensionUsuario(usuario);
 
 		}
 
@@ -345,7 +387,7 @@ public class ETLAuditoriaEJB {
 			dimUsu.setApellido(per.getApellido());
 			dimUsu.setCargo(per.getCargo().getDescripcion());
 			dimUsu.setCedula(ced);
-			dimUsu.setEdad(calcularEdad(per.getFechaNacimiento()));
+			dimUsu.setEdad(calcularEdad("27/09/1995"));
 			dimUsu.setGenero(per.getGenero().name());
 			dimUsu.setTipoUsuario(per.getTipoUsuario().getNombre());
 

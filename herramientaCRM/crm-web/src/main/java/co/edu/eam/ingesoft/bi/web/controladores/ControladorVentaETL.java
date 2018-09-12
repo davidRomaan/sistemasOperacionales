@@ -328,7 +328,7 @@ public class ControladorVentaETL implements Serializable {
 			
 			if (rollingSeleccionado){
 				
-				etlVentasEJB.limpiarBDOracle();
+				etlVentasEJB.limpiarDWH();
 				
 			}
 

@@ -736,9 +736,9 @@ public class Persistencia implements Serializable {
 
 	}
 
-	public void limpiarBDOracle(String nombreTable) {
+	public void limpiarDWH(String nombreTable) {
 
-		String sql = "DELETE FROM " + nombreTable;
+		String sql = "DELETE FROM dwh." + nombreTable + " where id > -1";
 		Query q = emMDWH.createNativeQuery(sql);
 		q.executeUpdate();
 
@@ -871,38 +871,11 @@ public class Persistencia implements Serializable {
 	// ------------------------------ Gestion del dataWareHouse
 	// -------------------------------
 
-	/**
-	 * Crea un hecho venta en la bd oracle
-	 * 
-	 * @param unidades
-	 *            unidades vendidas
-	 * @param subtotal
-	 *            subtotal de la compra
-	 * @param cedulaCliente
-	 *            c�dula del cliente que compr�
-	 * @param idMunicipio
-	 *            c�digo del municipio donde se realiz� la venta
-	 * @param idProducto
-	 *            c�digo del procuto que se vendi�
-	 * @param cedulaEmpleado
-	 *            c�dula del empleado que realiz� la venta
-	 */
+	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void crearHechoVentas(int unidades, double subtotal, String cedulaCliente, int idMunicipio, int idProducto,
-			String cedulaEmpleado, Calendar fecha) {
+	public void crearHechoVentas(HechoVentas hecho) {
 
-		String sql = "INSERT INTO HECHO_VENTAS (unidades, subtotal, municipio_id, producto_id, "
-				+ "cedula_empleado, cedula_cliente, fecha_venta) VALUES (?1,?2,?3,?4,?5,?6,?7)";
-
-		Query q = emMDWH.createNativeQuery(sql);
-		q.setParameter(1, unidades);
-		q.setParameter(2, subtotal);
-		q.setParameter(3, idMunicipio);
-		q.setParameter(4, idProducto);
-		q.setParameter(5, cedulaEmpleado);
-		q.setParameter(6, cedulaCliente);
-		q.setParameter(7, fecha);
-		q.executeUpdate();
+		emMDWH.persist(hecho);
 
 	}
 
@@ -916,18 +889,19 @@ public class Persistencia implements Serializable {
 	 * @param usuario
 	 */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void crearHechoAuditoria(String accion, String dispositivo, String navegador, Calendar fecha,
-			DimensionUsuario usuario) {
+	public void crearHechoAuditoria(HechoAuditoria hecho) {
+		
+		emMDWH.persist(hecho);
 
-		String sql = "INSERT INTO HECHO_AUDITORIA (accion, dispositivo, navegador, fecha, cedula_usuario) VALUES (?1,?2,?3,?4,?5)";
-
-		Query q = emMDWH.createNativeQuery(sql);
-		q.setParameter(1, accion);
-		q.setParameter(2, dispositivo);
-		q.setParameter(3, navegador);
-		q.setParameter(4, fecha);
-		q.setParameter(5, usuario.getCedula());
-		q.executeUpdate();
+//		String sql = "INSERT INTO HECHO_AUDITORIA (accion, dispositivo, navegador, fecha, cedula_usuario) VALUES (?1,?2,?3,?4,?5)";
+//
+//		Query q = emMDWH.createNativeQuery(sql);
+//		q.setParameter(1, accion);
+//		q.setParameter(2, dispositivo);
+//		q.setParameter(3, navegador);
+//		q.setParameter(4, fecha);
+//		q.setParameter(5, usuario.getCedula());
+//		q.executeUpdate();
 
 	}
 
@@ -958,19 +932,19 @@ public class Persistencia implements Serializable {
 	 *            dimensi�n de la persona que se desea registrar
 	 */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void crearDimensionPersona(DimensionPersona dimension) {
+	public void crearDimension(Object dimension) {
 
-		String sql = "INSERT INTO DIMENSION_PERSONA (cedula, nombre, apellido, genero, edad, tipo_persona) "
-				+ "VALUES (?1,?2,?3,?4,?5,?6)";
+//		String sql = "INSERT INTO DIMENSION_PERSONA (cedula, nombre, apellido, genero, edad, tipo_persona) "
+//				+ "VALUES (?1,?2,?3,?4,?5,?6)";
 
-		Query q = emMDWH.createNativeQuery(sql);
-		q.setParameter(1, dimension.getCedula());
-		q.setParameter(2, dimension.getNombre());
-		q.setParameter(3, dimension.getApellido());
-		q.setParameter(4, dimension.getGenero());
-		q.setParameter(5, dimension.getEdad());
-		q.setParameter(6, dimension.getTipoPersona());
-		q.executeUpdate();
+		emMDWH.persist(dimension);
+//		q.setParameter(1, dimension.getCedula());
+//		q.setParameter(2, dimension.getNombre());
+//		q.setParameter(3, dimension.getApellido());
+//		q.setParameter(4, dimension.getGenero());
+//		q.setParameter(5, dimension.getEdad());
+//		q.setParameter(6, dimension.getTipoPersona());
+//		q.executeUpdate();
 
 	}
 
@@ -982,19 +956,21 @@ public class Persistencia implements Serializable {
 	 */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void crearDimensionUsuario(DimensionUsuario dimension) {
+		
+		emMDWH.persist(dimension);
 
-		String sql = "INSERT INTO DIMENSION_USUARIO (cedula, nombre, apellido, genero, edad, tipo_usuario, cargo) "
-				+ "VALUES (?1,?2,?3,?4,?5,?6,?7)";
-
-		Query q = emMDWH.createNativeQuery(sql);
-		q.setParameter(1, dimension.getCedula());
-		q.setParameter(2, dimension.getNombre());
-		q.setParameter(3, dimension.getApellido());
-		q.setParameter(4, dimension.getGenero());
-		q.setParameter(5, dimension.getEdad());
-		q.setParameter(6, dimension.getTipoUsuario());
-		q.setParameter(7, dimension.getCargo());
-		q.executeUpdate();
+//		String sql = "INSERT INTO DIMENSION_USUARIO (cedula, nombre, apellido, genero, edad, tipo_usuario, cargo) "
+//				+ "VALUES (?1,?2,?3,?4,?5,?6,?7)";
+//
+//		Query q = emMDWH.createNativeQuery(sql);
+//		q.setParameter(1, dimension.getCedula());
+//		q.setParameter(2, dimension.getNombre());
+//		q.setParameter(3, dimension.getApellido());
+//		q.setParameter(4, dimension.getGenero());
+//		q.setParameter(5, dimension.getEdad());
+//		q.setParameter(6, dimension.getTipoUsuario());
+//		q.setParameter(7, dimension.getCargo());
+//		q.executeUpdate();
 
 	}
 
@@ -1104,36 +1080,36 @@ public class Persistencia implements Serializable {
 	}
 
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-	public boolean dimensionPersonaExiste(String cedula) {
+	public DimensionPersona dimensionPersonaExiste(String cedula) {
 
-		String sql = "SELECT * FROM DIMENSION_PERSONA WHERE cedula = ?1";
-		Query q = emMDWH.createNativeQuery(sql);
+//		String sql = "SELECT * FROM DIMENSION_PERSONA WHERE cedula = ?1";
+		Query q = emMDWH.createNamedQuery(DimensionPersona.BUSCAR_PERSONA_CED);
 		q.setParameter(1, cedula);
 
-		List<Object> lista = q.getResultList();
+		List<DimensionPersona> lista = q.getResultList();
 
 		if (lista.size() != 0) {
-			return true;
+			return lista.get(0);
 		}
 
-		return false;
+		return null;
 
 	}
 
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-	public boolean dimensionUsuarioExiste(String cedula) {
-
-		String sql = "SELECT * FROM DIMENSION_USUARIO WHERE cedula = ?1";
-		Query q = emMDWH.createNativeQuery(sql);
+	public DimensionUsuario dimensionUsuarioExiste(String cedula) {
+		
+		Query q = emMDWH.createNamedQuery(DimensionUsuario.BUSCAR_USUARIO_CED);
 		q.setParameter(1, cedula);
 
-		List<Object> lista = q.getResultList();
+		List<DimensionUsuario> lista = q.getResultList();
 
 		if (lista.size() != 0) {
-			return true;
+						
+			return lista.get(0);
 		}
 
-		return false;
+		return null;
 
 	}
 
@@ -1164,19 +1140,19 @@ public class Persistencia implements Serializable {
 	 * @return true si existe, de lo contrario false
 	 */
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-	public boolean dimensionExiste(int id, String nameId, String tabla) {
+	public Object dimensionExiste(String query, String nombre) {
 
-		String sql = "SELECT * FROM " + tabla + " WHERE " +  nameId  + " = ?1";
-		Query q = emMDWH.createNativeQuery(sql);
-		q.setParameter(1, id);
+		//String sql = "SELECT * FROM " + tabla + " WHERE " +  nameId  + " = ?1";
+		Query q = emMDWH.createNamedQuery(query);
+		q.setParameter(1, nombre);
 
 		List<Object> lista = q.getResultList();
 
 		if (lista.size() != 0) {
-			return true;
+			return lista.get(0);
 		}
 
-		return false;
+		return null;
 
 	}
 
@@ -1218,15 +1194,17 @@ public class Persistencia implements Serializable {
 	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void editarDimensionUsuario(String cedula, String tipo_usuario, int edad) {
+	public void editarDimensionUsuario(DimensionUsuario usuario) {
+		
+		emMDWH.merge(usuario);
 
-		String sql = "UPDATE DIMENSION_USUARIO SET edad = ?1, tipo_usuario = ?2 WHERE cedula = ?3";
-
-		Query q = emMDWH.createNativeQuery(sql);
-		q.setParameter(1, edad);
-		q.setParameter(2, tipo_usuario);
-		q.setParameter(3, cedula);
-		q.executeUpdate();
+//		String sql = "UPDATE DIMENSION_USUARIO SET edad = ?1, tipo_usuario = ?2 WHERE cedula = ?3";
+//
+//		Query q = emMDWH.createNativeQuery(sql);
+//		q.setParameter(1, edad);
+//		q.setParameter(2, tipo_usuario);
+//		q.setParameter(3, cedula);
+//		q.executeUpdate();
 
 	}
 

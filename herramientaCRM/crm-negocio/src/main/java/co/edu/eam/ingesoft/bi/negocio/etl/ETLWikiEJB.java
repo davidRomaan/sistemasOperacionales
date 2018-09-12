@@ -158,21 +158,21 @@ public class ETLWikiEJB {
 			int idPage = recentChanges.getPageId();
 			int userId = recentChanges.getUser().getUserId();
 
-			if (!em.dimensionExiste(recentChanges.getRcId(), "rc_id", "RECENT_CHANGES")) {
-
-				if (!em.dimensionExiste(idPage, "page_id", "\"BI\".\"PAGE\"") && !listaIdPaginas.contains(idPage)) {
-					//em.crearDimensionPage(recentChanges.getPage());
-					listaIdPaginas.add(idPage);
-				}
-
-				if (!em.dimensionExiste(userId, "user_id", "\"BI\".\"USER\"") && !listaIdUsuarios.contains(userId)) {
-					em.crearDimensionUser(recentChanges.getUser());
-					listaIdUsuarios.add(userId);
-				}
-				
-				em.crearHechoRecentChanges(recentChanges);
-
-			}
+//			if (!em.dimensionExiste(recentChanges.getRcId(), "rc_id", "RECENT_CHANGES")) {
+//
+//				if (!em.dimensionExiste(idPage, "page_id", "\"BI\".\"PAGE\"") && !listaIdPaginas.contains(idPage)) {
+//					//em.crearDimensionPage(recentChanges.getPage());
+//					listaIdPaginas.add(idPage);
+//				}
+//
+//				if (!em.dimensionExiste(userId, "user_id", "\"BI\".\"USER\"") && !listaIdUsuarios.contains(userId)) {
+//					em.crearDimensionUser(recentChanges.getUser());
+//					listaIdUsuarios.add(userId);
+//				}
+//				
+//				em.crearHechoRecentChanges(recentChanges);
+//
+//			}
 
 		}
 		
@@ -184,9 +184,9 @@ public class ETLWikiEJB {
 	 */
 	public void limpiarBDOracle() {
 
-		em.limpiarBDOracle("\"BI\".\"RECENT_CHANGES\"");
-		em.limpiarBDOracle("\"BI\".\"PAGE\"");
-		em.limpiarBDOracle("\"BI\".\"USER\"");
+		em.limpiarDWH("\"BI\".\"RECENT_CHANGES\"");
+		em.limpiarDWH("\"BI\".\"PAGE\"");
+		em.limpiarDWH("\"BI\".\"USER\"");
 
 	}
 	

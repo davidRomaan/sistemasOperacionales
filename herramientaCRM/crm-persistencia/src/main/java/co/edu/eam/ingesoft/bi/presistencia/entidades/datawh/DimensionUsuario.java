@@ -7,13 +7,16 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="DIMENSION_USUARIO")
-@NamedQuery(
-		name = DimensionUsuario.BUSCAR_USUARIO_CED, query = "SELECT du FROM DimensionUsuario du WHERE du.cedula = ?1")
+@NamedQueries(
+		@NamedQuery(name = DimensionUsuario.BUSCAR_USUARIO_CED, query = "SELECT du FROM DimensionUsuario du WHERE du.cedula = ?1")
+		)
+
 public class DimensionUsuario implements Serializable {
 
 	public static final String BUSCAR_USUARIO_CED = "buscar.cedula";
@@ -21,7 +24,7 @@ public class DimensionUsuario implements Serializable {
 	@Id
 	@Column(name="ID")
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private String id;
+	private int id;
 
 	@Column(name="CEDULA")
 	private String cedula;
@@ -114,6 +117,14 @@ public class DimensionUsuario implements Serializable {
 
 	public void setCargo(String cargo) {
 		this.cargo = cargo;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 	
