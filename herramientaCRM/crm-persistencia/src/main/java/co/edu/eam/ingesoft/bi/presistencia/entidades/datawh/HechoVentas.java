@@ -40,7 +40,7 @@ public class HechoVentas implements Serializable {
 
 	@JoinColumn(name = "ID_CLIENTE")
 	@ManyToOne
-	private DimensionPersona persona;
+	private DimensionCliente cliente;
 
 	@JoinColumn(name = "MUNICIPIO_ID")
 	@ManyToOne
@@ -62,12 +62,12 @@ public class HechoVentas implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
-	public HechoVentas(int unidades, double subtotal, DimensionPersona persona, DimensionPersona empleado,
+	public HechoVentas(int unidades, double subtotal, DimensionCliente cliente, DimensionPersona empleado,
 			DimensionMunicipio municipio, DimensionProducto producto, Calendar fecha) {
 		super();
 		this.unidades = unidades;
 		this.subtotal = subtotal;
-		this.persona = persona;
+		this.cliente = cliente;
 		this.municipio = municipio;
 		this.producto = producto;
 		this.empleado = empleado;
@@ -90,12 +90,12 @@ public class HechoVentas implements Serializable {
 		this.subtotal = subtotal;
 	}
 
-	public DimensionPersona getPersona() {
-		return persona;
+	public DimensionCliente getPersona() {
+		return cliente;
 	}
 
-	public void setPersona(DimensionPersona persona) {
-		this.persona = persona;
+	public void setCliente(DimensionCliente persona) {
+		this.cliente = persona;
 	}
 
 	public DimensionMunicipio getMunicipio() {
@@ -142,5 +142,5 @@ public class HechoVentas implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-
+	
 }

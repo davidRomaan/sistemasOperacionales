@@ -22,6 +22,7 @@ import co.edu.eam.ingesoft.bi.presistencia.entidades.FacturaVenta;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.InventarioProducto;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.ModulosUsuario;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Persona;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionCliente;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionMunicipio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionPersona;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionProducto;
@@ -1090,6 +1091,23 @@ public class Persistencia implements Serializable {
 		q.setParameter(1, cedula);
 
 		List<DimensionPersona> lista = q.getResultList();
+
+		if (lista.size() != 0) {
+			return lista.get(0);
+		}
+
+		return null;
+
+	}
+	
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	public DimensionCliente dimensionClienteExiste(String cedula) {
+
+//		String sql = "SELECT * FROM DIMENSION_PERSONA WHERE cedula = ?1";
+		Query q = emMDWH.createNamedQuery(DimensionCliente.BUSCAR_PERSONA_CED);
+		q.setParameter(1, cedula);
+
+		List<DimensionCliente> lista = q.getResultList();
 
 		if (lista.size() != 0) {
 			return lista.get(0);
