@@ -245,11 +245,6 @@ public class ControladorVentas implements Serializable {
 		inventarioProductoComprar.setCantidad(inventarioProductoComprar.getCantidad() + dv.getCantidad());
 		productosCompra.remove(dv);
 		
-		accion = "Eliminar DetalleVenta";
-		String browserDetail = Faces.getRequest().getHeader("User-Agent");
-		auditoriaEJB.crearAuditoria("AuditoriaDetalleVenta", accion, "DV eliminada: " + factura.getId(),
-				sesion.getUser().getCedula(), browserDetail);
-		
 		reload();
 	}
 
