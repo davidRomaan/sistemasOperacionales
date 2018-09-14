@@ -12,46 +12,44 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="DIMENSION_EMPLEADO")
+@Table(name = "DIMENSION_CLIENTE")
 @NamedQueries({
-		@NamedQuery(
-		name = DimensionPersona.BUSCAR_USER_NAME, query="SELECT u FROM User u WHERE u.userName = ?1"),
-		@NamedQuery(name = DimensionPersona.BUSCAR_PERSONA_CED, query = "SELECT p FROM DimensionPersona p WHERE p.cedula = ?1")
-})
-public class DimensionPersona implements Serializable {
+		@NamedQuery(name = DimensionCliente.BUSCAR_USER_NAME, query = "SELECT u FROM User u WHERE u.userName = ?1"),
+		@NamedQuery(name = DimensionCliente.BUSCAR_PERSONA_CED, query = "SELECT p FROM DimensionPersona p WHERE p.cedula = ?1") })
+public class DimensionCliente implements Serializable {
 
-	public static final String BUSCAR_USER_NAME = "buscar.user_name";
-	
-	public static final String BUSCAR_PERSONA_CED = "buscarPersona.cedula";
-	
+	public static final String BUSCAR_USER_NAME = "buscarC.user_name";
+
+	public static final String BUSCAR_PERSONA_CED = "buscarCliente.cedula";
+
 	@Id
-	@Column(name="id")
+	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-	
-	@Column(name="CEDULA")
+
+	@Column(name = "CEDULA")
 	private String cedula;
-	
-	@Column(name="NOMBRE")
+
+	@Column(name = "NOMBRE")
 	private String nombre;
-	
-	@Column(name="APELLIDO")
+
+	@Column(name = "APELLIDO")
 	private String apellido;
-	
-	@Column(name="GENERO")
+
+	@Column(name = "GENERO")
 	private String genero;
-	
-	@Column(name="EDAD")
+
+	@Column(name = "EDAD")
 	private short edad;
-	
-	@Column(name="TIPO_PERSONA")
+
+	@Column(name = "TIPO_PERSONA")
 	private String tipoPersona;
-	
-	public DimensionPersona() {
+
+	public DimensionCliente() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public DimensionPersona(String cedula, String nombre, String apellido, String genero, short edad,
+	public DimensionCliente(String cedula, String nombre, String apellido, String genero, short edad,
 			String tipoPersona) {
 		super();
 		this.cedula = cedula;
@@ -117,7 +115,5 @@ public class DimensionPersona implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
-	
-	
+
 }

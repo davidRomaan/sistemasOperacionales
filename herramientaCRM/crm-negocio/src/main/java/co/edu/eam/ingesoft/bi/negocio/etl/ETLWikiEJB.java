@@ -1,7 +1,9 @@
 package co.edu.eam.ingesoft.bi.negocio.etl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -69,10 +71,8 @@ public class ETLWikiEJB {
 			int mes = Integer.parseInt(datosFecha[1]);
 			int anio = Integer.parseInt(datosFecha[2]);
 
-			Date fecha = new Date();
-			fecha.setDate(dia);
-			fecha.setMonth(mes);
-			fecha.setYear(anio);
+			Calendar fecha = new GregorianCalendar();
+			fecha.set(anio, mes, dia);			
 
 			String rcTitle = ((String) objects[2]);
 			String rcComment = ((String) objects[3]);

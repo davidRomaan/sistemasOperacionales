@@ -1,6 +1,7 @@
 package co.edu.eam.ingesoft.bi.presistencia.entidades.datawh;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -33,7 +34,7 @@ public class RecentChanges implements Serializable{
 	
 	@Column(name="rc_timestamp")
 	@Temporal(TemporalType.DATE)
-	private Date rcTimestamp;
+	private Calendar rcTimestamp;
 	
 	@Column(name="rc_title")
 	private String rcTitle;
@@ -61,7 +62,7 @@ public class RecentChanges implements Serializable{
 		// TODO Auto-generated constructor stub
 	}
 
-	public RecentChanges(int rcId, Date rcTimestamp, String rcTitle, String rcComment, int rcOldLen, int rcNewLen,
+	public RecentChanges(int rcId, Calendar rcTimestamp, String rcTitle, String rcComment, int rcOldLen, int rcNewLen,
 			boolean rcNew, int pageId, User user) {
 		super();
 		this.rcId = rcId;
@@ -83,11 +84,11 @@ public class RecentChanges implements Serializable{
 		this.rcId = rcId;
 	}
 
-	public Date getRcTimestamp() {
+	public Calendar getRcTimestamp() {
 		return rcTimestamp;
 	}
 
-	public void setRcTimestamp(Date rcTimestamp) {
+	public void setRcTimestamp(Calendar rcTimestamp) {
 		this.rcTimestamp = rcTimestamp;
 	}
 

@@ -19,6 +19,7 @@ import co.edu.eam.ingesoft.bi.presistencia.entidades.FacturaVenta;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Municipio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Persona;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.Producto;
+import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionCliente;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionMunicipio;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionPersona;
 import co.edu.eam.ingesoft.bi.presistencia.entidades.datawh.DimensionProducto;
@@ -94,7 +95,7 @@ public class ETLVentasEJB {
 					HechoVentas hecho = new HechoVentas();
 					hecho.setEmpleado(crearDimensionEmpleado(facturaVenta));
 					hecho.setMunicipio(crearDimensionMunicipio(facturaVenta));
-					hecho.setPersona(crearDimensionCliente(facturaVenta));
+					hecho.setCliente(crearDimensionCliente(facturaVenta));
 					hecho.setProducto(crearDimensionProducto(detalleVenta));
 
 					hecho.setSubtotal(detalleVenta.getSubtotal());
@@ -119,7 +120,8 @@ public class ETLVentasEJB {
 
 		em.limpiarDWH("HECHO_VENTAS");
 		em.limpiarDWH("DIMENSION_MUNICIPIO");
-		em.limpiarDWH("DIMENSION_PERSONA");
+		em.limpiarDWH("DIMENSION_EMPLEADO");
+		em.limpiarDWH("DIMENSION_CLIENTE");
 		em.limpiarDWH("DIMENSION_PRODUCTO");
 
 	}
@@ -142,12 +144,12 @@ public class ETLVentasEJB {
 		List<DimensionPersona> empleadosRegistrados = new ArrayList<DimensionPersona>();
 		List<DimensionProducto> productosRegistrados = new ArrayList<DimensionProducto>();
 		List<DimensionMunicipio> municipiosRegistrados = new ArrayList<DimensionMunicipio>();
-		List<DimensionPersona> clientesRegistrados = new ArrayList<DimensionPersona>();
+		List<DimensionCliente> clientesRegistrados = new ArrayList<DimensionCliente>();
 
 		DimensionPersona empleadoBuscado = null;
 		DimensionProducto productoBuscado = null;
 		DimensionMunicipio municipioBuscado = null;
-		DimensionPersona clienteBuscado = null;
+		DimensionCliente clienteBuscado = null;
 
 		for (HechoVentas hechoVentas : hechos) {
 
@@ -294,7 +296,7 @@ public class ETLVentasEJB {
 				
 			}
 
-			clienteBuscado = em.dimensionPersonaExiste(cedulaCliente);
+			clienteBuscado = em.dimensionClienteExiste(cedulaCliente);
 			
 			boolean clienteRegistrado = false;
 
@@ -302,7 +304,7 @@ public class ETLVentasEJB {
 				
 				clienteRegistrado = true;
 				
-				clienteBuscado = new DimensionPersona();
+				clienteBuscado = new DimensionCliente();
 				
 				hechoVentas.getPersona().setId(clienteBuscado.getId());
 				
@@ -316,11 +318,11 @@ public class ETLVentasEJB {
 			
 			if (!clienteRegistrado && clienteBuscado == null){
 				
-				for (DimensionPersona dimensionPersona : clientesRegistrados) {
+				for (DimensionCliente dimensionCliente : clientesRegistrados) {
 					
-					if (dimensionPersona.getCedula().equals(cedulaCliente)){
+					if (dimensionCliente.getCedula().equals(cedulaCliente)){
 						
-						hechoVentas.setPersona(dimensionPersona);
+						hechoVentas.setCliente(dimensionCliente);
 						break;
 						
 					}
@@ -329,10 +331,10 @@ public class ETLVentasEJB {
 				
 			} else {
 				
-				hechoVentas.setPersona(clienteBuscado);
+				hechoVentas.setCliente(clienteBuscado);
 				
 			}
-
+			
 			em.crearHechoVentas(hechoVentas);
 
 		}
@@ -384,9 +386,9 @@ public class ETLVentasEJB {
 	 * @param facturaVenta
 	 *            factura en la cual esta el cliente registrado
 	 */
-	private DimensionPersona crearDimensionCliente(FacturaVenta facturaVenta) {
+	private DimensionCliente crearDimensionCliente(FacturaVenta facturaVenta) {
 
-		DimensionPersona dimensionCliente = new DimensionPersona();
+		DimensionCliente dimensionCliente = new DimensionCliente();
 		Persona cliente = facturaVenta.getClienteId();
 		dimensionCliente.setNombre(cliente.getNombre());
 		dimensionCliente.setApellido(cliente.getApellido());
@@ -428,21 +430,26 @@ public class ETLVentasEJB {
 
 			List<DetalleVenta> detalles = (List<DetalleVenta>) (Object) em
 					.listarConParametroObjeto(DetalleVenta.LISTAR_DETALLES_FACTURA, facturaVenta);
-
+			
 			for (DetalleVenta detalleVenta : detalles) {
 
 				HechoVentas hecho = new HechoVentas();
 				hecho.setEmpleado(crearDimensionEmpleado(facturaVenta));
 				hecho.setMunicipio(crearDimensionMunicipio(facturaVenta));
-				hecho.setPersona(crearDimensionCliente(facturaVenta));
+				hecho.setCliente(crearDimensionCliente(facturaVenta));
 				hecho.setProducto(crearDimensionProducto(detalleVenta));
 
-				hecho.setSubtotal(detalleVenta.getSubtotal());
-				hecho.setUnidades(detalleVenta.getCantidad());
+				double subtotal = detalleVenta.getSubtotal();
+				int unidades = detalleVenta.getCantidad();
+				
+				hecho.setSubtotal(subtotal);
+				hecho.setUnidades(unidades);
+								
 				hecho.setFecha(facturaVenta.getFechaVenta());
 				listaHechos.add(hecho);
 
 			}
+						
 		}
 
 		return listaHechos;
@@ -619,13 +626,21 @@ public class ETLVentasEJB {
 
 			}
 
-			DimensionPersona cliente = hecho.getPersona();
+			DimensionCliente cliente = hecho.getPersona();
 
 			if (cliente.getEdad() < 10 || cliente.getEdad() > 130) {
 
 				cliente.setEdad((short) calcularPromedioEdades(hechos));
 
 			}
+			
+//			DimensionPersona empleado = hecho.getEmpleado();
+//
+//			if (empleado.getEdad() < 10 || empleado.getEdad() > 130) {
+//
+//				empleado.setEdad((short) calcularPromedioEdades(hechos));
+//
+//			}
 
 		}
 
