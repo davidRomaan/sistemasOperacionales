@@ -87,7 +87,7 @@ public class ControladorGestionVentas implements Serializable {
 		}
 	}
 
-	/**
+	/**	
 	 * Elimina todos los detalles de venta una factura
 	 */
 	public void eliminarTodosDetallesVenta() {
